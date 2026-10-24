@@ -112,6 +112,7 @@ test('the gallery shows a three-column grid with one selectable baseline or late
             ->assertSee('data-comparison-captures', false)
             ->assertSee('data-image-zoom', false)
             ->assertSee('data-zoom-trigger', false)
+            ->assertSee('data-zoom-help hidden', false)
             ->assertSee('<optgroup label="crud">', false)
             ->assertSee('<optgroup label="other">', false)
             ->assertSee('<optgroup label="central">', false)
@@ -153,7 +154,34 @@ test('the gallery defaults to desktop normal captures and exposes the filtered s
         ->assertOk()
         ->assertSee('<option value="normal" selected>normal</option>', false)
         ->assertSee('<option value="Desktop" selected>Desktop</option>', false)
+        ->assertSee('<optgroup label="Primary">', false)
+        ->assertSee('<optgroup label="Secondary">', false)
+        ->assertSee('<optgroup label="Other">', false)
+        ->assertSee('<option value="dashboard" >Dashboard</option>', false)
+        ->assertSee('<option value="mailing-lists" >Communications</option>', false)
+        ->assertSee('<option value="tasks" >Onboarding</option>', false)
+        ->assertSee('<option value="tenants" >Tenants</option>', false)
+        ->assertSee('<option value="users" >Users</option>', false)
+        ->assertSee('<option value="account" >Account Settings</option>', false)
+        ->assertSee('<option value="auth" >Authentication</option>', false)
         ->assertSee('data-screenshot-count', false);
+});
+
+test('the catalog includes additional central and tenant page templates', function () {
+    $caseIds = collect(app(ScreenshotCatalog::class)->cases())->pluck('id');
+
+    expect($caseIds)->toContain(
+        'central-users-index',
+        'central-users-index-empty',
+        'central-tenants-index',
+        'central-tenants-index-empty',
+        'tenant-folders-edit',
+        'tenant-polls-edit',
+        'tenant-riser-stacks-create',
+        'tenant-riser-stacks-edit',
+        'tenant-riser-stacks-show',
+        'tenant-roles-edit',
+    );
 });
 
 test('the gallery reports an uncaptured baseline as not found', function () {

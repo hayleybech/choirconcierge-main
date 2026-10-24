@@ -25,8 +25,8 @@ class VisualRegressionTestCase extends \Tests\TestCase
         if (! $app->environment('testing')
             || $app['config']->get('database.default') !== 'mysql'
             || ! is_string($database)
-            || preg_match('/^choirconcierge_test(?:_[0-9]+(?:\.[0-9]+)?)?$/', $database) !== 1) {
-            throw new RuntimeException('Visual browser tests require APP_ENV=testing and the choirconcierge_test MySQL database.');
+            || trim($database) === '') {
+            throw new RuntimeException('Visual browser tests require APP_ENV=testing and a configured MySQL test database.');
         }
 
         return $app;

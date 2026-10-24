@@ -123,7 +123,7 @@
 		},
 		{
 			"id": "central-account-edit",
-			"module": "central",
+			"module": "account",
 			"page_type": "edit",
 			"state": "normal",
 			"route": "central.account.edit",
@@ -135,7 +135,7 @@
 		},
 		{
 			"id": "central-dashboard",
-			"module": "central",
+			"module": "dashboard",
 			"page_type": "show",
 			"state": "normal",
 			"route": "central.dash",
@@ -159,7 +159,7 @@
 		},
 		{
 			"id": "central-tenant-create",
-			"module": "central",
+			"module": "tenants",
 			"page_type": "create",
 			"state": "normal",
 			"route": "central.tenants.create",
@@ -171,7 +171,7 @@
 		},
 		{
 			"id": "central-tenant-show",
-			"module": "central",
+			"module": "tenants",
 			"page_type": "show",
 			"state": "normal",
 			"route": "central.tenants.show",
@@ -182,8 +182,33 @@
 			"assert_text": "Visual Regression Choir"
 		},
 		{
+			"id": "central-tenants-index",
+			"module": "tenants",
+			"page_type": "index",
+			"state": "normal",
+			"route": "central.tenants.index",
+			"parameters": {},
+			"persona": "central-admin",
+			"component": "Central/Tenants/Index",
+			"browser": "chromium",
+			"assert_text": "Visual Regression Choir"
+		},
+		{
+			"id": "central-tenants-index-empty",
+			"module": "tenants",
+			"page_type": "index",
+			"state": "empty",
+			"route": "central.tenants.index",
+			"parameters": { "filter[id]": "no-matching-tenant" },
+			"persona": "central-admin",
+			"component": "Central/Tenants/Index",
+			"browser": "chromium",
+			"assert_text": "Tenants",
+			"empty_props": ["tenants"]
+		},
+		{
 			"id": "central-tenant-onboarding",
-			"module": "central",
+			"module": "tenants",
 			"page_type": "onboarding",
 			"state": "normal",
 			"route": "central.tenants.onboarding",
@@ -192,6 +217,31 @@
 			"component": "Central/Tenants/Onboarding",
 			"browser": "chromium",
 			"assert_text": "Organisation Created!"
+		},
+		{
+			"id": "central-users-index",
+			"module": "users",
+			"page_type": "index",
+			"state": "normal",
+			"route": "central.users.index",
+			"parameters": {},
+			"persona": "central-admin",
+			"component": "Central/Users/Index",
+			"browser": "chromium",
+			"assert_text": "Visual Regression"
+		},
+		{
+			"id": "central-users-index-empty",
+			"module": "users",
+			"page_type": "index",
+			"state": "empty",
+			"route": "central.users.index",
+			"parameters": { "filter[search]": "no matching screenshot user" },
+			"persona": "central-admin",
+			"component": "Central/Users/Index",
+			"browser": "chromium",
+			"assert_text": "Users",
+			"empty_props": ["users"]
 		},
 		{
 			"id": "tenant-dashboard",
@@ -471,6 +521,30 @@
 			"assert_text": "Visual Regression Stack"
 		},
 		{
+			"id": "tenant-riser-stacks-create",
+			"module": "riser-stacks",
+			"page_type": "create",
+			"state": "normal",
+			"route": "stacks.create",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "tenant-admin",
+			"component": "RiserStacks/Create",
+			"browser": "chromium",
+			"assert_text": "Create Riser Stack"
+		},
+		{
+			"id": "tenant-riser-stacks-show",
+			"module": "riser-stacks",
+			"page_type": "show",
+			"state": "normal",
+			"route": "stacks.show",
+			"parameters": { "tenant": "visual-regression", "stack": 1 },
+			"persona": "tenant-admin",
+			"component": "RiserStacks/Show",
+			"browser": "chromium",
+			"assert_text": "Visual Regression Stack"
+		},
+		{
 			"id": "tenant-polls-create",
 			"module": "polls",
 			"page_type": "create",
@@ -723,6 +797,54 @@
 			"browser": "chromium",
 			"assert_text": "This song does not have any attachments yet.",
 			"empty_props": ["attachment_types"]
+		},
+		{
+			"id": "tenant-folders-edit",
+			"module": "documents",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "folders.edit",
+			"parameters": { "tenant": "visual-regression", "folder": 1 },
+			"persona": "tenant-admin",
+			"component": "Folders/Edit",
+			"browser": "chromium",
+			"assert_text": "Edit Folder"
+		},
+		{
+			"id": "tenant-polls-edit",
+			"module": "polls",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "polls.edit",
+			"parameters": { "tenant": "visual-regression", "poll": 1 },
+			"persona": "tenant-admin",
+			"component": "Polls/Edit",
+			"browser": "chromium",
+			"assert_text": "Edit Poll"
+		},
+		{
+			"id": "tenant-riser-stacks-edit",
+			"module": "riser-stacks",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "stacks.edit",
+			"parameters": { "tenant": "visual-regression", "stack": 1 },
+			"persona": "tenant-admin",
+			"component": "RiserStacks/Edit",
+			"browser": "chromium",
+			"assert_text": "Edit Riser Stack"
+		},
+		{
+			"id": "tenant-roles-edit",
+			"module": "roles",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "roles.edit",
+			"parameters": { "tenant": "visual-regression", "role": 1 },
+			"persona": "tenant-admin",
+			"component": "Roles/Edit",
+			"browser": "chromium",
+			"assert_text": "Edit Singer Role"
 		}
 	]
 }

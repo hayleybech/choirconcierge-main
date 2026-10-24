@@ -220,13 +220,13 @@
                         @foreach ($filterGroups[$field] as $group => $groupValues)
                             <optgroup label="{{ $group }}">
                                 @foreach ($groupValues as $value)
-                                    <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $value }}</option>
+                                    <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $field === 'module' ? ($moduleLabels[$value] ?? ucwords(str_replace('-', ' ', $value))) : $value }}</option>
                                 @endforeach
                             </optgroup>
                         @endforeach
                     @else
                         @foreach ($values as $value)
-                            <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $value }}</option>
+                            <option value="{{ $value }}" @selected($field === 'state' && $value === 'normal')>{{ $field === 'module' ? ($moduleLabels[$value] ?? ucwords(str_replace('-', ' ', $value))) : $value }}</option>
                         @endforeach
                     @endif
                 </select>
@@ -317,7 +317,8 @@
         <button class="image-zoom-close" aria-label="Close image preview">Close</button>
     </form>
     <img data-zoom-image alt="">
-    <p data-zoom-caption></p>
+    <p data-zoom-caption aria-live="polite"></p>
+    <p class="zoom-help" data-zoom-help hidden>Use the left and right arrow keys to browse screenshots.</p>
 </dialog>
 <script>
 	const filters = Array.from(document.querySelectorAll('[data-filter]'));
@@ -327,8 +328,11 @@
 	const galleryView = document.querySelector('[data-gallery-view]');
 	const gridVariantSelect = document.querySelector('[data-grid-variant-select]');
 	const imageZoomDialog = document.querySelector('[data-image-zoom]');
+	const zoomTriggers = Array.from(document.querySelectorAll('[data-zoom-trigger]'));
 	const zoomImage = imageZoomDialog.querySelector('[data-zoom-image]');
 	const zoomCaption = imageZoomDialog.querySelector('[data-zoom-caption]');
+	const zoomHelp = imageZoomDialog.querySelector('[data-zoom-help]');
+	let currentZoomTrigger = null;
 
 	function applyFilters() {
 		let visibleCount = 0;
@@ -359,19 +363,54 @@
 		});
 	}
 
+	function showZoomImage(trigger) {
+		const image = trigger.querySelector('img');
+		zoomImage.src = image.currentSrc || image.src;
+		zoomImage.alt = image.alt;
+		zoomCaption.textContent = image.alt;
+		zoomHelp.hidden = galleryView.value !== 'grid';
+		currentZoomTrigger = trigger;
+		if (!imageZoomDialog.open) {
+			imageZoomDialog.showModal();
+		}
+	}
+
+	function navigateZoomedImage(direction) {
+		const visibleGridTriggers = zoomTriggers.filter(trigger => {
+			const card = trigger.closest('[data-screenshot]');
+			const variant = trigger.closest('[data-grid-variant]');
+			return card && !card.hidden && variant && !variant.hidden;
+		});
+		const currentIndex = visibleGridTriggers.indexOf(currentZoomTrigger);
+
+		if (currentIndex === -1 || visibleGridTriggers.length < 2) {
+			return;
+		}
+
+		const nextIndex = (currentIndex + direction + visibleGridTriggers.length) % visibleGridTriggers.length;
+		showZoomImage(visibleGridTriggers[nextIndex]);
+	}
+
 	filters.forEach(filter => filter.addEventListener('change', applyFilters));
 	galleryView.addEventListener('change', applyGalleryView);
 	gridVariantSelect.addEventListener('change', applyGalleryView);
 	applyFilters();
 
-	document.querySelectorAll('[data-zoom-trigger]').forEach(trigger => {
-		trigger.addEventListener('click', () => {
-			const image = trigger.querySelector('img');
-			zoomImage.src = image.currentSrc || image.src;
-			zoomImage.alt = image.alt;
-			zoomCaption.textContent = image.alt;
-			imageZoomDialog.showModal();
-		});
+	zoomTriggers.forEach(trigger => {
+		trigger.addEventListener('click', () => showZoomImage(trigger));
+	});
+
+	imageZoomDialog.addEventListener('keydown', event => {
+		if (!imageZoomDialog.open || galleryView.value !== 'grid') {
+			return;
+		}
+
+		const direction = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+
+		if (direction !== 0) {
+			event.preventDefault();
+			navigateZoomedImage(direction);
+		}
 	});
 
 	imageZoomDialog.addEventListener('click', event => {

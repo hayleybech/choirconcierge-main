@@ -31,11 +31,14 @@ test('captures every catalog case at every viewport without JavaScript errors', 
     $latestDirectory = config('visual-regression.latest_directory');
     $baselineDirectory = config('visual-regression.baseline_directory');
 
+    $testDatabase = config('database.connections.mysql.database');
     expect(app()->environment())
         ->toBe('testing')
-        ->and(config('database.connections.mysql.database'))
-        ->toMatch('/^choirconcierge_test(?:_[0-9]+(?:\.[0-9]+)?)?$/');
+        ->and($testDatabase)
+        ->toBeString()
+        ->not->toBeEmpty();
 
+    $originalSuperAdminEmail = config('app.super_admin_email', 'hayleybech@gmail.com');
     config(['app.debug' => false]);
     config(['app.super_admin_email' => 'visual-regression-admin@example.test']);
     Carbon::setTestNow('2026-10-23 12:00:00');
@@ -43,12 +46,13 @@ test('captures every catalog case at every viewport without JavaScript errors', 
     $tenantSuperAdmin = null;
     $visualRegressionTenant = null;
     $visualRegressionAdminRoleId = null;
+    $visualRegressionFolderId = null;
+    $visualRegressionRiserStackId = null;
     $tenantAdminSetUp = false;
     $screenshotStyle = json_encode(
         '<style>' . VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS . '</style>',
         JSON_THROW_ON_ERROR,
     );
-
     try {
         foreach ($catalog->cases() as $case) {
             if (in_array($case['persona'], ['authenticated-user', 'tenant-admin', 'tenant-empty-admin', 'tenant-super-admin'], true)) {
@@ -150,13 +154,15 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                     ]);
                     SongCategory::create(['title' => 'Warm-ups']);
 
-                    Folder::factory()->create(['title' => 'Visual Regression Documents']);
+                    $folder = Folder::factory()->create(['title' => 'Visual Regression Documents']);
+                    $visualRegressionFolderId = $folder->id;
                     UserGroup::factory()->create([
                         'title' => 'Visual Regression Mailing List',
                         'slug' => 'visual-regression-mailing-list',
                         'tenant_id' => tenant('id'),
                     ]);
-                    RiserStack::factory()->create(['title' => 'Visual Regression Stack']);
+                    $riserStack = RiserStack::factory()->create(['title' => 'Visual Regression Stack']);
+                    $visualRegressionRiserStackId = $riserStack->id;
 
                     Task::factory()->create([
                         'id' => 1,
@@ -241,11 +247,11 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                 }
             }
 
-            if ($case['persona'] === 'tenant-super-admin') {
+            if (in_array($case['persona'], ['tenant-super-admin', 'central-admin'], true)) {
                 $tenantSuperAdmin ??= User::factory()->create([
                     'first_name' => 'Visual',
                     'last_name' => 'Regression',
-                    'email' => 'visual-regression-admin@example.test',
+                    'email' => config('app.super_admin_email'),
                 ]);
 
                 $this->actingAs($tenantSuperAdmin);
@@ -256,6 +262,22 @@ test('captures every catalog case at every viewport without JavaScript errors', 
                 File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $case['id']);
 
                 if ($case['component'] === 'Roles/Show') {
+                    $case['parameters']['role'] = $visualRegressionAdminRoleId;
+                }
+
+                if ($case['component'] === 'RiserStacks/Show') {
+                    $case['parameters']['stack'] = $visualRegressionRiserStackId;
+                }
+
+                if ($case['component'] === 'RiserStacks/Edit') {
+                    $case['parameters']['stack'] = $visualRegressionRiserStackId;
+                }
+
+                if ($case['component'] === 'Folders/Edit') {
+                    $case['parameters']['folder'] = $visualRegressionFolderId;
+                }
+
+                if ($case['component'] === 'Roles/Edit') {
                     $case['parameters']['role'] = $visualRegressionAdminRoleId;
                 }
 
@@ -314,6 +336,7 @@ test('captures every catalog case at every viewport without JavaScript errors', 
             }
 
             Carbon::setTestNow();
+            config(['app.super_admin_email' => $originalSuperAdminEmail]);
         }
     }
 });

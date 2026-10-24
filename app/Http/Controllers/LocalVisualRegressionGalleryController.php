@@ -16,6 +16,40 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LocalVisualRegressionGalleryController extends Controller
 {
+    private const PRIMARY_MODULES = [
+        'dashboard',
+        'singers',
+        'songs',
+        'events',
+        'documents',
+        'riser-stacks',
+        'mailing-lists',
+        'tasks',
+        'polls',
+        'tenants',
+        'users',
+    ];
+
+    private const MODULE_LABELS = [
+        'account' => 'Account Settings',
+        'auth' => 'Authentication',
+        'central' => 'Platform',
+        'dashboard' => 'Dashboard',
+        'documents' => 'Documents',
+        'errors' => 'Errors',
+        'events' => 'Events',
+        'mailing-lists' => 'Communications',
+        'polls' => 'Polls',
+        'riser-stacks' => 'Riser Stacks',
+        'roles' => 'Roles',
+        'singers' => 'Singers',
+        'songs' => 'Songs',
+        'tasks' => 'Onboarding',
+        'tenants' => 'Tenants',
+        'users' => 'Users',
+        'voice-parts' => 'Voice Parts',
+    ];
+
     public function __construct(private readonly ScreenshotCatalog $catalog)
     {
     }
@@ -45,6 +79,7 @@ class LocalVisualRegressionGalleryController extends Controller
             'entries' => $entries,
             'filters' => $this->filters($entries),
             'filterGroups' => $this->filterGroups($entries),
+            'moduleLabels' => self::MODULE_LABELS,
         ]);
     }
 
@@ -112,6 +147,21 @@ class LocalVisualRegressionGalleryController extends Controller
      */
     private function filterGroups(Collection $entries): array
     {
+        $modules = $entries->pluck('module')->filter()->unique();
+        $otherModules = ['auth', 'errors'];
+        $primaryModules = $modules
+            ->filter(fn(string $module): bool => in_array($module, self::PRIMARY_MODULES, true))
+            ->sortBy(fn(string $module): int => (int) array_search($module, self::PRIMARY_MODULES, true))
+            ->values();
+        $secondaryModules = $modules
+            ->reject(fn(string $module): bool => in_array($module, self::PRIMARY_MODULES, true)
+                || in_array($module, $otherModules, true))
+            ->sortBy(fn(string $module): string => self::MODULE_LABELS[$module] ?? ucwords(str_replace('-', ' ', $module)))
+            ->values();
+        $otherModuleValues = $modules
+            ->filter(fn(string $module): bool => in_array($module, $otherModules, true))
+            ->sort()
+            ->values();
         $pageTypes = $entries->pluck('page_type')->filter()->unique()->sort()->groupBy(
             fn(string $pageType): string => in_array($pageType, ['index', 'create', 'show', 'edit'], true)
                 ? 'crud'
@@ -119,12 +169,19 @@ class LocalVisualRegressionGalleryController extends Controller
         );
 
         $routes = $entries->groupBy(fn(array $entry): string => match (true) {
-            $entry['module'] === 'central' => 'central',
+            $entry['module'] === 'central' || str_starts_with($entry['route'], 'central.') => 'central',
             in_array($entry['module'], ['auth', 'errors'], true) => 'other',
             default => 'tenant',
         })->map(fn(Collection $group): Collection => $group->pluck('route')->unique()->sort()->values());
 
         return [
+            'module' => collect([
+                'Primary' => $primaryModules,
+                'Secondary' => $secondaryModules,
+                'Other' => $otherModuleValues,
+            ])->filter(fn(Collection $group): bool => $group->isNotEmpty())
+                ->map(fn(Collection $group): array => $group->all())
+                ->all(),
             'page_type' => $pageTypes->map(fn(Collection $group): array => $group->values()->all())->all(),
             'route' => $routes->all(),
         ];

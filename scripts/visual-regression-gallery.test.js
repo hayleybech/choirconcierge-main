@@ -19,6 +19,9 @@ function createElement(dataset = {}, hidden = false) {
 		querySelector(selector) {
 			return this[selector];
 		},
+		closest(selector) {
+			return this.ancestors?.[selector] ?? null;
+		},
 		showModal() {
 			this.open = true;
 		},
@@ -36,27 +39,45 @@ test('switches between one grid capture variant and the comparison view', () => 
 	gridVariantSelect.value = 'latest';
 	const baseline = createElement({ gridVariant: 'baseline' }, true);
 	const latest = createElement({ gridVariant: 'latest' });
+	const secondBaseline = createElement({ gridVariant: 'baseline' }, true);
+	const secondLatest = createElement({ gridVariant: 'latest' });
 	const gridCaptures = createElement({}, false);
 	const comparisonCaptures = createElement({}, true);
 	const imageZoomDialog = createElement();
 	const zoomImage = createElement();
 	const zoomCaption = createElement();
+	const zoomHelp = createElement({}, true);
 	imageZoomDialog['[data-zoom-image]'] = zoomImage;
 	imageZoomDialog['[data-zoom-caption]'] = zoomCaption;
+	imageZoomDialog['[data-zoom-help]'] = zoomHelp;
+	const cards = [
+		createElement({ module: 'auth', state: 'normal', viewport: 'Desktop' }),
+		createElement({ module: 'songs', state: 'normal', viewport: 'Desktop' }),
+		createElement({ module: 'songs', state: 'empty', viewport: 'Desktop' }),
+	];
 	const thumbnail = createElement();
 	thumbnail.src = '/screenshots/auth-login/desktop/latest';
 	thumbnail.alt = 'Latest capture for Auth/Login at Desktop';
 	const zoomTrigger = createElement();
 	zoomTrigger['img'] = thumbnail;
+	zoomTrigger.ancestors = { '[data-screenshot]': cards[0], '[data-grid-variant]': latest };
+	const nextThumbnail = createElement();
+	nextThumbnail.src = '/screenshots/tenant-songs-index/desktop/latest';
+	nextThumbnail.alt = 'Latest capture for Songs/Index at Desktop';
+	const nextZoomTrigger = createElement();
+	nextZoomTrigger['img'] = nextThumbnail;
+	nextZoomTrigger.ancestors = { '[data-screenshot]': cards[1], '[data-grid-variant]': secondLatest };
+	const comparisonThumbnail = createElement();
+	comparisonThumbnail.src = '/screenshots/auth-login/desktop/baseline';
+	comparisonThumbnail.alt = 'Approved baseline for Auth/Login at Desktop';
+	const comparisonZoomTrigger = createElement();
+	comparisonZoomTrigger['img'] = comparisonThumbnail;
+	comparisonZoomTrigger.ancestors = { '[data-screenshot]': cards[0] };
 	const moduleFilter = createElement({ filter: 'module' });
 	const stateFilter = createElement({ filter: 'state' });
 	stateFilter.value = 'normal';
 	const viewportFilter = createElement({ filter: 'viewport' });
 	viewportFilter.value = 'Desktop';
-	const cards = [
-		createElement({ module: 'auth', state: 'normal', viewport: 'Desktop' }),
-		createElement({ module: 'songs', state: 'empty', viewport: 'Desktop' }),
-	];
 	const screenshotCount = createElement();
 	const selectors = {
 		'[data-gallery]': gallery,
@@ -73,10 +94,10 @@ test('switches between one grid capture variant and the comparison view', () => 
 			return {
 				'[data-filter]': [moduleFilter, stateFilter, viewportFilter],
 				'[data-screenshot]': cards,
-				'[data-grid-captures]': [gridCaptures],
-				'[data-comparison-captures]': [comparisonCaptures],
-				'[data-grid-variant]': [baseline, latest],
-				'[data-zoom-trigger]': [zoomTrigger],
+			'[data-grid-captures]': [gridCaptures],
+			'[data-comparison-captures]': [comparisonCaptures],
+			'[data-grid-variant]': [baseline, latest, secondBaseline, secondLatest],
+			'[data-zoom-trigger]': [zoomTrigger, nextZoomTrigger, comparisonZoomTrigger],
 			}[selector];
 		},
 	};
@@ -86,7 +107,28 @@ test('switches between one grid capture variant and the comparison view', () => 
 
 	assert.ok(script, 'the gallery should contain its client-side controls');
 	vm.runInNewContext(script[1], { document });
-	assert.equal(screenshotCount.textContent, 'Showing 1 of 2 screenshots');
+	assert.equal(screenshotCount.textContent, 'Showing 2 of 3 screenshots');
+
+	zoomTrigger.listeners.click();
+	assert.equal(imageZoomDialog.open, true);
+	assert.equal(zoomHelp.hidden, false);
+	assert.equal(zoomImage.src, thumbnail.src);
+	assert.equal(zoomImage.alt, thumbnail.alt);
+	assert.equal(zoomCaption.textContent, thumbnail.alt);
+
+	let rightArrowPrevented = false;
+	imageZoomDialog.listeners.keydown({ key: 'ArrowRight', preventDefault() { rightArrowPrevented = true; } });
+	assert.equal(rightArrowPrevented, true);
+	assert.equal(zoomImage.src, nextThumbnail.src);
+	assert.equal(zoomImage.alt, nextThumbnail.alt);
+	assert.equal(zoomCaption.textContent, nextThumbnail.alt);
+
+	imageZoomDialog.listeners.keydown({ key: 'ArrowLeft', preventDefault() {} });
+	assert.equal(zoomImage.src, thumbnail.src);
+	assert.equal(zoomCaption.textContent, thumbnail.alt);
+
+	imageZoomDialog.listeners.click({ target: imageZoomDialog });
+	assert.equal(imageZoomDialog.open, false);
 
 	gridVariantSelect.value = 'baseline';
 	gridVariantSelect.listeners.change();
@@ -95,27 +137,29 @@ test('switches between one grid capture variant and the comparison view', () => 
 	assert.equal(gridCaptures.hidden, false);
 	assert.equal(comparisonCaptures.hidden, true);
 
-	zoomTrigger.listeners.click();
-	assert.equal(imageZoomDialog.open, true);
-	assert.equal(zoomImage.src, thumbnail.src);
-	assert.equal(zoomImage.alt, thumbnail.alt);
-	assert.equal(zoomCaption.textContent, thumbnail.alt);
-	imageZoomDialog.listeners.click({ target: imageZoomDialog });
-	assert.equal(imageZoomDialog.open, false);
-
 	galleryView.value = 'compare';
 	galleryView.listeners.change();
 	assert.equal(gallery.dataset.view, 'compare');
 	assert.equal(gridCaptures.hidden, true);
 	assert.equal(comparisonCaptures.hidden, false);
+	comparisonZoomTrigger.listeners.click();
+	assert.equal(imageZoomDialog.open, true);
+	assert.equal(zoomImage.src, comparisonThumbnail.src);
+	assert.equal(zoomHelp.hidden, true);
+	let compareArrowPrevented = false;
+	imageZoomDialog.listeners.keydown({ key: 'ArrowRight', preventDefault() { compareArrowPrevented = true; } });
+	assert.equal(compareArrowPrevented, false);
+	assert.equal(zoomImage.src, comparisonThumbnail.src);
+	imageZoomDialog.listeners.click({ target: imageZoomDialog });
 
 	moduleFilter.value = 'songs';
 	moduleFilter.listeners.change();
-	assert.equal(cards[1].hidden, true);
-	assert.equal(screenshotCount.textContent, 'Showing 0 of 2 screenshots');
+	assert.equal(cards[0].hidden, true);
+	assert.equal(cards[1].hidden, false);
+	assert.equal(screenshotCount.textContent, 'Showing 1 of 3 screenshots');
 
 	stateFilter.value = '';
 	stateFilter.listeners.change();
-	assert.equal(cards[1].hidden, false);
-	assert.equal(screenshotCount.textContent, 'Showing 1 of 2 screenshots');
+	assert.equal(cards[2].hidden, false);
+	assert.equal(screenshotCount.textContent, 'Showing 2 of 3 screenshots');
 });
