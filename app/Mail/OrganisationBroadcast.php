@@ -2,12 +2,15 @@
 
 namespace App\Mail;
 
+use App\Enums\EmailCategory;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use LogicException;
 
 class OrganisationBroadcast extends Mailable implements Loggable
 {
@@ -17,13 +20,22 @@ class OrganisationBroadcast extends Mailable implements Loggable
 
     public Collection $fileMeta;
 
+    public ?User $recipient = null;
+
     private User $fromUser;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(UserGroup $group, string $subject, string $body, User $fromUser, Collection $fileMeta, string $uid, int $size)
-    {
+    public function __construct(
+        UserGroup $group,
+        string $subject,
+        string $body,
+        User $fromUser,
+        Collection $fileMeta,
+        string $uid,
+        int $size,
+    ) {
         $this->to($group->email, $group->title);
         $this->subject($subject);
         $this->from($fromUser->email, $fromUser->name);
@@ -43,7 +55,21 @@ class OrganisationBroadcast extends Mailable implements Loggable
     {
         $this->fileMeta->each(fn ($file) => $this->attachFromStorageDisk('temp', 'broadcasts/'.$file['hashName'], $file['originalName']));
 
-        return $this->markdown('emails.broadcast', ['body' => $this->body]);
+        if ($this->recipient === null) {
+            throw new LogicException('A recipient is required to render an organisation broadcast.');
+        }
+
+        $emailPreferenceLinks = app(EmailPreferenceLinks::class)->make($this->recipient, EmailCategory::COMMUNICATIONS);
+
+        return $this->markdown('emails.broadcast', [
+            'body' => $this->body,
+            'emailPreferenceLinks' => $emailPreferenceLinks,
+        ]);
+    }
+
+    public function forRecipient(User $recipient): void
+    {
+        $this->recipient = $recipient;
     }
 
     public function getContent(): string

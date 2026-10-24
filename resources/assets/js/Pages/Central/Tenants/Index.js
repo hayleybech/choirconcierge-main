@@ -21,11 +21,12 @@ import useFilterPane from '../../../hooks/useFilterPane';
 import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import TenantFilters from './TenantFilters';
+import TenantStatsWidget from '../Dash/TenantStatsWidget';
 
-const Index = ({ tenants, pagination, setSidebarOpen }) => {
+const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 	const { route } = useRoute();
 
-	const [showFilters, setShowFilters, filterAction] = useFilterPane();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'id', name: 'Organisation Name', default: true },
@@ -75,6 +76,11 @@ const Index = ({ tenants, pagination, setSidebarOpen }) => {
 					)}
 				</PageHeaderActions>
 			</PageHeader>
+			{!!tenantStats && (
+				<div className="w-full bg-white border-b">
+					<TenantStatsWidget {...tenantStats} panel={false} />
+				</div>
+			)}
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -85,7 +91,14 @@ const Index = ({ tenants, pagination, setSidebarOpen }) => {
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
-				tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}
+				tableMobile={
+					<TenantTableMobile
+						tenants={tenants}
+						pagination={pagination}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
+					/>
+				}
 				tableDesktop={
 					<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} pagination={pagination} />
 				}

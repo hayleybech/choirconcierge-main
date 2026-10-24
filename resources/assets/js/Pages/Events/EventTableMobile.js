@@ -7,6 +7,7 @@ import TableMobile, {
 	TableMobileSelectableLink,
 } from '../../components/TableMobile';
 import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import { DateTime } from 'luxon';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
@@ -76,18 +77,12 @@ const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit, hasNonDefaultF
 										</div>
 									</div>
 								</div>
-								{userEnsemblesCount > 1 && event.ensembles.length > 0 && (
-									<div className="mt-2 flex gap-1 flex-wrap mb-3">
-										{event.ensembles.map(ensemble => (
-											<Badge
-												key={ensemble.id}
-												colour="bg-purple-100 text-purple-800 truncate"
-												display=""
-											>
-												{ensemble.name}
-											</Badge>
-										))}
-									</div>
+								{userEnsemblesCount > 1 && (
+									<EnsembleBadges
+										ensembles={event.ensembles}
+										className="mt-2 flex gap-1 flex-wrap mb-3"
+										badgeClassName="truncate"
+									/>
 								)}
 							</div>
 						</TableMobileSelectableLink>

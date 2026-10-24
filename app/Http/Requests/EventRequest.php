@@ -46,6 +46,7 @@ class EventRequest extends FormRequest
                 'after:start_date',
             ],
             'send_notification' => ['boolean'],
+            'notification_message' => ['nullable', 'string', 'max:5000'],
         ];
     }
 }

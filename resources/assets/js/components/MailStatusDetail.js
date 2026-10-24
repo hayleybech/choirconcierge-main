@@ -5,10 +5,16 @@ const MailStatusDetail = ({log, event, mailType}) => {
 	if (event.status === 'received' && mailType === 'broadcast') {
 		return (
 			<p className="text-sm text-gray-500">
-				Broadcast created by{' '}
-				<span className="font-medium text-gray-900">{log.from}</span>
+				Broadcast created by <span className="font-medium text-gray-900">{log.from}</span>
 			</p>
-		)
+		);
+	}
+	if (event.status === 'received' && mailType === 'product') {
+		return (
+			<p className="text-sm text-gray-500">
+				Product Announcement created
+			</p>
+		);
 	}
 	if (event.status === 'received' && mailType === 'inbound') {
 		return (
@@ -124,6 +130,13 @@ const MailStatusDetail = ({log, event, mailType}) => {
 		return (
 			<p className="text-sm text-gray-500">
 				A notification email was sent to <span className="font-medium text-gray-900">all recipients</span>.
+			</p>
+		);
+	}
+	if (event.status === 'announcement-sent') {
+		return (
+			<p className="text-sm text-gray-500">
+				A product announcement email was sent to <span className="font-medium text-gray-900">all recipients</span>.
 			</p>
 		);
 	}

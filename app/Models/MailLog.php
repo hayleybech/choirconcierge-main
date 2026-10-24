@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Mail\Loggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -33,7 +34,40 @@ class MailLog extends Model
 {
     use HasFactory;
 
+    public const TYPE_LABELS = [
+        'broadcast' => 'Broadcast',
+        'inbound' => 'Inbound',
+        'notification' => 'Notification',
+        'product' => 'Product Announcement',
+    ];
+
+    public const DEFAULT_TYPES = ['broadcast', 'inbound', 'product'];
+
     protected $guarded = [];
+
+    public function isProductAnnouncement(): bool
+    {
+        return str_starts_with($this->uid, 'product-announcement-');
+    }
+
+    /**
+     * @param array<int, string> $types
+     */
+    public static function applyTypeFilter(Builder $query, array $types): Builder
+    {
+        $types = array_values(array_intersect($types, array_keys(self::TYPE_LABELS)));
+
+        if ($types === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->where(function (Builder $query) use ($types): void {
+            foreach ($types as $type) {
+                $prefix = $type === 'product' ? 'product-announcement' : $type;
+                $query->orWhere('uid', 'like', $prefix . '-%');
+            }
+        });
+    }
 
     public function events(): HasMany
     {
@@ -66,18 +100,10 @@ class MailLog extends Model
     public static function createFromMessage(Loggable $message) {
         $mailLog = self::create([
             'uid' => $message->getUid(),
-            'from' => Str::limit(collect($message->from)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
-            'to' => Str::limit(collect($message->to)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 512),
-            'cc' => Str::limit(collect($message->cc)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
-            'bcc' => Str::limit(collect($message->bcc)
-                ->map(fn($item) => $item['address'])
-                ->join(', '), 254),
+            'from' => Str::limit(self::formatRecipients($message->from), 254),
+            'to' => Str::limit(self::formatRecipients($message->to), 512),
+            'cc' => Str::limit(self::formatRecipients($message->cc), 254),
+            'bcc' => Str::limit(self::formatRecipients($message->bcc), 254),
             'subject' => Str::limit($message->subject, 128-3),
             'body' => $message->getContent(),
             'size' => $message->getSize(),
@@ -107,5 +133,17 @@ class MailLog extends Model
         }
 
         return $mailLog;
+    }
+
+    private static function formatRecipients(array $recipients): string
+    {
+        return collect($recipients)
+            ->map(function (array $recipient): string {
+                $address = $recipient['address'];
+                $name = $recipient['name'] ?? null;
+
+                return filled($name) ? $name.' <'.$address.'>' : $address;
+            })
+            ->join(', ');
     }
 }

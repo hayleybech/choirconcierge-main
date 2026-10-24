@@ -30,7 +30,7 @@ const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 				<TBody>
 					{users.map(user => (
 						<tr key={user.id}>
-							<TableCell>
+							<TableCell compact>
 								<div className="flex items-center">
 									<div className="shrink-0 h-10 w-10">
 										<img className="h-10 w-10 rounded-md" src={user.avatar_url} alt={user.name} />
@@ -55,7 +55,7 @@ const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 									</div>
 								</div>
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								<ul className="flex gap-2">
 									{user.memberships.slice(0, 2).map(membership => (
 										<li key={membership.id} className="flex gap-2 items-center mb-2">
@@ -75,7 +75,7 @@ const UserTableDesktop = ({ users, sortFilterForm, pagination }) => {
 									)}
 								</ul>
 							</TableCell>
-							<TableCell>
+							<TableCell compact>
 								<Icon icon="envelope" mr className="text-gray-400" />
 								<a href={`mailto:${user.email}`} target="_blank">
 									{user.email}

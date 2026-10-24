@@ -23,4 +23,8 @@ A new poll has been created. Please take a moment to cast your vote.
 
 Regards,
 {{ config('app.name') }}
+
+@if($emailPreferenceLinks ?? false)
+@include('emails.partials.email-preference-footer')
+@endif
 </x-mail::message>

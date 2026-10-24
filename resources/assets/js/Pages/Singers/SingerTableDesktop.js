@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useForm, usePage } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { Link, usePage } from '@inertiajs/react';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerStatusTag from '../../components/SingerStatusTag';
 import Table, {
@@ -14,22 +14,15 @@ import Table, {
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
-import Dialog from '../../components/Dialog';
-import Button from '../../components/inputs/ButtonV2';
-import { DateTime } from 'luxon';
-import Form from '../../components/Form';
-import Label from '../../components/inputs/Label';
-import DateTextInput from '../../components/inputs/DateTextInput';
-import Error from '../../components/inputs/Error';
-import Help from '../../components/inputs/Help';
 import DateTag from '../../components/DateTag';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import RadioGroup from '../../components/inputs/RadioGroup';
 import Badge from '../../components/Badge';
 import { handleNameSort } from '../../utils/sortHelpers';
 import ButtonV2 from '../../components/inputs/ButtonV2';
+import RenewFeesDialog from './components/RenewFeesDialog';
+import { DateTime } from 'luxon';
 
 const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bulkEdit }) => {
 	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
@@ -135,25 +128,12 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 							</TableCell>
 							{can['manage_finances'] && (
 								<TableCell>
-									<FeeStatus status={singer.fee_status} />
-
-									{singer.paid_until && (
-										<div className="text-sm text-gray-500 italic mb-2">
-											<DateTag date={singer.paid_until} />
-										</div>
-									)}
-
-									<ButtonV2
-										intent="secondary"
-										weight="outline"
-										size="sm"
-										onClick={() => {
-											setRenewingSinger(singer);
-											setFeeDialogIsOpen(true);
-										}}
-									>
-										Renew Fees
-									</ButtonV2>
+									<FeeStatus
+										status={singer.fee_status}
+										tooltip={`Expires ${DateTime.fromJSDate(
+											new Date(singer.paid_until)
+										).toLocaleString(DateTime['DATE_MED'])}`}
+									/>
 								</TableCell>
 							)}
 						</TItemRow>
@@ -166,92 +146,3 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 };
 
 export default SingerTableDesktop;
-
-const feeDiffs = {
-	month: { months: 1 },
-	quarter: { quarters: 1 },
-	halfyear: { months: 6 },
-	year: { years: 1 },
-};
-const RenewFeesDialog = ({ isOpen, setIsOpen, singer }) => {
-	const { route } = useRoute();
-	const { tenant } = usePage().props;
-
-	const { data, setData, put, errors, transform } = useForm({
-		freq: tenant.fee_freq ?? null,
-		paid_until: singer?.paid_until ? DateTime.fromISO(singer.paid_until) : null,
-	});
-
-	useEffect(() => {
-		const prevDate = singer?.paid_until ? DateTime.fromISO(singer.paid_until) : null;
-		if (tenant.fee_freq) {
-			const diff = feeDiffs[tenant.fee_freq];
-			setData('paid_until', prevDate?.plus(diff) ?? DateTime.now().plus(diff));
-		} else {
-			setData('paid_until', prevDate);
-		}
-	}, [singer]);
-
-	transform(data => ({
-		...data,
-		paid_until: data.paid_until?.toISODate() ?? null,
-	}));
-
-	function submit(e) {
-		e.preventDefault();
-		put(route('singers.fees.update', { singer }), {
-			onSuccess: () => setIsOpen(false),
-		});
-	}
-
-	function renewFor(period) {
-		const diff = feeDiffs[period];
-		setData(data => ({
-			freq: period,
-			paid_until: data.paid_until?.plus(diff) ?? DateTime.now().plus(diff),
-		}));
-	}
-
-	return (
-		<Dialog
-			title="Mark fees as paid"
-			okLabel="Save"
-			onOk={submit}
-			okColour="primary"
-			okMethod="delete"
-			isOpen={isOpen}
-			setIsOpen={setIsOpen}
-		>
-			<p className="mb-2">To renew a singer's fees, update their expiry date below.</p>
-
-			<Form onSubmit={submit}>
-				<div className="sm:col-span-6">
-					<RadioGroup
-						label="Renew for"
-						selected={data.freq}
-						setSelected={value => renewFor(value)}
-						options={[
-							{ id: 'month', name: 'Month' },
-							{ id: 'quarter', name: 'Quarter' },
-							{ id: 'halfyear', name: 'Half-year' },
-							{ id: 'year', name: 'Year' },
-						]}
-					/>
-					<Help>Your fee frequency will be saved for next time.</Help>
-
-					<hr className="mt-6 mb-4" />
-
-					<Label label="Membership expires" forInput="paid_until" />
-					<DateTextInput
-						name="paid_until"
-						hasErrors={!!errors.paid_until}
-						value={data.paid_until?.toISODate() ?? ''}
-						updateFn={value => setData('paid_until', DateTime.fromISO(value) ?? null)}
-					/>
-					<Help>Manually adjust the expiry date here.</Help>
-					{errors.paid_until && <Error>{errors.paid_until}</Error>}
-				</div>
-			</Form>
-		</Dialog>
-	);
-};

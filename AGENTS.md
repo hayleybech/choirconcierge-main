@@ -333,3 +333,8 @@ Choir Concierge is a multi-tenant SaaS platform for choir management, including 
 - Use `tz_from_tenant_to_utc()` and `tz_from_utc_to_tenant()` in `app/helpers.php` for timezone conversion; do not use raw Carbon shifts.
 - Apply `TenantTimezoneDates` to models with date columns that need tenant-aware display.
 - `spatie/laravel-query-builder` powers filterable and sortable index endpoints; custom sorts are in `app/Http/Sorts/`.
+
+## Hayley's Code Style
+- Strong preference for fluent method chaining rather than individual statements.
+- Treat every loop as an opportunity to refactor to collections.
+- Look for opportunities to refactor existing collection code to a collection pipeline. e.g. Try replacing an early return inside an `each` callback with a prior `reject` call.

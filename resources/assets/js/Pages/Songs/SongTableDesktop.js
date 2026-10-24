@@ -4,6 +4,7 @@ import SongStatusTag from '../../components/SongStatusTag';
 import PitchButton from '../../components/PitchButton';
 import Table, { TableCell, TableHeading, TableSelectAll, TBody, THead, TableCellSelect, TItemRow } from '../../components/Table';
 import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import DateTag from '../../components/DateTag';
 import SongStatus from '../../SongStatus';
 import TableHeadingSort from '../../components/TableHeadingSort';
@@ -73,13 +74,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 						</TableCell>
 						{showEnsemblesColumn && (
 							<TableCell>
-								<div className="space-x-1.5 space-y-1.5">
-									{song.ensembles.map(ensemble => (
-										<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-											{ensemble.name}
-										</Badge>
-									))}
-								</div>
+								<EnsembleBadges ensembles={song.ensembles} className="space-x-1.5 space-y-1.5" />
 							</TableCell>
 						)}
 						<TableCell>

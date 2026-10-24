@@ -4,7 +4,7 @@ import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellS
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
-import Badge from "../../components/Badge";
+import EnsembleBadges from "../../components/EnsembleBadges";
 
 const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit }) => {
     const { route } = useRoute();
@@ -30,13 +30,7 @@ const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit }) => {
                         </TableCell>
                         {userEnsemblesCount > 1 && (
                             <TableCell>
-                                <div className="flex flex-wrap gap-1">
-                                    {stack.ensembles.map(ensemble => (
-                                        <Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-                                            {ensemble.name}
-                                        </Badge>
-                                    ))}
-                                </div>
+                                <EnsembleBadges ensembles={stack.ensembles} />
                             </TableCell>
                         )}
                         <TableCell>

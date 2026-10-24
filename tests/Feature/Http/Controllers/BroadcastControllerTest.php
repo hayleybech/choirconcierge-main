@@ -1,10 +1,13 @@
 <?php
 
 use App\Jobs\SendEmailForGroup;
+use App\Mail\OrganisationBroadcast;
+use App\Models\MailLog;
 use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia;
 
@@ -28,6 +31,17 @@ it('has a send email page', function () {
         );
 });
 
+it('preselects the mailing list when provided', function () {
+    $user = $this->actingAsRole('Music Team');
+    $group = createGroup($user);
+
+    $this->get(the_tenant_route('communications.create', ['list' => $group->id]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('MailingLists/Broadcasts/Create')
+            ->where('selectedList', $group->id)
+        );
+});
+
 it('dispatches a job to send the email', function () {
     $user = $this->actingAsRole('Music Team');
 
@@ -41,10 +55,68 @@ it('dispatches a job to send the email', function () {
 
     Queue::assertPushed(SendEmailForGroup::class, function (SendEmailForGroup $job) use ($user, $group) {
         return $job->group->is($group)
+            && $job->group->relationLoaded('tenant')
             && $job->message->subject === 'this is a test'
             && $job->message->body === 'test body'
+            && $job->message instanceof OrganisationBroadcast
             && $job->message->hasFrom($user);
     });
+});
+
+it('includes the mandatory email preference footer in broadcast emails', function () {
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $recipient = User::factory()->create();
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-test', 20);
+    $message->forRecipient($recipient);
+
+    $rendered = $message->render();
+
+    expect($rendered)
+        ->toContain('class="header"')
+        ->toContain('Communications')
+        ->toContain('emails for your choir are mandatory.')
+        ->toContain('Manage your email preferences')
+        ->not->toContain('Unsubscribe from Communications');
+    $message->assertSeeInText('Message body');
+});
+
+it('renders the preference footer when the group delivery job sends a broadcast', function () {
+    Mail::fake();
+
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $contextColumnLength = 64; // mail_log_events.context is VARCHAR(64).
+    $ellipsis = '...';
+    $group->update(['title' => str_repeat('a', $contextColumnLength + 1)]);
+    $recipient = User::factory()->create();
+    $group->recipient_users()->attach($recipient);
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-job-test', 20);
+
+    MailLog::createFromMessage($message);
+    (new SendEmailForGroup($message, $group))->handle();
+
+    Mail::assertSent(OrganisationBroadcast::class, function (OrganisationBroadcast $sentMessage) use ($recipient) {
+        $rendered = $sentMessage->render();
+
+        return $sentMessage->recipient?->is($recipient)
+            && str_contains($rendered, 'emails for your choir are mandatory.')
+            && str_contains($rendered, 'Manage your email preferences');
+    });
+
+    expect(MailLog::firstWhere('uid', $message->uid)
+        ->events()
+        ->where('status', 'clones-sent')
+        ->firstOrFail()
+        ->context)->toBe(str_repeat('a', $contextColumnLength - strlen($ellipsis)).$ellipsis);
+});
+
+it('requires a recipient before rendering broadcast emails', function () {
+    $sender = $this->actingAsRole('Music Team');
+    $group = createGroup($sender);
+    $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-test', 20);
+
+    expect(fn () => $message->render())->toThrow(LogicException::class);
 });
 
 it('stores attachments in temporary storage', function () {
@@ -96,6 +168,20 @@ it('logs the size of the broadcast', function () {
         'subject' => 'this is a test',
         'size' => $expectedSize,
     ]);
+});
+
+it('keeps the mailing list name and address in the broadcast mail log', function () {
+    $user = $this->actingAsRole('Music Team');
+    $group = createGroup($user);
+
+    $this->post(the_tenant_route('communications.store'), [
+        'list' => $group->id,
+        'subject' => 'this is a test',
+        'body' => 'test body',
+    ])->assertRedirect(route('communications.index'));
+
+    expect(MailLog::firstWhere('subject', 'this is a test')->to)
+        ->toBe($group->title.' <'.$group->email.'>');
 });
 
 function createGroup(User $user): UserGroup

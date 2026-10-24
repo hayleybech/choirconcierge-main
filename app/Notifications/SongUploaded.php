@@ -2,7 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\EmailCategory;
 use App\Models\Song;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -33,7 +36,9 @@ class SongUploaded extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof User && $notifiable->hasEmailPreference(EmailCategory::SONGS)
+            ? ['mail']
+            : [];
     }
 
     /**
@@ -50,6 +55,9 @@ class SongUploaded extends Notification
             ->markdown('emails.song_uploaded', [
                 'song' => $this->song,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->song->id, $notifiable)),
+                'emailPreferenceLinks' => $notifiable instanceof User
+                    ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::SONGS)
+                    : null,
             ]);
     }
 

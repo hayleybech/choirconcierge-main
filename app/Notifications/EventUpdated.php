@@ -2,7 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\EmailCategory;
 use App\Models\Event;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -20,13 +23,16 @@ class EventUpdated extends Notification
 
     private array $original;
 
+    private ?string $message;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct(Event $event, array $original)
+    public function __construct(Event $event, array $original, ?string $message = null)
     {
         $this->event = $event;
         $this->original = $original;
+        $this->message = $message;
     }
 
     /**
@@ -37,7 +43,9 @@ class EventUpdated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof User && $notifiable->hasEmailPreference(EmailCategory::EVENTS)
+            ? ['mail']
+            : [];
     }
 
     /**
@@ -70,7 +78,11 @@ class EventUpdated extends Notification
             ->with(['event' => $this->event])
             ->markdown('emails.event_updated', [
                 'event' => $this->event,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->event->id, $notifiable)),
+                'emailPreferenceLinks' => $notifiable instanceof User
+                    ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::EVENTS)
+                    : null,
                 'original' => $this->original,
                 'view_url' => the_tenant_route('events.show', $this->event),
                 'description_diff' => $description_diff,

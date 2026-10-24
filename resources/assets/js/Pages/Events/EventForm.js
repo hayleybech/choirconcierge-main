@@ -18,6 +18,7 @@ import FormFooter from "../../components/FormFooter";
 import Form from "../../components/Form";
 import CheckboxWithLabel from "../../components/inputs/CheckboxWithLabel";
 import RichTextInput from "../../components/inputs/RichTextInput";
+import TextareaInput from "../../components/inputs/TextareaInput";
 import FormWrapper from "../../components/FormWrapper";
 import useRoute from "../../hooks/useRoute";
 import { dateTimeFromISO, setTime } from "../../utils/eventDateTime";
@@ -35,7 +36,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
         location_address: event?.location_address ?? '',
         description: event?.description ?? '',
         ensembles: event?.ensembles?.map(ensemble => ensemble.id) ?? [],
-        send_notification: !event,
+        ...(event ? { send_notification: false, notification_message: '' } : {}),
         is_repeating: event?.is_repeating ?? false,
         repeat_frequency_unit: event?.repeat_frequency_unit ?? null,
 
@@ -130,7 +131,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
         }
         return newRepeatUntilDate;
     }
-    
+
     function setDay(source, target) {
         return target.set({
             year: source.year,
@@ -216,7 +217,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                         <Label label="Start Date" forInput="start_date" />
                         <DateCalendarInput
                             name="start_date"
-                            value={data.start_date}
+                            value={data.start_date.toISO()}
                             startMonth={new Date(new Date().getFullYear(), 0)}
                             endMonth={new Date(new Date().getFullYear() + 5, 11)}
                             updateFn={setStartDate}
@@ -249,7 +250,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                         <Label label="End Date" forInput="end_date" />
                         <DateCalendarInput
                             name="end_date"
-                            value={data.end_date}
+                            value={data.end_date.toISO()}
                             startMonth={new Date(new Date().getFullYear(), 0)}
                             endMonth={new Date(new Date().getFullYear() + 5, 11)}
                             updateFn={setEndDate}
@@ -295,7 +296,7 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                             <Label label="Repeat Until" forInput="repeat_until" />
                             <DateCalendarInput
                                 name="repeat_until"
-                                value={data.repeat_until}
+                                value={data.repeat_until.toISO()}
                                 startMonth={new Date(new Date().getFullYear(), 0)}
                                 endMonth={new Date(new Date().getFullYear() + 5, 11)}
                                 updateFn={setRepeatUntil}
@@ -306,17 +307,29 @@ const EventForm = ({ event, types, mode, ensembles = [] }) => {
                     </FormSection>
                 )}
 
-                <FormSection title="Notifications">
-                    <CheckboxWithLabel
-                        label={`Send ${event ? '"Event Updated"' : '"Event Created"'} notification to singers?`}
-                        id="send_notification"
-                        name="send_notification"
-                        value={true}
-                        checked={data.send_notification}
-                        onChange={e => setData('send_notification', e.target.checked)}
-                        className="mr-8 mb-4"
-                    />
-                </FormSection>
+                {event && (
+                    <FormSection title="Notifications">
+                        <CheckboxWithLabel
+                            label={'Send "Event Updated" notification to singers?'}
+                            id="send_notification"
+                            name="send_notification"
+                            value={true}
+                            checked={data.send_notification}
+                            onChange={e => setData('send_notification', e.target.checked)}
+                            className="mr-8 mb-4"
+                        />
+                        {data.send_notification && (
+                            <div className="sm:col-span-6">
+                                <Label label="Message (optional)" forInput="notification_message" />
+                                <TextareaInput
+                                    name="notification_message"
+                                    value={data.notification_message}
+                                    updateFn={value => setData('notification_message', value)}
+                                />
+                            </div>
+                        )}
+                    </FormSection>
+                )}
 
                 <FormFooter>
                     <ButtonLink href={event ? route('events.show', {event}) : route('events.index')}>Cancel</ButtonLink>

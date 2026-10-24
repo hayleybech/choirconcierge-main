@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomFieldEntryController;
 use App\Http\Controllers\CustomiseUpcomingEventsWidgetController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\EmailPreferenceController;
 use App\Http\Controllers\EnrolmentController;
 use App\Http\Controllers\EnsembleController;
 use App\Http\Controllers\EventActivityController;
@@ -59,6 +60,7 @@ use App\Http\Controllers\VoicePartController;
 use App\Http\Controllers\PollController;
 use App\Http\Middleware\BlockMemberAccessWhenNoActiveSubscription;
 use App\Http\Middleware\EnsureUserIsMember;
+use App\Http\Middleware\EnsureUserIsSuperAdmin;
 use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectTenantFromDomainToFolder;
 use App\Http\Middleware\SetTenantRouteParam;
@@ -138,6 +140,10 @@ Route::middleware([
             // Account Settings
             Route::singleton('account', AccountController::class)->only(['edit', 'update']);
             Route::name('account.')->prefix('account')->group(function () {
+                Route::put('/inbox-preference', [App\Http\Controllers\InboxPreferenceController::class, 'update'])
+                    ->middleware(EnsureUserIsSuperAdmin::class)
+                    ->name('inbox-preference.update');
+                Route::put('/notifications', [EmailPreferenceController::class, 'update'])->name('notifications.update');
                 Route::post('/two-factor/regenerate', [TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
                 Route::singleton('two-factor', TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
             });
@@ -146,6 +152,7 @@ Route::middleware([
             Route::get('singers/export', ExportMemberController::class)->name('singers.export');
             Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
             Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
+            Route::post('singers/bulk-fees', [SingerController::class, 'bulkUpdateFees'])->name('singers.bulk-fees.update');
             Route::post('singers/bulk-destroy', [SingerController::class, 'bulkDestroy'])->name('singers.bulk-destroy');
             Route::resource('singers', SingerController::class);
             Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
@@ -258,9 +265,16 @@ Route::middleware([
             });
             Route::get('/communications/create', [BroadcastController::class, 'create'])->name('communications.create');
             Route::post('/communications', [BroadcastController::class, 'store'])->name('communications.store');
-            Route::resource('communications', MailLogController::class)->only(['index', 'show'])->middleware(EnsureUserIsMember::class)->parameters([
-                'communications' => 'mail_log',
-            ]);
+            Route::resource('inbox', MailLogController::class)
+                ->only(['index', 'show'])
+                ->names([
+                    'index' => 'communications.index',
+                    'show' => 'communications.show',
+                ])
+                ->middleware(EnsureUserIsMember::class)
+                ->parameters([
+                    'inbox' => 'mail_log',
+                ]);
             Route::resource('groups', UserGroupController::class);
 
             // Tasks module

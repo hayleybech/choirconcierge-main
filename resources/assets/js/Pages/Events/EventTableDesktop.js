@@ -11,6 +11,7 @@ import Table, {
 	TItemRow,
 } from '../../components/Table';
 import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import DateTag from '../../components/DateTag';
 import EventType from '../../EventType';
 import TableHeadingSort from '../../components/TableHeadingSort';
@@ -74,13 +75,7 @@ const EventTableDesktop = ({ events, sortFilterForm, userEnsemblesCount, bulkEdi
 						</TableCell>
 						{showEnsemblesColumn && (
 							<TableCell>
-								<div className="space-x-1.5 space-y-1.5">
-									{event.ensembles.map(ensemble => (
-										<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-											{ensemble.name}
-										</Badge>
-									))}
-								</div>
+								<EnsembleBadges ensembles={event.ensembles} className="space-x-1.5 space-y-1.5" />
 							</TableCell>
 						)}
 						<TableCell>

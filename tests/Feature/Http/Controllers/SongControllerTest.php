@@ -267,7 +267,6 @@ class SongControllerTest extends TestCase
         ]);
 
         $response->assertRedirect(the_tenant_route('songs.show', [$song]));
-        Notification::assertNothingSent();
     }
 
     #[DataProvider('songProvider')]
@@ -277,13 +276,15 @@ class SongControllerTest extends TestCase
         $this->actingAs($this->createUserWithRole('Music Team'));
 
         $data = $getData();
-        $data['send_notification'] = true;
+        $data['notification_message'] = 'This created-song note should be ignored.';
         $this->post(the_tenant_route('songs.store'), $data)
             ->assertSessionHasNoErrors();
 
         $this->assertDatabaseHas('songs', ['title' => $data['title']]);
 
-        Notification::assertSentTo(auth()->user(), SongUploaded::class);
+        Notification::assertSentTo(auth()->user(), SongUploaded::class, fn (SongUploaded $notification): bool =>
+            !str_contains($notification->toMail(auth()->user())->render(), 'This created-song note should be ignored.')
+        );
     }
 
     #[DataProvider('songProvider')]

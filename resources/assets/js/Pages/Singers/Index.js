@@ -23,14 +23,22 @@ import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
+import RenewFeesDialog from './components/RenewFeesDialog';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
 	const [showImportDialog, setShowImportDialog] = useState(false);
+	const [showBulkRenewFeesDialog, setShowBulkRenewFeesDialog] = useState(false);
 	const { can } = usePage().props;
 	const { route } = useRoute();
 
-	const bulkEdit = useBulkEdit(allSingers, can.update_singer, can.delete_singer, 'Singer');
+	const bulkEdit = useBulkEdit(
+		allSingers,
+		can.update_singer || can.manage_finances,
+		can.delete_singer,
+		'Singer',
+		!can.update_singer
+	);
 
 	const sorts = [
 		{ id: 'full-name', name: 'First Name', default: true },
@@ -162,7 +170,24 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 
 			<ImportSingersDialog isOpen={showImportDialog} setIsOpen={setShowImportDialog} />
 
-			<BulkEditBar bulkEdit={bulkEdit} />
+			<BulkEditBar
+				bulkEdit={bulkEdit}
+				actions={
+					can.manage_finances && (
+						<Button
+							size="sm"
+							intent="secondary"
+							weight="clear"
+							theme="dark"
+							onClick={() => setShowBulkRenewFeesDialog(true)}
+							className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+						>
+							<Icon icon="calendar-check" />
+							Renew Fees
+						</Button>
+					)
+				}
+			/>
 
 			<IndexContainer
 				showFilters={showFilters}
@@ -225,6 +250,13 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 				key={bulkEdit.selectedIds}
 				onSuccess={() => bulkEdit.setSelectedIds([])}
 				statuses={statuses}
+			/>
+
+			<RenewFeesDialog
+				isOpen={showBulkRenewFeesDialog}
+				setIsOpen={setShowBulkRenewFeesDialog}
+				singerIds={bulkEdit.selectedIds}
+				onSuccess={() => bulkEdit.setSelectedIds([])}
 			/>
 		</>
 	);

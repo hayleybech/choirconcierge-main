@@ -34,8 +34,7 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 		can_vote_multiple: false,
 		close_at: null,
 		options: ['', ''],
-		send_notification: true,
-		ensemble_ids: [],
+        ensemble_ids: [],
 	});
 
 	const rawDateFormat = 'yyyy-MM-dd HH:mm:ss';
@@ -221,20 +220,15 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 						</div>
 					</FormSection>
 
-					<FormSection title="Notifications">
-						<div className="sm:col-span-6">
-							<CheckboxWithLabel
-								label="Send notification to singers?"
-								id="send_notification"
-								name="send_notification"
-								checked={!!data.send_notification}
-								onChange={e => setData('send_notification', e.target.checked)}
-							/>
-						</div>
-					</FormSection>
-
-					<FormFooter>
-						<Button type="submit" intent="primary" weight="solid" disabled={processing}>
+                    <FormFooter>
+						<Button href={route('polls.index')}>Cancel</Button>
+						<Button
+							type="submit"
+							intent="primary"
+							weight="solid"
+							className="ml-3"
+							disabled={processing}
+						>
 							Create
 						</Button>
 					</FormFooter>
