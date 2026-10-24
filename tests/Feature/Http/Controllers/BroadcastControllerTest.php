@@ -86,6 +86,9 @@ it('renders the preference footer when the group delivery job sends a broadcast'
 
     $sender = $this->actingAsRole('Music Team');
     $group = createGroup($sender);
+    $contextColumnLength = 64; // mail_log_events.context is VARCHAR(64).
+    $ellipsis = '...';
+    $group->update(['title' => str_repeat('a', $contextColumnLength + 1)]);
     $recipient = User::factory()->create();
     $group->recipient_users()->attach($recipient);
     $message = new OrganisationBroadcast($group, 'A broadcast', '<p>Message body</p>', $sender, collect(), 'broadcast-job-test', 20);
@@ -100,6 +103,12 @@ it('renders the preference footer when the group delivery job sends a broadcast'
             && str_contains($rendered, 'emails for your choir are mandatory.')
             && str_contains($rendered, 'Manage your email preferences');
     });
+
+    expect(MailLog::firstWhere('uid', $message->uid)
+        ->events()
+        ->where('status', 'clones-sent')
+        ->firstOrFail()
+        ->context)->toBe(str_repeat('a', $contextColumnLength - strlen($ellipsis)).$ellipsis);
 });
 
 it('requires a recipient before rendering broadcast emails', function () {
