@@ -54,8 +54,8 @@ const SectionLayout = ({ sections, layout }) => {
 							className={({ selected }) =>
 								classNames(
 									selected
-										? 'border-purple-500 text-purple-600'
-										: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700',
+										? 'border-purple-500 text-purple-600 bg-gray-50'
+										: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 bg-gray-100',
 									'flex-1 whitespace-nowrap border-b-2 px-3 py-3 text-center text-sm font-medium'
 								)
 							}

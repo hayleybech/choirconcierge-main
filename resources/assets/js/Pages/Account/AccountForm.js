@@ -142,8 +142,8 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 						type="button"
 						className={`flex-1 cursor-pointer border-b-2 px-3 py-3 text-sm font-medium ${
 							activeTab === tab
-								? 'border-purple-600 text-purple-600'
-								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+								? 'border-purple-600 text-purple-600 bg-gray-50'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 bg-gray-100'
 						}`}
 						onClick={() => setActiveTab(tab)}
 						aria-selected={activeTab === tab}
