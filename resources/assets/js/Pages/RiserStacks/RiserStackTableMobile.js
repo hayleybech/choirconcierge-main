@@ -8,7 +8,7 @@ import TableMobile, {
 } from '../../components/TableMobile';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
 
@@ -47,18 +47,12 @@ const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDef
 										</p>
 									</div>
 								</div>
-								{userEnsemblesCount > 1 && stack.ensembles.length > 0 && (
-									<div className="mt-2 flex gap-1 flex-wrap">
-										{stack.ensembles.map(ensemble => (
-											<Badge
-												key={ensemble.name}
-												colour="bg-purple-100 text-purple-800 truncate"
-												display=""
-											>
-												{ensemble.name}
-											</Badge>
-										))}
-									</div>
+								{userEnsemblesCount > 1 && (
+									<EnsembleBadges
+										ensembles={stack.ensembles}
+										className="mt-2 flex gap-1 flex-wrap"
+										badgeClassName="truncate"
+									/>
 								)}
 							</div>
 						</TableMobileSelectableLink>

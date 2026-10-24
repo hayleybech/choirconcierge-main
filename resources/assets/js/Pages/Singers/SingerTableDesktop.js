@@ -128,27 +128,12 @@ const SingerTableDesktop = ({ singers, sortFilterForm, pagination, ensembles, bu
 							</TableCell>
 							{can['manage_finances'] && (
 								<TableCell>
-									<div className="flex gap-2 items-center">
-										<FeeStatus
-											status={singer.fee_status}
-											tooltip={`Expires ${DateTime.fromJSDate(
-												new Date(singer.paid_until)
-											).toLocaleString(DateTime['DATE_MED'])}`}
-										/>
-									</div>
-									<ButtonV2
-										intent="success"
-										weight="outline"
-										size="xs"
-										onClick={() => {
-											setRenewingSinger(singer);
-											setFeeDialogIsOpen(true);
-										}}
-										className="mt-1"
-									>
-										<Icon icon="calendar-check" />
-										Renew
-									</ButtonV2>
+									<FeeStatus
+										status={singer.fee_status}
+										tooltip={`Expires ${DateTime.fromJSDate(
+											new Date(singer.paid_until)
+										).toLocaleString(DateTime['DATE_MED'])}`}
+									/>
 								</TableCell>
 							)}
 						</TItemRow>

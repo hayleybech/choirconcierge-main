@@ -31,6 +31,7 @@ import TableMobile, {
 	TableMobileHeader,
 } from '../../components/TableMobile';
 import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterSortPane from '../../components/FilterSortPane';
@@ -184,14 +185,11 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 													</span>
 												)}
 											</div>
-											{showEnsembleColumn && p.ensembles?.length > 0 && (
-												<div className="flex flex-wrap gap-1 mt-1">
-													{p.ensembles.map(e => (
-														<Badge key={e.id} colour="bg-purple-100 text-purple-800">
-															{e.name}
-														</Badge>
-													))}
-												</div>
+											{showEnsembleColumn && (
+												<EnsembleBadges
+													ensembles={p.ensembles}
+													className="flex flex-wrap gap-1 mt-1"
+												/>
 											)}
 										</div>
 									</TableMobileSelectableLink>
@@ -244,14 +242,10 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 									</TableCell>
 									{showEnsembleColumn && (
 										<TableCell>
-											<div className="flex flex-wrap gap-1 max-w-[200px]">
-												{p.ensembles?.map(e => (
-													<Badge key={e.id} colour="bg-purple-100 text-purple-800">
-														{e.name}
-													</Badge>
-												)) || '-'}
-												{p.ensembles?.length === 0 && '-'}
-											</div>
+											<EnsembleBadges
+												ensembles={p.ensembles}
+												className="flex flex-wrap gap-1 max-w-[200px]"
+											/>
 										</TableCell>
 									)}
 									<TableCell>

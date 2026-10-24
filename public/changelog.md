@@ -1,3 +1,20 @@
+# 2026-10-24
+## Unified Communications
+### Communications is now Inbox!
+In an effort to make communicating with your choir members more efficient, and to improve the in-app experience, we've given every user their own inbox. 
+- The "Communications" section is now "Inbox".
+- The Inbox presents a unified message view for all members, allowing everyone to receive and manage messages without leaving the app. 
+### Notifications settings
+- Added notification preferences to Account Settings. 
+- Toggle emails for songs, events, documents, polls, and attendance reports.
+- Essential communications (Broadcasts) for your organisation and account security emails remain enabled.
+### Choir Concierge announcements newsletter
+- We've added a newsletter service to keep you informed about new features and updates for Choir Concierge.
+- You can manage your newsletter preferences in the new Notifications Settings.
+### Other Changes
+- Pending songs will now send an email notification when published instead of when they are created.
+- Added bulk edit for the Renew Fees feature and simplified the way fees are presented in the Singers table.  
+---
 # 2026-10-17
 ## Further Attendance Reporting Tweaks and More!
 - Added edit and bulk edit to RSVPs via the RSVP list

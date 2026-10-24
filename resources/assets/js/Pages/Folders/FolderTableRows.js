@@ -4,7 +4,7 @@ import FolderIcon from '../../components/FolderIcon';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
 import Button from '../../components/inputs/ButtonV2';
-import Badge from '../../components/Badge';
+import EnsembleBadges from '../../components/EnsembleBadges';
 import useRoute from '../../hooks/useRoute';
 
 export const DocumentRowDesktop = ({
@@ -93,13 +93,7 @@ export const FolderRowDesktop = ({
 			</TableCell>
 			{showEnsemblesColumn && (
 				<TableCell>
-					<div className="space-x-1.5 space-y-1.5">
-						{folder.ensembles.map(ensemble => (
-							<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-								{ensemble.name}
-							</Badge>
-						))}
-					</div>
+					<EnsembleBadges ensembles={folder.ensembles} className="space-x-1.5 space-y-1.5" />
 				</TableCell>
 			)}
 			<TableCell>
@@ -248,14 +242,11 @@ export const FolderRowMobile = ({
 								)}
 							</div>
 						</div>
-						{showEnsemblesColumn && folder.ensembles.length > 0 && (
-							<div className="mt-2 flex flex-wrap gap-1">
-								{folder.ensembles.map(ensemble => (
-									<Badge key={ensemble.id} colour="bg-purple-100 text-purple-800">
-										{ensemble.name}
-									</Badge>
-								))}
-							</div>
+						{showEnsemblesColumn && (
+							<EnsembleBadges
+								ensembles={folder.ensembles}
+								className="mt-2 flex flex-wrap gap-1"
+							/>
 						)}
 					</div>
 				</div>

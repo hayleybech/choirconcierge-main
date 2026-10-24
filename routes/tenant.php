@@ -148,6 +148,7 @@ Route::middleware([
             Route::get('singers/export', ExportMemberController::class)->name('singers.export');
             Route::get('singers/{singer}/attendance', [SingerAttendanceController::class, '__invoke'])->name('singers.attendance');
             Route::post('singers/bulk-update', [SingerController::class, 'bulkUpdate'])->name('singers.bulk-update');
+            Route::post('singers/bulk-fees', [SingerController::class, 'bulkUpdateFees'])->name('singers.bulk-fees.update');
             Route::post('singers/bulk-destroy', [SingerController::class, 'bulkDestroy'])->name('singers.bulk-destroy');
             Route::resource('singers', SingerController::class);
             Route::resource('singers.placements', SingerPlacementController::class)->only(['create', 'store', 'edit', 'update']);
