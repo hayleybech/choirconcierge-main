@@ -2,14 +2,16 @@
 
 namespace App\Navigation;
 
+use App\Features\InboxFeature;
 use App\Models\Tenant;
 
 class Navigation
 {
     public function get(?string $tenant = null, bool $forApi = false): array
     {
-        $items = $tenant && Tenant::find($tenant)
-            ? $this->tenantItems()
+        $tenantModel = $tenant ? Tenant::find($tenant) : null;
+        $items = $tenantModel
+            ? $this->tenantItems(InboxFeature::isEnabledFor($tenantModel, auth()->user()))
             : $this->centralItems();
 
         if ($forApi) {
@@ -73,7 +75,7 @@ class Navigation
         ];
     }
 
-    protected function tenantItems(): array
+    protected function tenantItems(bool $inboxEnabled): array
     {
         return [
             [
@@ -83,23 +85,6 @@ class Navigation
                 'can' => 'view_dash',
                 'showAsActiveForRoutes' => ['dash'],
                 'items' => []
-            ],
-            [
-                'name' => 'Inbox',
-                'route' => 'communications.index',
-                'can' => 'view_mail_logs',
-                'icon' => 'fa-mail-bulk',
-                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
-                'items' => [
-                    ['name' => 'Compose', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
-                    [
-                        'name' => 'Mailing Lists',
-                        'route' => 'groups.index',
-                        'icon' => 'fa-at',
-                        'can' => 'list_groups',
-                        'showAsActiveForRoutes' => ['groups.*'],
-                    ]
-                ]
             ],
             [
                 'name' => 'Singers',
@@ -155,6 +140,23 @@ class Navigation
                 'showAsActiveForRoutes' => ['stacks.*'],
                 'items' => [
                     ['name' => 'Add New', 'route' => 'stacks.create', 'icon' => 'fa-plus-square', 'can' => 'create_stack', 'showAsActiveForRoutes' => ['stacks.create']],
+                ]
+            ],
+            [
+                'name' => $inboxEnabled ? 'Inbox' : 'Communications',
+                'route' => 'communications.index',
+                'can' => 'view_mail_logs',
+                'icon' => 'fa-mail-bulk',
+                'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
+                'items' => [
+                    ['name' => $inboxEnabled ? 'Compose' : 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    [
+                        'name' => 'Mailing Lists',
+                        'route' => 'groups.index',
+                        'icon' => 'fa-at',
+                        'can' => 'list_groups',
+                        'showAsActiveForRoutes' => ['groups.*'],
+                    ]
                 ]
             ],
             [

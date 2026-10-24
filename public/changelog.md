@@ -1,10 +1,6 @@
-# 2026-10-24
-## Unified Communications
-### Communications is now Inbox!
-In an effort to make communicating with your choir members more efficient, and to improve the in-app experience, we've given every user their own inbox. 
-- The "Communications" section is now "Inbox".
-- The Inbox presents a unified message view for all members, allowing everyone to receive and manage messages without leaving the app. 
-### Notifications settings
+# 2026-10-25
+## Notifications and Announcements
+### Notification settings
 - Added notification preferences to Account Settings. 
 - Toggle emails for songs, events, documents, polls, and attendance reports.
 - Essential communications (Broadcasts) for your organisation and account security emails remain enabled.

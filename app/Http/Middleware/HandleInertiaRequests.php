@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Features\InboxFeature;
 use App\Models\Attendance;
 use App\Models\CustomField;
 use App\Models\CustomFieldEntry;
@@ -24,6 +25,7 @@ use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Middleware;
+use Stancl\Tenancy\Contracts\Tenant as TenantContract;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -56,6 +58,10 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $tenant = tenancy()->initialized ? tenancy()->tenant : null;
+        $inboxEnabled = $tenant instanceof TenantContract
+            && InboxFeature::isEnabledFor($tenant, $request->user());
+
         return array_merge(parent::share($request), [
             'flash' => [
                 'message' => fn() => $request->session()->get('status'),
@@ -119,13 +125,15 @@ class HandleInertiaRequests extends Middleware
                 'update_tenant' => auth()->user()?->can('update', [Tenant::class, null]),
                 'list_tenants' => auth()->user()?->isSuperAdmin,
                 'manage_product_announcements' => auth()->user()?->isSuperAdmin,
+                'manage_inbox_preview' => auth()->user()?->isSuperAdmin,
 
                 'view_member_history' => auth()->user()?->isSuperAdmin,
             ],
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant?->loadMissing('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
-            'unreadCommunicationsCount' => fn () => tenancy()->initialized
+            'inboxEnabled' => $inboxEnabled,
+            'unreadCommunicationsCount' => fn () => $inboxEnabled
                 ? MailLogController::unreadCommunicationsCount()
                 : null,
             'impersonationActive' => session()->has('impersonation:active'),

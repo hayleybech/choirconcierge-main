@@ -18,7 +18,7 @@ import FilterSortPane from '../../../components/FilterSortPane';
 import Sorts from '../../../components/Sorts';
 import MailLogFilters from './MailLogFilters';
 
-const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSidebarOpen }) => {
+const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const showAdminDetails = can.create_broadcast || can.update_group;
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -35,13 +35,13 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 		{ name: 'to', defaultValue: '' },
 		{ name: 'from', defaultValue: '' },
 		{ name: 'type', multiple: true, defaultValue: defaultMailTypes },
-		{ name: 'read', defaultValue: '' },
+		...(inboxEnabled ? [{ name: 'read', defaultValue: '' }] : []),
 	];
 	const sortFilterForm = useSortFilterForm('communications.index', filters, sorts);
 
 	const actions = [
 		{
-			label: 'Compose',
+			label: inboxEnabled ? 'Compose' : 'Send Broadcast',
 			icon: 'inbox-out',
 			url: route('communications.create'),
 			intent: 'primary',
@@ -61,20 +61,20 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 
 	return (
 		<>
-			<AppHead title="Inbox" />
+			<AppHead title={inboxEnabled ? 'Inbox' : 'Communications'} />
 
 			{showAdminDetails && <TrialAntiSpamNotice />}
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Inbox">
+				<PageTopNavigation title={inboxEnabled ? 'Inbox' : 'Communications'}>
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-																		<ActionMenuItem
-																			key={key}
-																			url={action.url}
-																			onClick={action.onClick}
-																			intent={action.intent}
-																		>
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								intent={action.intent}
+							>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -84,18 +84,18 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderTitle>
-					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Inbox
+					<Icon icon="mail-bulk" type="solid" className="mr-2" /> {inboxEnabled ? 'Inbox' : 'Communications'}
 				</PageHeaderTitle>
 				<PageHeaderActions>
 					{actions.map(action => (
 						<Button
 							key={action.label}
 							href={action.url}
-																		onClick={action.onClick}
-																		size="md"
-																		intent={action.intent}
-																		weight={action.weight}
-																		className={action.className}
+							onClick={action.onClick}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
@@ -109,7 +109,14 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 				filterPane={
 					<FilterSortPane
 						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<MailLogFilters form={sortFilterForm} mailingLists={mailingLists} mailTypes={mailTypes} />}
+						filters={
+							<MailLogFilters
+								form={sortFilterForm}
+								mailingLists={mailingLists}
+								mailTypes={mailTypes}
+								inboxEnabled={inboxEnabled}
+							/>
+						}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
@@ -117,6 +124,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 					<MailLogTableMobile
 						logs={logs}
 						showAdminDetails={showAdminDetails}
+						inboxEnabled={inboxEnabled}
 						hasNonDefaultFilters={hasNonDefaultFilters}
 						setShowFilters={setShowFilters}
 					/>
@@ -125,6 +133,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, setSideba
 					<MailLogTableDesktop
 						logs={logs}
 						showAdminDetails={showAdminDetails}
+						inboxEnabled={inboxEnabled}
 						sortFilterForm={sortFilterForm}
 					/>
 				}

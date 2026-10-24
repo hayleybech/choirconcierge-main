@@ -60,6 +60,7 @@ use App\Http\Controllers\VoicePartController;
 use App\Http\Controllers\PollController;
 use App\Http\Middleware\BlockMemberAccessWhenNoActiveSubscription;
 use App\Http\Middleware\EnsureUserIsMember;
+use App\Http\Middleware\EnsureUserIsSuperAdmin;
 use App\Http\Middleware\NoRobots;
 use App\Http\Middleware\RedirectTenantFromDomainToFolder;
 use App\Http\Middleware\SetTenantRouteParam;
@@ -139,6 +140,9 @@ Route::middleware([
             // Account Settings
             Route::singleton('account', AccountController::class)->only(['edit', 'update']);
             Route::name('account.')->prefix('account')->group(function () {
+                Route::put('/inbox-preference', [App\Http\Controllers\InboxPreferenceController::class, 'update'])
+                    ->middleware(EnsureUserIsSuperAdmin::class)
+                    ->name('inbox-preference.update');
                 Route::put('/notifications', [EmailPreferenceController::class, 'update'])->name('notifications.update');
                 Route::post('/two-factor/regenerate', [TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
                 Route::singleton('two-factor', TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);

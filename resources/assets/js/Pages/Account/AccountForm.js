@@ -25,13 +25,23 @@ import NotificationSettings from './NotificationSettings';
 const regionFirstDayOfWeek = country => (['CA', 'IN', 'JP', 'US'].includes(country) ? 0 : 1);
 
 const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recoveryCodes }) => {
-	const { user, tenant, email_preferences, can_receive_attendance_reports } = usePage().props;
+	const { user, tenant, email_preferences, can_receive_attendance_reports, can, inbox_preference } = usePage().props;
 	const [activeTab, setActiveTab] = useState(() => {
 		const tab = new URLSearchParams(window.location.search).get('tab');
 
-		return ['profile', 'security', 'language', 'notifications'].includes(tab) ? tab : 'profile';
+		return ['profile', 'security', 'language', 'notifications', ...(can?.manage_inbox_preview ? ['inbox'] : [])].includes(tab)
+			? tab
+			: 'profile';
 	});
 	const [showRecoveryCodes, setShowRecoveryCodes] = useState(false);
+	const [inboxPreference, setInboxPreference] = useState(() =>
+		inbox_preference === null || inbox_preference === undefined
+			? 'inherit'
+			: inbox_preference
+			? 'enabled'
+			: 'disabled',
+	);
+	const [updatingInboxPreference, setUpdatingInboxPreference] = useState(false);
 	const accountRoute = tenant ? 'account' : 'central.account';
 
 	const disableTwoFactor = () => {
@@ -44,6 +54,18 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 		if (confirm('Are you sure you want to regenerate recovery codes? Your old codes will no longer work.')) {
 			router.post(route(`${accountRoute}.two-factor.regenerate`), {}, { preserveScroll: true });
 		}
+	};
+
+	const saveInboxPreference = () => {
+		setUpdatingInboxPreference(true);
+		router.put(
+			route(`${accountRoute}.inbox-preference.update`),
+			{ preference: inboxPreference },
+			{
+				preserveScroll: true,
+				onFinish: () => setUpdatingInboxPreference(false),
+			},
+		);
 	};
 
 	const { data, setData, post, processing, errors, transform } = useForm({
@@ -136,6 +158,7 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 					['security', 'Security'],
 					['language', 'Language & Region'],
 					['notifications', 'Notifications'],
+					...(can?.manage_inbox_preview ? [['inbox', 'Inbox Preview']] : []),
 				].map(([tab, label]) => (
 					<button
 						key={tab}
@@ -158,6 +181,41 @@ const AccountForm = ({ postUrl, cancelUrl, twoFactorUrl, twoFactorEnabled, recov
 					accountRoute={accountRoute}
 					canReceiveAttendanceReports={can_receive_attendance_reports}
 				/>
+			) : activeTab === 'inbox' && can?.manage_inbox_preview ? (
+				<>
+					<FormSection title="Inbox Preview">
+						<div className="sm:col-span-6">
+							<Label label="Super-admin Inbox experience" forInput="inbox_preference" />
+							<Select
+								name="inbox_preference"
+								options={[
+									{ key: 'inherit', label: 'Use each tenant’s setting' },
+									{ key: 'enabled', label: 'Always use Inbox' },
+									{ key: 'disabled', label: 'Always use Communications' },
+								]}
+								value={inboxPreference}
+								updateFn={setInboxPreference}
+							/>
+							<Help>
+								This account-wide preview affects only your super-admin experience. Until you choose an override,
+								you inherit the current tenant’s setting.
+							</Help>
+						</div>
+					</FormSection>
+					<FormFooter>
+						<ButtonLink href={cancelUrl}>Cancel</ButtonLink>
+						<Button
+							intent="primary"
+							weight="solid"
+							type="button"
+							className="ml-3"
+							disabled={updatingInboxPreference}
+							onClick={saveInboxPreference}
+						>
+							Save
+						</Button>
+					</FormFooter>
+				</>
 			) : (
 				<Form onSubmit={submit}>
 				{activeTab === 'profile' && (

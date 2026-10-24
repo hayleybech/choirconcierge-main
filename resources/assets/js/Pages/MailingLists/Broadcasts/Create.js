@@ -25,8 +25,9 @@ import FileInput from '../../../components/inputs/FileInput';
 import useRoute from '../../../hooks/useRoute';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Create = ({ lists, selectedList, setSidebarOpen }) => {
+const Create = ({ lists, selectedList, setSidebarOpen, inboxEnabled }) => {
 	const { route } = useRoute();
+	const composeTitle = inboxEnabled ? 'Compose Message' : 'Send Broadcast';
 	const listOptions = lists.map(({ title, id, ...list }) => ({
 		label: title,
 		value: id,
@@ -46,13 +47,13 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 	}
 
 	const breadcrumbs = [
-		{ name: 'Communications', url: route('communications.index') },
-		{ name: 'Compose Message', url: route('communications.create') },
+		{ name: inboxEnabled ? 'Inbox' : 'Communications', url: route('communications.index') },
+		{ name: composeTitle, url: route('communications.create') },
 	];
 
 	return (
 		<>
-			<AppHead title="Compose Message" />
+			<AppHead title={composeTitle} />
 
 			<TrialAntiSpamNotice />
 
@@ -64,7 +65,7 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
 						<Icon icon="inbox-out" type="solid" className="mr-2" />
-						Compose Message
+						{composeTitle}
 					</PageHeaderTitle>
 				</PageHeaderContent>
 			</PageHeader>
@@ -72,10 +73,10 @@ const Create = ({ lists, selectedList, setSidebarOpen }) => {
 			<div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:w-full">
 				{lists.length > 0 ? (
 					<Form onSubmit={submit}>
-    		<FormSection
-    			title="Compose a message"
-    			description="Choose a mailing list and write your message. Your choir's letterhead is included automatically."
-    		>
+						<FormSection
+							title={inboxEnabled ? 'Compose a message' : 'Send Broadcast'}
+							description="Choose a mailing list and write your message. Your choir's letterhead is included automatically."
+						>
 							<div className="sm:col-span-6">
 								<Label label="Mailing List" />
 								<MailingListSelect

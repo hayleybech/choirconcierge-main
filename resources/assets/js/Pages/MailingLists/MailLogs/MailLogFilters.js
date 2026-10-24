@@ -7,7 +7,7 @@ import FilterActions from '../../../components/inputs/FilterActions';
 import CheckboxGroup from '../../../components/inputs/CheckboxGroup';
 import RadioGroup from '../../../components/inputs/RadioGroup';
 
-const MailLogFilters = ({ form, mailingLists, mailTypes }) => (
+const MailLogFilters = ({ form, mailingLists, mailTypes, inboxEnabled }) => (
 	<Filters
 		routeName="communications.index"
 		form={form}
@@ -37,25 +37,27 @@ const MailLogFilters = ({ form, mailingLists, mailTypes }) => (
 						updateFn={value => setData('type', value)}
 					/>
 				</fieldset>
-				<fieldset>
-					<RadioGroup
-						label={
-							<div className="flex items-center justify-between mb-2">
-								<Label label="Read status" />
-								<FilterActions onClear={() => setData('read', '')} />
-							</div>
-						}
-						options={[
-							{ id: '', name: 'All' },
-							{ id: 'read', name: 'Read', icon: 'envelope-open-text' },
-							{ id: 'unread', name: 'Unread', icon: 'envelope' },
-						]}
-						selected={data.read}
-						setSelected={value => setData('read', value)}
-						vertical
-						size="xs"
-					/>
-				</fieldset>
+				{inboxEnabled && (
+					<fieldset>
+						<RadioGroup
+							label={
+								<div className="flex items-center justify-between mb-2">
+									<Label label="Read status" />
+									<FilterActions onClear={() => setData('read', '')} />
+								</div>
+							}
+							options={[
+								{ id: '', name: 'All' },
+								{ id: 'read', name: 'Read', icon: 'envelope-open-text' },
+								{ id: 'unread', name: 'Unread', icon: 'envelope' },
+							]}
+							selected={data.read}
+							setSelected={value => setData('read', value)}
+							vertical
+							size="xs"
+						/>
+					</fieldset>
+				)}
 				<div>
 					<div className="flex items-center justify-between">
 						<Label label="To" forInput="to" />

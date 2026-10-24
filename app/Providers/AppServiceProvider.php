@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Features\InboxFeature;
 use App\Http\View\Composers\SingerStatusComposer;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
-use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
@@ -22,8 +22,10 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Guard $auth)
+    public function boot(): void
     {
+        InboxFeature::define();
+
         Model::preventLazyLoading($this->app->environment(['local', 'testing']));
 
         Schema::defaultStringLength(191);

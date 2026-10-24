@@ -7,7 +7,7 @@ import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
 import Button from '../../../components/inputs/ButtonV2';
 
-const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setShowFilters }) => {
+const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setShowFilters, inboxEnabled }) => {
 	const { route } = useRoute();
 	const bulkEdit = {
 		isActiveMobile: false,
@@ -35,7 +35,7 @@ const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setS
 					const showLogAdminDetails = showAdminDetails && mailType !== 'product';
 					const recipient = log.latest_event?.user_group;
 					return (
-						<li key={log.id} className={`flex ${log.is_read ? 'bg-gray-50' : 'font-bold'}`}>
+						<li key={log.id} className={`flex ${inboxEnabled ? (log.is_read ? 'bg-gray-50' : 'font-bold') : ''}`}>
 							<TableMobileLink url={route('communications.show', { mail_log: log })}>
 								<div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
 									<div className="flex items-center pr-2">

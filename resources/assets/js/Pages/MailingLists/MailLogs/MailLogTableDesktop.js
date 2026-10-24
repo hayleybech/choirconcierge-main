@@ -8,7 +8,7 @@ import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag'
 import Pagination from '../../../components/Pagination';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 
-const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
+const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm, inboxEnabled }) => {
 	const { route } = useRoute();
 
 	return (
@@ -55,7 +55,7 @@ const MailLogTableDesktop = ({ logs, showAdminDetails, sortFilterForm }) => {
 					const mailType = log.uid.split('-')[0];
 					const showLogAdminDetails = showAdminDetails && mailType !== 'product';
 					return (
-						<tr key={log.id} className={log.is_read ? 'bg-gray-50' : 'font-bold'}>
+						<tr key={log.id} className={inboxEnabled ? (log.is_read ? 'bg-gray-50' : 'font-bold') : ''}>
 							<TableCell>
 								<Link
 									href={route('communications.show', { mail_log: log })}

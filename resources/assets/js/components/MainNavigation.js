@@ -6,7 +6,7 @@ import useRoute from "../hooks/useRoute";
 
 const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu }) => {
     const { route } = useRoute();
-    const {user, unreadCommunicationsCount} = usePage().props;
+    const { user, inboxEnabled, unreadCommunicationsCount } = usePage().props;
 
     return (
 		<nav className="flex min-h-0 flex-1 flex-col px-4">
@@ -25,7 +25,7 @@ const MainNavigation = ({ navigation, closeSidebar, onOpenUserMenu }) => {
 						>
 							<Icon icon={item.icon} className="mr-4" />
 							{item.name}
-							{item.route === 'communications.index' && unreadCommunicationsCount > 0 && (
+							{item.route === 'communications.index' && inboxEnabled && unreadCommunicationsCount > 0 && (
 								<span
 									aria-label={`${unreadCommunicationsCount} unread communications`}
 									className="ml-auto inline-flex items-center rounded-full bg-white/20 px-2 py-0.5 text-xs font-semibold text-white"

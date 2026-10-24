@@ -15,6 +15,7 @@ describe('MainNavigation inbox badge', () => {
 		usePage.mockReturnValue({
 			props: {
 				user: { name: 'Singer', email: 'singer@example.com', avatar_url: '' },
+				inboxEnabled: true,
 				unreadCommunicationsCount: 4,
 			},
 		});
@@ -35,6 +36,7 @@ describe('MainNavigation inbox badge', () => {
 		usePage.mockReturnValue({
 			props: {
 				user: { name: 'Singer', email: 'singer@example.com', avatar_url: '' },
+				inboxEnabled: true,
 				unreadCommunicationsCount: 0,
 			},
 		});
@@ -42,6 +44,24 @@ describe('MainNavigation inbox badge', () => {
 		render(
 			<MainNavigation
 				navigation={[{ name: 'Inbox', route: 'communications.index', icon: 'mail', items: [] }]}
+			/>,
+		);
+
+		expect(screen.queryByLabelText(/unread communications/)).toBeNull();
+	});
+
+	it('hides the unread badge when inbox is disabled', () => {
+		usePage.mockReturnValue({
+			props: {
+				user: { name: 'Singer', email: 'singer@example.com', avatar_url: '' },
+				inboxEnabled: false,
+				unreadCommunicationsCount: 4,
+			},
+		});
+
+		render(
+			<MainNavigation
+				navigation={[{ name: 'Communications', route: 'communications.index', icon: 'mail', items: [] }]}
 			/>,
 		);
 

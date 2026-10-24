@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
+use Laravel\Pennant\Feature;
 
 uses(RefreshDatabase::class);
 
@@ -88,6 +89,16 @@ it('filters tenant communications by mail type and the current user read state',
                 $unreadInbound->id,
                 $productAnnouncement->id,
             ])->sort()->values()->all())
+            ->where('inboxEnabled', false)
+            ->where('unreadCommunicationsCount', null)
+        );
+
+    Feature::for(tenancy()->tenant)->activate('inbox');
+
+    $this->get(the_tenant_route('communications.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('inboxEnabled', true)
             ->where('unreadCommunicationsCount', 2)
         );
 

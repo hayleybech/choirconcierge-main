@@ -42,6 +42,7 @@ Route::prefix('/app')->group(function () {
         Route::middleware([EnsureUserIsSuperAdmin::class])->group(function () {
             Route::get('announcements/create', [Central\ProductAnnouncementController::class, 'create'])->name('announcements.create');
             Route::post('announcements', [Central\ProductAnnouncementController::class, 'store'])->name('announcements.store');
+            Route::put('tenants/{tenant}/inbox-feature', [Central\TenantInboxFeatureController::class, 'update'])->name('tenants.inbox-feature.update');
         });
 
         // Tenants
@@ -58,6 +59,9 @@ Route::prefix('/app')->group(function () {
 
         // Two-Factor Authentication
         Route::name('account.')->prefix('account')->group(function () {
+            Route::put('/inbox-preference', [App\Http\Controllers\InboxPreferenceController::class, 'update'])
+                ->middleware(EnsureUserIsSuperAdmin::class)
+                ->name('inbox-preference.update');
             Route::put('/notifications', [EmailPreferenceController::class, 'update'])->name('notifications.update');
             Route::post('/two-factor/regenerate', [App\Http\Controllers\TwoFactorController::class, 'regenerate'])->name('two-factor.regenerate');
             Route::singleton('two-factor', App\Http\Controllers\TwoFactorController::class)->creatable()->only(['show', 'store', 'destroy']);
