@@ -168,6 +168,66 @@
 			"component": "Central/Tenants/Create",
 			"browser": "chromium",
 			"assert_text": "Create Organisation"
+		},
+		{
+			"id": "central-tenant-show",
+			"module": "central",
+			"page_type": "show",
+			"state": "normal",
+			"route": "central.tenants.show",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "authenticated-user",
+			"component": "Central/Tenants/Show",
+			"browser": "chromium",
+			"assert_text": "Visual Regression Choir"
+		},
+		{
+			"id": "central-tenant-onboarding",
+			"module": "central",
+			"page_type": "onboarding",
+			"state": "normal",
+			"route": "central.tenants.onboarding",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "authenticated-user",
+			"component": "Central/Tenants/Onboarding",
+			"browser": "chromium",
+			"assert_text": "Organisation Created!"
+		},
+		{
+			"id": "tenant-dashboard",
+			"module": "dashboard",
+			"page_type": "show",
+			"state": "normal",
+			"route": "dash",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "tenant-admin",
+			"component": "Dash/Show",
+			"browser": "chromium",
+			"assert_text": "Dashboard"
+		},
+		{
+			"id": "tenant-account-edit",
+			"module": "account",
+			"page_type": "edit",
+			"state": "normal",
+			"route": "account.edit",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "tenant-admin",
+			"component": "Account/Edit",
+			"browser": "chromium",
+			"assert_text": "Account Settings"
+		},
+		{
+			"id": "tenant-singers-index",
+			"module": "singers",
+			"page_type": "index",
+			"state": "normal",
+			"route": "singers.index",
+			"parameters": { "tenant": "visual-regression" },
+			"persona": "tenant-admin",
+			"component": "Singers/Index",
+			"browser": "chromium",
+			"assert_text": "Visual Regression"
 		}
 	]
 }
