@@ -19,7 +19,9 @@ class ScreenshotCatalog
      *     persona: string,
      *     component: string,
      *     browser: string,
-     *     assert_text: string
+     *     assert_text: string,
+     *     empty_props?: list<string>,
+     *     pdf_viewer?: bool
      * }>
      *
      * @throws JsonException
@@ -94,7 +96,9 @@ class ScreenshotCatalog
      *     persona: string,
      *     component: string,
      *     browser: string,
-     *     assert_text: string
+     *     assert_text: string,
+     *     empty_props?: list<string>,
+     *     pdf_viewer?: bool
      * }|null
      *
      * @throws JsonException

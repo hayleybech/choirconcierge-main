@@ -20,6 +20,24 @@ test('the screenshot catalog includes at least forty cases', function () {
     expect(count(app(ScreenshotCatalog::class)->cases()))->toBeGreaterThanOrEqual(40);
 });
 
+test('every indexed screenshot page has a dedicated empty state case', function () {
+    $cases = collect(app(ScreenshotCatalog::class)->cases());
+    $indexCases = $cases->filter(fn (array $case): bool => $case['page_type'] === 'index' && $case['state'] === 'normal');
+
+    expect($indexCases)->not->toBeEmpty();
+
+    foreach ($indexCases as $indexCase) {
+        $emptyStateCase = $cases->first(fn (array $case): bool =>
+            $case['component'] === $indexCase['component']
+            && $case['page_type'] === 'index'
+            && $case['state'] === 'empty'
+        );
+
+        expect($emptyStateCase)->toBeArray();
+        expect($emptyStateCase['empty_props'] ?? [])->not->toBeEmpty();
+    }
+});
+
 test('catalog routes and page components are valid', function () {
     $catalog = app(ScreenshotCatalog::class);
 

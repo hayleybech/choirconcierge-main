@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class LocalVisualRegressionGalleryController extends Controller
@@ -82,6 +84,13 @@ class LocalVisualRegressionGalleryController extends Controller
         $request->session()->put('2fa.id', 'visual-regression');
 
         return redirect()->route('auth.2fa.challenge');
+    }
+
+    public function changelogEmptyPreview(): InertiaResponse
+    {
+        $this->ensureLocalEnvironment();
+
+        return Inertia::render('Central/Changelog', ['logs' => collect()]);
     }
 
     /**

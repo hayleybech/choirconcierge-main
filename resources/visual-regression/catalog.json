@@ -155,7 +155,7 @@
 			"persona": "authenticated-user",
 			"component": "Central/Changelog",
 			"browser": "chromium",
-			"assert_text": "Changelog"
+			"assert_text": "Further Attendance Reporting Tweaks and More!"
 		},
 		{
 			"id": "central-tenant-create",
@@ -275,7 +275,7 @@
 			"persona": "tenant-admin",
 			"component": "Events/Rsvps/Index",
 			"browser": "chromium",
-			"assert_text": "RSVP List"
+			"assert_text": "Visual Regression"
 		},
 		{
 			"id": "tenant-events-attendance-index",
@@ -287,7 +287,7 @@
 			"persona": "tenant-admin",
 			"component": "Events/Attendance/Index",
 			"browser": "chromium",
-			"assert_text": "Attendance List"
+			"assert_text": "Visual Regression"
 		},
 		{
 			"id": "tenant-event-types-index",
@@ -323,7 +323,8 @@
 			"persona": "tenant-admin",
 			"component": "Songs/Show",
 			"browser": "chromium",
-			"assert_text": "Northern Lights"
+			"assert_text": "Northern Lights",
+			"pdf_viewer": true
 		},
 		{
 			"id": "tenant-songs-create",
@@ -359,7 +360,7 @@
 			"persona": "tenant-admin",
 			"component": "Folders/Index",
 			"browser": "chromium",
-			"assert_text": "Documents"
+			"assert_text": "Visual Regression Documents"
 		},
 		{
 			"id": "tenant-documents-create",
@@ -383,7 +384,7 @@
 			"persona": "tenant-admin",
 			"component": "MailingLists/Index",
 			"browser": "chromium",
-			"assert_text": "Mailing Lists"
+			"assert_text": "Visual Regression Mailing List"
 		},
 		{
 			"id": "tenant-tasks-index",
@@ -395,7 +396,7 @@
 			"persona": "tenant-admin",
 			"component": "Tasks/Index",
 			"browser": "chromium",
-			"assert_text": "Onboarding Tasks"
+			"assert_text": "Pass Audition"
 		},
 		{
 			"id": "tenant-tasks-create",
@@ -443,7 +444,7 @@
 			"persona": "tenant-admin",
 			"component": "RiserStacks/Index",
 			"browser": "chromium",
-			"assert_text": "Riser Stacks"
+			"assert_text": "Visual Regression Stack"
 		},
 		{
 			"id": "tenant-polls-create",
@@ -479,7 +480,7 @@
 			"persona": "tenant-admin",
 			"component": "Roles/Index",
 			"browser": "chromium",
-			"assert_text": "Singer Roles"
+			"assert_text": "Admin"
 		},
 		{
 			"id": "tenant-roles-create",
@@ -504,6 +505,188 @@
 			"component": "VoiceParts/Create",
 			"browser": "chromium",
 			"assert_text": "Create Voice Part"
+		},
+		{
+			"id": "central-changelog-empty",
+			"module": "central",
+			"page_type": "index",
+			"state": "empty",
+			"route": "local.visual-regression.changelog-empty-preview",
+			"parameters": {},
+			"persona": "authenticated-user",
+			"component": "Central/Changelog",
+			"browser": "chromium",
+			"assert_text": "Changelog",
+			"empty_props": ["logs"]
+		},
+		{
+			"id": "tenant-singers-index-empty",
+			"module": "singers",
+			"page_type": "index",
+			"state": "empty",
+			"route": "singers.index",
+			"parameters": { "tenant": "visual-regression-empty-singers" },
+			"persona": "tenant-super-admin",
+			"component": "Singers/Index",
+			"browser": "chromium",
+			"assert_text": "No singers",
+			"empty_props": ["allSingers"]
+		},
+		{
+			"id": "tenant-events-index-empty",
+			"module": "events",
+			"page_type": "index",
+			"state": "empty",
+			"route": "events.index",
+			"parameters": { "tenant": "visual-regression-empty-events" },
+			"persona": "tenant-super-admin",
+			"component": "Events/Index",
+			"browser": "chromium",
+			"assert_text": "No events",
+			"empty_props": ["events.data"]
+		},
+		{
+			"id": "tenant-events-rsvps-index-empty",
+			"module": "events",
+			"page_type": "index",
+			"state": "empty",
+			"route": "events.rsvps.index",
+			"parameters": { "tenant": "visual-regression-empty-rsvps", "event": 1 },
+			"persona": "tenant-super-admin",
+			"component": "Events/Rsvps/Index",
+			"browser": "chromium",
+			"assert_text": "RSVP List",
+			"empty_props": ["allSingers"]
+		},
+		{
+			"id": "tenant-events-attendance-index-empty",
+			"module": "events",
+			"page_type": "index",
+			"state": "empty",
+			"route": "events.attendances.index",
+			"parameters": { "tenant": "visual-regression-empty-attendance", "event": 1 },
+			"persona": "tenant-super-admin",
+			"component": "Events/Attendance/Index",
+			"browser": "chromium",
+			"assert_text": "Attendance List",
+			"empty_props": ["allSingers"]
+		},
+		{
+			"id": "tenant-event-types-index-empty",
+			"module": "events",
+			"page_type": "index",
+			"state": "empty",
+			"route": "event-types.index",
+			"parameters": { "tenant": "visual-regression-empty-event-types" },
+			"persona": "tenant-super-admin",
+			"component": "EventTypes/Index",
+			"browser": "chromium",
+			"assert_text": "Event Types",
+			"empty_props": ["categories"]
+		},
+		{
+			"id": "tenant-songs-index-empty",
+			"module": "songs",
+			"page_type": "index",
+			"state": "empty",
+			"route": "songs.index",
+			"parameters": { "tenant": "visual-regression-empty-songs" },
+			"persona": "tenant-super-admin",
+			"component": "Songs/Index",
+			"browser": "chromium",
+			"assert_text": "No songs",
+			"empty_props": ["songs.data"]
+		},
+		{
+			"id": "tenant-song-categories-index-empty",
+			"module": "songs",
+			"page_type": "index",
+			"state": "empty",
+			"route": "song-categories.index",
+			"parameters": { "tenant": "visual-regression-empty-song-categories" },
+			"persona": "tenant-super-admin",
+			"component": "SongCategories/Index",
+			"browser": "chromium",
+			"assert_text": "Song Categories",
+			"empty_props": ["categories"]
+		},
+		{
+			"id": "tenant-documents-index-empty",
+			"module": "documents",
+			"page_type": "index",
+			"state": "empty",
+			"route": "folders.index",
+			"parameters": { "tenant": "visual-regression-empty-documents" },
+			"persona": "tenant-empty-admin",
+			"component": "Folders/Index",
+			"browser": "chromium",
+			"assert_text": "No folders",
+			"empty_props": ["folders", "documents"]
+		},
+		{
+			"id": "tenant-mailing-lists-index-empty",
+			"module": "mailing-lists",
+			"page_type": "index",
+			"state": "empty",
+			"route": "groups.index",
+			"parameters": { "tenant": "visual-regression-empty-mailing-lists" },
+			"persona": "tenant-super-admin",
+			"component": "MailingLists/Index",
+			"browser": "chromium",
+			"assert_text": "No mailing lists",
+			"empty_props": ["lists.data"]
+		},
+		{
+			"id": "tenant-tasks-index-empty",
+			"module": "tasks",
+			"page_type": "index",
+			"state": "empty",
+			"route": "tasks.index",
+			"parameters": { "tenant": "visual-regression-empty-tasks" },
+			"persona": "tenant-super-admin",
+			"component": "Tasks/Index",
+			"browser": "chromium",
+			"assert_text": "No onboarding tasks",
+			"empty_props": ["tasks.data"]
+		},
+		{
+			"id": "tenant-riser-stacks-index-empty",
+			"module": "riser-stacks",
+			"page_type": "index",
+			"state": "empty",
+			"route": "stacks.index",
+			"parameters": { "tenant": "visual-regression-empty-stacks" },
+			"persona": "tenant-super-admin",
+			"component": "RiserStacks/Index",
+			"browser": "chromium",
+			"assert_text": "No riser stacks",
+			"empty_props": ["stacks.data"]
+		},
+		{
+			"id": "tenant-roles-index-empty",
+			"module": "roles",
+			"page_type": "index",
+			"state": "empty",
+			"route": "roles.index",
+			"parameters": { "tenant": "visual-regression-empty-roles" },
+			"persona": "tenant-super-admin",
+			"component": "Roles/Index",
+			"browser": "chromium",
+			"assert_text": "Singer Roles",
+			"empty_props": ["roles"]
+		},
+		{
+			"id": "tenant-songs-show-empty",
+			"module": "songs",
+			"page_type": "show",
+			"state": "empty",
+			"route": "songs.show",
+			"parameters": { "tenant": "visual-regression-empty-song-show", "song": 1 },
+			"persona": "tenant-super-admin",
+			"component": "Songs/Show",
+			"browser": "chromium",
+			"assert_text": "This song does not have any attachments yet.",
+			"empty_props": ["attachment_types"]
 		}
 	]
 }

@@ -67,6 +67,8 @@ Route::prefix('/app')->group(function () {
 
             Route::middleware('auth')->group(function () {
                 Route::get('/', [LocalVisualRegressionGalleryController::class, 'index'])->name('index');
+                Route::get('/changelog-empty-preview', [LocalVisualRegressionGalleryController::class, 'changelogEmptyPreview'])
+                    ->name('changelog-empty-preview');
                 Route::get('/{case}/{viewport}/{variant}', [LocalVisualRegressionGalleryController::class, 'image'])
                     ->where([
                         'case' => '[a-z0-9-]+',
