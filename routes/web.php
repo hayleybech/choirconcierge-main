@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central;
 use App\Http\Controllers\EmailPreferenceController;
+use App\Http\Controllers\LocalVisualRegressionGalleryController;
 use App\Http\Middleware\EnsureUserIsSuperAdmin;
 use App\Http\Middleware\SampleByAuthentication;
 
@@ -70,8 +71,34 @@ Route::prefix('/app')->group(function () {
         // Changelog
         Route::get('changelog', Central\ChangelogController::class)->name('changelog');
 	});
+
+    if (app()->environment(['local', 'testing'])) {
+        Route::prefix('cgal')->name('local.visual-regression.')->group(function () {
+            Route::get('/auth/two-factor-preview', [LocalVisualRegressionGalleryController::class, 'twoFactorPreview'])
+                ->name('two-factor-preview');
+            Route::get('/errors/{status}', [LocalVisualRegressionGalleryController::class, 'errorPreview'])
+                ->where('status', '403|404|500')
+                ->name('error-preview');
+
+            Route::middleware('auth')->group(function () {
+                Route::get('/', [LocalVisualRegressionGalleryController::class, 'index'])->name('index');
+                Route::get('/two-factor-setup-preview', [LocalVisualRegressionGalleryController::class, 'twoFactorSetupPreview'])
+                    ->name('two-factor-setup-preview');
+                Route::get('/central-mail-logs-empty-preview', [LocalVisualRegressionGalleryController::class, 'centralMailLogsEmptyPreview'])
+                    ->name('central-mail-logs-empty-preview');
+                Route::get('/changelog-empty-preview', [LocalVisualRegressionGalleryController::class, 'changelogEmptyPreview'])
+                    ->name('changelog-empty-preview');
+                Route::get('/{case}/{viewport}/{variant}', [LocalVisualRegressionGalleryController::class, 'image'])
+                    ->where([
+                        'case' => '[a-z0-9-]+',
+                        'viewport' => '[a-z0-9-]+',
+                        'variant' => 'baseline|latest|diff',
+                    ])
+                    ->name('image');
+            });
+        });
+    }
 });
 
 Route::fallback(fn () => abort(404))
     ->middleware(SampleByAuthentication::rate(1.0, 0.01));
-

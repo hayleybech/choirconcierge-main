@@ -325,7 +325,9 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
 
     public function isSuperAdmin(): Attribute
     {
-        return Attribute::get(fn($value, $attributes) => $attributes['email'] === 'hayleybech@gmail.com');
+        return Attribute::get(
+            fn ($value, $attributes) => $attributes['email'] === config('app.super_admin_email', 'hayleybech@gmail.com')
+        );
     }
 
     public function registerMediaCollections(): void

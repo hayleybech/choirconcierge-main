@@ -53,6 +53,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-browser": "4.1",
         "pestphp/pest-plugin-laravel": "^4.0",
         "spatie/laravel-ignition": "^2.0",
         "wnx/laravel-stats": "^2.8"
@@ -78,6 +79,10 @@
         }
     },
     "scripts": {
+        "visual:test": "node scripts/visual-regression-runner.js",
+        "visual:audit": "node scripts/visual-regression-audit.js",
+        "visual:update": "node scripts/visual-regression-runner.js --update-baselines",
+        "visual:install": "npx playwright install chromium",
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
         ],
@@ -98,6 +103,7 @@
         ]
     },
     "config": {
+        "process-timeout": 600,
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true,

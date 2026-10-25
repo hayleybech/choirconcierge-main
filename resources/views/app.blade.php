@@ -28,7 +28,9 @@
         @include ('snippets.tagmanagerbody')
     @endif
 
-    @routes(nonce: 'your-nonce-here')
+    @php \Tightenco\Ziggy\BladeRouteGenerator::$generated = false; @endphp
+    @routes
+    <script>window.Ziggy = @json((new \Tightenco\Ziggy\Ziggy())->toArray());</script>
 
     @inertia
 

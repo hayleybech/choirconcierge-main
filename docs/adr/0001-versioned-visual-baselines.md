@@ -1,0 +1,3 @@
+# Keep visual baselines in version control and make CI the canonical renderer
+
+Choir Concierge needs a reviewable baseline corpus and a local gallery, while test captures must remain separate from tenant data. We will keep the screenshot catalog and approved baselines in version control, use the CI runtime as the canonical renderer, and treat per-run captures and diffs as local or CI artifacts; the local/testing-only gallery will index baselines and recent local captures without application database tables. This trades repository size and remote-to-local visibility for reviewable diffs and repeatable rendering; CI-run ingestion and GitHub pull-request reporting are deferred until the external CI provider is known.
