@@ -6,6 +6,7 @@ import * as Sentry from '@sentry/react';
 import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { onMessageFromRN, sendMessageToRN } from './lib/reactNative';
 
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import '../app.css';
 
 const VERSION = 'choir-concierge@2025-09-22c';
