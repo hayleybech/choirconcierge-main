@@ -198,25 +198,29 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 					<SectionLayout
 						layout={{
 							className:
-								'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:flex-1 xl:min-h-0 xl:grid-cols-4 lg:overflow-y-auto',
+								'grid-cols-1 divide-y divide-gray-300 sm:grid sm:grid-cols-2 sm:divide-x sm:divide-y-0 xl:flex-1 xl:min-h-0 xl:grid-cols-4 xl:overflow-hidden',
 							columns: [
 								{
 									id: 'attachments',
 									className:
-										'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch',
+										'sm:col-span-1 sm:border-r sm:border-r-gray-300 sm:order-1 flex flex-col justify-stretch xl:min-h-0 xl:overflow-hidden',
 								},
 								{
 									id: 'viewer',
 									className:
 										'hidden xl:flex sm:col-span-2 xl:col-span-2 sm:order-3 xl:order-2 min-h-0 flex-col overflow-hidden',
 								},
-								{ id: 'details', className: 'sm:col-span-1 sm:order-2 xl:order-3' },
+								{
+									id: 'details',
+									className: 'sm:col-span-1 sm:order-2 xl:order-3 xl:flex xl:min-h-0 xl:flex-col xl:overflow-hidden',
+								},
 							],
 						}}
 						sections={[
 							{
 								id: 'attachments',
 								column: 'attachments',
+								className: 'xl:min-h-0 xl:flex-1 xl:overflow-hidden',
 								title: 'Attachments',
 								hideTitleOnDesktop: true,
 								show: true,
@@ -300,6 +304,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 							{
 								id: 'description',
 								column: 'details',
+								className: 'xl:min-h-0 xl:flex-1 xl:overflow-y-auto',
 								title: 'Description',
 								show: true,
 								content: <SongDescription description={song.description} />,
