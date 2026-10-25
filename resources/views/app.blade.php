@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
     <!-- Styles -->
-    <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
+    @viteReactRefresh
+    @vite(['resources/assets/js/app.js'])
     <link href="{{ global_asset('/vendor/fontawesome-pro/css/all.min.css') }}" rel="stylesheet">
 	<link rel="shortcut icon" href="{{ global_asset( '/img/vibrant/favicon.png' ) }}">
 
@@ -48,11 +49,6 @@
             console.error("Service workers are not supported.");
         }
     </script>
-
-    <!-- Scripts -->
-    <script src="{{ mix('/js/manifest.js') }}"></script>
-    <script src="{{ mix('/js/vendor.js') }}"></script>
-    <script src="{{ mix('/js/app.js') }}"></script>
 
 	@stack('scripts-footer-bottom')
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Inertia\Testing\AssertableInertia as Assert;
+use Illuminate\Support\Facades\Vite;
 use Laravel\Pennant\Feature;
 use Tests\TestCase;
 
@@ -17,9 +18,9 @@ class NavigationTest extends TestCase
                 ->has('navigation')
                 ->where('navigation.0.name', 'Dashboard')
                 ->where('navigation.0.route', 'dash')
-                ->where('navigation.1.name', 'Communications')
-                ->where('navigation.1.route', 'communications.index')
-                ->where('navigation.1.items.0.name', 'Send Broadcast')
+                ->where('navigation.6.name', 'Communications')
+                ->where('navigation.6.route', 'communications.index')
+                ->where('navigation.6.items.0.name', 'Send Broadcast')
             );
     }
 
@@ -30,16 +31,16 @@ class NavigationTest extends TestCase
 
         $this->get(the_tenant_route('dash'))
             ->assertInertia(fn (Assert $page) => $page
-                ->where('navigation.1.name', 'Inbox')
-                ->where('navigation.1.items.0.name', 'Compose')
+                ->where('navigation.6.name', 'Inbox')
+                ->where('navigation.6.items.0.name', 'Compose')
             );
     }
 
-    public function test_app_stylesheet_uses_the_versioned_mix_asset(): void
+    public function test_app_stylesheet_uses_the_versioned_vite_asset(): void
     {
         $this->actingAs($this->createUserWithRole('Admin'));
 
         $this->get(the_tenant_route('dash'))
-            ->assertSee('href="'.e(mix('/css/app.css')).'"', false);
+            ->assertSee('href="'.e(Vite::asset('resources/assets/app.css')).'"', false);
     }
 }
