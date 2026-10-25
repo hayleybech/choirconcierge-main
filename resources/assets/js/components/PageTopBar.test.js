@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
-import { SidebarProvider } from '../contexts/sidebar-context';
 
 jest.mock('react-responsive', () => ({
 	useMediaQuery: jest.fn(),
@@ -9,14 +8,11 @@ jest.mock('react-responsive', () => ({
 
 import { useMediaQuery } from 'react-responsive';
 
-const renderWithSidebar = (ui, setSidebarOpen = jest.fn()) =>
-	render(<SidebarProvider setSidebarOpen={setSidebarOpen}>{ui}</SidebarProvider>);
-
 describe('PageTopBar', () => {
-	it('opens the sidebar through context', () => {
+	it('opens the sidebar without requiring a provider', () => {
 		const setSidebarOpen = jest.fn();
 
-		renderWithSidebar(<PageTopBar>Page title</PageTopBar>, setSidebarOpen);
+		render(<PageTopBar setSidebarOpen={setSidebarOpen}>Page title</PageTopBar>);
 		fireEvent.click(screen.getByRole('button', { name: 'Open sidebar' }));
 
 		expect(setSidebarOpen).toHaveBeenCalledWith(true);

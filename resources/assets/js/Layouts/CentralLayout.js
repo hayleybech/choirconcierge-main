@@ -59,7 +59,7 @@ export default function CentralLayout({ children }) {
 
                 <main className="flex-1 flex flex-col justify-stretch relative overflow-y-auto focus:outline-none" scroll-region="true">
                     <ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-                        {children}
+                        {React.isValidElement(children) ? React.cloneElement(children, { setSidebarOpen }) : children}
                     </ErrorBoundary>
                 </main>
             </div>

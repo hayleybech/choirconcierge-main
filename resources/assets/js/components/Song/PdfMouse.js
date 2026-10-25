@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import LoadingSpinner from '../LoadingSpinner';
 import PdfToolbar from './PdfToolbar';
 

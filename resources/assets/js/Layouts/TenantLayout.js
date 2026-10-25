@@ -345,7 +345,7 @@ export default function TenantLayout({ children }) {
 							)}
 
 						<ErrorBoundary fallback={() => <OuterPageErrorFallback />} key={route().current()}>
-							{children}
+							{React.isValidElement(children) ? React.cloneElement(children, { setSidebarOpen }) : children}
 						</ErrorBoundary>
 					</main>
 

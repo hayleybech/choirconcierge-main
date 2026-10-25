@@ -21,4 +21,14 @@ describe('React Native bridge', () => {
 
 		deregister();
 	});
+
+	it('loads without a Node event emitter', () => {
+		jest.isolateModules(() => {
+			jest.doMock('events', () => ({}));
+
+			expect(() => require('./reactNative')).not.toThrow();
+		});
+
+		jest.dontMock('events');
+	});
 });
