@@ -12,26 +12,36 @@ import MailLogTableDesktop from './MailLogTableDesktop';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import EmptyState from '../../../components/EmptyState';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
+import useSortFilterForm from '../../../hooks/useSortFilterForm';
+import useFilterPane from '../../../hooks/useFilterPane';
+import FilterSortPane from '../../../components/FilterSortPane';
+import Sorts from '../../../components/Sorts';
+import MailLogFilters from './MailLogFilters';
 
-const Index = ({ logs, can, setSidebarOpen }) => {
+const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
 	const { route } = useRoute();
-
-	// const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
-
-	// const sorts = [
-	//     { id: 'id', name: 'Organisation Name', default: true },
-	//     { id: 'created_at', name: 'Date Created' },
-	// ];
-	//
-	// const filters = [
-	//     { name: 'id', defaultValue: '' },
-	// ]
-	//
-	// const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
+	const showAdminDetails = can.create_broadcast || can.update_group;
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const sorts = [
+		{ id: 'subject', name: 'Subject' },
+		{ id: 'to', name: 'To' },
+		{ id: 'from', name: 'From' },
+		{ id: 'size', name: 'Size' },
+		...(showAdminDetails ? [{ id: 'opens', name: 'Opens' }] : []),
+		{ id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
+	];
+	const filters = [
+		{ name: 'subject', defaultValue: '' },
+		{ name: 'to', defaultValue: '' },
+		{ name: 'from', defaultValue: '' },
+		{ name: 'type', multiple: true, defaultValue: defaultMailTypes },
+		...(inboxEnabled ? [{ name: 'read', defaultValue: '' }] : []),
+	];
+	const sortFilterForm = useSortFilterForm('communications.index', filters, sorts);
 
 	const actions = [
 		{
-			label: 'Send Broadcast',
+			label: inboxEnabled ? 'Compose' : 'Send Broadcast',
 			icon: 'inbox-out',
 			url: route('communications.create'),
 			intent: 'primary',
@@ -46,19 +56,25 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 			weight: 'solid',
 			can: 'list_groups',
 		},
+		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	return (
 		<>
-			<AppHead title="Tenants" />
+			<AppHead title={inboxEnabled ? 'Inbox' : 'Communications'} />
 
-			<TrialAntiSpamNotice />
+			{showAdminDetails && <TrialAntiSpamNotice />}
 
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Communications">
+				<PageTopNavigation title={inboxEnabled ? 'Inbox' : 'Communications'}>
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} intent={action.intent}>
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								intent={action.intent}
+							>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -68,13 +84,14 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 			</PageTopBar>
 			<PageHeader>
 				<PageHeaderTitle>
-					<Icon icon="mail-bulk" type="solid" className="mr-2" /> Communications
+					<Icon icon="mail-bulk" type="solid" className="mr-2" /> {inboxEnabled ? 'Inbox' : 'Communications'}
 				</PageHeaderTitle>
 				<PageHeaderActions>
 					{actions.map(action => (
 						<Button
 							key={action.label}
 							href={action.url}
+							onClick={action.onClick}
 							size="md"
 							intent={action.intent}
 							weight={action.weight}
@@ -88,16 +105,38 @@ const Index = ({ logs, can, setSidebarOpen }) => {
 			</PageHeader>
 
 			<IndexContainer
-				// showFilters={showFilters}
-				// filterPane={
-				//     <FilterSortPane
-				//         sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-				//         filters={<TenantFilters form={sortFilterForm} />}
-				//         closeFn={() => setShowFilters(false)}
-				//     />
-				// }
-				tableMobile={<MailLogTableMobile logs={logs} />}
-				tableDesktop={<MailLogTableDesktop logs={logs} />}
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={
+							<MailLogFilters
+								form={sortFilterForm}
+								mailingLists={mailingLists}
+								mailTypes={mailTypes}
+								inboxEnabled={inboxEnabled}
+							/>
+						}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableMobile={
+					<MailLogTableMobile
+						logs={logs}
+						showAdminDetails={showAdminDetails}
+						inboxEnabled={inboxEnabled}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
+					/>
+				}
+				tableDesktop={
+					<MailLogTableDesktop
+						logs={logs}
+						showAdminDetails={showAdminDetails}
+						inboxEnabled={inboxEnabled}
+						sortFilterForm={sortFilterForm}
+					/>
+				}
 				emptyState={
 					logs.data.length === 0 && (
 						<EmptyState

@@ -7,7 +7,6 @@ import GlobalTrackPlayer from '../components/Audio/GlobalTrackPlayer';
 import { PlayerContext } from '../contexts/player-context';
 import { PitchShifter } from 'soundtouchjs';
 import ImpersonateUserModal from '../components/ImpersonateUserModal';
-import LayoutTopBar from '../components/LayoutTopBar';
 import ToastFlash from '../components/ToastFlash';
 import { useMediaQuery } from 'react-responsive';
 import usePromptBeforeUnload from '../hooks/usePromptBeforeUnload';
@@ -339,7 +338,7 @@ export default function TenantLayout({ children }) {
 							<TenantNotice variant="warning">This demo site is cleared once per week.</TenantNotice>
 						)}
 
-						{process.env.MIX_FEATURE_BILLING &&
+						{import.meta.env.VITE_FEATURE_BILLING &&
 							tenant.id !== 'demo' &&
 							(can.manage_finances || can.update_tenant) && (
 								<BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />

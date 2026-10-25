@@ -1,7 +1,10 @@
 import React, { useRef, useState } from 'react';
-import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+import { Document, Page, pdfjs } from 'react-pdf';
+import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.js?url';
 import LoadingSpinner from '../LoadingSpinner';
 import PdfToolbar from './PdfToolbar';
+
+pdfjs.GlobalWorkerOptions.workerSrc = pdfWorker;
 
 const PdfMouse = ({ filename, openFullscreen, closeFullscreen, isFullscreen, pitch, instrument, setInstrument }) => {
 	const CONTAINER_PADDING = 0;

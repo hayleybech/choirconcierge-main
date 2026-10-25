@@ -2,7 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Enums\EmailCategory;
 use App\Models\Song;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -14,14 +17,17 @@ class SongUpdated extends Notification
 
     private Song $song;
 
+    private ?string $message;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Song $song)
+    public function __construct(Song $song, ?string $message = null)
     {
         $this->song = $song;
+        $this->message = $message;
     }
 
     /**
@@ -32,7 +38,9 @@ class SongUpdated extends Notification
      */
     public function via($notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof User && $notifiable->hasEmailPreference(EmailCategory::SONGS)
+            ? ['mail']
+            : [];
     }
 
     /**
@@ -48,7 +56,11 @@ class SongUpdated extends Notification
             ->subject('Song Updated: '.$this->song->title)
             ->markdown('emails.song_updated', [
                 'song' => $this->song,
+                'message' => $this->message,
                 'tracking_pixel' => new HtmlString($this->getTrackingPixel($this->song->id, $notifiable)),
+                'emailPreferenceLinks' => $notifiable instanceof User
+                    ? app(EmailPreferenceLinks::class)->make($notifiable, EmailCategory::SONGS)
+                    : null,
             ]);
     }
 

@@ -81,7 +81,7 @@ class PollController extends Controller
 
     public function store(PollRequest $request): RedirectResponse
     {
-        $poll = Poll::create($request->safe()->except(['options', 'send_notification', 'ensemble_ids']));
+        $poll = Poll::create($request->safe()->except(['options', 'ensemble_ids']));
 
         $options = collect($request->input('options', []))
             ->map(fn ($label) => ['label' => $label]);
@@ -89,20 +89,18 @@ class PollController extends Controller
 
         $poll->ensembles()->sync($request->input('ensemble_ids', []));
 
-        if ($request->input('send_notification')) {
-            $members = Membership::active()->with('user');
+        $members = Membership::active()->with('user');
 
-            if ($request->filled('ensemble_ids') && count($request->input('ensemble_ids')) > 0) {
-                $members->whereHas('enrolments', function ($query) use ($request) {
-                    $query->whereIn('ensemble_id', $request->input('ensemble_ids'));
-                });
-            }
-
-            $notification = new PollCreated($poll);
-            $recipients = $members->get()->pluck('user');
-            Notification::send($recipients, $notification);
-            $notification->log($poll->id, $recipients->first());
+        if ($request->filled('ensemble_ids') && count($request->input('ensemble_ids')) > 0) {
+            $members->whereHas('enrolments', function ($query) use ($request) {
+                $query->whereIn('ensemble_id', $request->input('ensemble_ids'));
+            });
         }
+
+        $notification = new PollCreated($poll);
+        $recipients = $members->get()->pluck('user');
+        Notification::send($recipients, $notification);
+        $notification->log($poll->id, $recipients->first());
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll created.']);
     }

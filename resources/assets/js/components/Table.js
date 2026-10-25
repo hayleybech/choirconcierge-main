@@ -11,8 +11,11 @@ export const TableHeading = ({ colSpan, children, className }) => (
 	</th>
 );
 
-export const TableCell = ({ colSpan, children, className }) => (
-	<td colSpan={colSpan} className={'px-6 py-4 whitespace-nowrap text-sm text-gray-500 ' + className}>
+export const TableCell = ({ colSpan, children, className, compact = false }) => (
+	<td
+		colSpan={colSpan}
+		className={`px-6 ${compact ? 'py-2' : 'py-4'} whitespace-nowrap text-sm text-gray-500 ${className ?? ''}`}
+	>
 		{children}
 	</td>
 );

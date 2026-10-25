@@ -46,8 +46,20 @@ class MailLogPolicy
 
     public function view(User $user, MailLog $log): bool
     {
+        if ($log->isProductAnnouncement()) {
+            return $user->memberships()
+                ->where('tenant_id', tenant('id'))
+                ->exists();
+        }
+
         return UserGroup::whereHas('mail_log_events', fn($query) => $query->where('mail_log_id', $log->id))
-            ->with('members.memberable', 'senders.sender')
+            ->with([
+                'tenant',
+                'recipient_roles',
+                'recipient_ensembles',
+                'sender_roles',
+                'sender_ensembles',
+            ])
             ->get()
             ->filter(fn(UserGroup $group) => $group->get_all_recipients()->contains($user)
                 || $group->get_all_senders()->contains($user)

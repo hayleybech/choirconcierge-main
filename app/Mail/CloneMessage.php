@@ -11,13 +11,22 @@ use Illuminate\Support\Facades\Mail;
 
 class CloneMessage
 {
+    /**
+     * The mail_log_events.context column is VARCHAR(64); reserve room for the ellipsis.
+     */
+    private const int EVENT_CONTEXT_MAX_LENGTH = 64;
+
+    private const string TRUNCATION_ELLIPSIS = '...';
+
     public static function forGroup(Mailable $message, UserGroup $group): void
     {
+        $groupTitleLimit = self::EVENT_CONTEXT_MAX_LENGTH - strlen(self::TRUNCATION_ELLIPSIS);
+
         if($group->get_all_recipients()->count() === 0) {
             MailLog::firstWhere('uid', $message->uid)->events()->create([
                 'status' => 'group-empty',
                 'user_group_id' => $group->id,
-                'context' => Str::limit($group->title, 64),
+                'context' => Str::limit($group->title, $groupTitleLimit),
             ]);
 
             return;
@@ -29,12 +38,16 @@ class CloneMessage
         MailLog::firstWhere('uid', $message->uid)->events()->create([
             'status' => 'clones-sent',
             'user_group_id' => $group->id,
-            'context' => Str::limit($group->title, 64),
+            'context' => Str::limit($group->title, $groupTitleLimit),
         ]);
     }
 
     private static function resendToUser(Mailable $message, User $user, UserGroup $group): void
     {
+        if ($message instanceof OrganisationBroadcast) {
+            $message->forRecipient($user);
+        }
+
         $originalSender = $message->from[0];
 
         // Clear replyTo, then put the original sender as the reply-to

@@ -21,7 +21,7 @@ import useRoute from '../../../hooks/useRoute';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import BillingTag from './BillingTag';
 import Badge from '../../../components/Badge';
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import DomainTag from '../../../components/DomainTag';
 
 const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
@@ -35,7 +35,7 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
 	</dl>
 );
 
-const Show = ({ tenant, setSidebarOpen }) => {
+const Show = ({ tenant, inbox_enabled, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { can } = usePage().props;
 	const breadcrumbs = [
@@ -124,6 +124,31 @@ const Show = ({ tenant, setSidebarOpen }) => {
 						},
 				]}
 			/>
+			{can.list_tenants && (
+				<SimplePanel>
+					<div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<h2 className="text-lg font-medium text-gray-900">Tenant Inbox</h2>
+							<p className="mt-1 text-sm text-gray-600">
+								The Inbox experience is currently {inbox_enabled ? 'enabled' : 'disabled'} for this choir.
+							</p>
+						</div>
+						<Button
+							onClick={() =>
+								router.put(
+									route('central.tenants.inbox-feature.update', { tenant }),
+									{ enabled: !inbox_enabled },
+									{ preserveScroll: true },
+								)
+							}
+							intent="primary"
+							weight="solid"
+						>
+							{inbox_enabled ? 'Disable Inbox' : 'Enable Inbox'}
+						</Button>
+					</div>
+				</SimplePanel>
+			)}
 		</>
 	);
 };

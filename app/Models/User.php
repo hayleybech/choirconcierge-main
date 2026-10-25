@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App;
+use App\Enums\EmailCategory;
 use App\Mail\Welcome;
 use App\Models\Traits\TenantTimezoneDates;
 use Illuminate\Database\Eloquent\Builder;
@@ -123,9 +124,20 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
      */
     protected $hidden = ['password', 'remember_token'];
 
+    protected $attributes = [
+        'email_preferences' => '{"communications":true,"songs":true,"events":true,"documents":true,"polls":true,"attendance_reports":true,"system":true,"product":true,"promotions":false,"community":false}',
+    ];
+
     protected $with = ['media', 'membership.roles', 'membership.status'];
 
-    public $casts = ['updated_at' => 'datetime', 'created_at' => 'datetime', 'last_login' => 'datetime', 'dob' => 'datetime', 'prefers_metric' => 'boolean'];
+    public $casts = [
+        'updated_at' => 'datetime',
+        'created_at' => 'datetime',
+        'last_login' => 'datetime',
+        'dob' => 'datetime',
+        'prefers_metric' => 'boolean',
+        'email_preferences' => 'array',
+    ];
 
     protected $appends = ['name', 'avatar_url', 'profile_avatar_url', 'bha_type', 'age'];
 
@@ -156,6 +168,57 @@ class User extends Authenticatable implements HasMedia, TwoFactorAuthenticatable
         $this->save();
 
         return true;
+    }
+
+    /**
+     * @return array{communications: bool, songs: bool, events: bool, documents: bool, attendance_reports: bool, system: bool, product: bool, promotions: bool, community: bool}
+     */
+    public function emailPreferences(): array
+    {
+        $storedPreferences = $this->email_preferences ?? [];
+        $preferences = EmailCategory::defaults();
+
+        foreach (EmailCategory::cases() as $category) {
+            if ($category->isMandatory()) {
+                $preferences[$category->value] = true;
+            } elseif (array_key_exists($category->value, $storedPreferences)) {
+                $preferences[$category->value] = (bool) $storedPreferences[$category->value];
+            }
+        }
+
+        return $preferences;
+    }
+
+    public function hasEmailPreference(EmailCategory $category): bool
+    {
+        return $this->emailPreferences()[$category->value];
+    }
+
+    public function canReceiveAttendanceReports(): bool
+    {
+        return Membership::query()
+            ->withoutTenancy()
+            ->where('user_id', $this->getKey())
+            ->whereHas('roles', function (Builder $query): void {
+                $query->withoutTenancy()->whereJsonContains('abilities', 'attendances_view');
+            })
+            ->exists();
+    }
+
+    /**
+     * @param array<string, bool> $preferences
+     */
+    public function updateEmailPreferences(array $preferences): void
+    {
+        $normalizedPreferences = $this->emailPreferences();
+
+        foreach (EmailCategory::cases() as $category) {
+            $normalizedPreferences[$category->value] = $category->isMandatory()
+                ? true
+                : (bool) ($preferences[$category->value] ?? $normalizedPreferences[$category->value]);
+        }
+
+        $this->forceFill(['email_preferences' => $normalizedPreferences])->save();
     }
 
     public static function setInitialPassword(string $password = null): string

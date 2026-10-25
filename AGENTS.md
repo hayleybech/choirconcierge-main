@@ -257,23 +257,22 @@ php artisan queue:work
 
 `php artisan schedule:test` is an interactive command; use it only when an interactive run is explicitly intended.
 
-#### Frontend (Laravel Mix, not Vite)
+#### Frontend (Vite)
 
 ```sh
 npm run dev
-npm run watch
-npm run prod
+npm run build
 npm test
 npm run prettier
 ```
 
-There is no `npm run build` script.
+For tests, create a `choirconcierge_test` database and configure `.env.testing` to use it. `phpunit.xml` configures the test queue, cache, mail, Telescope, and stop-on-failure behavior.
 
 ### Project Architecture
 
 Choir Concierge is a multi-tenant SaaS platform for choir management, including member rosters, song libraries, event RSVP and attendance, document storage, riser-stack editing, mailing lists, onboarding checklists, and polls.
 
-- **Runtime and frontend:** Composer requires PHP `>=8.4`; the application uses Laravel 11 with the Laravel 10 file structure. The frontend uses Inertia.js v1, React 17, and Tailwind CSS 4, bundled with Laravel Mix. Inertia pages are under `resources/assets/js/Pages/`.
+- **Runtime and frontend:** Composer requires PHP `>=8.4`; the application uses Laravel 11 with the Laravel 10 file structure. The frontend uses Inertia.js v1, React 17, and Tailwind CSS 4, bundled with Vite. Inertia pages are under `resources/assets/js/Pages/`.
 - **Database and queues:** MySQL is shared across tenants; tenants do not have separate databases. The queue driver is `database`, and background jobs implement `ShouldQueue`.
 - **Billing:** Laravel Spark with Paddle (`laravel/spark-paddle`); `Tenant` is billable.
 - **Tenancy:** `stancl/tenancy` v3 uses single-database mode. `DatabaseTenancyBootstrapper` is intentionally disabled; Cache, Filesystem, and Queue bootstrappers are active. Tenants are identified by human-readable slugs in paths (`choirconcierge.com/{tenant}/...`); subdomain requests redirect to that format. Models use `BelongsToTenant` for automatic scoping. `TenantCreated` starts a chained pipeline: `SendWelcomeEmailSeries`, `SendTenantCreatedNotification`, `SeedForTenant`, then `CreateAdminMembershipForTenant`.
@@ -333,3 +332,8 @@ Choir Concierge is a multi-tenant SaaS platform for choir management, including 
 - Use `tz_from_tenant_to_utc()` and `tz_from_utc_to_tenant()` in `app/helpers.php` for timezone conversion; do not use raw Carbon shifts.
 - Apply `TenantTimezoneDates` to models with date columns that need tenant-aware display.
 - `spatie/laravel-query-builder` powers filterable and sortable index endpoints; custom sorts are in `app/Http/Sorts/`.
+
+## Hayley's Code Style
+- Strong preference for fluent method chaining rather than individual statements.
+- Treat every loop as an opportunity to refactor to collections.
+- Look for opportunities to refactor existing collection code to a collection pipeline. e.g. Try replacing an early return inside an `each` callback with a prior `reject` call.

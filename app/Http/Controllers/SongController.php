@@ -10,6 +10,7 @@ use App\Models\Song;
 use App\Models\SongCategory;
 use App\Models\SongStatus;
 use App\Models\VoicePart;
+use App\Notifications\SongPublished;
 use App\Notifications\SongUpdated;
 use App\Notifications\SongUploaded;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -74,9 +75,9 @@ class SongController extends Controller
 
     public function store(SongRequest $request): RedirectResponse
     {
-        $song = Song::create($request->safe()->except('send_notification'));
+        $song = Song::create($request->safe()->except(['send_notification', 'notification_message']));
 
-        if ($request->input('send_notification')) {
+        if ($song->status->title !== 'Pending') {
             $notification = new SongUploaded($song);
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
@@ -157,10 +158,20 @@ class SongController extends Controller
 
     public function update(SongRequest $request, Song $song): RedirectResponse
     {
-        $song->update($request->safe()->except('send_notification'));
+        $previousStatus = $song->status->title;
+        $updatedStatus = SongStatus::findOrFail($request->input('status'));
 
-        if ($request->input('send_notification')) {
-            $notification = new SongUpdated($song);
+        $song->update($request->safe()->except(['send_notification', 'notification_message']));
+
+        $notification = null;
+
+        if ($previousStatus === 'Pending' && in_array($updatedStatus->title, ['Learning', 'Active'], true)) {
+            $notification = new SongPublished($song);
+        } elseif ($request->input('send_notification') && $updatedStatus->title !== 'Pending') {
+            $notification = new SongUpdated($song, $request->input('notification_message'));
+        }
+
+        if ($notification !== null) {
             $recipients = Membership::active()->with('user')->get()->pluck('user');
             Notification::send($recipients, $notification);
             $notification->log($song->id, $recipients->first());

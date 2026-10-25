@@ -22,6 +22,7 @@ class BroadcastController extends Controller
         $this->authorize('createBroadcast', UserGroup::class);
 
         return Inertia::render('MailingLists/Broadcasts/Create', [
+            'selectedList' => $request->integer('list') ?: null,
             'lists' => UserGroup::with(['tenant', 'sender_roles', 'recipient_roles', 'sender_ensembles', 'recipient_ensembles'])
                 ->get()
                 ->filter(fn(UserGroup $group) => $group->authoriseSender($request->user()))
@@ -31,7 +32,7 @@ class BroadcastController extends Controller
 
     public function store(BroadcastRequest $request): RedirectResponse
     {
-        $group = UserGroup::find($request->input('list'));
+        $group = UserGroup::with('tenant')->find($request->input('list'));
 
         $this->authorize('createBroadcastFor', $group);
 

@@ -36,7 +36,7 @@ const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
 			<TBody>
 				{tenants.map(tenant => (
 					<tr key={tenant.id}>
-						<TableCell>
+						<TableCell compact>
 							<Link
 								href={route('central.tenants.show', { tenant })}
 								className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
@@ -44,21 +44,21 @@ const TenantTableDesktop = ({ tenants, sortFilterForm, pagination }) => {
 								{tenant.name}
 							</Link>
 						</TableCell>
-						<TableCell>
+						<TableCell compact>
 							<div className="flex gap-1 flex-wrap">
 								{tenant.domains.map(domainItem => (
 									<DomainTag key={domainItem.domain}>{domainItem.domain}</DomainTag>
 								))}
 							</div>
 						</TableCell>
-						<TableCell>{tenant.timezone}</TableCell>
-						<TableCell>
+						<TableCell compact>{tenant.timezone}</TableCell>
+						<TableCell compact>
 							<BillingTag billing={tenant.billing_status} />
 						</TableCell>
-						<TableCell>
+						<TableCell compact>
 							<DateTag icon="pencil" date={tenant.created_at} />
 						</TableCell>
-						<TableCell>
+						<TableCell compact>
 							<ButtonLink href={route('dash', { tenant })} intent="primary" weight="solid" size="sm">
 								<Icon icon="sign-in-alt" />
 								Open

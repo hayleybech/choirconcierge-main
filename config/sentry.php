@@ -4,7 +4,7 @@ $VERSION = 'choir-concierge@2025-09-22c';
 
 return [
 
-    'dsn' => env('SENTRY_LARAVEL_DSN', env('MIX_SENTRY_DSN')),
+    'dsn' => env('SENTRY_LARAVEL_DSN', env('VITE_SENTRY_DSN')),
 
     // capture release as git sha
     // 'release' => trim(exec('git --git-dir ' . base_path('.git') . ' log --pretty="%h" -n1 HEAD')),
@@ -36,7 +36,7 @@ return [
     // @see: https://docs.sentry.io/platforms/php/configuration/options/#send-default-pii
     'send_default_pii' => false,
 
-    'traces_sample_rate' => (float) (env('MIX_SENTRY_TRACES_SAMPLE_RATE', 0.0)),
+    'traces_sample_rate' => (float) (env('VITE_SENTRY_TRACES_SAMPLE_RATE', 0.0)),
 
     'controllers_base_namespace' => env('SENTRY_CONTROLLERS_BASE_NAMESPACE', 'App\\Http\\Controllers'),
 

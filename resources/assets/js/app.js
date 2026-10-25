@@ -1,25 +1,31 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { createInertiaApp, router } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import * as Sentry from '@sentry/react';
 import { Integrations as TracingIntegrations } from '@sentry/tracing';
 import { onMessageFromRN, sendMessageToRN } from './lib/reactNative';
 
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import '../app.css';
+
 const VERSION = 'choir-concierge@2025-09-22c';
+const pages = import.meta.glob(['./Pages/**/*.js', './Pages/**/*.jsx', '!./Pages/**/*.test.js']);
 
 Sentry.init({
-	dsn: process.env.MIX_SENTRY_DSN,
+	dsn: import.meta.env.VITE_SENTRY_DSN,
 	logErrors: true,
 	integrations: [new TracingIntegrations.BrowserTracing()],
-	tracesSampleRate: process.env.MIX_SENTRY_TRACES_SAMPLE_RATE,
+	tracesSampleRate: import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE,
 	tracingOptions: {
 		trackComponents: true,
 	},
-	release: process.env.MIX_SENTRY_ENV === 'production' ? VERSION : `VERSION:${process.env.MIX_SENTRY_ENV}`,
-	environment: process.env.MIX_SENTRY_ENV,
+	release: import.meta.env.VITE_SENTRY_ENV === 'production' ? VERSION : `VERSION:${import.meta.env.VITE_SENTRY_ENV}`,
+	environment: import.meta.env.VITE_SENTRY_ENV,
 });
 createInertiaApp({
-	resolve: name => require(`./Pages/${name}`),
+	resolve: name =>
+		resolvePageComponent([`./Pages/${name}.js`, `./Pages/${name}.jsx`], pages).then(module => module.default),
 	setup({ el, App, props }) {
 		if (props.initialPage.props.isWebView) {
 			router.on('before', event => {

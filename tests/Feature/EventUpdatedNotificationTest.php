@@ -23,10 +23,10 @@ test('EventUpdated notification handles null original description', function () 
     ]);
     $user->id = 1;
 
-    $notification = new EventUpdated($event, $original);
+    $notification = new EventUpdated($event, $original, 'Please review the event changes.');
 
     // This should not throw an exception
     $mailMessage = $notification->toMail($user);
 
-    expect($mailMessage)->not->toBeNull();
+    expect($mailMessage->viewData['message'])->toBe('Please review the event changes.');
 });

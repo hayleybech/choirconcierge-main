@@ -2,7 +2,10 @@
 
 namespace App\Mail;
 
+use App\Enums\EmailCategory;
 use App\Models\Event;
+use App\Models\User;
+use App\Services\EmailPreferenceLinks;
 use App\Models\VoicePart;
 use Illuminate\Bus\Queueable;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +22,7 @@ class AttendanceReport extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Event $event)
+    public function __construct(public Event $event, public ?User $recipient = null)
     {
         //
     }
@@ -104,12 +107,17 @@ class AttendanceReport extends Mailable
             return $voiceParts->sortKeys(SORT_NATURAL | SORT_FLAG_CASE);
         });
 
+        $emailPreferenceLinks = $this->recipient !== null
+            ? app(EmailPreferenceLinks::class)->make($this->recipient, EmailCategory::ATTENDANCE_REPORTS)
+            : null;
+
         return new Content(
             markdown: 'emails.attendance-report',
             with: [
                 'url' => route('events.attendances.index', ['event' => $this->event, 'tenant' => $this->event->tenant->id]),
                 'absent_singers' => $grouped,
                 'show_ensembles' => $this->event->ensembles->count() > 1,
+                'emailPreferenceLinks' => $emailPreferenceLinks,
             ],
         );
     }

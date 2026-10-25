@@ -2,8 +2,8 @@ import classNames from "../classNames";
 import Icon from "./Icon";
 import React from "react";
 
-const FeeStatus = ({ status }) => (
-	<div className={classNames('mb-2 text-sm', STATUSES[status].colour)}>
+const FeeStatus = ({ status, tooltip }) => (
+	<div className={classNames('text-sm', STATUSES[status].colour)} title={tooltip}>
 		<Icon icon={STATUSES[status].icon} mr className={STATUSES[status].colour} />
 		<span className="font-semibold truncate">
             {STATUSES[status].label}

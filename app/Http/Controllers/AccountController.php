@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Features\InboxFeature;
 use App\Http\Requests\ProfileRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -17,6 +18,9 @@ class AccountController extends Controller
         return Inertia::render('Account/Edit', [
             'two_factor_enabled' => $user->hasTwoFactorEnabled(),
             'recovery_codes' => $user->hasTwoFactorEnabled() ? $user->getRecoveryCodes() : [],
+            'email_preferences' => $user->emailPreferences(),
+            'can_receive_attendance_reports' => $user->canReceiveAttendanceReports(),
+            'inbox_preference' => $user->isSuperAdmin ? InboxFeature::personalOverride($user) : null,
         ]);
     }
 
@@ -25,7 +29,7 @@ class AccountController extends Controller
         auth()->user()->update($request->validated());
 
         return redirect()
-            ->route('account.edit')
+            ->route('account.edit', ['tab' => $request->validated('tab')])
             ->with(['status' => 'Account Settings updated.']);
     }
 }

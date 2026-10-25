@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -278,22 +279,52 @@ class SingerController extends Controller
     {
         $this->authorize('update', Membership::class);
 
-        $request->validate([
+        $data = $request->validate([
             'singer_ids' => 'required|array',
             'singer_ids.*' => 'exists:memberships,id',
             'status' => ['required', Rule::enum(SingerStatus::class)],
         ]);
 
-        $singerIds = $request->input('singer_ids');
-        $status = $request->input('status');
-
-        Membership::whereIn('id', $singerIds)
+        Membership::whereIn('id', $data['singer_ids'])
             ->get()
-            ->each(fn($membership) => $membership->statuses()->create(['status' => $status]));
+            ->each(function (Membership $membership) use ($data): void {
+                $membership->statuses()->create(['status' => $data['status']]);
+            });
 
         return redirect()
             ->route('singers.index')
-            ->with(['status' => count($singerIds) . ' singers updated. ']);
+            ->with(['status' => count($data['singer_ids']) . ' singers updated. ']);
+    }
+
+    public function bulkUpdateFees(Request $request): RedirectResponse
+    {
+        Gate::authorize('update-fees');
+
+        $data = $request->validate([
+            'singer_ids' => ['required', 'array', 'min:1'],
+            'singer_ids.*' => ['required', 'integer', 'distinct', 'exists:memberships,id'],
+            'freq' => ['required', Rule::in(['month', 'quarter', 'halfyear', 'year'])],
+        ]);
+
+        $singers = Membership::whereIn('id', $data['singer_ids'])
+            ->get()
+            ->each(function (Membership $singer) use ($data): void {
+                $expiry = $singer->paid_until?->copy() ?? now();
+                $singer->update([
+                    'paid_until' => match ($data['freq']) {
+                        'month' => $expiry->addMonthNoOverflow(),
+                        'quarter' => $expiry->addMonthsNoOverflow(3),
+                        'halfyear' => $expiry->addMonthsNoOverflow(6),
+                        'year' => $expiry->addYearNoOverflow(),
+                    },
+                ]);
+            });
+
+        tenant()->update(['fee_freq' => $data['freq']]);
+
+        return redirect()
+            ->route('singers.index')
+            ->with(['status' => $singers->count() . ' singers fees renewed. ']);
     }
 
     public function bulkDestroy(Request $request): RedirectResponse

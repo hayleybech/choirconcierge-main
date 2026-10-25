@@ -33,7 +33,7 @@ const countryStateOptions = {
 };
 
 const StateSelect = ({ country, defaultValue, updateFn, ...rest }) => {
-	if (!country in countryStateOptions) {
+	if (!(country in countryStateOptions)) {
 		return null;
 	}
 

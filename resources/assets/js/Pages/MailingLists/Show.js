@@ -24,6 +24,12 @@ const Show = ({ list, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const actions = [
+		{
+			label: 'Compose',
+			icon: 'paper-plane',
+			url: route('communications.create', { list: list.id }),
+			can: 'create_broadcast',
+		},
 		{ label: 'Edit', icon: 'edit', url: route('groups.edit', { group: list }), can: 'update_group' },
 		{
 			label: 'Delete',
@@ -61,7 +67,7 @@ const Show = ({ list, setSidebarOpen }) => {
 							key={action.label}
 							url={action.url}
 							onClick={action.onClick}
-							intent={action.intent}
+												intent={action.intent}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

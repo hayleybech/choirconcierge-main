@@ -50,10 +50,10 @@ class RecurringEventController extends Controller
         }
         $original = $event->getOriginal();
 
-        UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), 'send_notification'));
+        UpdateRecurringEvent::handle($mode, $event, Arr::except($request->validated(), ['send_notification', 'notification_message']));
 
         if ($request->input('send_notification')) {
-            $notification = new EventUpdated($event, $original);
+            $notification = new EventUpdated($event, $original, $request->input('notification_message'));
             $recipients = Membership::active()->with('user')->get()->map(fn ($singer) => $singer->user);
             Notification::send($recipients, $notification);
             $notification->log($event->id, $recipients->first());

@@ -25,13 +25,19 @@ import FileInput from '../../../components/inputs/FileInput';
 import useRoute from '../../../hooks/useRoute';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 
-const Create = ({ lists, setSidebarOpen }) => {
+const Create = ({ lists, selectedList, setSidebarOpen, inboxEnabled }) => {
 	const { route } = useRoute();
+	const composeTitle = inboxEnabled ? 'Compose Message' : 'Send Broadcast';
+	const listOptions = lists.map(({ title, id, ...list }) => ({
+		label: title,
+		value: id,
+		...list,
+	}));
 
 	const { data, setData, post, processing, errors, progress } = useForm({
 		subject: '',
 		body: '',
-		list: null,
+		list: selectedList,
 		attachments: [],
 	});
 
@@ -41,13 +47,13 @@ const Create = ({ lists, setSidebarOpen }) => {
 	}
 
 	const breadcrumbs = [
-		{ name: 'Communications', url: route('communications.index') },
-		{ name: 'Send Email Broadcast', url: route('communications.create') },
+		{ name: inboxEnabled ? 'Inbox' : 'Communications', url: route('communications.index') },
+		{ name: composeTitle, url: route('communications.create') },
 	];
 
 	return (
 		<>
-			<AppHead title="Send Email" />
+			<AppHead title={composeTitle} />
 
 			<TrialAntiSpamNotice />
 
@@ -59,7 +65,7 @@ const Create = ({ lists, setSidebarOpen }) => {
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
 						<Icon icon="inbox-out" type="solid" className="mr-2" />
-						Send Email Broadcast
+						{composeTitle}
 					</PageHeaderTitle>
 				</PageHeaderContent>
 			</PageHeader>
@@ -68,17 +74,14 @@ const Create = ({ lists, setSidebarOpen }) => {
 				{lists.length > 0 ? (
 					<Form onSubmit={submit}>
 						<FormSection
-							title="Compose email with letterhead"
-							description="Choose a mailing list, then start writing! "
+							title={inboxEnabled ? 'Compose a message' : 'Send Broadcast'}
+							description="Choose a mailing list and write your message. Your choir's letterhead is included automatically."
 						>
 							<div className="sm:col-span-6">
 								<Label label="Mailing List" />
 								<MailingListSelect
-									options={lists.map(({ title, id, ...list }) => ({
-										label: title,
-										value: id,
-										...list,
-									}))}
+									options={listOptions}
+									defaultValue={listOptions.find(option => option.value === selectedList)}
 									updateFn={value => setData('list', value)}
 								/>
 								{errors.list && <Error>{errors.list}</Error>}
@@ -105,7 +108,7 @@ const Create = ({ lists, setSidebarOpen }) => {
 								{errors.body && <Error>{errors.body}</Error>}
 							</div>
 
-							<div className="sm:col-span-6">
+ 						<div className="sm:col-span-6">
 								<Label label="Attachments" forInput="attachments" />
 								<FileInput
 									name="attachments"
@@ -131,7 +134,7 @@ const Create = ({ lists, setSidebarOpen }) => {
 
 						<FormFooter>
 							<ButtonLink href={route('groups.index')}>Cancel</ButtonLink>
- 						<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
+							<Button intent="primary" weight="solid" type="submit" className="ml-3" disabled={processing}>
 								<Icon icon="paper-plane" mr /> Send
 							</Button>
 						</FormFooter>

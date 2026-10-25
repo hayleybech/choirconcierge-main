@@ -36,6 +36,7 @@ class SongRequest extends FormRequest
             'song' => [],
             'show_for_prospects' => ['boolean'],
             'send_notification' => ['boolean'],
+            'notification_message' => ['nullable', 'string', 'max:5000'],
         ];
     }
 }

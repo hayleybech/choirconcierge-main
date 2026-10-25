@@ -85,6 +85,7 @@ class UserGroupController extends Controller
         });
 
         $group->can = [
+            'create_broadcast' => auth()->user()?->can('createBroadcast', UserGroup::class) && $group->authoriseSender(auth()->user()),
             'update_group' => auth()->user()?->can('update', $group),
             'delete_group' => auth()->user()?->can('delete', $group),
         ];

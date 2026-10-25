@@ -202,7 +202,7 @@ const BillingForm = ({ organisation }) => {
 		post(route('organisation.update'));
 	}
 
-	return process.env.MIX_FEATURE_BILLING ? (
+	return import.meta.env.VITE_FEATURE_BILLING ? (
 		<Form onSubmit={submit}>
 			<FormSection title="Billing Details">
 				<div className="sm:col-span-6">

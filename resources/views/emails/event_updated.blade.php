@@ -3,6 +3,13 @@
 # This event has been updated
 ## {{ $event->title }}
 
+@if($message)
+Message:
+
+{{ $message }}
+
+@endif
+
 {{-- method 1: attach then reference--}}
 {{--  $mailable->attachFromStorage('logo.png')  --}}
 {{--<img src="cid:logo.png">--}}
@@ -64,4 +71,8 @@
 
 Regards, <br />
 {{ config('app.name') }}
+
+@if($emailPreferenceLinks ?? false)
+@include('emails.partials.email-preference-footer')
+@endif
 </x-mail::message>

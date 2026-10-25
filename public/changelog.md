@@ -1,3 +1,16 @@
+# 2026-10-25
+## Notifications and Announcements
+### Notification settings
+- Added notification preferences to Account Settings. 
+- Toggle emails for songs, events, documents, polls, and attendance reports.
+- Essential communications (Broadcasts) for your organisation and account security emails remain enabled.
+### Choir Concierge announcements newsletter
+- We've added a newsletter service to keep you informed about new features and updates for Choir Concierge.
+- You can manage your newsletter preferences in the new Notifications Settings.
+### Other Changes
+- Pending songs will now send an email notification when published instead of when they are created.
+- Added bulk edit for the Renew Fees feature and simplified the way fees are presented in the Singers table.  
+---
 # 2026-10-17
 ## Further Attendance Reporting Tweaks and More!
 - Added edit and bulk edit to RSVPs via the RSVP list

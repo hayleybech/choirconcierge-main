@@ -3,11 +3,19 @@ import { DetailList, DetailListItem } from '../components/DetailList';
 import Badge from '../../../components/Badge';
 import FeeStatus from '../../../components/FeeStatus';
 import DateTag from '../../../components/DateTag';
-import React from 'react';
+import React, { useState } from 'react';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
+import Button from '../../../components/inputs/ButtonV2';
+import Icon from '../../../components/Icon';
+import RenewFeesDialog from '../components/RenewFeesDialog';
 
-export const MembershipDetailsSection = ({ singer, can }) => (
+
+export const MembershipDetailsSection = ({ singer, can }) => {
+	const [feeDialogIsOpen, setFeeDialogIsOpen] = useState(false);
+
+	return (
+		<>
 			<SimplePanel>
 				<div className="flex flex-col sm:flex-row">
 					<DetailList gridCols="grid-cols-2 md:grid-cols-4">
@@ -25,12 +33,26 @@ export const MembershipDetailsSection = ({ singer, can }) => (
 							</div>
 						</DetailListItem>
 						<DetailListItem label="Membership Fees">
-							<FeeStatus status={singer.fee_status} />
-							{singer.paid_until && (
-								<span className="text-sm text-gray-500 italic">
-									<DateTag date={singer.paid_until} label="Expires" />
-								</span>
-							)}
+							<div className="space-y-1">
+
+								<FeeStatus status={singer.fee_status} />
+								{singer.paid_until && (
+									<div className="text-sm text-gray-500 italic">
+										<DateTag date={singer.paid_until} label="Expires" icon="calendar-times" />
+									</div>
+								)}
+								{can['manage_finances'] && (
+									<Button
+										intent="success"
+										weight="outline"
+										size="xs"
+										onClick={() => setFeeDialogIsOpen(true)}
+									>
+										<Icon icon="calendar-check" />
+										Renew
+									</Button>
+								)}
+							</div>
 						</DetailListItem>
 						<DetailListItem label="Referred by">{singer.referrer ?? 'Unknown'}</DetailListItem>
 						<DetailListItem label="Reason for Joining">
@@ -59,12 +81,12 @@ export const MembershipDetailsSection = ({ singer, can }) => (
 											{idx !== singer.statuses.length - 1 ? (
 												<div
 													aria-hidden="true"
-													className="absolute top-4 left-2 -ml-px h-full w-0.5 bg-gray-500"
+													className="absolute top-4 left-2 h-full w-0.5 bg-gray-500"
 												/>
 											) : null}
 											<div className="relative flex h-6 items-center justify-between gap-4">
 												<div className="flex items-center">
-													<div className="rounded-full border bg-gray-100 border-gray-100 size-8 flex items-center">
+													<div className="rounded-full size-8 flex items-center">
 														<SingerStatusTag
 															status={new SingerStatus(statusRecord.status)}
 														/>{' '}
@@ -86,4 +108,9 @@ export const MembershipDetailsSection = ({ singer, can }) => (
 					)}
 				</div>
 			</SimplePanel>
-		);
+			{can['manage_finances'] && (
+				<RenewFeesDialog isOpen={feeDialogIsOpen} setIsOpen={setFeeDialogIsOpen} singer={singer} />
+			)}
+		</>
+	);
+};

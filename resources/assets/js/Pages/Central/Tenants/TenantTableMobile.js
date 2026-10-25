@@ -2,8 +2,10 @@ import React from 'react';
 import TableMobile, { TableMobileHeader, TableMobileLink } from '../../../components/TableMobile';
 import BillingTag from './BillingTag';
 import Pagination from '../../../components/Pagination';
+import Icon from '../../../components/Icon';
+import Button from '../../../components/inputs/ButtonV2';
 
-const TenantTableMobile = ({ tenants, pagination }) => {
+const TenantTableMobile = ({ tenants, pagination, hasNonDefaultFilters, setShowFilters }) => {
 	const bulkEdit = {
 		isActiveMobile: false,
 		noun: 'Tenant',
@@ -13,7 +15,17 @@ const TenantTableMobile = ({ tenants, pagination }) => {
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit} />
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					size="sm"
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight="clear"
+					onClick={() => setShowFilters(previousValue => !previousValue)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{tenants.map(tenant => (
 					<li key={tenant.id} className="flex">

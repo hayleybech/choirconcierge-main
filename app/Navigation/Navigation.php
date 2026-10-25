@@ -2,14 +2,16 @@
 
 namespace App\Navigation;
 
+use App\Features\InboxFeature;
 use App\Models\Tenant;
 
 class Navigation
 {
     public function get(?string $tenant = null, bool $forApi = false): array
     {
-        $items = $tenant && Tenant::find($tenant)
-            ? $this->tenantItems()
+        $tenantModel = $tenant ? Tenant::find($tenant) : null;
+        $items = $tenantModel
+            ? $this->tenantItems(InboxFeature::isEnabledFor($tenantModel, auth()->user()))
             : $this->centralItems();
 
         if ($forApi) {
@@ -48,17 +50,32 @@ class Navigation
                 'items' => []
             ],
             [
-                'name' => 'Mail Logs',
+                'name' => 'Communications',
                 'route' => 'central.mail-logs.index',
-                'icon' => 'history',
+                'icon' => 'fa-mail-bulk',
                 'can' => 'list_tenants',
-                'showAsActiveForRoutes' => ['central.mail-logs.*'],
-                'items' => []
+                'showAsActiveForRoutes' => ['central.mail-logs.*', 'central.announcements.*'],
+                'items' => [
+                    [
+                        'name' => 'Mail Logs',
+                        'route' => 'central.mail-logs.index',
+                        'icon' => 'history',
+                        'can' => 'list_tenants',
+                        'showAsActiveForRoutes' => ['central.mail-logs.*'],
+                    ],
+                    [
+                        'name' => 'Announcements',
+                        'route' => 'central.announcements.create',
+                        'icon' => 'bullhorn',
+                        'can' => 'manage_product_announcements',
+                        'showAsActiveForRoutes' => ['central.announcements.*'],
+                    ],
+                ],
             ],
         ];
     }
 
-    protected function tenantItems(): array
+    protected function tenantItems(bool $inboxEnabled): array
     {
         return [
             [
@@ -126,13 +143,13 @@ class Navigation
                 ]
             ],
             [
-                'name' => 'Communications',
+                'name' => $inboxEnabled ? 'Inbox' : 'Communications',
                 'route' => 'communications.index',
-                'can' => 'create_broadcast',
+                'can' => 'view_mail_logs',
                 'icon' => 'fa-mail-bulk',
                 'showAsActiveForRoutes' => ['communications.*', 'groups.*'],
                 'items' => [
-                    ['name' => 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
+                    ['name' => $inboxEnabled ? 'Compose' : 'Send Broadcast', 'route' => 'communications.create', 'icon' => 'inbox-out', 'can' => 'create_broadcast', 'showAsActiveForRoutes' => ['communications.create']],
                     [
                         'name' => 'Mailing Lists',
                         'route' => 'groups.index',

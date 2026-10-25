@@ -62,8 +62,8 @@ const RadioGroup = ({
 										'text-lg ml-3',
  									option.textColour ?? '',
  									option.colour ?? '',
- 									checked && !option.colour && !option.textColour && 'text-purple-700',
- 									!checked && !option.colour && !option.textColour && 'text-gray-900',
+ 									checked && !option.colour && !option.textColour && 'text-purple-600',
+ 									!checked && !option.colour && !option.textColour && 'text-gray-600',
 										(disabled || option.disabled) && 'opacity-50',
 										size === 'xs' ? 'text-base' : 'text-lg'
 									)}
@@ -74,8 +74,8 @@ const RadioGroup = ({
 								className={classNames(
 									'flex gap-1.5 w-full',
 									contentVertical ? 'flex-col' : 'flex-row items-center justify-between',
-									size === 'xs' && 'ml-0',
-									size === 'sm' && 'ml-0',
+									size === 'xs' && !option.icon && 'ml-2',
+									size === 'sm' && !option.icon && 'ml-2',
 									size === 'md' && 'ml-3'
 								)}
 							>

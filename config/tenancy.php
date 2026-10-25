@@ -129,8 +129,8 @@ return [
 //        'suffix_storage_path' => true,
 
         /**
-         * By default, asset() calls are made multi-tenant too. You can use global_asset() and mix()
-         * for global, non-tenant-specific assets. However, you might have some issues when using
+         * By default, asset() calls are made multi-tenant too. Use global_asset() for global,
+         * non-tenant-specific assets. However, you might have some issues when using
          * packages that use asset() calls inside the tenant app. To avoid such issues, you can
          * disable asset() helper tenancy and explicitly use tenant_asset() calls in places
          * where you want to use tenant-specific assets (product images, avatars, etc).

@@ -150,6 +150,54 @@ return [
                         'activeUserGracePeriodDays' => null,
                     ]
                 ],
+                [
+                    'name' => 'Small Choir (2025)',
+                    'short_description' => 'Up to 25 users.',
+                    'yearly_id' => env('SPARK_PLAN_SMALL_YEARLY_2025', 62775),
+                    'features' => [
+                        'Up to 25 users',
+                        'Unmetered storage',
+                        '20% off first year with coupon code FIRSTYR',
+                    ],
+                    'archived' => true,
+                    'options' => [
+                        'activeUserQuota' => 25,
+                        'activeUserQuotaBuffer' => 5,
+                        'activeUserGracePeriodDays' => 30,
+                    ]
+                ],
+                [
+                    'name' => 'Medium Choir (2025)',
+                    'short_description' => 'Up to 50 users.',
+                    'yearly_id' => env('SPARK_PLAN_MEDIUM_YEARLY_2025', 62838),
+                    'features' => [
+                        'Up to 50 users',
+                        'Unmetered storage',
+                        '20% off first year with coupon code FIRSTYR',
+                    ],
+                    'archived' => true,
+                    'options' => [
+                        'activeUserQuota' => 50,
+                        'activeUserQuotaBuffer' => 5,
+                        'activeUserGracePeriodDays' => 30,
+                    ]
+                ],
+                [
+                    'name' => 'Large Choir (2025)',
+                    'short_description' => '51+ users.',
+                    'yearly_id' => env('SPARK_PLAN_LARGE_YEARLY_2025', 62839),
+                    'features' => [
+                        'Unlimited users',
+                        'Unmetered storage',
+                        '20% off first year with coupon code FIRSTYR',
+                    ],
+                    'archived' => true,
+                    'options' => [
+                        'activeUserQuota' => null,
+                        'activeUserQuotaBuffer' => null,
+                        'activeUserGracePeriodDays' => null,
+                    ]
+                ],
             ],
 
         ],

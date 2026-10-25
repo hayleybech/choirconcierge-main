@@ -17,31 +17,25 @@ yarn-error.log
 _ide_helper.php
 _ide_helper_models.php
 
+public/fonts/
+/public/build
 public/css/app.css
 public/js/app.js
-
-public/fonts/
 public/mix-manifest.json
 
 queue.pid
 /reports/
 
 .phpunit.result.cache
-
 public/js/test.js
 
 .env.testing
-
 public/js/resources_assets_js_Pages_Dash_Show_js.js
-
 public/js/risers.js
 
 coverage/
-
 public/js/manifest.js
-
 public/js/vendor.js
-
 public/51103eacf3bef7f35f0812db4ea611f7.js
 
 .phpunit.cache/

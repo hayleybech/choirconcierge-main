@@ -31,6 +31,7 @@ class PollControllerTest extends TestCase
     public function test_store_creates_poll_with_options(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));
+        Notification::fake();
 
         $data = [
             'title' => 'Where should we go?',
@@ -65,7 +66,7 @@ class PollControllerTest extends TestCase
             'can_vote_multiple' => false,
             'close_at' => null,
             'options' => ['Option A', 'Option B'],
-            'send_notification' => true,
+            'notification_message' => 'This created-poll note should be ignored.',
         ];
 
         $this->post(the_tenant_route('polls.store'), $data)
@@ -73,7 +74,11 @@ class PollControllerTest extends TestCase
 
         Notification::assertSentTo(
             Membership::active()->with('user')->get()->pluck('user'),
-            PollCreated::class
+            PollCreated::class,
+            fn (PollCreated $notification): bool => !str_contains(
+                $notification->toMail(auth()->user())->render(),
+                'This created-poll note should be ignored.',
+            ),
         );
     }
 

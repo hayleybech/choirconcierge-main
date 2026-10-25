@@ -2,7 +2,6 @@ import React, {useCallback, useState} from 'react'
 import SidebarDesktop from "../components/SidebarDesktop";
 import SidebarMobile from "../components/SidebarMobile";
 import {usePage} from '@inertiajs/react';
-import LayoutTopBar from "../components/LayoutTopBar";
 import ToastFlash from "../components/ToastFlash";
 import {useMediaQuery} from "react-responsive";
 import useRoute from "../hooks/useRoute";
