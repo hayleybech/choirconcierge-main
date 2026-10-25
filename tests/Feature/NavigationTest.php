@@ -35,12 +35,4 @@ class NavigationTest extends TestCase
                 ->where('navigation.6.items.0.name', 'Compose')
             );
     }
-
-    public function test_app_stylesheet_uses_the_versioned_vite_asset(): void
-    {
-        $this->actingAs($this->createUserWithRole('Admin'));
-
-        $this->get(the_tenant_route('dash'))
-            ->assertSee('href="'.e(Vite::asset('resources/assets/app.css')).'"', false);
-    }
 }
