@@ -25,6 +25,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditRiserStacksModal from './BulkEditRiserStacksModal';
 import BulkEditBar from '../../components/BulkEditBar';
+import Sorts from '../../components/Sorts';
 
 const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
@@ -33,9 +34,16 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 
 	const bulkEdit = useBulkEdit(stacks.data, can.update_stack && ensembles.length > 1, can.delete_stack, 'Stack');
 
-	const filters = [{ name: 'ensembles.id', multiple: true }];
+	const sorts = [
+		{ id: 'title', name: 'Name', default: true },
+		{ id: 'created_at', name: 'Date Created' },
+	];
+	const filters = [
+		{ name: 'search', defaultValue: '' },
+		{ name: 'ensembles.id', multiple: true },
+	];
 
-	const sortFilterForm = useSortFilterForm('stacks.index', filters, []);
+	const sortFilterForm = useSortFilterForm('stacks.index', filters, sorts);
 	const actions = [
 		{
 			label: 'Add New',
@@ -112,6 +120,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 				showFilters={showFilters}
 				filterPane={
 					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<RiserStackFilters
 								ensembles={ensembles}
@@ -127,6 +136,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 						stacks={stacks}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
+						sortFilterForm={sortFilterForm}
 					/>
 				}
 				tableMobile={

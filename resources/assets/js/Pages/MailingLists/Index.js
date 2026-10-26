@@ -21,9 +21,27 @@ import TrialAntiSpamNotice from './TrialAntiSpamNotice';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import useFilterPane from '../../hooks/useFilterPane';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import FilterSortPane from '../../components/FilterSortPane';
+import Sorts from '../../components/Sorts';
+import MailingListFilters from './MailingListFilters';
 
 const Index = ({ lists, can, setSidebarOpen }) => {
 	const { route } = useRoute();
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+
+	const sorts = [
+		{ id: 'title', name: 'Title', default: true },
+		{ id: 'list_type', name: 'Type' },
+		{ id: 'address', name: 'Address' },
+		{ id: 'created_at', name: 'Created' },
+	];
+	const filters = [
+		{ name: 'search', defaultValue: '' },
+		{ name: 'list_type', multiple: true },
+	];
+	const sortFilterForm = useSortFilterForm('groups.index', filters, sorts);
 
 	const bulkEdit = useBulkEdit(lists.data, false, can.delete_group, 'List');
 	const actions = [
@@ -44,6 +62,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			can: 'create_broadcast',
 		},
 		bulkEdit.action,
+		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	const breadcrumbs = [
@@ -122,8 +141,23 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			<BulkEditBar bulkEdit={bulkEdit} />
 
 			<IndexContainer
-				tableDesktop={<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} />}
-				tableMobile={<MailingListTableMobile lists={lists} bulkEdit={bulkEdit} />}
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={<MailingListFilters form={sortFilterForm} />}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableDesktop={<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} sortFilterForm={sortFilterForm} />}
+				tableMobile={
+					<MailingListTableMobile
+						lists={lists}
+						bulkEdit={bulkEdit}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+						setShowFilters={setShowFilters}
+					/>
+				}
 				emptyState={
 					lists.data.length === 0 ? (
 						<EmptyState

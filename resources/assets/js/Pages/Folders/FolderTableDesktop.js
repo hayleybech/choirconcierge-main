@@ -29,8 +29,8 @@ const FolderTableDesktop = ({ folders, documents, isFiltered, setDeletingFolder,
                                 Created
                             </TableHeadingSort>
                         </TableHeading>
-                        {(permissions['delete_folder'] || permissions['delete_document']) && (
-                            <TableHeading>Delete</TableHeading>
+                        {(permissions['update_folder'] || permissions['update_document'] || permissions['delete_folder'] || permissions['delete_document']) && (
+                            <TableHeading>Actions</TableHeading>
                         )}
                     </tr>
                 </THead>

@@ -39,7 +39,7 @@ const EventTypeTableDesktop = ({ categories, showEditCategory, showDeleteCategor
 						<TableCell>
 							<div className="flex gap-2 justify-end">
 								{can.create_event && (
-									<Button intent="primary" weight="solid" size="sm" onClick={() => showEditCategory(category)}>
+									<Button intent="secondary" weight="solid" size="sm" onClick={() => showEditCategory(category)}>
 										<Icon icon="edit" />
 										Edit
 									</Button>

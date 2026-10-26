@@ -23,7 +23,7 @@ const VoicePartTableMobile = ({ voiceParts }) => {
 						<div className="shrink-0">
 							<Swatch colour={voicePart.colour} />
 						</div>
-						<div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
+						<div className="min-w-0 flex-1 px-4 sm:px-0 lg:grid lg:grid-cols-2 lg:gap-4">
 							<div>
 								<div className="flex items-center justify-between">
 									<p className="flex items-center min-w-0 mr-1.5">

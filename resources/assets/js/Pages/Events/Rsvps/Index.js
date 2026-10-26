@@ -211,12 +211,12 @@ const Index = ({
 	const breadcrumbs = [
 		{ name: 'Events', url: route('events.index') },
 		{ name: event.title, url: route('events.show', { event }) },
-		{ name: 'RSVP List', url: route('events.rsvps.index', { event }) },
+		{ name: 'RSVP Roster', url: route('events.rsvps.index', { event }) },
 	];
 
 	return (
 		<>
-			<AppHead title={`RSVP List - ${event.title}`} />
+			<AppHead title={`RSVP Roster - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				{(filterAction || bulkEdit.action) && (
@@ -240,8 +240,8 @@ const Index = ({
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
-						<Icon icon="calendar" type="solid" className="mr-2" />
-						RSVP List
+						<Icon icon="clipboard-list" className="mr-2" />
+						RSVP Roster
 					</PageHeaderTitle>
 				</PageHeaderContent>
 				<PageHeaderActions>

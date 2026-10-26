@@ -8,8 +8,9 @@ import TableMobile, {
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
+import Button from '../../components/inputs/ButtonV2';
 
-const MailingListTableMobile = ({ lists, bulkEdit }) => {
+const MailingListTableMobile = ({ lists, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
     const { route } = useRoute();
 
     const list_type_labels = {
@@ -20,7 +21,17 @@ const MailingListTableMobile = ({ lists, bulkEdit }) => {
 
     return (
         <div>
-            <TableMobileHeader bulkEdit={bulkEdit} />
+            <TableMobileHeader bulkEdit={bulkEdit}>
+                <Button
+                    size="sm"
+                    intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+                    weight="clear"
+                    onClick={() => setShowFilters(prev => !prev)}
+                >
+                    <Icon icon="filter" mr />
+                    Filter/Sort
+                </Button>
+            </TableMobileHeader>
             <TableMobile pagination={<Pagination details={lists} />}>
                 {lists.data.map((list) => (
                     <TableMobileListItem key={list.id}>
@@ -35,7 +46,7 @@ const MailingListTableMobile = ({ lists, bulkEdit }) => {
                                     <p className="flex items-center min-w-0 mr-1.5">
                                         <span className="text-sm font-medium text-purple-600 truncate">{list.title}</span>
                                     </p>
-                                    <div className="text-xs text-gray-500 shrink-0">
+                                    <div className="flex shrink-0 items-center text-xs text-gray-500">
                                         <Icon icon={list.type_icon} mr className="text-gray-400" />
                                         {list_type_labels[list.list_type]}
                                     </div>

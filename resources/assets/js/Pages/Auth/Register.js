@@ -34,7 +34,9 @@ const Register = ({  }) => {
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
 
-                    <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+                    <a href="https://www.choirconcierge.com">
+                        <img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+                    </a>
 
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create an account</h2>
                     <p className="mt-2 text-center text-sm leading-6 text-gray-500">Already have an account? <a href={route('login')} className="font-medium text-purple-600 hover:text-purple-500">Log in</a></p>

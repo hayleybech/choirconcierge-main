@@ -8,10 +8,14 @@ use App\Models\Role;
 use App\Enums\SingerStatus;
 use App\Models\UserGroup;
 use App\Models\VoicePart;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\AllowedSort;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UserGroupController extends Controller
 {
@@ -26,8 +30,29 @@ class UserGroupController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('MailingLists/Index', [
-            'lists' => UserGroup::with('tenant')
-                ->orderBy('title')
+            'lists' => QueryBuilder::for(UserGroup::class)
+                ->with('tenant')
+                ->allowedFilters([
+                    AllowedFilter::callback('search', static function (Builder $query, string $value): void {
+                        $address = str_contains($value, '@') ? strstr($value, '@', true) : $value;
+
+                        $query->where(function (Builder $query) use ($value, $address): void {
+                            $query->where('title', 'like', "%{$value}%");
+
+                            if ($address !== '') {
+                                $query->orWhere('slug', 'like', "%{$address}%");
+                            }
+                        });
+                    }),
+                    AllowedFilter::exact('list_type'),
+                ])
+                ->allowedSorts([
+                    'title',
+                    'list_type',
+                    AllowedSort::field('address', 'slug'),
+                    'created_at',
+                ])
+                ->defaultSort('title')
                 ->paginate(20)->appends($request->query()),
         ]);
     }

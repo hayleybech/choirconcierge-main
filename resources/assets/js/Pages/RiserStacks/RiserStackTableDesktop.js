@@ -5,8 +5,9 @@ import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import EnsembleBadges from "../../components/EnsembleBadges";
+import TableHeadingSort from '../../components/TableHeadingSort';
 
-const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit }) => {
+const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit, sortFilterForm }) => {
     const { route } = useRoute();
 
     return (
@@ -14,9 +15,9 @@ const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit }) => {
             <THead>
                 <tr>
                     <TableSelectAll bulkEdit={bulkEdit} totalItems={stacks.data.length} />
-                    <TableHeading>Title</TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="title">Name</TableHeadingSort></TableHeading>
                     {userEnsemblesCount > 1 && <TableHeading>Ensembles</TableHeading>}
-                    <TableHeading>Created</TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="created_at">Date Created</TableHeadingSort></TableHeading>
                 </tr>
             </THead>
             <TBody>

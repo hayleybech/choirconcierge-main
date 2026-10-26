@@ -30,7 +30,9 @@ const TwoFactorChallenge = () => {
 			<AppHead title="Two-Factor Challenge" />
 
 			<div className="sm:mx-auto sm:w-full sm:max-w-md">
-				<img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+				<a href="https://www.choirconcierge.com">
+					<img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+				</a>
 
 				<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Two-Factor Authentication</h2>
 			</div>

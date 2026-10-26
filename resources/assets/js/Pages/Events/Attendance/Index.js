@@ -223,12 +223,12 @@ const Index = ({
 	const breadcrumbs = [
 		{ name: 'Events', url: route('events.index') },
 		{ name: event.title, url: route('events.show', { event }) },
-		{ name: 'Attendance List', url: route('events.attendances.index', { event }) },
+		{ name: 'Attendance Roster', url: route('events.attendances.index', { event }) },
 	];
 
 	return (
 		<>
-			<AppHead title={`Attendance List - ${event.title}`} />
+			<AppHead title={`Attendance Roster - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
@@ -244,8 +244,8 @@ const Index = ({
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
-						<Icon icon="calendar" type="solid" className="mr-2" />
-						Attendance List
+						<Icon icon="clipboard-list" className="mr-2" />
+						Attendance Roster
 					</PageHeaderTitle>
 					<PageHeaderMeta>
 						<div>

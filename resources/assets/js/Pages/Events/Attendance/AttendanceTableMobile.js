@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import TableMobile, {
 	TableMobileHeader,
@@ -26,7 +26,6 @@ const AttendanceTableMobile = ({
 	setShowFilters,
 }) => {
 	const { route } = useRoute();
-	const [editingSingerId, setEditingSingerId] = useState(null);
 
 	return (
 		<div>
@@ -45,13 +44,13 @@ const AttendanceTableMobile = ({
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>
 						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
-						<div className="relative">
+						<div className="flex items-center">
 							<TableMobileSelectableLink
 								bulkEdit={bulkEdit}
 								value={singer.id}
 								url={route('singers.show', { singer })}
 							>
-								<div className="flex items-center gap-4">
+								<div className="flex min-w-0 items-center gap-4">
 									<div className="shrink-0">
 										<img
 											className="h-8 w-8 rounded-md object-cover"
@@ -59,15 +58,7 @@ const AttendanceTableMobile = ({
 											alt={singer.user.name}
 										/>
 									</div>
-									<div
-										className={`flex flex-col gap-1 ${
-											(!!singer.attendance.absent_reason &&
-												singer.attendance.response === 'absent') ||
-											editingSingerId === singer.id
-												? 'pb-16'
-												: 'pb-10'
-										}`}
-									>
+									<div className="flex min-w-0 flex-col gap-1">
 										<div>
 											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
 											<span className="ml-1 text-sm font-medium text-purple-600 truncate">
@@ -94,19 +85,12 @@ const AttendanceTableMobile = ({
 									</div>
 								</div>
 							</TableMobileSelectableLink>
-							<div
-								className={`pb-4 flex items-center gap-2 absolute bottom-0 transition-[padding] ${
-									bulkEdit.isActiveMobile ? 'pl-11' : 'pl-4'
-								}`}
-							>
-								<div className="pl-12">
-									<AttendanceRecord
-										attendance={singer.attendance}
-										singerId={singer.id}
-										event={event}
-										onToggleEditing={isEditing => setEditingSingerId(isEditing ? singer.id : null)}
-									/>
-								</div>
+							<div className="shrink-0 pr-4 sm:pr-6">
+								<AttendanceRecord
+									attendance={singer.attendance}
+									singerId={singer.id}
+									event={event}
+								/>
 							</div>
 						</div>
 					</TableMobileListItem>

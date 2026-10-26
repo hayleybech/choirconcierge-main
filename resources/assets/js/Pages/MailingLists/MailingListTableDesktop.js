@@ -5,8 +5,9 @@ import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
+import TableHeadingSort from '../../components/TableHeadingSort';
 
-const MailingListTableDesktop = ({ lists, bulkEdit }) => {
+const MailingListTableDesktop = ({ lists, bulkEdit, sortFilterForm }) => {
     const { route } = useRoute();
 
     const list_type_labels = {
@@ -20,10 +21,10 @@ const MailingListTableDesktop = ({ lists, bulkEdit }) => {
             <THead>
                 <tr>
                     <TableSelectAll bulkEdit={bulkEdit} totalItems={lists.data.length} />
-                    <TableHeading>Title</TableHeading>
-                    <TableHeading>Type</TableHeading>
-                    <TableHeading>Address</TableHeading>
-                    <TableHeading>Created</TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="title">Title</TableHeadingSort></TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="list_type">Type</TableHeadingSort></TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="address">Address</TableHeadingSort></TableHeading>
+                    <TableHeading><TableHeadingSort form={sortFilterForm} sort="created_at">Created</TableHeadingSort></TableHeading>
                 </tr>
             </THead>
             <TBody>

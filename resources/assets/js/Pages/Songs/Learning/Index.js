@@ -81,12 +81,12 @@ const Index = ({
 	const breadcrumbs = [
 		{ name: 'Songs', url: route('songs.index') },
 		{ name: song.title, url: route('songs.show', { song }) },
-		{ name: 'Learning Status List', url: route('songs.singers.index', { song }) },
+		{ name: 'Learning Roster', url: route('songs.singers.index', { song }) },
 	];
 
 	return (
 		<>
-			<AppHead title={`Learning Status List - ${song.title}`} />
+			<AppHead title={`Learning Roster - ${song.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				{actions.length > 0 && (
@@ -104,8 +104,8 @@ const Index = ({
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
-						<Icon icon="list-music" type="solid" className="mr-2" />
-						Learning Status List
+						<Icon icon="clipboard-list" className="mr-2" />
+						Learning Roster
 					</PageHeaderTitle>
 				</PageHeaderContent>
 				<PageHeaderActions>

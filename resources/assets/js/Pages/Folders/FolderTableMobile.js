@@ -102,7 +102,7 @@ const FolderTableMobile = ({
 								)}
 								{permissions['create_document'] && (
 									<div className="flex items-center px-4 py-4 sm:px-6 ml">
-										<div className="px-4 w-full">
+										<div className="px-4 sm:px-0 w-full">
 											<DocumentForm folder={folder} />
 										</div>
 									</div>

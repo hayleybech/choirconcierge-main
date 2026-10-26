@@ -58,7 +58,7 @@ export const DocumentRowDesktop = ({
 							weight="outline"
 							size="sm"
 						>
-							<Icon icon="times" /> Delete
+							<Icon icon="fa-trash" /> Delete
 						</Button>
 					)}
 				</div>
@@ -102,7 +102,13 @@ export const FolderRowDesktop = ({
 			<TableCell>
 				<div className="flex items-center gap-2">
 					{permissions['update_folder'] && (
-						<Button href={route('folders.edit', { folder })} intent="secondary" weight="solid" size="sm" className="ml-2">
+						<Button
+							href={route('folders.edit', { folder })}
+							intent="secondary"
+							weight="solid"
+							size="sm"
+							className="ml-2"
+						>
 							<Icon icon="edit" />
 							Edit
 						</Button>
@@ -117,7 +123,7 @@ export const FolderRowDesktop = ({
 							weight="outline"
 							size="sm"
 						>
-							<Icon icon="times" /> Delete
+							<Icon icon="fa-trash" /> Delete
 						</Button>
 					)}
 				</div>
@@ -144,7 +150,7 @@ export const DocumentRowMobile = ({
 				className={`block hover:bg-gray-50 ${!isInsideFolder ? 'border-b border-gray-200' : ''}`}
 			>
 				<div className="flex items-center py-4 sm:px-6">
-					<div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
+					<div className="min-w-0 flex-1 px-4 sm:px-0 lg:grid lg:grid-cols-2 lg:gap-4">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center min-w-0 mr-1.5">
 								{isInsideFolder && (
@@ -181,7 +187,7 @@ export const DocumentRowMobile = ({
 										weight="outline"
 										size="md"
 									>
-										<Icon icon="trash" />
+										<Icon icon="fa-trash" />
 									</Button>
 								)}
 							</div>
@@ -213,7 +219,7 @@ export const FolderRowMobile = ({
 				className="block hover:bg-gray-50"
 			>
 				<div className="flex items-center py-4 sm:px-6">
-					<div className="min-w-0 flex-1 px-4 lg:grid lg:grid-cols-2 lg:gap-4">
+					<div className="min-w-0 flex-1 px-4 sm:px-0 lg:grid lg:grid-cols-2 lg:gap-4">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center min-w-0 mr-1.5">
 								<Icon icon={isOpen ? 'folder-open' : 'folder'} mr className="text-purple-500" />
@@ -222,7 +228,12 @@ export const FolderRowMobile = ({
 
 							<div className="flex gap-2">
 								{permissions['update_folder'] && (
-  					<Button href={route('folders.edit', { folder })} intent="secondary" weight="solid" size="md">
+									<Button
+										href={route('folders.edit', { folder })}
+										intent="secondary"
+										weight="solid"
+										size="md"
+									>
 										<Icon icon="edit" />
 									</Button>
 								)}
@@ -233,20 +244,17 @@ export const FolderRowMobile = ({
 											e.stopPropagation();
 											setDeletingFolder(folder);
 										}}
- 						intent="danger"
- 						weight="outline"
- 						size="md"
+										intent="danger"
+										weight="outline"
+										size="md"
 									>
-										<Icon icon="trash" />
+										<Icon icon="fa-trash" />
 									</Button>
 								)}
 							</div>
 						</div>
 						{showEnsemblesColumn && (
-							<EnsembleBadges
-								ensembles={folder.ensembles}
-								className="mt-2 flex flex-wrap gap-1"
-							/>
+							<EnsembleBadges ensembles={folder.ensembles} className="mt-2 flex flex-wrap gap-1" />
 						)}
 					</div>
 				</div>

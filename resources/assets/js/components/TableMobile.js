@@ -15,7 +15,7 @@ export const TableMobileListItem = ({ children, className = '' }) => (
 	<li className={`flex flex-col relative ${className}`}>{children}</li>
 );
 
-export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4', children, ...props }) => (
+export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4 sm:pl-0', children, ...props }) => (
 	<Link
 		href={url}
 		onClick={onClick}
@@ -57,7 +57,7 @@ export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) =>
 		<TableMobileLink
 			url={bulkEdit.isActiveMobile ? '' : url}
 			active={bulkEdit.selectedIds.includes(value)}
-			padding={bulkEdit.isActiveMobile ? 'pl-11 transition-[padding] ease-out' : 'pl-4 transition-[padding] ease-out'}
+			padding={bulkEdit.isActiveMobile ? 'pl-11 sm:pl-11 transition-[padding] ease-out' : 'pl-4 sm:pl-0 transition-[padding] ease-out'}
 			{...longPressProps}
 		>
 			{children}

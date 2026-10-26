@@ -31,7 +31,9 @@ const Login = ({ tenant, toastErrors, flash, isWebView }) => {
 
 			<div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-100">
 				<div className="sm:mx-auto sm:w-full sm:max-w-md">
-					<img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+					<a href="https://www.choirconcierge.com">
+						<img src="/img/vibrant/logo-dark.svg" alt="Choir Concierge" className="h-12 w-auto mx-auto" />
+					</a>
 
 					{tenant && <img src={tenant.logo_url} alt={tenant.name} className="h-12 w-auto mx-auto mt-6" />}
 

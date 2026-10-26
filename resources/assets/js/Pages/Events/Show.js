@@ -345,7 +345,7 @@ const ViewRsvpsButton = ({ event }) => {
 	return (
 		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
 			<Icon icon="clipboard-list" />
-			View All
+			View Roster
 		</ButtonLink>
 	);
 };
@@ -355,8 +355,8 @@ const EditAttendanceButton = ({ event }) => {
 
 	return (
 		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
-			<Icon icon="edit" />
-			Edit
+			<Icon icon="clipboard-list" />
+			View Roster
 		</ButtonLink>
 	);
 };

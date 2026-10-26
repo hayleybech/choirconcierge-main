@@ -332,8 +332,8 @@ const EditLearningSummaryButton = ({ song }) => {
 
 	return (
 		<ButtonLink intent="primary" weight="solid" size="sm" href={route('songs.singers.index', { song })}>
-			<Icon icon="edit" />
-			Edit
+			<Icon icon="clipboard-list" />
+			View Roster
 		</ButtonLink>
 	);
 };
