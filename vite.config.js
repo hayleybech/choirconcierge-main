@@ -1,4 +1,4 @@
-import { defineConfig, transformWithEsbuild } from 'vite';
+import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -9,28 +9,12 @@ export default defineConfig({
 			clientFiles: [
 				'resources/assets/js/app.js',
 				// 'resources/assets/app.css',
-				// 'resources/assets/js/Layouts/TenantLayout.js',
-				// 'resources/assets/js/Pages/Dash/**/*.js',
+				// 'resources/assets/js/Layouts/TenantLayout.jsx',
+				// 'resources/assets/js/Pages/Dash/**/*.jsx',
 			],
 		},
 	},
-	optimizeDeps: {
-		esbuildOptions: {
-			loader: { '.js': 'jsx' },
-		},
-	},
 	plugins: [
-		{
-			name: 'transform-jsx-in-js',
-			enforce: 'pre',
-			transform(code, id) {
-				if (!id.replaceAll('\\', '/').includes('/resources/assets/js/') || !id.endsWith('.js')) {
-					return null;
-				}
-
-				return transformWithEsbuild(code, id, { loader: 'jsx', jsx: 'automatic' });
-			},
-		},
 		laravel({
 			input: ['resources/assets/js/app.js'],
 			refresh: true,

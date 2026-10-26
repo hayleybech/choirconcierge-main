@@ -1,13 +1,5 @@
 module.exports = {
-  content: [
-    './resources/assets/js/components/**/*.js',
-    './resources/assets/js/Layouts/**/*.js',
-    './resources/assets/js/Pages/**/**/*.js',
-    './resources/assets/js/**/*.js',
-
-    // this one works, can probably delete the ones above now
-    './resources/assets/js/**/*.{html,js,jsx,ts,tsx}'
-  ],
+  content: ['./resources/assets/js/{components,contexts,Layouts,Pages,hooks}/**/*.{jsx,tsx}'],
   theme: {
     fontFamily: { 'sans': 'Lato, Arial, Helvetica, sans-serif' },
     extend: {

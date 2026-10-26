@@ -10,7 +10,7 @@ import 'react-pdf/dist/Page/AnnotationLayer.css';
 import '../app.css';
 
 const VERSION = 'choir-concierge@2025-09-22c';
-const pages = import.meta.glob(['./Pages/**/*.js', './Pages/**/*.jsx', '!./Pages/**/*.test.js']);
+const pages = import.meta.glob('./Pages/**/*.jsx');
 
 Sentry.init({
 	dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -24,8 +24,7 @@ Sentry.init({
 	environment: import.meta.env.VITE_SENTRY_ENV,
 });
 createInertiaApp({
-	resolve: name =>
-		resolvePageComponent([`./Pages/${name}.js`, `./Pages/${name}.jsx`], pages).then(module => module.default),
+	resolve: name => resolvePageComponent(`./Pages/${name}.jsx`, pages).then(module => module.default),
 	setup({ el, App, props }) {
 		if (props.initialPage.props.isWebView) {
 			router.on('before', event => {
@@ -39,7 +38,7 @@ createInertiaApp({
 			);
 		}
 
-		render(<App {...props} />, el);
+		render(React.createElement(App, props), el);
 	},
 	progress: { color: '#38bdf8' },
 });
