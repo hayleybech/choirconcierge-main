@@ -49,6 +49,7 @@ const AttendanceTableMobile = ({
 								bulkEdit={bulkEdit}
 								value={singer.id}
 								url={route('singers.show', { singer })}
+								showChevron={false}
 							>
 								<div className="flex min-w-0 items-center gap-4">
 									<div className="shrink-0">
@@ -85,12 +86,15 @@ const AttendanceTableMobile = ({
 									</div>
 								</div>
 							</TableMobileSelectableLink>
-							<div className="shrink-0 pr-4 sm:pr-6">
+							<div className="shrink-0">
 								<AttendanceRecord
 									attendance={singer.attendance}
 									singerId={singer.id}
 									event={event}
 								/>
+							</div>
+							<div className="shrink-0 pl-4 pr-4 sm:pr-6">
+								<Icon icon="chevron-right" className="text-gray-400" />
 							</div>
 						</div>
 					</TableMobileListItem>

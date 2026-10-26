@@ -37,8 +37,9 @@ const SingerTableMobile = ({ singers, pagination, bulkEdit, hasNonDefaultFilters
 							bulkEdit={bulkEdit}
 							value={singer.id}
 							url={route('singers.show', { singer: singer.id })}
+							chevronClassName="md:ml-4"
 						>
-							<div className="shrink-0">
+							<div className="shrink-0 md:mr-4">
 								<img
 									className="h-12 w-12 rounded-lg"
 									src={singer.user.avatar_url}

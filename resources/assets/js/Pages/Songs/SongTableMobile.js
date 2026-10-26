@@ -66,7 +66,7 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFil
 								{userEnsemblesCount > 1 && (
 									<EnsembleBadges
 										ensembles={song.ensembles}
-										className="mt-2 flex gap-1 flex-wrap pl-4"
+										className="mt-2 flex gap-1 flex-wrap"
 										badgeClassName="truncate"
 									/>
 								)}

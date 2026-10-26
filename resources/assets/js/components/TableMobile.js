@@ -15,7 +15,16 @@ export const TableMobileListItem = ({ children, className = '' }) => (
 	<li className={`flex flex-col relative ${className}`}>{children}</li>
 );
 
-export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4 sm:pl-0', children, ...props }) => (
+export const TableMobileLink = ({
+	url,
+	onClick,
+	active,
+	padding = 'pl-4 sm:pl-0',
+	chevronClassName = '',
+	showChevron = true,
+	children,
+	...props
+}) => (
 	<Link
 		href={url}
 		onClick={onClick}
@@ -24,14 +33,16 @@ export const TableMobileLink = ({ url, onClick, active, padding = 'pl-4 sm:pl-0'
 	>
 		<div className="flex items-center pr-4 py-4 sm:px-6">
 			<div className="flex-1 flex items-center justify-between min-w-0 w-full">{children}</div>
-			<div>
-				<Icon icon="chevron-right" className="text-gray-400" />
-			</div>
+			{showChevron && (
+				<div className={chevronClassName}>
+					<Icon icon="chevron-right" className="text-gray-400" />
+				</div>
+			)}
 		</div>
 	</Link>
 );
 
-export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) => {
+export const TableMobileSelectableLink = ({ url, bulkEdit, value, chevronClassName, showChevron, children }) => {
 	const onLongPress = () => {
 		if (bulkEdit.isAllowed && !bulkEdit.isActiveMobile) {
 			bulkEdit.toggleSelection(value);
@@ -58,6 +69,8 @@ export const TableMobileSelectableLink = ({ url, bulkEdit, value, children }) =>
 			url={bulkEdit.isActiveMobile ? '' : url}
 			active={bulkEdit.selectedIds.includes(value)}
 			padding={bulkEdit.isActiveMobile ? 'pl-11 sm:pl-11 transition-[padding] ease-out' : 'pl-4 sm:pl-0 transition-[padding] ease-out'}
+			chevronClassName={chevronClassName}
+			showChevron={showChevron}
 			{...longPressProps}
 		>
 			{children}
@@ -80,7 +93,7 @@ export const TableMobileSelect = ({ bulkEdit, value }) => {
 	);
 };
 export const TableMobileHeader = ({ bulkEdit, children, className = '' }) => (
-	<div className={`sticky top-[47px] z-20 px-4 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 ${className}`}>
+	<div className={`sticky top-[47px] z-20 px-4 md:px-6 py-1 border-b border-gray-200 flex gap-1 items-center justify-between bg-gray-50 ${className}`}>
 		<div className="flex items-center">
 			{bulkEdit.isActiveMobile && (
 				<div className="pr-2 absolute left-4 flex">
