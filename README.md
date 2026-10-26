@@ -47,6 +47,8 @@
 - create `.env.testing` with DB credentials (copy `.env` first)
 
 ## Testing
+- See [Visual regression testing](docs/visual-regression.md) for browser screenshot setup, capture, comparison, and baseline updates.
+
 ### Testing the Incoming Mailbox
 - Ensure the mailbox@test.choirconcierge.com login details are configured in the .env file
 - `herd php artisan schedule:test` - choose `ProcessGroupMailbox`

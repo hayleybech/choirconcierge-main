@@ -156,6 +156,11 @@ class LocalVisualRegressionGalleryController extends Controller
         $this->ensureLocalEnvironment();
 
         return Inertia::render('Central/MailLogs/Index', [
+            'mailTypes' => collect(MailLog::TYPE_LABELS)
+                ->map(fn (string $name, string $id): array => ['id' => $id, 'name' => $name])
+                ->values(),
+            'defaultMailTypes' => MailLog::DEFAULT_TYPES,
+            'tenants' => collect(),
             'logs' => MailLog::query()
                 ->whereRaw('1 = 0')
                 ->with(['latestEvent', 'tenants'])

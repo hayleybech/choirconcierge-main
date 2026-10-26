@@ -1061,7 +1061,7 @@
 			"persona": "tenant-admin",
 			"component": "MailingLists/Broadcasts/Create",
 			"browser": "chromium",
-			"assert_text": "Send Email Broadcast"
+			"assert_text": "Send Broadcast"
 		},
 		{
 			"id": "tenant-mailing-lists-create",
