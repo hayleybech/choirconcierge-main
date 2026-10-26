@@ -351,7 +351,7 @@ class SingerController extends Controller
 
         return QueryBuilder::for($query)
             ->with(['tasks', 'status', 'user', 'enrolments' => ['voice_part', 'ensemble'],])
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
                         ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
@@ -381,7 +381,7 @@ class SingerController extends Controller
                     default => $query->whereDate('paid_until', '>', now()->addMonth()),
                 })
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 ...$this->singerSorts(),
                 AllowedSort::custom('status-title', new \App\CustomSorts\SingerStatusSort(), 'status'),
                 AllowedSort::custom('part-title', new SingerVoicePartSort(), 'part'),

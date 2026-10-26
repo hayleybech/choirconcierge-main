@@ -40,7 +40,7 @@ class LearningStatusController extends Controller
             ]);
 
         $pagination = QueryBuilder::for($query)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
                         ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
@@ -69,7 +69,7 @@ class LearningStatusController extends Controller
                     );
                 })->default([SingerStatus::MEMBERS->value]),
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 ...$this->singerSorts(),
                 AllowedSort::callback('learning-status', function (Builder $query, bool $descending) use ($song) {
                     $direction = $descending ? 'DESC' : 'ASC';

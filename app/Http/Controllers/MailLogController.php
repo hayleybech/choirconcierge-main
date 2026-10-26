@@ -25,7 +25,7 @@ class MailLogController extends Controller
     {
         $showAdminDetails = $this->showAdminDetails();
         $query = QueryBuilder::for($showAdminDetails ? self::queryLogsAdmin() : self::queryLogsAuthorisedForUser())
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('type', fn (Builder $query, mixed $values) => MailLog::applyTypeFilter(
                     $query,
                     Arr::wrap($values),
@@ -51,7 +51,7 @@ class MailLogController extends Controller
                 'from',
             ])
             ->defaultSort('-created_at')
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'subject',
                 'to',
                 'from',

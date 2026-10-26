@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Models\Billing;
+
+use Laravel\Paddle\Customer as CashierCustomer;
+
+class Customer extends CashierCustomer
+{
+    protected $table = 'billing_customers';
+}

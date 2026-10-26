@@ -41,7 +41,7 @@ class RiserStackController extends Controller
     {
         return QueryBuilder::for(RiserStack::class)
             ->with('ensembles')
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::exact('ensembles.id'),
             ])
             ->forEnsembles()

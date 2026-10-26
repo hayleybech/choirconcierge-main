@@ -36,14 +36,14 @@ class UserController extends Controller
         $nameSort = AllowedSort::custom('full-name', new UserNameSort(), 'name');
 
         return QueryBuilder::for(User::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('search', fn(Builder $query, $value) => $query
                     ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
                     ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                 ),
             ])
             ->defaultSort($nameSort)
-            ->allowedSorts([
+            ->allowedSorts(...[
                 $nameSort,
                 'email',
             ])

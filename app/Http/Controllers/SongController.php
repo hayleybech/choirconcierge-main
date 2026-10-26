@@ -253,7 +253,7 @@ class SongController extends Controller
     {
         return QueryBuilder::for(Song::class)
             ->forEnsembles()
-            ->allowedFilters([
+            ->allowedFilters(...[
                 'title',
                 AllowedFilter::exact('status.id')
                     ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
@@ -265,7 +265,7 @@ class SongController extends Controller
                 AllowedFilter::exact('ensembles.id'),
             ])
             ->defaultSort('title')
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'title',
                 'created_at',
                 AllowedSort::custom('status-title', new SongStatusSort(), 'title'),

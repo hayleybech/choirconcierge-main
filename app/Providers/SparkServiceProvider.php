@@ -6,8 +6,8 @@ use App\Models\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
-use Spark\Plan;
-use Spark\Spark;
+use ChoirConcierge\LegacySpark\Plan;
+use ChoirConcierge\LegacySpark\Spark;
 
 class SparkServiceProvider extends ServiceProvider
 {

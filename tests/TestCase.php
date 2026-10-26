@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use JMac\Testing\Traits\AdditionalAssertions;
 use Illuminate\Support\Carbon;
-use Laravel\Paddle\Subscription;
+use ChoirConcierge\LegacyCashierPaddle\Subscription;
 
 abstract class TestCase extends BaseTestCase
 {

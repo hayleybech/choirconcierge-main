@@ -8,9 +8,9 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class SingerStatusSort implements Sort
 {
-    public function __invoke(Builder $query, bool $descending, string $property)
+    public function __invoke(Builder $query, bool $descending, string $property): void
     {
-        return $query
+        $query
             ->addSubSelect(
                 'status_title',
                 DB::table('membership_status')

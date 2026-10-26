@@ -27,7 +27,7 @@ class AttendanceReportController extends Controller
 
         $events = QueryBuilder::for(Event::class)
             ->with([])
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::exact('type.id')
                     ->default([$defaultEventType]),
                 AllowedFilter::scope('starts_after')

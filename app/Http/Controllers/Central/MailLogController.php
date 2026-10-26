@@ -19,7 +19,7 @@ class MailLogController extends Controller
     public function index(): Response
     {
         $logs = QueryBuilder::for(MailLog::class)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('type', fn (Builder $query, mixed $values) => MailLog::applyTypeFilter(
                     $query,
                     Arr::wrap($values),
@@ -39,7 +39,7 @@ class MailLogController extends Controller
                 ),
             ])
             ->defaultSort('-created_at')
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'subject',
                 'from',
                 'to',

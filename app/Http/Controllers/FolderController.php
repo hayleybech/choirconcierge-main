@@ -47,17 +47,17 @@ class FolderController extends Controller
                         });
                 });
             })
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::partial('title'),
             ])
-            ->allowedSorts(['title', 'created_at'])
+            ->allowedSorts(...['title', 'created_at'])
             ->defaultSort('title')
             ->get();
 
         $documents = collect();
         if ($request->filled('filter.title')) {
             $documents = QueryBuilder::for(Document::class)
-                ->allowedFilters([
+                ->allowedFilters(...[
                     AllowedFilter::partial('title'),
                 ])
                 ->whereHas('folder', function (Builder $query) use ($user) {

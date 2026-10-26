@@ -288,7 +288,7 @@ class EventController extends Controller
     {
         return QueryBuilder::for(Event::class)
             ->forEnsembles()
-            ->allowedFilters([
+            ->allowedFilters(...[
                 'title',
                 AllowedFilter::exact('type.id'),
                 AllowedFilter::scope('date')->default(['upcoming']),
@@ -306,7 +306,7 @@ class EventController extends Controller
                     $query->whereIn('response', ['present', 'late']);
                 },
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'title',
                 'start_date',
                 AllowedSort::custom('type-title', new EventTypeSort(), 'type'),
