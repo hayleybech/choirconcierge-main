@@ -29,7 +29,6 @@ export default defineConfig({
 			'react-pdf',
 			'@sentry/react',
 			'lodash',
-			'moment',
 			'@tiptap/react',
 			'@tiptap/starter-kit',
 			'howler',

@@ -29,11 +29,11 @@ pipeline:
       npm ci 
       npm run build
 
-  - name: Pest
+  - name: PHP Unit Tests
     cmd: |
       php artisan test
 
-  - name: Jest
+  - name: JS Unit Tests
     cmd: |
       npm test
 
