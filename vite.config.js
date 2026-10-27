@@ -22,4 +22,17 @@ export default defineConfig({
 		react(),
 		tailwindcss(),
 	],
+	optimizeDeps: {
+		include: [
+			'tone',
+			'pdfjs-dist',
+			'react-pdf',
+			'@sentry/react',
+			'lodash',
+			'moment',
+			'@tiptap/react',
+			'@tiptap/starter-kit',
+			'howler',
+		],
+	},
 });

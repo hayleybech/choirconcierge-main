@@ -1,6 +1,27 @@
-@import 'tailwindcss';
+@import 'tailwindcss' source(none);
 
-@config '../../tailwind.config.js';
+@source './js/components/**/*.{jsx,tsx}';
+@source './js/contexts/**/*.{jsx,tsx}';
+@source './js/Layouts/**/*.{jsx,tsx}';
+@source './js/Pages/**/*.{jsx,tsx}';
+@source './js/hooks/**/*.{jsx,tsx}';
+
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@theme {
+    --font-sans: Lato, Arial, Helvetica, sans-serif;
+
+    --color-brand-purple-dark: #200142;
+    --color-brand-light-pink: #e5e3e8;
+    --color-brand-off-white: #f2f1f3;
+    --color-brand-blue: #21a7eb;
+
+    --width-250px: 250px;
+
+    --ease-in-back: cubic-bezier(0.36, 0, 0.66, -0.56);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
@@ -42,4 +63,22 @@ body,
 /* PDF Viewer */
 .react-pdf__Page__canvas {
     margin: 0 auto;
+}
+
+.prose a {
+    color: var(--color-purple-500);
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+    font-weight: 300;
+}
+
+.prose ul {
+    margin-top: 0;
+}
+
+.prose li > p {
+    margin: 0;
 }
