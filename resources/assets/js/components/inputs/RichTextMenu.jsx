@@ -1,0 +1,299 @@
+import React, {useEffect, useRef, useState} from 'react';
+import ButtonV2 from './ButtonV2';
+import Icon from '../Icon';
+import {Popover} from '@headlessui/react';
+import TextInput from './TextInput';
+import {useMediaQuery} from "react-responsive";
+ 
+const RichTextMenu = ({editor}) => {
+    if (!editor) {
+        return null;
+    }
+
+    return (
+        <div className="p-2 flex gap-x-3 bg-gray-50 rounded-tl-sm rounded-tr-sm">
+            <PopoverOnMobile label={<Icon icon="heading"/>}>
+                <MenuButton
+                    title="Heading Level 1"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleHeading({level: 1})
+                            .run()
+                    }
+                    isActive={editor.isActive('heading', {level: 1})}
+                >
+                    <Icon icon="h1" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Heading Level 2"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleHeading({level: 2})
+                            .run()
+                    }
+                    isActive={editor.isActive('heading', {level: 2})}
+                >
+                    <Icon icon="h2" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Heading Level 3"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleHeading({level: 3})
+                            .run()
+                    }
+                    isActive={editor.isActive('heading', {level: 3})}
+                >
+                    <Icon icon="h3" type="regular"/>
+                </MenuButton>
+            </PopoverOnMobile>
+            <PopoverOnMobile label={<Icon icon="text" />}>
+                <MenuButton
+                    title="Bold"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleBold()
+                            .run()
+                    }
+                    isActive={editor.isActive('bold')}
+                >
+                    <Icon icon="bold" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Italic"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleItalic()
+                            .run()
+                    }
+                    isActive={editor.isActive('italic')}
+                >
+                    <Icon icon="italic" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Underline"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleUnderline()
+                            .run()
+                    }
+                    isActive={editor.isActive('underline')}
+                >
+                    <Icon icon="underline" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Strikethrough"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleStrike()
+                            .run()
+                    }
+                    isActive={editor.isActive('strike')}
+                >
+                    <Icon icon="strikethrough" type="regular"/>
+                </MenuButton>
+                <MenuButton
+                    title="Bullet List"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleBulletList()
+                            .run()
+                    }
+                    isActive={editor.isActive('bulletList')}
+                >
+                    <Icon icon="list-ul" type="regular"/>
+                </MenuButton>
+
+                <MenuButton
+                    title="Ordered List"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .toggleOrderedList()
+                            .run()
+                    }
+                    isActive={editor.isActive('orderedList')}
+                >
+                    <Icon icon="list-ol" type="regular"/>
+                </MenuButton>
+            </PopoverOnMobile>
+            <div>
+                <MenuButton
+                    title="Clear Formatting"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .unsetAllMarks()
+                            .clearNodes()
+                            .run()
+                    }
+                >
+                    <Icon icon="remove-format" type="regular"/>
+                </MenuButton>
+            </div>
+            <div>
+                <LinkPopover
+                    onSave={href => editor.commands.setLink({href})}
+                    onRemove={() => editor.commands.unsetLink()}
+                    initialUrl={editor.getAttributes('link').href}
+                    key={editor.getAttributes('link').href}
+                />
+            </div>
+            <div>
+                <MenuButton
+                    title="Horizontal Rule"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .setHorizontalRule()
+                            .run()
+                    }
+                >
+                    <Icon icon="horizontal-rule" type="regular"/>
+                </MenuButton>
+            </div>
+            <div>
+                <MenuButton
+                    title="Undo"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .undo()
+                            .run()
+                    }
+                >
+                    <Icon icon="undo" type="regular"/>
+                </MenuButton>
+                <MenuButton
+                    title="Redo"
+                    onClick={() =>
+                        editor
+                            .chain()
+                            .focus()
+                            .redo()
+                            .run()
+                    }
+                >
+                    <Icon icon="redo" type="regular"/>
+                </MenuButton>
+            </div>
+        </div>
+    );
+};
+
+export default RichTextMenu;
+
+const MenuButton = React.forwardRef(({onClick, isActive, title, children}, ref) => (
+    <ButtonV2
+        intent="secondary"
+        weight="clear"
+        onClick={onClick}
+        type="button"
+        size="md"
+        className={isActive ? 'text-purple-500' : ''}
+        title={title}
+        ref={ref}
+    >
+        {children}
+    </ButtonV2>
+));
+
+const LinkPopover = props => {
+    const [url, setUrl] = useState(props.initialUrl ?? '');
+
+    const buttonRef = useRef(null);
+
+    useEffect(() => {
+        const handleKeyDown = event => {
+            // Listen for Ctrl + K
+            if (event.ctrlKey && event.key === 'k') {
+                event.preventDefault(); // Prevent default browser behavior (e.g., opening search)
+
+                buttonRef.current.click();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
+    return (
+        <Popover className="relative">
+            <Popover.Button as={MenuButton} title="Link" ref={buttonRef}>
+                <Icon icon="link" type="regular"/>
+            </Popover.Button>
+            <Popover.Panel as={PopoverPanel} className="w-52">
+                <TextInput
+                    name="url"
+                    placeholder="https://www.google.com"
+                    className="p-1.5"
+                    wrapperClasses="mt-0"
+                    value={url}
+                    updateFn={value => setUrl(value)}
+                />
+                <ButtonV2 intent="primary" weight="solid" size="sm" type="button" onClick={() => props.onSave(url)}>
+                    <Icon icon="check"/>
+                </ButtonV2>
+                <ButtonV2 intent="secondary" weight="outline" size="sm" type="button" onClick={() => props.onRemove()}>
+                    <Icon icon="trash"/>
+                </ButtonV2>
+            </Popover.Panel>
+        </Popover>
+    );
+};
+
+const PopoverPanel = React.forwardRef((props, ref) => (
+    <div
+        className={`bg-white p-1 absolute z-10 rounded shadow-2xl border border-gray-300 top-[calc(100%+8px)] flex gap-1 ${props.className}`}
+        ref={ref}
+    >
+        {props.children}
+    </div>
+));
+
+const PopoverOnMobile = (props) => {
+    const isMobile = useMediaQuery({query: '(max-width: 1023px)'});
+
+    return (
+        <div>
+            {isMobile ? (
+                <Popover className="relative">
+                    <Popover.Button as={MenuButton}>
+                        {props.label}
+                    </Popover.Button>
+
+                    <Popover.Panel as={PopoverPanel}>
+                        {props.children}
+                    </Popover.Panel>
+                </Popover>
+            ) : props.children}
+        </div>
+    )
+}
