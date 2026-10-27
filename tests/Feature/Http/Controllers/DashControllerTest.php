@@ -72,4 +72,38 @@ class DashControllerTest extends TestCase
                 ->has('activePolls.0.my_vote_option_ids')
             );
     }
+
+    public function test_index_only_includes_voters_for_non_anonymous_poll_options(): void
+    {
+        $pollCreator = $this->createUserWithRole('Membership Team');
+        $voter = $this->createUserWithRole('User');
+        $this->actingAs($pollCreator);
+
+        $publicPoll = Poll::create([
+            'title' => 'Public poll',
+            'tenant_id' => tenant('id'),
+        ]);
+        $publicPoll->created_at = now()->subMinute();
+        $publicPoll->saveQuietly();
+        $publicOption = $publicPoll->options()->create(['label' => 'Public option']);
+        $publicOption->votes()->create(['membership_id' => $voter->membership->id]);
+
+        $anonymousPoll = Poll::create([
+            'title' => 'Anonymous poll',
+            'tenant_id' => tenant('id'),
+            'is_anonymous' => true,
+            'created_at' => now(),
+        ]);
+        $anonymousOption = $anonymousPoll->options()->create(['label' => 'Anonymous option']);
+        $anonymousOption->votes()->create(['membership_id' => $voter->membership->id]);
+
+        $this->get(the_tenant_route('dash'))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('activePolls.0.title', 'Anonymous poll')
+                ->missing('activePolls.0.options.0.voters')
+                ->where('activePolls.0.options.0.votes_count', 1)
+                ->where('activePolls.1.options.0.voters.0.name', $voter->name)
+                ->where('activePolls.1.options.0.votes_count', 1)
+            );
+    }
 }

@@ -20,6 +20,7 @@ class PollFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'can_vote_multiple' => false,
+            'is_anonymous' => false,
             'is_closed' => false,
         ];
     }

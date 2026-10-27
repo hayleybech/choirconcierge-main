@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PollRequest;
 use App\Models\Membership;
 use App\Models\Poll;
-use App\Models\PollOption;
 use App\Models\Ensemble;
 use App\Notifications\PollCreated;
 use Illuminate\Support\Facades\DB;
@@ -108,6 +107,7 @@ class PollController extends Controller
     public function show(Poll $poll): Response
     {
         $poll->load(['options' => fn ($q) => $q->withCount('votes'), 'ensembles']);
+        $poll->addVotersToOptions();
 
         $membership = auth()->user()?->memberships()->firstWhere('tenant_id', '=', $poll->tenant_id);
         $myVoteOptionIds = [];
@@ -135,15 +135,32 @@ class PollController extends Controller
 
     public function update(Poll $poll, PollRequest $request): RedirectResponse
     {
-        $poll->update($request->safe()->except(['options', 'send_notification', 'ensemble_ids']));
+        $validated = $request->validated();
 
-        // Replace options with provided list
-        $poll->options()->delete();
-        $options = collect($request->input('options', []))
-            ->map(fn ($label) => ['label' => $label]);
-        $poll->options()->createMany($options->all());
+        $poll->update(collect($validated)
+            ->except(['options', 'option_ids', 'send_notification', 'ensemble_ids', 'is_anonymous'])
+            ->all());
 
-        $poll->ensembles()->sync($request->input('ensemble_ids', []));
+        $existingOptions = $poll->options()->get()->keyBy('id');
+        $submittedOptionIds = collect($validated['option_ids'] ?? []);
+        $retainedOptionIds = collect($validated['options'])
+            ->map(function (string $label, int $index) use ($poll, $existingOptions, $submittedOptionIds): int {
+                $optionId = $submittedOptionIds->has($index)
+                    ? $submittedOptionIds->get($index)
+                    : $existingOptions->keys()->get($index);
+
+                if ($optionId !== null) {
+                    $option = $existingOptions->get($optionId);
+                    $option->update(['label' => $label]);
+
+                    return (int) $option->id;
+                }
+
+                return (int) $poll->options()->create(['label' => $label])->id;
+            });
+
+        $poll->options()->whereNotIn('id', $retainedOptionIds)->delete();
+        $poll->ensembles()->sync($validated['ensemble_ids'] ?? []);
 
         return redirect()->route('polls.show', [$poll])->with(['status' => 'Poll updated.']);
     }

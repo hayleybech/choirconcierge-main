@@ -34,6 +34,7 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 		can_vote_multiple: !!poll.can_vote_multiple,
 		close_at: poll.close_at ? DateTime.fromISO(poll.close_at) : null,
 		options: (poll.options || []).map(o => o.label),
+		option_ids: (poll.options || []).map(o => o.id),
 		ensemble_ids: (poll.ensembles || []).map(e => e.id),
 	});
 
@@ -51,12 +52,14 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 		setData('options', next);
 	};
 
-	const addOption = () => setData('options', [...data.options, '']);
-	const removeOption = idx =>
-		setData(
-			'options',
-			data.options.filter((_, i) => i !== idx)
-		);
+	const addOption = () => {
+		setData('options', [...data.options, '']);
+		setData('option_ids', [...data.option_ids, null]);
+	};
+	const removeOption = idx => {
+		setData('options', data.options.filter((_, i) => i !== idx));
+		setData('option_ids', data.option_ids.filter((_, i) => i !== idx));
+	};
 
 	function setCloseAtDate(value) {
 		const date = DateTime.fromJSDate(value);
@@ -144,6 +147,13 @@ const Edit = ({ poll, ensembles = [], setSidebarOpen }) => {
 								checked={!!data.can_vote_multiple}
 								onChange={e => setData('can_vote_multiple', e.target.checked)}
 							/>
+						</div>
+
+						<div className="sm:col-span-6 text-sm">
+							<p className="font-medium text-gray-700">Anonymous voting</p>
+							<p className="text-gray-500">
+								{poll.is_anonymous ? 'Enabled' : 'Disabled'}; this setting cannot be changed after creation.
+							</p>
 						</div>
 
 						<div className="sm:col-span-4 relative z-20">

@@ -32,6 +32,7 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 		title: '',
 		description: '',
 		can_vote_multiple: false,
+		is_anonymous: false,
 		close_at: null,
 		options: ['', ''],
         ensemble_ids: [],
@@ -142,6 +143,17 @@ const Create = ({ ensembles = [], setSidebarOpen }) => {
 								checked={!!data.can_vote_multiple}
 								onChange={e => setData('can_vote_multiple', e.target.checked)}
 							/>
+						</div>
+
+						<div className="sm:col-span-6">
+							<CheckboxWithLabel
+								label="Anonymous voting"
+								id="is_anonymous"
+								name="is_anonymous"
+								checked={!!data.is_anonymous}
+								onChange={e => setData('is_anonymous', e.target.checked)}
+							/>
+							<Help>Voter identities will not be shown to poll participants.</Help>
 						</div>
 
 						<div className="sm:col-span-4 relative z-20">

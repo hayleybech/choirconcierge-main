@@ -7,6 +7,7 @@ import RadioGroup from '../../components/inputs/RadioGroup';
 import { FancyCheckboxGroup } from '../../components/inputs/CheckboxGroup';
 import Icon from '../../components/Icon';
 import Prose from "../../components/Prose";
+import PollOptionVoters from '../../components/PollOptionVoters';
  
 const PollItem = ({ poll }) => {
 	const { route } = useRoute();
@@ -77,7 +78,12 @@ const PollItem = ({ poll }) => {
 							options={poll.options.map(opt => ({
 								id: opt.id,
 								name: opt.label,
-								description: `${opt.votes_count ?? 0} votes`,
+								description: (
+									<div className="flex items-center gap-2">
+										{(opt.votes_count ?? 0) === 0 && <span>0 votes</span>}
+										{!poll.is_anonymous && <PollOptionVoters option={opt} />}
+									</div>
+								),
 							}))}
 							value={data.option_ids}
 							onChange={value => toggle(value)}
@@ -89,7 +95,12 @@ const PollItem = ({ poll }) => {
 							options={poll.options.map(opt => ({
 								id: opt.id,
 								name: opt.label,
-								description: `${opt.votes_count ?? 0} votes`,
+								description: (
+									<div className="flex items-center gap-2">
+										{(opt.votes_count ?? 0) === 0 && <span>0 votes</span>}
+										{!poll.is_anonymous && <PollOptionVoters option={opt} />}
+									</div>
+								),
 							}))}
 							selected={data.option_ids[0]}
 							setSelected={value => toggle(value)}
