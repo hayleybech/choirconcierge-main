@@ -58,7 +58,9 @@ test('catalog routes and page components are valid', function () {
 
     foreach ($catalog->cases() as $case) {
         expect(Route::has($case['route']))->toBeTrue()
-            ->and(File::exists(resource_path('assets/js/Pages/' . $case['component'] . '.js')))->toBeTrue();
+            ->and(collect(config('inertia.testing.page_extensions'))->contains(fn (string $extension): bool =>
+                File::exists(resource_path('assets/js/Pages/' . $case['component'] . '.' . $extension))
+            ))->toBeTrue();
     }
 
     foreach ($catalog->viewports() as $viewport) {
