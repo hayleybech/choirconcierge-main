@@ -50,7 +50,7 @@ const SongTableDesktop = ({ songs, sortFilterForm, userEnsemblesCount, bulkEdit 
 						<TableCell>
 							<div className="flex items-center">
 								<div>
-									<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />
+									{/*<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="sm" />*/}
 								</div>
 								<div className="ml-4 max-w-[45ch] overflow-hidden text-ellipsis whitespace-nowrap">
 									<Link

@@ -5,8 +5,10 @@ const test = require('node:test');
 const sharp = require('sharp');
 const {
 	assertNoSymlinkComponents,
+	canUpdateBaselines,
 	comparePngBuffers,
 	screenshotPath,
+	shouldRunStrictCiChecks,
 	validateCatalog,
 } = require('./visual-regression-runner');
 
@@ -59,6 +61,22 @@ test('treats screenshot dimension changes as mismatches', async () => {
 	assert.equal(comparison.matches, false);
 	assert.equal(comparison.dimensionsMatch, false);
 	assert.equal(comparison.differingPixels, 1);
+});
+
+test('allows baseline updates from the canonical renderer without enabling CI mode', () => {
+	assert.equal(canUpdateBaselines(true, true), true);
+});
+
+test('requires the canonical renderer flag before updating baselines', () => {
+	assert.equal(canUpdateBaselines(true, false), false);
+});
+
+test('skips strict CI checks while updating baselines', () => {
+	assert.equal(shouldRunStrictCiChecks(true, true), false);
+});
+
+test('keeps strict CI checks enabled for comparison runs', () => {
+	assert.equal(shouldRunStrictCiChecks(true, false), true);
 });
 
 test('rejects unsafe catalog IDs before constructing screenshot paths', () => {

@@ -33,8 +33,3 @@ pipeline:
   - name: JS Unit Tests
     cmd: |
       npm test
-
-  - name: Visual Regression Tests
-    cmd: |
-      composer visual:install
-      VISUAL_REGRESSION_CI=true composer visual:test

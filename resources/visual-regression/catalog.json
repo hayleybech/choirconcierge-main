@@ -434,7 +434,7 @@
 			"persona": "tenant-admin",
 			"component": "Songs/Learning/Index",
 			"browser": "chromium",
-			"assert_text": "Learning Status List"
+			"assert_text": "Learning Roster"
 		},
 		{
 			"id": "tenant-song-categories-index",
@@ -689,7 +689,7 @@
 			"persona": "tenant-super-admin",
 			"component": "Events/Rsvps/Index",
 			"browser": "chromium",
-			"assert_text": "RSVP List",
+			"assert_text": "RSVP Roster",
 			"empty_props": ["allSingers"]
 		},
 		{
@@ -702,7 +702,7 @@
 			"persona": "tenant-super-admin",
 			"component": "Events/Attendance/Index",
 			"browser": "chromium",
-			"assert_text": "Attendance List",
+			"assert_text": "Attendance Roster",
 			"empty_props": ["allSingers"]
 		},
 		{

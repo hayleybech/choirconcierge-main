@@ -70,6 +70,12 @@
             font-size: 1.125rem;
         }
 
+        .case-indicators { display: inline-flex; align-items: center; gap: .35rem; margin-left: .35rem; vertical-align: middle; }
+        .indicator-icon { width: 1.15rem; height: 1.15rem; vertical-align: middle; }
+        .status-passed { color: #15803d; }
+        .status-failed { color: #b91c1c; }
+        .status-other { color: #6b7280; }
+
         .metadata {
             margin: 0 0 1rem;
             color: #4b5563;
@@ -261,7 +267,7 @@
 
     <section class="gallery" data-gallery data-view="grid" aria-label="Screenshot cases">
         @forelse ($entries as $entry)
-            <article class="case" data-screenshot
+            <article class="case" data-screenshot data-case-id="{{ $entry['id'] }}"
                      data-module="{{ $entry['module'] }}"
                      data-page_type="{{ $entry['page_type'] }}"
                      data-state="{{ $entry['state'] }}"
@@ -270,7 +276,24 @@
                      data-route="{{ $entry['route'] }}"
                      data-comparison="{{ $entry['comparison'] }}"
                      data-viewport="{{ $entry['viewport']['label'] }}">
-                <h2>{{ $entry['component'] }} — {{ $entry['viewport']['label'] }}</h2>
+                <h2>{{ $entry['component'] }} — {{ $entry['viewport']['label'] }}
+                    <span class="case-indicators" aria-label="{{ $entry['viewport']['label'] }} device, {{ $entry['comparison'] }}">
+                        @if (str_contains(strtolower($entry['viewport']['label']), 'mobile'))
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+                        @elseif (str_contains(strtolower($entry['viewport']['label']), 'tablet'))
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>
+                        @else
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+                        @endif
+                        @if ($entry['comparison'] === 'passed')
+                            <svg class="indicator-icon status-passed" role="img" aria-label="Passed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"/></svg>
+                        @elseif ($entry['comparison'] === 'failed')
+                            <svg class="indicator-icon status-failed" role="img" aria-label="Failed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                        @else
+                            <svg class="indicator-icon status-other" role="img" aria-label="{{ $entry['comparison'] }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
+                        @endif
+                    </span>
+                </h2>
                 <p class="metadata">
                     {{ $entry['id'] }} · {{ $entry['route'] }} · {{ $entry['viewport']['width'] }}
                     × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['comparison'] }}
@@ -318,7 +341,7 @@
     </form>
     <img data-zoom-image alt="">
     <p data-zoom-caption aria-live="polite"></p>
-    <p class="zoom-help" data-zoom-help hidden>Use the left and right arrow keys to browse screenshots.</p>
+    <p class="zoom-help" data-zoom-help hidden>Use the left and right arrow keys to browse screenshots, R to change device, and M to change module.</p>
 </dialog>
 <script>
 	const filters = Array.from(document.querySelectorAll('[data-filter]'));
@@ -345,6 +368,37 @@
 		});
 
 		screenshotCount.textContent = `Showing ${visibleCount} of ${cards.length} screenshots`;
+	}
+
+	function handleFilterChange(filter) {
+		applyFilters();
+		if (!imageZoomDialog.open) {
+			return;
+		}
+
+		const currentCard = currentZoomTrigger?.closest('[data-screenshot]');
+		const currentVariant = currentZoomTrigger?.closest('[data-grid-variant]');
+		const filterName = filter.dataset.filter;
+		const matchingTrigger = zoomTriggers.find(trigger => {
+			const card = trigger.closest('[data-screenshot]');
+			const variant = trigger.closest('[data-grid-variant]');
+			if (!card || !variant || variant.dataset.gridVariant !== currentVariant?.dataset.gridVariant) {
+				return false;
+			}
+
+			const matches = filterName === 'viewport'
+				? card.dataset.caseId === currentCard?.dataset.caseId && card.dataset.viewport === filter.value
+				: card.dataset.viewport === currentCard?.dataset.viewport && card.dataset[filterName] === filter.value;
+
+			return matches && filters.every(activeFilter => !activeFilter.value || activeFilter.dataset.filter === filterName || card.dataset[activeFilter.dataset.filter] === activeFilter.value);
+		});
+
+		if (matchingTrigger) {
+			showZoomImage(matchingTrigger);
+			return;
+		}
+
+		zoomCaption.textContent = `${zoomImage.alt} — no matching image for the selected ${filterName === 'viewport' ? 'device' : 'filter'}. The current image remains open; change filters or press Escape to close.`;
 	}
 
 	function applyGalleryView() {
@@ -391,7 +445,7 @@
 		showZoomImage(visibleGridTriggers[nextIndex]);
 	}
 
-	filters.forEach(filter => filter.addEventListener('change', applyFilters));
+	filters.forEach(filter => filter.addEventListener('change', () => handleFilterChange(filter)));
 	galleryView.addEventListener('change', applyGalleryView);
 	gridVariantSelect.addEventListener('change', applyGalleryView);
 	applyFilters();
@@ -402,6 +456,19 @@
 
 	imageZoomDialog.addEventListener('keydown', event => {
 		if (!imageZoomDialog.open || galleryView.value !== 'grid') {
+			return;
+		}
+
+		if (['r', 'm'].includes(event.key.toLowerCase())) {
+			const filterName = event.key.toLowerCase() === 'r' ? 'viewport' : 'module';
+			const filter = filters.find(item => item.dataset.filter === filterName);
+			if (filter) {
+				const options = Array.from(filter.options).filter(option => option.value);
+				const currentIndex = options.findIndex(option => option.value === filter.value);
+				filter.value = options[(currentIndex + 1) % options.length]?.value ?? '';
+				filter.dispatchEvent(new Event('change'));
+				event.preventDefault();
+			}
 			return;
 		}
 

@@ -7,6 +7,8 @@
         "prettier": "prettier",
         "test": "vitest run",
         "test:visual": "node --test scripts/visual-regression-runner.test.js scripts/visual-regression-audit.test.js scripts/visual-regression-gallery.test.js",
+        "visual:compare": "node -e \"process.env.VISUAL_REGRESSION_CI='true'; require('./scripts/visual-regression-runner.js').main().then(code => { process.exitCode = code; });\"",
+        "visual:update": "node -e \"process.env.VISUAL_REGRESSION_CANONICAL='true'; require('./scripts/visual-regression-runner.js').main(['--update-baselines']).then(code => { process.exitCode = code; });\"",
         "icon": "node scripts/render-fontawesome-icon.js"
     },
     "devDependencies": {

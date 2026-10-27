@@ -118,6 +118,14 @@ function runCommand(command, args, options = {}) {
 	return result.status ?? 1;
 }
 
+function canUpdateBaselines(updateBaselines, isCanonicalRenderer) {
+	return !updateBaselines || isCanonicalRenderer;
+}
+
+function shouldRunStrictCiChecks(isCiEnvironment, updateBaselines) {
+	return isCiEnvironment && !updateBaselines;
+}
+
 function screenshotPath(directory, caseId, viewportId) {
 	if (!safePathSegment.test(caseId) || !safePathSegment.test(viewportId)) {
 		throw new Error('Screenshot path IDs must be safe lowercase path segments.');
@@ -254,17 +262,19 @@ async function compareCaptures(catalog, updateBaselines, compareWithBaselines) {
 async function main(args = process.argv.slice(2)) {
 	const updateBaselines = args.includes('--update-baselines');
 	const unknownArguments = args.filter(argument => argument !== '--update-baselines');
-	const isCiEnvironment = ['true', '1'].includes((process.env.VISUAL_REGRESSION_CI ?? '').toLowerCase());
+	const isCiEnvironment = shouldRunStrictCiChecks(
+		['true', '1'].includes((process.env.VISUAL_REGRESSION_CI ?? '').toLowerCase()),
+		updateBaselines
+	);
+	const isCanonicalRenderer = process.env.VISUAL_REGRESSION_CANONICAL === 'true';
 
 	if (unknownArguments.length > 0) {
 		console.error(`Unknown argument(s): ${unknownArguments.join(', ')}`);
 		return 2;
 	}
 
-	if (updateBaselines && (!isCiEnvironment || process.env.VISUAL_REGRESSION_CANONICAL !== 'true')) {
-		console.error(
-			'Baseline updates require VISUAL_REGRESSION_CI=true and VISUAL_REGRESSION_CANONICAL=true in the canonical renderer.'
-		);
+	if (!canUpdateBaselines(updateBaselines, isCanonicalRenderer)) {
+		console.error('Baseline updates require VISUAL_REGRESSION_CANONICAL=true in the canonical renderer.');
 		return 2;
 	}
 
@@ -327,4 +337,12 @@ if (require.main === module) {
 		});
 }
 
-module.exports = { assertNoSymlinkComponents, comparePngBuffers, main, screenshotPath, validateCatalog };
+module.exports = {
+	assertNoSymlinkComponents,
+	canUpdateBaselines,
+	comparePngBuffers,
+	main,
+	screenshotPath,
+	shouldRunStrictCiChecks,
+	validateCatalog,
+};
