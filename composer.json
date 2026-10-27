@@ -10,6 +10,8 @@
         "php": ">=8.4",
         "ext-json": "*",
         "barryvdh/laravel-ide-helper": "^3.0",
+        "choirconcierge/cashier-paddle-classic": "^1.12",
+        "choirconcierge/spark-paddle-classic": "^4.1",
         "doctrine/dbal": "^3.3",
         "fakerphp/faker": "^1.9.1",
         "garygreen/pretty-routes": "^1.0",
@@ -17,12 +19,12 @@
         "inertiajs/inertia-laravel": "^1.0",
         "jfcherng/php-diff": "^6.16",
         "laragear/two-factor": "^3.0",
-        "laravel/framework": "^11.0",
+        "laravel/cashier-paddle": "^2.8",
+        "laravel/framework": "^12.0",
         "laravel/nightwatch": "^1.15",
         "laravel/pennant": "^1.26",
         "laravel/sanctum": "^4.0",
         "laravel/slack-notification-channel": "^3.6",
-        "laravel/spark-paddle": "4.1.1",
         "laravel/telescope": "^5.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
@@ -33,9 +35,10 @@
         "spatie/calendar-links": "^1.7",
         "spatie/flysystem-dropbox": "^2.0",
         "spatie/icalendar-generator": "^2.3",
-        "spatie/laravel-backup": "^8.0",
+        "spatie/laravel-backup": "^9.0",
         "spatie/laravel-medialibrary": "^11.0",
-        "spatie/laravel-query-builder": "^5.0",
+        "spatie/laravel-query-builder": "^7.0",
+        "revoltify/subscriptionify": "^1.0",
         "spatie/laravel-robots-middleware": "^1.3",
         "stancl/tenancy": "^3.1",
         "symfony/http-client": "^6.0",
@@ -114,8 +117,24 @@
     },
     "repositories": [
         {
-            "type": "composer",
-            "url": "https://spark.laravel.com"
+            "type": "path",
+            "url": "packages/legacy-cashier-paddle",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "choirconcierge/cashier-paddle-classic": "1.12.0"
+                }
+            }
+        },
+        {
+            "type": "path",
+            "url": "packages/legacy-spark-paddle",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "choirconcierge/spark-paddle-classic": "4.1.1"
+                }
+            }
         }
     ]
 }

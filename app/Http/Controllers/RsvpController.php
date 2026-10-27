@@ -96,7 +96,7 @@ class RsvpController extends Controller
             ]);
 
         $pagination = QueryBuilder::for($query)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('user.name', fn(Builder $query, $value) => $query
                     ->whereHas('user', fn(Builder $query) => $query
                         ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
@@ -129,7 +129,7 @@ class RsvpController extends Controller
                     );
                 })->default([$defaultStatus]),
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 ...$this->singerSorts(),
                 $rsvpSort,
                 $updatedSort,

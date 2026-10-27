@@ -4,7 +4,17 @@ namespace App\Providers;
 
 use App\Features\InboxFeature;
 use App\Http\View\Composers\SingerStatusComposer;
+use App\Models\Billing\Customer as BillingCustomer;
+use App\Models\Billing\Subscription as BillingSubscription;
+use App\Models\Billing\SubscriptionItem as BillingSubscriptionItem;
+use App\Models\Billing\Transaction as BillingTransaction;
+use App\Models\Tenant;
+use App\Observers\LegacyCashierCustomerObserver;
+use App\Observers\LegacyCashierSubscriptionObserver;
+use App\Observers\LegacyTenantSubscriptionObserver;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
+use ChoirConcierge\LegacyCashierPaddle\Customer as LegacyCashierCustomer;
+use ChoirConcierge\LegacyCashierPaddle\Subscription as LegacyCashierSubscription;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
@@ -12,6 +22,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Paddle\Cashier;
 use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 
@@ -24,6 +35,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Cashier::useCustomerModel(BillingCustomer::class);
+        Cashier::useSubscriptionModel(BillingSubscription::class);
+        Cashier::useSubscriptionItemModel(BillingSubscriptionItem::class);
+        Cashier::useTransactionModel(BillingTransaction::class);
+
+        LegacyCashierSubscription::observe(LegacyCashierSubscriptionObserver::class);
+        LegacyCashierCustomer::observe(LegacyCashierCustomerObserver::class);
+        Tenant::observe(LegacyTenantSubscriptionObserver::class);
+
         InboxFeature::define();
 
         Model::preventLazyLoading($this->app->environment(['local', 'testing']));

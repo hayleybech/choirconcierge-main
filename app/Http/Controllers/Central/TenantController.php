@@ -92,7 +92,7 @@ class TenantController extends Controller
 
 	private function getTenants() {
 		return QueryBuilder::for(Tenant::class)
-			->allowedFilters([
+			->allowedFilters(...[
 				'id',
                 AllowedFilter::callback('billing_status', fn(Builder $query, $value) => match ($value) {
                     'active' => $query->active(),
@@ -104,7 +104,7 @@ class TenantController extends Controller
                 })
 			])
 			->defaultSort('id')
-			->allowedSorts([
+			->allowedSorts(...[
 				'id',
 				'created_at',
 			])->with('domains')

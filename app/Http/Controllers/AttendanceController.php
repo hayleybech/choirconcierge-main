@@ -75,7 +75,7 @@ class AttendanceController extends Controller
             ]);
 
         $pagination = QueryBuilder::for($query)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('user.name', function (Builder $query, $value) {
                     $terms = preg_split('/\s+/', trim((string) $value), -1, PREG_SPLIT_NO_EMPTY);
 
@@ -111,7 +111,7 @@ class AttendanceController extends Controller
                     );
                 }),
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 ...$this->singerSorts(),
                 $attendanceSort,
                 $updatedSort,

@@ -20,7 +20,7 @@ class SingerAttendanceController extends Controller
             ->where('membership_id', $singer->id)
             ->with(['event' => fn($query) => $query->with('type')])
             ->join('events', 'attendances.event_id', '=', 'events.id')
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::callback('type.id', fn($query, $value) => $query->whereIn('events.type_id', (array) $value)),
                 AllowedFilter::callback('starts_after', fn($query, $value) => $query->where('events.start_date', '>=', $value)),
                 AllowedFilter::callback('starts_before', fn($query, $value) => $query->where('events.start_date', '<=', $value)),

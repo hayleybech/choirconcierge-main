@@ -9,9 +9,9 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class UserNameSort implements Sort
 {
-    public function __invoke(Builder $query, bool $descending, string $property)
+    public function __invoke(Builder $query, bool $descending, string $property): void
     {
-        return $query
+        $query
             ->orderBy('first_name', $descending ? 'desc' : 'asc')
             ->orderBy('last_name', $descending ? 'desc' : 'asc');
     }

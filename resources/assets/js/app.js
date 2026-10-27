@@ -9,7 +9,7 @@ import { onMessageFromRN, sendMessageToRN } from './lib/reactNative';
 import '../app.css';
 
 const VERSION = 'choir-concierge@2025-09-22c';
-const pages = import.meta.glob('./Pages/**/*.jsx');
+const pages = import.meta.glob(['./Pages/**/*.jsx', '!./Pages/**/*.test.jsx']);
 
 Sentry.init({
 	dsn: import.meta.env.VITE_SENTRY_DSN,

@@ -37,7 +37,7 @@ class PollController extends Controller
 
         /** @var LengthAwarePaginator $pagination */
         $pagination = QueryBuilder::for($query)
-            ->allowedFilters([
+            ->allowedFilters(...[
                 AllowedFilter::partial('title'),
                 AllowedFilter::callback('status', function (Builder $query, $value) {
                     if ($value === 'open') {
@@ -55,7 +55,7 @@ class PollController extends Controller
                 }),
                 AllowedFilter::exact('ensembles.id'),
             ])
-            ->allowedSorts([
+            ->allowedSorts(...[
                 'title',
                 'created_at',
                 'votes_count',

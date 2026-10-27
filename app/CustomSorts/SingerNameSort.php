@@ -8,11 +8,11 @@ use Spatie\QueryBuilder\Sorts\Sort;
 
 class SingerNameSort implements Sort
 {
-    public function __invoke(Builder $query, bool $descending, string $property)
+    public function __invoke(Builder $query, bool $descending, string $property): void
     {
         $prefix = \DB::getTablePrefix();
 
-        return $query
+        $query
             ->addSubSelect('full_name',
                 User::selectRaw('CONCAT(first_name, " ", last_name) AS full_name')
                     ->whereRaw("`${prefix}memberships`.`user_id` = `${prefix}users`.`id`")

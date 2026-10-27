@@ -20,9 +20,9 @@ class TenantStats
         }
 
         return [
-            'activeTenants' => $this->getActiveTenantsCount(),
-            'tenantsOnTrial' => $this->getTenantsOnTrialCount(),
-            'tenantsTrialExpired' => $this->getTenantsTrialExpiredCount(),
+            'activeTenants' => Tenant::active()->count(),
+            'tenantsOnTrial' => Tenant::trial()->count(),
+            'tenantsTrialExpired' => Tenant::expiredTrial()->count(),
             'activeMembers' => $this->getActiveMembersCount(),
             'trialConversionRate' => $this->getTrialConversionRate(),
             'medianRetentionTime' => $this->getMedianRetentionTime(),
@@ -68,31 +68,6 @@ class TenantStats
             ->median();
 
         return $medianRetentionTime === null ? null : round($medianRetentionTime, 2);
-    }
-
-    private function getActiveTenantsCount(): int
-    {
-        return Tenant::active()->count();
-    }
-
-    private function getTenantsOnTrialCount(): int
-    {
-        return Tenant::whereHas('subscriptions', function (Builder $query): void {
-            $query->onTrial();
-        })->orWhereHas('customer', function (Builder $query): void {
-            $query->whereNotNull('trial_ends_at')
-                ->where('trial_ends_at', '>', Carbon::now());
-        })->count();
-    }
-
-    private function getTenantsTrialExpiredCount(): int
-    {
-        return Tenant::whereHas('subscriptions', function (Builder $query): void {
-            $query->expiredTrial();
-        })->orWhereHas('customer', function (Builder $query): void {
-            $query->whereNotNull('trial_ends_at')
-                ->where('trial_ends_at', '<', Carbon::now());
-        })->count();
     }
 
     private function getActiveMembersCount(): int

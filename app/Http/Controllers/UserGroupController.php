@@ -32,7 +32,7 @@ class UserGroupController extends Controller
         return Inertia::render('MailingLists/Index', [
             'lists' => QueryBuilder::for(UserGroup::class)
                 ->with('tenant')
-                ->allowedFilters([
+                ->allowedFilters(...[
                     AllowedFilter::callback('search', static function (Builder $query, string $value): void {
                         $address = str_contains($value, '@') ? strstr($value, '@', true) : $value;
 
@@ -46,7 +46,7 @@ class UserGroupController extends Controller
                     }),
                     AllowedFilter::exact('list_type'),
                 ])
-                ->allowedSorts([
+                ->allowedSorts(...[
                     'title',
                     'list_type',
                     AllowedSort::field('address', 'slug'),
