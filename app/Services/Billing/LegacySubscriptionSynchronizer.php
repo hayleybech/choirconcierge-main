@@ -9,9 +9,9 @@ use Revoltify\Subscriptionify\Enums\FeatureType;
 use Revoltify\Subscriptionify\Enums\SubscriptionStatus;
 use Revoltify\Subscriptionify\Models\Feature;
 use Revoltify\Subscriptionify\Models\Plan;
-use Revoltify\Subscriptionify\Models\Subscription as EntitlementSubscription;
+use Revoltify\Subscriptionify\Models\Subscription as PlanSubscription;
 
-class LegacyEntitlementSynchronizer
+class LegacySubscriptionSynchronizer
 {
     public function sync(Tenant $tenant): void
     {
@@ -24,7 +24,7 @@ class LegacyEntitlementSynchronizer
             $tenant->loadMissing(['customer', 'subscriptions']);
 
             if ($tenant->has_gratis) {
-                $this->saveEntitlement(
+                $this->saveSubscription(
                     $tenant,
                     $this->noCostPlan(),
                     SubscriptionStatus::Active,
@@ -54,7 +54,7 @@ class LegacyEntitlementSynchronizer
                     ? now()
                     : null;
 
-                $this->saveEntitlement(
+                $this->saveSubscription(
                     $tenant,
                     $plan,
                     $status,
@@ -70,7 +70,7 @@ class LegacyEntitlementSynchronizer
             if ($tenant->onGenericTrial()) {
                 $trialEndsAt = $tenant->trialEndsAt();
 
-                $this->saveEntitlement(
+                $this->saveSubscription(
                     $tenant,
                     $this->trialPlan(),
                     SubscriptionStatus::Trialing,
@@ -85,7 +85,7 @@ class LegacyEntitlementSynchronizer
             if ($tenant->customer?->trial_ends_at !== null) {
                 $trialEndsAt = $tenant->customer->trial_ends_at;
 
-                $this->saveEntitlement(
+                $this->saveSubscription(
                     $tenant,
                     $this->trialPlan(),
                     SubscriptionStatus::Expired,
@@ -97,11 +97,11 @@ class LegacyEntitlementSynchronizer
                 return;
             }
 
-            $this->expireEntitlements($tenant);
+            $this->expireSubscriptions($tenant);
         });
     }
 
-    private function saveEntitlement(
+    private function saveSubscription(
         Tenant $tenant,
         Plan $plan,
         SubscriptionStatus $status,
@@ -110,8 +110,8 @@ class LegacyEntitlementSynchronizer
         ?CarbonInterface $trialEndsAt = null,
         ?CarbonInterface $cancelledAt = null,
     ): void {
-        $entitlements = $tenant->entitlementSubscriptions();
-        $current = $entitlements->latest('id')->lockForUpdate()->first();
+        $subscriptions = $tenant->planSubscriptions();
+        $current = $subscriptions->latest('id')->lockForUpdate()->first();
         $attributes = [
             'plan_id' => $plan->getKey(),
             'status' => $status,
@@ -121,17 +121,17 @@ class LegacyEntitlementSynchronizer
             'cancelled_at' => $cancelledAt,
         ];
 
-        if ($current instanceof EntitlementSubscription) {
+        if ($current instanceof PlanSubscription) {
             if ($current->plan_id === $plan->getKey() && $current->getStatus() === $status) {
                 $attributes['starts_at'] = $current->getStartsAt();
             }
 
             $current->update($attributes);
         } else {
-            $current = $entitlements->create($attributes);
+            $current = $subscriptions->create($attributes);
         }
 
-        $entitlements->whereKeyNot($current->getKey())
+        $subscriptions->whereKeyNot($current->getKey())
             ->whereIn('status', [
                 SubscriptionStatus::Active,
                 SubscriptionStatus::Trialing,
@@ -144,9 +144,9 @@ class LegacyEntitlementSynchronizer
             ]);
     }
 
-    private function expireEntitlements(Tenant $tenant): void
+    private function expireSubscriptions(Tenant $tenant): void
     {
-        $tenant->entitlementSubscriptions()
+        $tenant->planSubscriptions()
             ->whereIn('status', [
                 SubscriptionStatus::Active,
                 SubscriptionStatus::Trialing,

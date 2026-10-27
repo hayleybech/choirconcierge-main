@@ -2,12 +2,12 @@
 
 use App\Models\Tenant;
 use App\Models\Membership;
-use App\Services\Billing\LegacyEntitlementSynchronizer;
+use App\Services\Billing\LegacySubscriptionSynchronizer;
 use Revoltify\Subscriptionify\Models\Plan;
-use Revoltify\Subscriptionify\Models\Subscription as EntitlementSubscription;
+use Revoltify\Subscriptionify\Models\Subscription as PlanSubscription;
 use Revoltify\Subscriptionify\Enums\SubscriptionStatus;
 
-test('tenant access is decided by its confirmed Subscriptionify entitlement', function () {
+test('tenant access is decided by its confirmed subscription', function () {
     $tenant = Tenant::factory()->create([
         'timezone' => 'Australia/Perth',
     ]);
@@ -18,7 +18,7 @@ test('tenant access is decided by its confirmed Subscriptionify entitlement', fu
         'slug' => 'legacy-small',
     ]);
 
-    EntitlementSubscription::query()->create([
+    PlanSubscription::query()->create([
         'subscribable_type' => $tenant->getMorphClass(),
         'subscribable_id' => $tenant->getKey(),
         'plan_id' => $plan->getKey(),
@@ -29,21 +29,21 @@ test('tenant access is decided by its confirmed Subscriptionify entitlement', fu
     expect($tenant->fresh()->billing_status['valid'])->toBeTrue();
 });
 
-test('a Spark-owned tenant receives a mirrored entitlement with the configured tier limits', function (int $planId, ?int $quota): void {
+test('a Spark-owned tenant receives a mirrored subscription with the configured tier limits', function (int $planId, ?int $quota): void {
     $tenant = Tenant::factory()
         ->withSubscription($planId)
         ->create(['timezone' => 'Australia/Perth']);
-    $entitlement = $tenant->entitlementSubscriptions()->with('plan.features')->latest('id')->firstOrFail();
-    $features = $entitlement->plan->features->mapWithKeys(
+    $subscription = $tenant->planSubscriptions()->with('plan.features')->latest('id')->firstOrFail();
+    $features = $subscription->plan->features->mapWithKeys(
         fn ($feature): array => [$feature->slug => (int) $feature->pivot->value],
     );
 
-    expect($entitlement->getStatus())->toBe(SubscriptionStatus::Active)
-        ->and($entitlement->plan->getSlug())->toStartWith('legacy-spark-')
+    expect($subscription->getStatus())->toBe(SubscriptionStatus::Active)
+        ->and($subscription->plan->getSlug())->toStartWith('legacy-spark-')
         ->and($features->get('active-user-quota'))->toBe($quota)
         ->and($features->get('active-user-quota-buffer'))->toBe($quota === null ? null : 5)
         ->and($features->get('active-user-grace-period-days'))->toBe($quota === null ? null : 30)
-        ->and($tenant->subscriptions()->exists())->toBeTrue();
+        ->and($tenant->planSubscriptions()->exists())->toBeTrue();
 })->with([
     'Small' => [62775, 25],
     'Medium' => [62838, 50],
@@ -54,9 +54,9 @@ test('a valid historical Spark plan outside the current catalog retains access',
     $tenant = Tenant::factory()
         ->withSubscription(1)
         ->create(['timezone' => 'Australia/Perth']);
-    $entitlement = $tenant->entitlementSubscriptions()->with('plan')->latest('id')->firstOrFail();
+    $subscription = $tenant->planSubscriptions()->with('plan')->latest('id')->firstOrFail();
 
-    expect($entitlement->plan->getSlug())->toBe('legacy-spark-1')
+    expect($subscription->plan->getSlug())->toBe('legacy-spark-1')
         ->and($tenant->fresh()->billing_status['valid'])->toBeTrue()
         ->and($tenant->fresh()->billing_status['activeUserQuota']['quota'])->toBeNull();
 });
@@ -69,19 +69,19 @@ test('a tenant covered by has_gratis receives active no-cost access', function (
 
     expect($tenant->has_gratis)->toBeTrue();
 
-    $entitlement = $tenant->entitlementSubscriptions()->with('plan')->latest('id')->firstOrFail();
+    $subscription = $tenant->planSubscriptions()->with('plan')->latest('id')->firstOrFail();
 
-    expect($entitlement->getStatus())->toBe(SubscriptionStatus::Active)
-        ->and($entitlement->plan->isFree())->toBeTrue()
+    expect($subscription->getStatus())->toBe(SubscriptionStatus::Active)
+        ->and($subscription->plan->isFree())->toBeTrue()
         ->and($tenant->fresh()->billing_status['valid'])->toBeTrue()
         ->and(Tenant::query()->active()->whereKey($tenant->getKey())->exists())->toBeTrue();
 
-    $initialSubscriptionCount = $tenant->entitlementSubscriptions()->count();
-    $initialStartDate = $entitlement->getStartsAt();
-    app(LegacyEntitlementSynchronizer::class)->sync($tenant);
+    $initialSubscriptionCount = $tenant->planSubscriptions()->count();
+    $initialStartDate = $subscription->getStartsAt();
+    app(LegacySubscriptionSynchronizer::class)->sync($tenant);
 
-    expect($tenant->entitlementSubscriptions()->count())->toBe($initialSubscriptionCount)
-        ->and($tenant->entitlementSubscriptions()->latest('id')->firstOrFail()->getStartsAt()->equalTo($initialStartDate))
+    expect($tenant->planSubscriptions()->count())->toBe($initialSubscriptionCount)
+        ->and($tenant->planSubscriptions()->latest('id')->firstOrFail()->getStartsAt()->equalTo($initialStartDate))
         ->toBeTrue();
 
     $tenant->customer()->firstOrFail()->update(['trial_ends_at' => null]);
@@ -89,15 +89,15 @@ test('a tenant covered by has_gratis receives active no-cost access', function (
     $tenant->save();
 
     expect($tenant->fresh()->billing_status['valid'])->toBeFalse()
-        ->and($tenant->fresh()->entitlementSubscriptions()->latest('id')->firstOrFail()->getStatus())
+        ->and($tenant->fresh()->planSubscriptions()->latest('id')->firstOrFail()->getStatus())
         ->toBe(SubscriptionStatus::Expired);
 });
 
-test('generic trial access and expiry use Subscriptionify entitlements', function () {
+test('generic trial access and expiry use Subscriptionify subscriptions', function () {
     $tenant = Tenant::factory()->create(['timezone' => 'Australia/Perth']);
-    $entitlement = $tenant->entitlementSubscriptions()->latest('id')->firstOrFail();
+    $subscription = $tenant->planSubscriptions()->latest('id')->firstOrFail();
 
-    expect($entitlement->getStatus())->toBe(SubscriptionStatus::Trialing)
+    expect($subscription->getStatus())->toBe(SubscriptionStatus::Trialing)
         ->and($tenant->billing_status['valid'])->toBeTrue()
         ->and(Tenant::query()->trial()->whereKey($tenant->getKey())->exists())->toBeTrue();
 
@@ -108,7 +108,7 @@ test('generic trial access and expiry use Subscriptionify entitlements', functio
         ->and(Tenant::query()->expiredTrial()->whereKey($tenant->getKey())->exists())->toBeTrue();
 });
 
-test('last confirmed access remains valid until reconciliation expires a stale Spark entitlement', function () {
+test('last confirmed access remains valid until reconciliation expires a stale Spark subscription', function () {
     $tenant = Tenant::query()->findOrFail('phpunit');
     $sparkSubscription = $tenant->subscriptions()->firstOrFail();
 
@@ -118,11 +118,11 @@ test('last confirmed access remains valid until reconciliation expires a stale S
 
     expect($tenant->fresh()->billing_status['valid'])->toBeTrue();
 
-    $this->artisan('billing:reconcile-legacy-entitlements')
+    $this->artisan('billing:reconcile-legacy-subscriptions')
         ->assertExitCode(0);
 
     expect($tenant->fresh()->billing_status['valid'])->toBeFalse()
-        ->and($tenant->fresh()->entitlementSubscriptions()->latest('id')->firstOrFail()->getStatus())
+        ->and($tenant->fresh()->planSubscriptions()->latest('id')->firstOrFail()->getStatus())
         ->toBe(SubscriptionStatus::Expired);
 });
 
@@ -160,10 +160,10 @@ test('Small tier access is retained during the quota grace period and blocked af
         ->and($expiredGraceStatus['valid'])->toBeFalse();
 });
 
-test('an expired Subscriptionify entitlement does not grant tenant access', function () {
+test('an expired plan subscription does not grant tenant access', function () {
     $tenant = Tenant::query()->findOrFail('phpunit');
-    $entitlement = $tenant->entitlementSubscriptions()->latest('id')->firstOrFail();
-    $entitlement->update(['status' => SubscriptionStatus::Expired]);
+    $subscription = $tenant->planSubscriptions()->latest('id')->firstOrFail();
+    $subscription->update(['status' => SubscriptionStatus::Expired]);
 
     expect($tenant->fresh()->billing_status['valid'])->toBeFalse()
         ->and(Tenant::query()->active()->whereKey($tenant->getKey())->exists())->toBeFalse();

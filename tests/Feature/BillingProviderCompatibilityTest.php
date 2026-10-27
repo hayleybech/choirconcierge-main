@@ -17,28 +17,27 @@ test('classic and billing providers register separate webhook routes', function 
         ->toContain('ChoirConcierge\LegacySpark\Http\Controllers\BillingPortalController');
 });
 
-test('classic, billing, and entitlement models use separate subscription tables', function () {
-    expect((new ChoirConcierge\LegacyCashierPaddle\Customer())->getTable())->toBe('customers');
-    expect((new ChoirConcierge\LegacyCashierPaddle\Subscription())->getTable())->toBe('subscriptions');
+test('classic, billing, and plan subscriptions use separate tables', function () {
+    expect((new ChoirConcierge\LegacyCashierPaddle\Customer())->getTable())->toBe('classic_customers');
+    expect((new ChoirConcierge\LegacyCashierPaddle\Subscription())->getTable())->toBe('classic_subscriptions');
     expect((new ChoirConcierge\LegacyCashierPaddle\Receipt())->getTable())->toBe('receipts');
 
-    expect((new App\Models\Billing\Customer())->getTable())->toBe('billing_customers');
-    expect((new App\Models\Billing\Subscription())->getTable())->toBe('billing_subscriptions');
-    expect((new App\Models\Billing\SubscriptionItem())->getTable())->toBe('billing_subscription_items');
-    expect((new App\Models\Billing\Transaction())->getTable())->toBe('billing_transactions');
-    expect((new Revoltify\Subscriptionify\Models\Subscription())->getTable())->toBe('ent_subscriptions');
-    expect((new Revoltify\Subscriptionify\Models\Feature())->getTable())->toBe('ent_features');
+    expect((new App\Models\Billing\Customer())->getTable())->toBe('customers');
+    expect((new App\Models\Billing\Subscription())->getTable())->toBe('subscriptions');
+    expect((new App\Models\Billing\SubscriptionItem())->getTable())->toBe('subscription_items');
+    expect((new App\Models\Billing\Transaction())->getTable())->toBe('transactions');
+    expect((new Revoltify\Subscriptionify\Models\Subscription())->getTable())->toBe('plan_subscriptions');
+    expect((new Revoltify\Subscriptionify\Models\Feature())->getTable())->toBe('entitlements');
     expect(Schema::hasTable('subscriptions'))->toBeTrue();
-    expect(Schema::hasTable('billing_subscriptions'))->toBeTrue();
-    expect(Schema::hasTable('ent_subscriptions'))->toBeTrue();
-    expect(Schema::hasTable('features'))->toBeTrue();
-    expect(Schema::hasTable('ent_features'))->toBeTrue();
+    expect(Schema::hasTable('classic_subscriptions'))->toBeTrue();
+    expect(Schema::hasTable('plan_subscriptions'))->toBeTrue();
+    expect(Schema::hasTable('entitlements'))->toBeTrue();
     expect(config('subscriptionify.tables'))->toBe([
-        'plans' => 'ent_plans',
-        'features' => 'ent_features',
-        'feature_plan' => 'ent_plan_features',
-        'subscriptions' => 'ent_subscriptions',
-        'feature_usages' => 'ent_feature_usage',
-        'feature_subscribable' => 'ent_feature_grants',
+        'plans' => 'plans',
+        'features' => 'entitlements',
+        'feature_plan' => 'feature_plan',
+        'subscriptions' => 'plan_subscriptions',
+        'feature_usages' => 'feature_usages',
+        'feature_subscribable' => 'feature_subscribable',
     ]);
 });

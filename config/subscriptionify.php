@@ -30,19 +30,19 @@ return [
     | Table Names
     |--------------------------------------------------------------------------
     |
-    | If your application already uses one of the default table names
-    | (e.g. you have a "subscriptions" table from Cashier), you can
-    | rename any Subscriptionify table here.
+    | The default table names are used wherever they do not conflict with
+    | Cashier. Plan features use "entitlements" to distinguish them from
+    | application feature flags.
     |
     */
 
     'tables' => [
-        'plans' => 'ent_plans',
-        'features' => 'ent_features',
-        'feature_plan' => 'ent_plan_features',
-        'subscriptions' => 'ent_subscriptions',
-        'feature_usages' => 'ent_feature_usage',
-        'feature_subscribable' => 'ent_feature_grants',
+        'plans' => 'plans',
+        'features' => 'entitlements',
+        'feature_plan' => 'feature_plan',
+        'subscriptions' => 'plan_subscriptions',
+        'feature_usages' => 'feature_usages',
+        'feature_subscribable' => 'feature_subscribable',
     ],
 
     /*

@@ -15,7 +15,8 @@ return new class extends Migration
         if (! Schema::hasTable($table)) {
             Schema::create($table, function (Blueprint $table): void {
                 $table->id();
-                $table->morphs('subscribable');
+                $table->string('subscribable_type');
+                $table->unsignedBigInteger('subscribable_id');
                 $table->foreignId('plan_id');
                 $table->string('status')->default('active');
                 $table->timestamp('starts_at');
@@ -25,7 +26,8 @@ return new class extends Migration
                 $table->timestamp('renewed_at')->nullable();
                 $table->timestamps();
 
-                $table->index(['subscribable_type', 'subscribable_id', 'status']);
+                $table->index(['subscribable_type', 'subscribable_id'], 'plan_subscribable_index');
+                $table->index(['subscribable_type', 'subscribable_id', 'status'], 'plan_subscribable_status_index');
                 $table->index('plan_id');
                 $table->index('status');
             });

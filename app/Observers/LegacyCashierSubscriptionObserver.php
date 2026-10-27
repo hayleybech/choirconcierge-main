@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Tenant;
-use App\Services\Billing\LegacyEntitlementSynchronizer;
+use App\Services\Billing\LegacySubscriptionSynchronizer;
 use ChoirConcierge\LegacyCashierPaddle\Subscription;
 
 class LegacyCashierSubscriptionObserver
@@ -24,7 +24,7 @@ class LegacyCashierSubscriptionObserver
         $tenant = $subscription->billable;
 
         if ($tenant instanceof Tenant) {
-            app(LegacyEntitlementSynchronizer::class)->sync($tenant);
+            app(LegacySubscriptionSynchronizer::class)->sync($tenant);
         }
     }
 }

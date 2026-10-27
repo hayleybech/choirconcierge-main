@@ -6,5 +6,4 @@ use Laravel\Paddle\Subscription as CashierSubscription;
 
 class Subscription extends CashierSubscription
 {
-    protected $table = 'billing_subscriptions';
 }

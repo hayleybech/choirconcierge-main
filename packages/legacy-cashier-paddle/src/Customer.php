@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Customer extends Model
 {
+    protected $table = 'classic_customers';
+
     /**
      * The attributes that are not mass assignable.
      *

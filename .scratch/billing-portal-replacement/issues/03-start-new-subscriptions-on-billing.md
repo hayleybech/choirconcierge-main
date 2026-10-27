@@ -4,7 +4,7 @@
 
 **Blocked by:**
 - 01: Prove parallel Spark and Paddle Billing compatibility.
-- 02: Keep legacy and free-tenant entitlements unified.
+- 02: Keep legacy and free-tenant subscriptions unified.
 
 **Status:** ready-for-agent
 

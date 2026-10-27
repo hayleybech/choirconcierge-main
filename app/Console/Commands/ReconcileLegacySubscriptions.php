@@ -3,31 +3,31 @@
 namespace App\Console\Commands;
 
 use App\Models\Tenant;
-use App\Services\Billing\LegacyEntitlementSynchronizer;
+use App\Services\Billing\LegacySubscriptionSynchronizer;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Throwable;
 
-class ReconcileLegacyEntitlements extends Command
+class ReconcileLegacySubscriptions extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'billing:reconcile-legacy-entitlements';
+    protected $signature = 'billing:reconcile-legacy-subscriptions';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Reconcile Spark and free-tenant Subscriptionify entitlements';
+    protected $description = 'Reconcile Spark and free-tenant subscriptions';
 
     /**
      * Execute the console command.
      */
-    public function handle(LegacyEntitlementSynchronizer $synchronizer): int
+    public function handle(LegacySubscriptionSynchronizer $synchronizer): int
     {
         $failedTenantIds = collect();
         $reconciledTenantCount = 0;
@@ -58,7 +58,7 @@ class ReconcileLegacyEntitlements extends Command
             return self::FAILURE;
         }
 
-        $this->info("Reconciled {$reconciledTenantCount} tenant entitlements.");
+        $this->info("Reconciled {$reconciledTenantCount} tenant subscriptions.");
 
         return self::SUCCESS;
     }

@@ -13,4 +13,4 @@
 - [ ] Subscriptions scheduled to cancel at period end are not imported; they retain access through the paid-through date, and final cutover completion waits until all pending cancellations expire.
 - [ ] A tenant remains Spark-owned until Paddle confirms the import and the resulting Billing subscription is verified; failed imports do not cause an ownership switch.
 - [ ] Import events and retries are idempotent and reconcilable, so delayed, duplicate, or replayed events cannot create duplicate subscriptions or charges.
-- [ ] Feature tests cover successful and failed imports, trial/discount preservation, delayed and duplicate events, and ownership/entitlement outcomes.
+- [ ] Feature tests cover successful and failed imports, trial/discount preservation, delayed and duplicate events, and ownership/subscription-access outcomes.

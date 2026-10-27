@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('billing_customers', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->morphs('billable');
             $table->string('paddle_id')->unique();
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('billing_subscriptions', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
             $table->morphs('billable');
             $table->string('type');
@@ -33,7 +33,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('billing_subscription_items', function (Blueprint $table) {
+        Schema::create('subscription_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subscription_id');
             $table->string('product_id');
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->unique(['subscription_id', 'price_id']);
         });
 
-        Schema::create('billing_transactions', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->morphs('billable');
             $table->string('paddle_id')->unique();
@@ -65,9 +65,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('billing_transactions');
-        Schema::dropIfExists('billing_subscription_items');
-        Schema::dropIfExists('billing_subscriptions');
-        Schema::dropIfExists('billing_customers');
+        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('subscription_items');
+        Schema::dropIfExists('subscriptions');
+        Schema::dropIfExists('customers');
     }
 };

@@ -14,6 +14,8 @@ use LogicException;
  */
 class Subscription extends Model
 {
+    protected $table = 'classic_subscriptions';
+
     use Prorates;
 
     const STATUS_ACTIVE = 'active';

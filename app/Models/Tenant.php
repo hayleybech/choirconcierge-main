@@ -19,7 +19,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use ChoirConcierge\LegacySpark\Billable;
 use Revoltify\Subscriptionify\Enums\SubscriptionStatus;
-use Revoltify\Subscriptionify\Models\Subscription as EntitlementSubscription;
+use Revoltify\Subscriptionify\Models\Subscription as PlanSubscription;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
@@ -129,13 +129,13 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
-        $subscription = $this->currentEntitlement();
+        $subscription = $this->currentSubscription();
         $activeUserQuotaStatus = $this->getActiveUserQuotaStatus($subscription);
         $onTrial = $subscription?->onTrial() ?? false;
         $hasGratis = $subscription?->getPlan()->isFree() ?? false;
 
         return Attribute::get(fn (): array => [
-            'valid' => $this->hasValidEntitlement($subscription) && !$activeUserQuotaStatus['quotaExceeded'],
+            'valid' => $this->hasValidSubscription($subscription) && !$activeUserQuotaStatus['quotaExceeded'],
             'onTrial' => $onTrial,
             'trialEndsAt' => $onTrial ? $subscription?->getTrialEndsAt() : null,
             'hasExpiredTrial' => in_array($subscription?->getStatus(), [
@@ -156,21 +156,21 @@ class Tenant extends BaseTenant
 
     public function scopeActive(Builder $query): Builder
     {
-        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
-            $this->applyValidEntitlementFilter($query);
+        return $query->whereHas('planSubscriptions', function (Builder $query): void {
+            $this->applyValidSubscriptionFilter($query);
         });
     }
 
     public function scopeInactive(Builder $query): Builder
     {
-        return $query->whereDoesntHave('entitlementSubscriptions', function (Builder $query): void {
-            $this->applyValidEntitlementFilter($query);
+        return $query->whereDoesntHave('planSubscriptions', function (Builder $query): void {
+            $this->applyValidSubscriptionFilter($query);
         });
     }
 
     public function scopeSubscribed(Builder $query): Builder
     {
-        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+        return $query->whereHas('planSubscriptions', function (Builder $query): void {
             $query->where(function (Builder $query): void {
                 $query->where(function (Builder $query): void {
                     $query->whereIn('status', [
@@ -189,7 +189,7 @@ class Tenant extends BaseTenant
 
     public function scopeEnded(Builder $query): Builder
     {
-        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+        return $query->whereHas('planSubscriptions', function (Builder $query): void {
             $query->where('status', SubscriptionStatus::Expired->value)
                 ->orWhere(function (Builder $query): void {
                     $query->where('status', SubscriptionStatus::Cancelled->value)
@@ -201,7 +201,7 @@ class Tenant extends BaseTenant
 
     public function scopeTrial(Builder $query): Builder
     {
-        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+        return $query->whereHas('planSubscriptions', function (Builder $query): void {
             $query->where('status', SubscriptionStatus::Trialing->value)
                 ->where('trial_ends_at', '>', now());
         });
@@ -209,7 +209,7 @@ class Tenant extends BaseTenant
 
     public function scopeExpiredTrial(Builder $query): Builder
     {
-        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+        return $query->whereHas('planSubscriptions', function (Builder $query): void {
             $query->whereIn('status', [
                 SubscriptionStatus::Trialing->value,
                 SubscriptionStatus::Expired->value,
@@ -242,9 +242,9 @@ class Tenant extends BaseTenant
      *     quotaNearlyExceeded: bool
      * }
      */
-    public function getActiveUserQuotaStatus(?EntitlementSubscription $subscription = null): array
+    public function getActiveUserQuotaStatus(?PlanSubscription $subscription = null): array
     {
-        $subscription ??= $this->currentEntitlement();
+        $subscription ??= $this->currentSubscription();
         $features = $subscription?->getPlan()->features ?? collect();
         $quota = $this->featureLimit($features, 'active-user-quota');
         $quotaBuffer = $this->featureLimit($features, 'active-user-quota-buffer');
@@ -273,22 +273,22 @@ class Tenant extends BaseTenant
         ];
     }
 
-    public function entitlementSubscriptions(): MorphMany
+    public function planSubscriptions(): MorphMany
     {
-        $subscriptionModel = config('subscriptionify.models.subscription', EntitlementSubscription::class);
+        $subscriptionModel = config('subscriptionify.models.subscription', PlanSubscription::class);
 
         return $this->morphMany($subscriptionModel, 'subscribable');
     }
 
-    private function currentEntitlement(): ?EntitlementSubscription
+    private function currentSubscription(): ?PlanSubscription
     {
-        return $this->entitlementSubscriptions()
+        return $this->planSubscriptions()
             ->with('plan.features')
             ->latest('id')
             ->first();
     }
 
-    private function hasValidEntitlement(?EntitlementSubscription $subscription): bool
+    private function hasValidSubscription(?PlanSubscription $subscription): bool
     {
         if ($subscription === null) {
             return false;
@@ -302,7 +302,7 @@ class Tenant extends BaseTenant
         };
     }
 
-    private function applyValidEntitlementFilter(Builder $query): void
+    private function applyValidSubscriptionFilter(Builder $query): void
     {
         $query->where(function (Builder $query): void {
             $query->where(function (Builder $query): void {

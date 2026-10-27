@@ -11,7 +11,7 @@ use App\Models\Billing\Transaction as BillingTransaction;
 use App\Models\Tenant;
 use App\Observers\LegacyCashierCustomerObserver;
 use App\Observers\LegacyCashierSubscriptionObserver;
-use App\Observers\LegacyTenantEntitlementObserver;
+use App\Observers\LegacyTenantSubscriptionObserver;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use ChoirConcierge\LegacyCashierPaddle\Customer as LegacyCashierCustomer;
 use ChoirConcierge\LegacyCashierPaddle\Subscription as LegacyCashierSubscription;
@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
 
         LegacyCashierSubscription::observe(LegacyCashierSubscriptionObserver::class);
         LegacyCashierCustomer::observe(LegacyCashierCustomerObserver::class);
-        Tenant::observe(LegacyTenantEntitlementObserver::class);
+        Tenant::observe(LegacyTenantSubscriptionObserver::class);
 
         InboxFeature::define();
 
