@@ -180,7 +180,10 @@ class Tenant extends BaseTenant
                 $query->whereNotNull('trial_ends_at')
                     ->where('trial_ends_at', '>', \Carbon\Carbon::now());
             })
-            ->whereNot('data->has_gratis', true);
+            ->where(function ($query) {
+                $query->whereNull('data->has_gratis')
+                    ->orWhere('data->has_gratis', false);
+            });
     }
 
     public function scopeSubscribed($query)
