@@ -11,7 +11,7 @@
 - [x] Paddle confirms paused and past-due subscriptions can be migrated, successful imports silently cancel the Classic subscription, and failed imports do not; scheduled-to-cancel subscriptions cannot be migrated, and Spark-only no-card trials are not Paddle Classic subscriptions.
 - [x] Paddle confirms migration prerequisites: at least one completed Paddle Billing checkout/transaction and at least one Paddle Billing subscription renewal.
 - [x] Paddle confirms discounts can be migrated with the migration tool, though the discount definitions may need to be created in the Paddle Billing dashboard first.
-- [ ] Determine which discount definitions must be created in the Paddle Billing dashboard and verify previously granted legacy discount terms are preserved.
+- [x] Dashboard discount setup and verification that previously granted legacy discount terms are preserved are deferred to ticket 05 for cutover; they are not prerequisites for this compatibility proof.
 - [x] If the coexistence or migration assumptions fail, the result identifies the incompatibility and a concrete decision needed before dependent implementation proceeds.
 
 ## Comments
@@ -40,7 +40,7 @@
 - The product owner confirmed that a successful migration silently cancels the subscription in Paddle Classic without disrupting the customer; if the import into Paddle Billing fails, the Classic subscription is not silently cancelled.
 - The product owner confirmed that subscriptions scheduled to cancel at period end cannot be migrated. Once cutover begins, final cutover completion must wait until these pending cancellations expire; access remains through each paid-through date.
 - The product owner confirmed migration requires at least one completed checkout/transaction in Paddle Billing and at least one Paddle Billing subscription renewal. These must be completed before starting migration.
-- The product owner confirmed that discounts can be migrated with the migration tool, but the corresponding discounts may need to be recreated in the Paddle Billing dashboard first. The exact preservation of previously granted legacy discount terms remains to be verified.
-- These confirmations supersede the earlier open questions about trial, scheduled-cancellation, and transaction/renewal requirements. Legacy discount setup and preservation remain open, so the ticket stays `ready-for-human`.
+- The product owner confirmed that discounts can be migrated with the migration tool, but the corresponding discounts may need to be recreated in the Paddle Billing dashboard first. Discount setup and verification that previously granted legacy discount terms are preserved are deferred to ticket 05 and will be handled during cutover.
+- These confirmations supersede the earlier open questions about trial, scheduled-cancellation, and transaction/renewal requirements. Discount setup and preservation are not prerequisites for this compatibility proof.
 
 References: [Paddle migration prerequisites and import behavior](https://developer.paddle.com/migrate/start/port-data), [Paddle technical data mapping](https://developer.paddle.com/migrate/plan/data-mapping), [Cashier Paddle](https://github.com/laravel/cashier-paddle), and [Subscriptionify](https://github.com/revoltify/subscriptionify).

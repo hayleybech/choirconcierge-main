@@ -6,7 +6,8 @@
 
 **Status:** ready-for-agent
 
-- [ ] Before production imports begin, complete at least one checkout in Paddle Billing and ensure at least one Paddle Billing subscription has renewed; create discount definitions in the Billing dashboard first where required for discount migration.
+- [ ] Before production imports begin, complete at least one checkout in Paddle Billing and ensure at least one Paddle Billing subscription has renewed.
+- [ ] During cutover, before importing discounted subscriptions, identify and create any required discount definitions in the Billing dashboard and verify migration preserves previously granted discount terms for their promised remaining duration.
 - [ ] Active, paused, and past-due subscriptions are imported when eligible or intentionally ended. Spark no-card trials are not Paddle Classic subscriptions, so the migration workflow handles them outside the Classic import and preserves their original Spark trial expiry if recreated in Billing; any already-granted legacy 20% `FIRSTYR` offer is honored through its promised term.
 - [ ] A successful Billing import silently cancels the corresponding Classic subscription without customer disruption; a failed import does not silently cancel the Classic subscription.
 - [ ] Subscriptions scheduled to cancel at period end are not imported; they retain access through the paid-through date, and final cutover completion waits until all pending cancellations expire.
