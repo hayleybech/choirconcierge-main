@@ -294,7 +294,7 @@ async function main(args = process.argv.slice(2)) {
 	fs.rmSync(diffDirectory, { recursive: true, force: true });
 	fs.mkdirSync(latestDirectory, { recursive: true });
 
-	if (runCommand('npm', ['run', 'prod']) !== 0) {
+	if (runCommand('npm', ['run', 'build']) !== 0) {
 		return 1;
 	}
 

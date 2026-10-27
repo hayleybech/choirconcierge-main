@@ -1,0 +1,226 @@
+import React from 'react';
+import TenantLayout from '../../Layouts/TenantLayout';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderTitle,
+} from '../../components/PageHeader/PageHeader';
+import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
+import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
+import Icon from '../../components/Icon';
+import Button from '../../components/inputs/ButtonV2';
+import AppHead from '../../components/AppHead';
+import EventTableDesktop from './EventTableDesktop';
+import EventTableMobile from './EventTableMobile';
+import EventFilters from '../../components/Event/EventFilters';
+import IndexContainer from '../../components/IndexContainer';
+import FilterSortPane from '../../components/FilterSortPane';
+import useFilterPane from '../../hooks/useFilterPane';
+import Sorts from '../../components/Sorts';
+import useSortFilterForm from '../../hooks/useSortFilterForm';
+import EmptyState from '../../components/EmptyState';
+import useRoute from '../../hooks/useRoute';
+import BulkEditEventsModal from './BulkEditEventsModal';
+import useBulkEdit from '../../hooks/useBulkEdit';
+import Dialog from '../../components/Dialog';
+import BulkEditBar from '../../components/BulkEditBar';
+import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
+ 
+const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
+	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showSyncModal, setShowSyncModal] = React.useState(false);
+	const { route } = useRoute();
+
+	const bulkEdit = useBulkEdit(events.data, can.update_event, can.delete_event, 'Event');
+
+	const sorts = [
+		{ id: 'title', name: 'Title' },
+		{ id: 'start_date', name: 'Event Date', default: true },
+		{ id: 'type-title', name: 'Type' },
+		{ id: 'created_at', name: 'Date Created' },
+	];
+
+	const filters = [
+		{ name: 'title', defaultValue: '' },
+		{ name: 'type.id', multiple: true },
+		{ name: 'date', defaultValue: 'upcoming' },
+		{ name: 'ensembles.id', multiple: true },
+	];
+
+	const transforms = data => ({
+		date: data.date === 'all' ? null : data.date,
+	});
+
+	const sortFilterForm = useSortFilterForm('events.index', filters, sorts, transforms);
+
+	const actions = [
+		{
+			label: 'Add New',
+			icon: 'calendar-plus',
+			url: route('events.create'),
+			intent: 'primary',
+			weight: 'solid',
+			can: 'create_event',
+		},
+		{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
+		{
+			label: 'Attendance Report',
+			icon: 'analytics',
+			url: route('events.reports.attendance'),
+			can: 'list_attendances',
+		},
+		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+		{
+			label: 'Sync to Calendar App',
+			icon: 'calendar-plus',
+			onClick: () => setShowSyncModal(true),
+		},
+		bulkEdit.action,
+		filterAction,
+	]
+		.filter(action => !!action)
+		.filter(action => (action.can ? can[action.can] : true));
+
+	return (
+		<>
+			<AppHead title="Events" />
+			<PageTopBar setSidebarOpen={setSidebarOpen}>
+				<PageTopNavigation title="Events">
+					<PageActionsMenu>
+						{actions.map((action, key) => (
+							<ActionMenuItem
+								key={key}
+								url={action.url}
+								onClick={action.onClick}
+								download={action.download}
+								intent={action.intent}
+								method={action.method}
+								disabled={action.disabled}
+							>
+								<Icon icon={action.icon} mr />
+								{action.label}
+							</ActionMenuItem>
+						))}
+					</PageActionsMenu>
+				</PageTopNavigation>
+			</PageTopBar>
+
+			<PageHeader>
+				<PageHeaderContent>
+					<PageHeaderTitle>
+						<Icon icon="calendar" type="solid" className="mr-2" /> Events
+					</PageHeaderTitle>
+				</PageHeaderContent>
+				<PageHeaderActions>
+					{actions.map(action => (
+						<Button
+							key={action.label}
+							href={action.url}
+							onClick={action.onClick}
+							size="md"
+							intent={action.intent}
+							weight={action.weight}
+							className={action.className}
+							external={action.download}
+							download={action.download}
+							method={action.method}
+							disabled={action.disabled}
+						>
+							<Icon icon={action.icon} mr />
+							{action.label}
+						</Button>
+					))}
+				</PageHeaderActions>
+			</PageHeader>
+
+			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />
+
+			<Dialog
+				title={`Delete ${bulkEdit.selectedIds.length} Events?`}
+				isOpen={bulkEdit.showDeleteModal}
+				setIsOpen={bulkEdit.setShowDeleteModal}
+				okLabel="Delete"
+				okColour="danger"
+				okMethod="post"
+				data={{ event_ids: bulkEdit.selectedIds }}
+				okUrl={route('events.bulk-destroy')}
+				onOk={() => {
+					bulkEdit.setSelectedIds([]);
+					bulkEdit.setShowDeleteModal(false);
+					bulkEdit.setIsForcedMobile(false);
+				}}
+			>
+				Are you sure you want to delete the selected events? This action cannot be undone.
+			</Dialog>
+
+			<BulkEditBar bulkEdit={bulkEdit} />
+
+			<IndexContainer
+				showFilters={showFilters}
+				filterPane={
+					<FilterSortPane
+						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
+						filters={
+							<EventFilters
+								eventTypes={eventTypes}
+								ensembles={ensembles}
+								userEnsemblesCount={userEnsemblesCount}
+								form={sortFilterForm}
+							/>
+						}
+						closeFn={() => setShowFilters(false)}
+					/>
+				}
+				tableMobile={
+					<EventTableMobile
+						events={events}
+						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
+						setShowFilters={setShowFilters}
+						hasNonDefaultFilters={hasNonDefaultFilters}
+					/>
+				}
+				tableDesktop={
+					<EventTableDesktop
+						events={events}
+						sortFilterForm={sortFilterForm}
+						userEnsemblesCount={userEnsemblesCount}
+						bulkEdit={bulkEdit}
+					/>
+				}
+				emptyState={
+					events.data.length === 0 ? (
+						<EmptyState
+							title="No events"
+							actionDescription={
+								can['create_event']
+									? 'Get started by adding an event like a rehearsal or performance. Otherwise, try expanding your filtering options.'
+									: 'Your team might not have added any events yet. Otherwise, you may need to expand your filtering options.'
+							}
+							icon="calendar"
+							href={can['create_event'] ? route('events.create') : null}
+							actionLabel="Add Event"
+							actionIcon="calendar-plus"
+						/>
+					) : null
+				}
+			/>
+
+			<BulkEditEventsModal
+				isOpen={bulkEdit.showEditModal}
+				setIsOpen={bulkEdit.setShowEditModal}
+				selectedEvents={events.data.filter(e => bulkEdit.selectedIds.includes(e.id))}
+				key={bulkEdit.selectedIds}
+				onSuccess={() => bulkEdit.setSelectedIds([])}
+				eventTypes={eventTypes}
+				ensembles={ensembles}
+				userEnsemblesCount={userEnsemblesCount}
+			/>
+		</>
+	);
+};
+
+Index.layout = page => <TenantLayout children={page} />;
+
+export default Index;

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
-import EventEmitter from 'events';
 
-const RNEvents = new EventEmitter();
+const RNEvents = new Map();
 
 export const sendMessageToRN = message => {
 	if (window.ReactNativeWebView) {
@@ -10,9 +9,21 @@ export const sendMessageToRN = message => {
 };
 
 export const registerRNHandler = (action, callback) => {
-	RNEvents.on(action, callback);
+	const handlers = RNEvents.get(action) || [];
+	handlers.push(callback);
+	RNEvents.set(action, handlers);
 
-	return () => RNEvents.off(action, callback);
+	return () => {
+		const handlerIndex = handlers.lastIndexOf(callback);
+
+		if (handlerIndex !== -1) {
+			handlers.splice(handlerIndex, 1);
+		}
+
+		if (handlers.length === 0 && RNEvents.get(action) === handlers) {
+			RNEvents.delete(action);
+		}
+	};
 };
 
 export const useRNHandler = (action, callback) => {
@@ -26,7 +37,7 @@ export const useRNHandler = (action, callback) => {
 export const onMessageFromRN = message => {
 	const { action, payload } = JSON.parse(message);
 
-	RNEvents.emit(action, payload);
+	RNEvents.get(action)?.slice().forEach(callback => callback(payload));
 };
 
 export const usePhoneBreadcrumb = (title, breadcrumbs) => {

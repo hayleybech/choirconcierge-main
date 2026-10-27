@@ -1,0 +1,96 @@
+import React from 'react';
+import { Link } from '@inertiajs/react';
+import TableMobile, { TableMobileHeader, TableMobileLink } from '../../../components/TableMobile';
+import useRoute from '../../../hooks/useRoute';
+import Icon from '../../../components/Icon';
+import Pagination from '../../../components/Pagination';
+import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
+import Button from '../../../components/inputs/ButtonV2';
+ 
+const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setShowFilters, inboxEnabled }) => {
+	const { route } = useRoute();
+	const bulkEdit = {
+		isActiveMobile: false,
+		noun: 'Mail Log',
+		selectedIds: [],
+		totalItems: logs.data.length,
+	};
+
+	return (
+		<div>
+			<TableMobileHeader bulkEdit={bulkEdit}>
+				<Button
+					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
+					weight={hasNonDefaultFilters ? 'outline' : 'clear'}
+					size="sm"
+					onClick={() => setShowFilters(prev => !prev)}
+				>
+					<Icon icon="filter" mr />
+					Filter/Sort
+				</Button>
+			</TableMobileHeader>
+			<TableMobile pagination={<Pagination details={logs} />}>
+				{logs.data.map(log => {
+					const mailType = log.uid.split('-')[0];
+					const showLogAdminDetails = showAdminDetails && mailType !== 'product';
+					const recipient = log.latest_event?.user_group;
+					return (
+						<li key={log.id} className={`flex ${inboxEnabled ? (log.is_read ? 'bg-gray-50' : 'font-bold') : ''}`}>
+							<TableMobileLink url={route('communications.show', { mail_log: log })}>
+								<div className="block hover:bg-gray-50 flex-grow min-w-0 text-gray-500">
+									<div className="flex items-center pr-2">
+										<div className="flex-1 flex items-center justify-between min-w-0 w-full gap-2">
+											<div className="text-purple-600">
+												<Icon icon={mailTypeIcons[mailType] ?? 'question'} mr />
+												{log.subject}
+												{recipient && (
+													<span className="block text-xs text-gray-400">
+														To: {recipient.title}
+													</span>
+												)}
+												<span className="block text-xs text-gray-400">
+													From:{' '}
+													{log.from_user ? (
+														<Link
+															href={
+																log.from_membership
+																	? route('singers.show', {
+																		singer: log.from_membership,
+																	})
+																	: route('central.users.show', {
+																		user: log.from_user,
+																	})
+																}
+																className="text-purple-600 hover:text-purple-800 focus:text-purple-800"
+																onClick={event => event.stopPropagation()}
+															>
+																{log.from}
+															</Link>
+														) : (
+														log.from
+														)}
+												</span>
+												{!!log.has_attachments && <Icon icon="paperclip" ml />}
+												{showLogAdminDetails && log.opens_count > 0 && (
+													<span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+														<Icon icon="eye" mr />
+														{log.opens_count}
+													</span>
+												)}
+											</div>
+										{showLogAdminDetails && (
+												<MailStatusTag event={log.latest_event} showLabel={false} />
+											)}
+										</div>
+									</div>
+								</div>
+							</TableMobileLink>
+						</li>
+					);
+				})}
+			</TableMobile>
+		</div>
+	);
+};
+
+export default MailLogTableMobile;

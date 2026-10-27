@@ -53,7 +53,7 @@ class TenantStats
 
     private function getMedianRetentionTime(): float|int|null
     {
-        return Tenant::whereHas('subscriptions', function (Builder $query): void {
+        $medianRetentionTime = Tenant::whereHas('subscriptions', function (Builder $query): void {
             $query->where('paddle_status', 'active')
                 ->orWhereNotNull('ends_at');
         })->with('subscriptions')->get()->map(function (Tenant $tenant): float|int {
@@ -66,6 +66,8 @@ class TenantStats
             return $start->diffInMonths($end, false);
         })->sort()
             ->median();
+
+        return $medianRetentionTime === null ? null : round($medianRetentionTime, 2);
     }
 
     private function getActiveTenantsCount(): int

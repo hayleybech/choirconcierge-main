@@ -1,0 +1,40 @@
+version: 1
+
+environment:
+  php: 8.4
+  node: 22
+
+services:
+  - mysql: 8
+
+pipeline:
+  - name: Setup
+    cmd: |
+      cp -v .env.example .env
+      
+      # Turning this off by default to be safe
+      # Might need to run this again if local/Herd composer has self-updated
+      sudo composer self-update --2
+      
+      composer install --no-interaction --prefer-dist --optimize-autoloader
+      
+      php artisan key:generate
+      php artisan ziggy:generate
+
+  - name: Assets
+    cmd: |
+      npm ci 
+      npm run build
+
+  - name: PHP Unit Tests
+    cmd: |
+      php artisan test
+
+  - name: JS Unit Tests
+    cmd: |
+      npm test
+
+  - name: Visual Regression Tests
+    cmd: |
+      composer visual:install
+      VISUAL_REGRESSION_CI=true composer visual:test
