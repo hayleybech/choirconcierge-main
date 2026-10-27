@@ -158,6 +158,18 @@
 			"assert_text": "Further Attendance Reporting Tweaks and More!"
 		},
 		{
+			"id": "central-announcements-create",
+			"module": "announcements",
+			"page_type": "create",
+			"state": "normal",
+			"route": "central.announcements.create",
+			"parameters": {},
+			"persona": "central-admin",
+			"component": "Central/Announcements/Create",
+			"browser": "chromium",
+			"assert_text": "Compose an announcement"
+		},
+		{
 			"id": "central-tenant-create",
 			"module": "tenants",
 			"page_type": "create",
