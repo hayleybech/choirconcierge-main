@@ -1,83 +1,14 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const os = require('node:os');
 const path = require('node:path');
 const test = require('node:test');
-const sharp = require('sharp');
 const {
 	assertNoSymlinkComponents,
-	canUpdateBaselines,
-	comparePngBuffers,
 	screenshotPath,
-	shouldRunStrictCiChecks,
+	validateCaptureCompleteness,
 	validateCatalog,
 } = require('./visual-regression-runner');
-
-async function createPng(width, height, background) {
-	return sharp({
-		create: {
-			width,
-			height,
-			channels: 4,
-			background,
-		},
-	})
-		.png()
-		.toBuffer();
-}
-
-test('strictly accepts identical screenshot pixels', async () => {
-	const screenshot = await createPng(2, 1, '#ffffff');
-	const comparison = await comparePngBuffers(screenshot, screenshot);
-
-	assert.equal(comparison.matches, true);
-	assert.equal(comparison.differingPixels, 0);
-});
-
-test('strictly rejects even one changed screenshot pixel', async () => {
-	const expected = await createPng(2, 1, '#ffffff');
-	const captured = await sharp({
-		create: {
-			width: 2,
-			height: 1,
-			channels: 4,
-			background: '#ffffff',
-		},
-	})
-		.composite([{ input: await createPng(1, 1, '#ff0000'), left: 0, top: 0 }])
-		.png()
-		.toBuffer();
-	const comparison = await comparePngBuffers(expected, captured);
-
-	assert.equal(comparison.matches, false);
-	assert.equal(comparison.differingPixels, 1);
-	assert.ok(Buffer.isBuffer(comparison.diffImage));
-});
-
-test('treats screenshot dimension changes as mismatches', async () => {
-	const expected = await createPng(1, 1, '#ffffff');
-	const captured = await createPng(2, 1, '#ffffff');
-	const comparison = await comparePngBuffers(expected, captured);
-
-	assert.equal(comparison.matches, false);
-	assert.equal(comparison.dimensionsMatch, false);
-	assert.equal(comparison.differingPixels, 1);
-});
-
-test('allows baseline updates from the canonical renderer without enabling CI mode', () => {
-	assert.equal(canUpdateBaselines(true, true), true);
-});
-
-test('requires the canonical renderer flag before updating baselines', () => {
-	assert.equal(canUpdateBaselines(true, false), false);
-});
-
-test('skips strict CI checks while updating baselines', () => {
-	assert.equal(shouldRunStrictCiChecks(true, true), false);
-});
-
-test('keeps strict CI checks enabled for comparison runs', () => {
-	assert.equal(shouldRunStrictCiChecks(true, false), true);
-});
 
 test('rejects unsafe catalog IDs before constructing screenshot paths', () => {
 	assert.throws(
@@ -91,14 +22,42 @@ test('rejects unsafe catalog IDs before constructing screenshot paths', () => {
 	);
 
 	assert.throws(
-		() => screenshotPath('tests/Browser/Screenshots/Baselines', '..', 'desktop'),
+		() => screenshotPath('tests/Browser/Screenshots/ArgosCaptures', '..', 'desktop'),
 		/safe lowercase path segments/
 	);
 });
 
+test('requires exactly one capture for every catalog case and viewport', () => {
+	const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'argos-captures-'));
+	const catalog = {
+		cases: [{ id: 'case-one' }, { id: 'case-two' }],
+		viewports: [{ id: 'desktop' }, { id: 'mobile' }],
+	};
+
+	try {
+		for (const screenshotCase of catalog.cases) {
+			for (const viewport of catalog.viewports) {
+				const filePath = screenshotPath(directory, screenshotCase.id, viewport.id);
+				fs.mkdirSync(path.dirname(filePath), { recursive: true });
+				fs.writeFileSync(filePath, 'png');
+			}
+		}
+
+		assert.equal(validateCaptureCompleteness(catalog, directory), 4);
+		const unexpectedPath = path.join(directory, 'unexpected.png');
+		fs.writeFileSync(unexpectedPath, 'png');
+		assert.throws(() => validateCaptureCompleteness(catalog, directory), /Incomplete Argos capture/);
+		fs.unlinkSync(unexpectedPath);
+		fs.unlinkSync(screenshotPath(directory, 'case-two', 'mobile'));
+		assert.throws(() => validateCaptureCompleteness(catalog, directory), /Incomplete Argos capture/);
+	} finally {
+		fs.rmSync(directory, { recursive: true, force: true });
+	}
+});
+
 test('rejects symlinked screenshot directories', () => {
-	const baselineDirectory = path.resolve('tests/Browser/Screenshots/Baselines');
-	const symlinkedCaseDirectory = path.join(baselineDirectory, 'auth-login');
+	const captureDirectory = path.resolve('tests/Browser/Screenshots/ArgosCaptures');
+	const symlinkedCaseDirectory = path.join(captureDirectory, 'auth-login');
 	const originalLstat = fs.lstatSync;
 
 	fs.lstatSync = (filePath, ...args) =>
@@ -108,7 +67,7 @@ test('rejects symlinked screenshot directories', () => {
 
 	try {
 		assert.throws(
-			() => screenshotPath(baselineDirectory, 'auth-login', 'desktop'),
+			() => screenshotPath(captureDirectory, 'auth-login', 'desktop'),
 			/must not contain symbolic links/
 		);
 	} finally {
@@ -127,7 +86,7 @@ test('rejects symlinked output roots before cleanup can begin', () => {
 
 	try {
 		assert.throws(
-			() => assertNoSymlinkComponents(path.join(screenshotsDirectory, 'Latest')),
+			() => assertNoSymlinkComponents(path.join(screenshotsDirectory, 'ArgosCaptures')),
 			/must not contain symbolic links/
 		);
 	} finally {

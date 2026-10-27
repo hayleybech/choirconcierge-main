@@ -81,8 +81,6 @@
     "scripts": {
         "visual:test": "node scripts/visual-regression-runner.js",
         "visual:audit": "node scripts/visual-regression-audit.js",
-        "visual:compare": "npm run visual:compare",
-        "visual:update": "npm run visual:update",
         "visual:install": "npx playwright install --with-deps chromium",
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

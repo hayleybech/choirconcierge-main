@@ -104,19 +104,13 @@ test('an authenticated user can see catalog metadata in the local screenshot gal
 	expect($response->getContent())->toMatch('/1440\s+×\s+900/');
 });
 
-test('the gallery shows a three-column grid with one selectable baseline or latest capture', function () {
-    $baselineDirectory = storage_path('framework/testing/visual-gallery-baselines');
+test('the gallery shows a three-column grid of latest catalog captures', function () {
     $latestDirectory = storage_path('framework/testing/visual-gallery-latest');
     $caseDirectory = 'auth-login';
 
-    config([
-        'visual-regression.baseline_directory' => $baselineDirectory,
-        'visual-regression.latest_directory' => $latestDirectory,
-    ]);
+    config(['visual-regression.latest_directory' => $latestDirectory]);
 
-    File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $caseDirectory);
     File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $caseDirectory);
-    File::put($baselineDirectory . DIRECTORY_SEPARATOR . $caseDirectory . DIRECTORY_SEPARATOR . 'desktop.png', 'baseline');
     File::put($latestDirectory . DIRECTORY_SEPARATOR . $caseDirectory . DIRECTORY_SEPARATOR . 'desktop.png', 'latest');
 
     try {
@@ -124,9 +118,6 @@ test('the gallery shows a three-column grid with one selectable baseline or late
             ->get(route('local.visual-regression.index'))
             ->assertOk()
             ->assertSee('data-view="grid"', false)
-            ->assertSee('data-gallery-view', false)
-            ->assertSee('data-grid-variant-select', false)
-            ->assertSee('data-comparison-captures', false)
             ->assertSee('data-image-zoom', false)
             ->assertSee('data-zoom-trigger', false)
             ->assertSee('data-zoom-help hidden', false)
@@ -135,14 +126,9 @@ test('the gallery shows a three-column grid with one selectable baseline or late
             ->assertSee('<optgroup label="central">', false)
             ->assertSee('<optgroup label="tenant">', false)
             ->assertSee('repeat(3, minmax(0, 1fr))', false)
-            ->assertSee('data-grid-variant="baseline"', false)
-            ->assertSee('data-grid-variant="latest"', false)
-            ->assertSee(route('local.visual-regression.image', [$caseDirectory, 'desktop', 'baseline']), false)
-            ->assertSee(route('local.visual-regression.image', [$caseDirectory, 'desktop', 'latest']), false);
-
-        expect($response->getContent())->toMatch('/data-grid-variant="baseline"\s+hidden/');
+            ->assertSee(route('local.visual-regression.image', [$caseDirectory, 'desktop', 'latest']), false)
+            ->assertDontSee('Approved baseline');
     } finally {
-        File::deleteDirectory($baselineDirectory);
         File::deleteDirectory($latestDirectory);
     }
 });
@@ -152,7 +138,7 @@ test('the gallery only serves images declared in the catalog', function () {
         ->get(route('local.visual-regression.image', [
             'case' => '..',
             'viewport' => 'desktop',
-            'variant' => 'baseline',
+            'variant' => 'latest',
         ]))
         ->assertNotFound();
 });
@@ -201,7 +187,7 @@ test('the catalog includes additional central and tenant page templates', functi
     );
 });
 
-test('the gallery reports an uncaptured baseline as not found', function () {
+test('the gallery does not serve retired baseline images', function () {
     $this->actingAs(User::factory()->create())
         ->get(route('local.visual-regression.image', [
             'case' => 'auth-login',
@@ -211,26 +197,18 @@ test('the gallery reports an uncaptured baseline as not found', function () {
         ->assertNotFound();
 });
 
-test('the local screenshot gallery displays the latest comparison status', function () {
-    $latestDirectory = storage_path('framework/testing/visual-regression-summary');
-    $summaryPath = $latestDirectory . DIRECTORY_SEPARATOR . 'summary.json';
+test('the local screenshot gallery reports whether a capture is available', function () {
+    $latestDirectory = storage_path('framework/testing/visual-regression-captures');
 
     config(['visual-regression.latest_directory' => $latestDirectory]);
-    File::ensureDirectoryExists($latestDirectory);
-    File::put($summaryPath, json_encode([
-        'schema_version' => 1,
-        'results' => [[
-            'case_id' => 'auth-login',
-            'viewport' => 'desktop',
-            'status' => 'passed',
-        ]],
-    ], JSON_THROW_ON_ERROR));
+    File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . 'auth-login');
+    File::put($latestDirectory . DIRECTORY_SEPARATOR . 'auth-login' . DIRECTORY_SEPARATOR . 'desktop.png', 'capture');
 
     try {
         $this->actingAs(User::factory()->create())
             ->get(route('local.visual-regression.index'))
             ->assertOk()
-            ->assertSee('passed');
+            ->assertSee('captured');
     } finally {
         File::deleteDirectory($latestDirectory);
     }

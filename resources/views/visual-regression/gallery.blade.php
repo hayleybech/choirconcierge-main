@@ -72,9 +72,6 @@
 
         .case-indicators { display: inline-flex; align-items: center; gap: .35rem; margin-left: .35rem; vertical-align: middle; }
         .indicator-icon { width: 1.15rem; height: 1.15rem; vertical-align: middle; }
-        .status-passed { color: #15803d; }
-        .status-failed { color: #b91c1c; }
-        .status-other { color: #6b7280; }
 
         .metadata {
             margin: 0 0 1rem;
@@ -124,19 +121,8 @@
             cursor: zoom-in;
         }
 
-        .images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-            gap: 1rem;
-        }
-
         figure {
             margin: 0;
-        }
-
-        figcaption {
-            margin-bottom: .5rem;
-            font-weight: 700;
         }
 
         img {
@@ -213,7 +199,7 @@
 <body>
 <header>
     <h1>CGAL Screenshot Gallery</h1>
-    <p>Local visual-regression captures and approved references</p>
+    <p>Local catalog screenshot captures</p>
 </header>
 <main>
     <form class="filters" aria-label="Screenshot filters">
@@ -247,20 +233,6 @@
                 @endforeach
             </select>
         </label>
-        <label>
-            View
-            <select data-gallery-view>
-                <option value="grid" selected>Grid</option>
-                <option value="compare">Compare</option>
-            </select>
-        </label>
-        <label>
-            Grid image
-            <select data-grid-variant-select>
-                <option value="latest" selected>Latest capture</option>
-                <option value="baseline">Approved baseline</option>
-            </select>
-        </label>
     </form>
 
     <p class="screenshot-count" data-screenshot-count role="status" aria-live="polite"></p>
@@ -274,10 +246,9 @@
                      data-persona="{{ $entry['persona'] }}"
                      data-browser="{{ $entry['browser'] ?? 'chromium' }}"
                      data-route="{{ $entry['route'] }}"
-                     data-comparison="{{ $entry['comparison'] }}"
                      data-viewport="{{ $entry['viewport']['label'] }}">
                 <h2>{{ $entry['component'] }} — {{ $entry['viewport']['label'] }}
-                    <span class="case-indicators" aria-label="{{ $entry['viewport']['label'] }} device, {{ $entry['comparison'] }}">
+                    <span class="case-indicators" aria-label="{{ $entry['viewport']['label'] }} device, {{ $entry['capture_status'] }}">
                         @if (str_contains(strtolower($entry['viewport']['label']), 'mobile'))
                             <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
                         @elseif (str_contains(strtolower($entry['viewport']['label']), 'tablet'))
@@ -285,49 +256,24 @@
                         @else
                             <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
                         @endif
-                        @if ($entry['comparison'] === 'passed')
-                            <svg class="indicator-icon status-passed" role="img" aria-label="Passed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m5 12 4 4L19 6"/></svg>
-                        @elseif ($entry['comparison'] === 'failed')
-                            <svg class="indicator-icon status-failed" role="img" aria-label="Failed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m6 6 12 12M18 6 6 18"/></svg>
-                        @else
-                            <svg class="indicator-icon status-other" role="img" aria-label="{{ $entry['comparison'] }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4m0 4h.01"/></svg>
-                        @endif
                     </span>
                 </h2>
                 <p class="metadata">
                     {{ $entry['id'] }} · {{ $entry['route'] }} · {{ $entry['viewport']['width'] }}
-                    × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['comparison'] }}
+                    × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['capture_status'] }}
                 </p>
                 <div class="grid-captures" data-grid-captures>
-                    @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture'] as $variant => $label)
-                        <figure data-grid-variant="{{ $variant }}" @if ($variant !== 'latest') hidden @endif>
-                            @if ($entry['images'][$variant])
-                                <button type="button" class="zoom-trigger" data-zoom-trigger
-                                        aria-label="Zoom {{ strtolower($label) }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                    <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], $variant]) }}"
-                                         alt="{{ $label }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                </button>
-                            @else
-                                <p class="missing">No {{ strtolower($label) }} captured.</p>
-                            @endif
-                        </figure>
-                    @endforeach
-                </div>
-                <div class="images comparison-images" data-comparison-captures hidden>
-                    @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture', 'diff' => 'Diff'] as $variant => $label)
-                        <figure>
-                            <figcaption>{{ $label }}</figcaption>
-                            @if ($entry['images'][$variant])
-                                <button type="button" class="zoom-trigger" data-zoom-trigger
-                                        aria-label="Zoom {{ strtolower($label) }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                    <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], $variant]) }}"
-                                         alt="{{ $label }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                </button>
-                            @else
-                                <p class="missing">No {{ strtolower($label) }} captured.</p>
-                            @endif
-                        </figure>
-                    @endforeach
+                    <figure>
+                        @if ($entry['images']['latest'])
+                            <button type="button" class="zoom-trigger" data-zoom-trigger
+                                    aria-label="Zoom latest capture for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
+                                <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], 'latest']) }}"
+                                     alt="Latest capture for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
+                            </button>
+                        @else
+                            <p class="missing">No capture available.</p>
+                        @endif
+                    </figure>
                 </div>
             </article>
         @empty
@@ -346,10 +292,7 @@
 <script>
 	const filters = Array.from(document.querySelectorAll('[data-filter]'));
 	const cards = Array.from(document.querySelectorAll('[data-screenshot]'));
-	const gallery = document.querySelector('[data-gallery]');
 	const screenshotCount = document.querySelector('[data-screenshot-count]');
-	const galleryView = document.querySelector('[data-gallery-view]');
-	const gridVariantSelect = document.querySelector('[data-grid-variant-select]');
 	const imageZoomDialog = document.querySelector('[data-image-zoom]');
 	const zoomTriggers = Array.from(document.querySelectorAll('[data-zoom-trigger]'));
 	const zoomImage = imageZoomDialog.querySelector('[data-zoom-image]');
@@ -377,12 +320,10 @@
 		}
 
 		const currentCard = currentZoomTrigger?.closest('[data-screenshot]');
-		const currentVariant = currentZoomTrigger?.closest('[data-grid-variant]');
 		const filterName = filter.dataset.filter;
 		const matchingTrigger = zoomTriggers.find(trigger => {
 			const card = trigger.closest('[data-screenshot]');
-			const variant = trigger.closest('[data-grid-variant]');
-			if (!card || !variant || variant.dataset.gridVariant !== currentVariant?.dataset.gridVariant) {
+			if (!card) {
 				return false;
 			}
 
@@ -401,28 +342,12 @@
 		zoomCaption.textContent = `${zoomImage.alt} — no matching image for the selected ${filterName === 'viewport' ? 'device' : 'filter'}. The current image remains open; change filters or press Escape to close.`;
 	}
 
-	function applyGalleryView() {
-		gallery.dataset.view = galleryView.value;
-
-		document.querySelectorAll('[data-grid-captures]').forEach(captures => {
-			captures.hidden = galleryView.value !== 'grid';
-		});
-
-		document.querySelectorAll('[data-comparison-captures]').forEach(captures => {
-			captures.hidden = galleryView.value !== 'compare';
-		});
-
-		document.querySelectorAll('[data-grid-variant]').forEach(variant => {
-			variant.hidden = variant.dataset.gridVariant !== gridVariantSelect.value;
-		});
-	}
-
 	function showZoomImage(trigger) {
 		const image = trigger.querySelector('img');
 		zoomImage.src = image.currentSrc || image.src;
 		zoomImage.alt = image.alt;
 		zoomCaption.textContent = image.alt;
-		zoomHelp.hidden = galleryView.value !== 'grid';
+		zoomHelp.hidden = false;
 		currentZoomTrigger = trigger;
 		if (!imageZoomDialog.open) {
 			imageZoomDialog.showModal();
@@ -432,8 +357,7 @@
 	function navigateZoomedImage(direction) {
 		const visibleGridTriggers = zoomTriggers.filter(trigger => {
 			const card = trigger.closest('[data-screenshot]');
-			const variant = trigger.closest('[data-grid-variant]');
-			return card && !card.hidden && variant && !variant.hidden;
+			return card && !card.hidden;
 		});
 		const currentIndex = visibleGridTriggers.indexOf(currentZoomTrigger);
 
@@ -446,8 +370,6 @@
 	}
 
 	filters.forEach(filter => filter.addEventListener('change', () => handleFilterChange(filter)));
-	galleryView.addEventListener('change', applyGalleryView);
-	gridVariantSelect.addEventListener('change', applyGalleryView);
 	applyFilters();
 
 	zoomTriggers.forEach(trigger => {
@@ -455,7 +377,7 @@
 	});
 
 	imageZoomDialog.addEventListener('keydown', event => {
-		if (!imageZoomDialog.open || galleryView.value !== 'grid') {
+		if (!imageZoomDialog.open) {
 			return;
 		}
 

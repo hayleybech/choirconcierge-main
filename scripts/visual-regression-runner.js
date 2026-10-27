@@ -1,76 +1,12 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
-const sharp = require('sharp');
 const { auditCatalog } = require('./visual-regression-audit');
 
 const root = path.resolve(__dirname, '..');
 const catalogPath = path.join(root, 'resources', 'visual-regression', 'catalog.json');
-const baselineDirectory = path.join(root, 'tests', 'Browser', 'Screenshots', 'Baselines');
-const latestDirectory = path.join(root, 'tests', 'Browser', 'Screenshots', 'Latest');
-const diffDirectory = path.join(root, 'tests', 'Browser', 'Screenshots', 'Diffs');
+const latestDirectory = path.join(root, 'tests', 'Browser', 'Screenshots', 'ArgosCaptures');
 const safePathSegment = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-async function comparePngBuffers(expectedBuffer, capturedBuffer) {
-	const [expected, captured] = await Promise.all([
-		sharp(expectedBuffer)
-			.ensureAlpha()
-			.raw()
-			.toBuffer({ resolveWithObject: true }),
-		sharp(capturedBuffer)
-			.ensureAlpha()
-			.raw()
-			.toBuffer({ resolveWithObject: true }),
-	]);
-
-	const dimensionsMatch =
-		expected.info.width === captured.info.width && expected.info.height === captured.info.height;
-	const width = Math.max(expected.info.width, captured.info.width);
-	const height = Math.max(expected.info.height, captured.info.height);
-	const diffPixels = Buffer.alloc(width * height * 4);
-	let differingPixels = 0;
-
-	for (let y = 0; y < height; y++) {
-		for (let x = 0; x < width; x++) {
-			const expectedOffset = (y * expected.info.width + x) * 4;
-			const capturedOffset = (y * captured.info.width + x) * 4;
-			const diffOffset = (y * width + x) * 4;
-			const pixelExistsInExpected = x < expected.info.width && y < expected.info.height;
-			const pixelExistsInCaptured = x < captured.info.width && y < captured.info.height;
-			const pixelDiffers =
-				!pixelExistsInExpected ||
-				!pixelExistsInCaptured ||
-				expected.data[expectedOffset] !== captured.data[capturedOffset] ||
-				expected.data[expectedOffset + 1] !== captured.data[capturedOffset + 1] ||
-				expected.data[expectedOffset + 2] !== captured.data[capturedOffset + 2] ||
-				expected.data[expectedOffset + 3] !== captured.data[capturedOffset + 3];
-
-			if (pixelDiffers) {
-				differingPixels++;
-				diffPixels[diffOffset] = 255;
-				diffPixels[diffOffset + 3] = 255;
-			}
-		}
-	}
-
-	return {
-		matches: differingPixels === 0,
-		dimensionsMatch,
-		differingPixels,
-		diffImage:
-			differingPixels === 0
-				? null
-				: await sharp(diffPixels, {
-						raw: {
-							width,
-							height,
-							channels: 4,
-						},
-				  })
-						.png()
-						.toBuffer(),
-	};
-}
 
 function readCatalog() {
 	return validateCatalog(JSON.parse(fs.readFileSync(catalogPath, 'utf8')));
@@ -118,14 +54,6 @@ function runCommand(command, args, options = {}) {
 	return result.status ?? 1;
 }
 
-function canUpdateBaselines(updateBaselines, isCanonicalRenderer) {
-	return !updateBaselines || isCanonicalRenderer;
-}
-
-function shouldRunStrictCiChecks(isCiEnvironment, updateBaselines) {
-	return isCiEnvironment && !updateBaselines;
-}
-
 function screenshotPath(directory, caseId, viewportId) {
 	if (!safePathSegment.test(caseId) || !safePathSegment.test(viewportId)) {
 		throw new Error('Screenshot path IDs must be safe lowercase path segments.');
@@ -142,6 +70,37 @@ function screenshotPath(directory, caseId, viewportId) {
 	assertNoSymlinkComponents(filePath);
 
 	return filePath;
+}
+
+function validateCaptureCompleteness(catalog, directory) {
+	const expectedPaths = catalog.cases.flatMap(screenshotCase =>
+		catalog.viewports.map(viewport => screenshotPath(directory, screenshotCase.id, viewport.id))
+	);
+	const missingPaths = expectedPaths.filter(filePath => !fs.existsSync(filePath));
+	const pngCount = fs.existsSync(directory)
+		? findPngFiles(directory).length
+		: 0;
+
+	if (missingPaths.length > 0 || pngCount !== expectedPaths.length) {
+		throw new Error(
+			`Incomplete Argos capture: expected ${expectedPaths.length} PNGs, found ${pngCount}, ` +
+				`${missingPaths.length} expected capture(s) missing.`
+		);
+	}
+
+	return expectedPaths.length;
+}
+
+function findPngFiles(directory) {
+	return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+		const entryPath = path.join(directory, entry.name);
+
+		if (entry.isDirectory()) {
+			return findPngFiles(entryPath);
+		}
+
+		return entry.isFile() && entry.name.toLowerCase().endsWith('.png') ? [entryPath] : [];
+	});
 }
 
 function assertNoSymlinkComponents(targetPath) {
@@ -167,141 +126,18 @@ function assertNoSymlinkComponents(targetPath) {
 	}
 }
 
-async function compareCaptures(catalog, updateBaselines, compareWithBaselines) {
-	const results = [];
-
-	for (const screenshotCase of catalog.cases) {
-		for (const viewport of catalog.viewports) {
-			const latestPath = screenshotPath(latestDirectory, screenshotCase.id, viewport.id);
-			const baselinePath = screenshotPath(baselineDirectory, screenshotCase.id, viewport.id);
-			const diffPath = screenshotPath(diffDirectory, screenshotCase.id, viewport.id);
-			const result = {
-				case_id: screenshotCase.id,
-				module: screenshotCase.module,
-				page_type: screenshotCase.page_type,
-				state: screenshotCase.state,
-				route: screenshotCase.route,
-				persona: screenshotCase.persona,
-				browser: catalog.browser,
-				viewport: viewport.id,
-				status: 'failed',
-				differing_pixels: null,
-			};
-
-			if (!fs.existsSync(latestPath)) {
-				console.error(`Missing capture: ${path.relative(root, latestPath)}`);
-				results.push(result);
-				continue;
-			}
-
-			if (updateBaselines) {
-				fs.mkdirSync(path.dirname(baselinePath), { recursive: true });
-				fs.copyFileSync(latestPath, screenshotPath(baselineDirectory, screenshotCase.id, viewport.id));
-				result.status = 'baseline_updated';
-				console.log(`Updated baseline: ${path.relative(root, baselinePath)}`);
-				results.push(result);
-				continue;
-			}
-
-			if (!compareWithBaselines) {
-				result.status = 'captured';
-				console.log(`Captured: ${screenshotCase.id} (${viewport.id}); baseline comparison is reserved for CI.`);
-				results.push(result);
-				continue;
-			}
-
-			if (!fs.existsSync(baselinePath)) {
-				console.error(`Missing reviewed baseline: ${path.relative(root, baselinePath)}`);
-				results.push(result);
-				continue;
-			}
-
-			const comparison = await comparePngBuffers(fs.readFileSync(baselinePath), fs.readFileSync(latestPath));
-
-			result.differing_pixels = comparison.differingPixels;
-
-			if (comparison.matches) {
-				result.status = 'passed';
-				console.log(`Match: ${screenshotCase.id} (${viewport.id})`);
-			} else {
-				result.status = 'diff';
-				fs.mkdirSync(path.dirname(diffPath), { recursive: true });
-
-				if (comparison.diffImage) {
-					fs.writeFileSync(diffPath, comparison.diffImage);
-					result.diff_path = path.relative(root, diffPath).replaceAll(path.sep, '/');
-				}
-
-				const difference =
-					`${comparison.differingPixels} pixel(s) differ` +
-					(comparison.dimensionsMatch ? '' : ' and image dimensions differ');
-				console.error(`Visual regression: ${screenshotCase.id} (${viewport.id}); ${difference}.`);
-			}
-
-			results.push(result);
-		}
-	}
-
-	const summaryPath = path.join(latestDirectory, 'summary.json');
-	fs.writeFileSync(
-		summaryPath,
-		`${JSON.stringify(
-			{
-				schema_version: 1,
-				comparison_mode: compareWithBaselines ? 'canonical-ci' : 'capture-only',
-				results,
-			},
-			null,
-			2
-		)}\n`
-	);
-
-	return results;
-}
-
-async function main(args = process.argv.slice(2)) {
-	const updateBaselines = args.includes('--update-baselines');
-	const unknownArguments = args.filter(argument => argument !== '--update-baselines');
-	const isCiEnvironment = shouldRunStrictCiChecks(
-		['true', '1'].includes((process.env.VISUAL_REGRESSION_CI ?? '').toLowerCase()),
-		updateBaselines
-	);
-	const isCanonicalRenderer = process.env.VISUAL_REGRESSION_CANONICAL === 'true';
-
-	if (unknownArguments.length > 0) {
-		console.error(`Unknown argument(s): ${unknownArguments.join(', ')}`);
-		return 2;
-	}
-
-	if (!canUpdateBaselines(updateBaselines, isCanonicalRenderer)) {
-		console.error('Baseline updates require VISUAL_REGRESSION_CANONICAL=true in the canonical renderer.');
-		return 2;
-	}
-
+async function main() {
 	const catalog = readCatalog();
 	const coverageAudit = auditCatalog(catalog);
 
 	if (!coverageAudit.complete) {
-		if (isCiEnvironment) {
-			console.error(
-				'The screenshot catalog must include every statically rendered Inertia page before CI capture can pass.'
-			);
-			return 1;
-		}
-
-		console.warn(
-			`Catalog coverage is incomplete: ${coverageAudit.missingComponents.length} page component(s) are missing, ` +
-				`${coverageAudit.unrecognizedComponents.length} catalog component(s) are unrecognized, ` +
-				`and ${coverageAudit.dynamicRenderCalls} render call(s) are dynamic.`
-		);
+		console.error('The screenshot catalog must include every statically rendered Inertia page before capture can pass.');
+		return 1;
 	}
 
-	for (const outputDirectory of [baselineDirectory, latestDirectory, diffDirectory]) {
-		assertNoSymlinkComponents(outputDirectory);
-	}
+	assertNoSymlinkComponents(latestDirectory);
 
 	fs.rmSync(latestDirectory, { recursive: true, force: true });
-	fs.rmSync(diffDirectory, { recursive: true, force: true });
 	fs.mkdirSync(latestDirectory, { recursive: true });
 
 	if (runCommand('npm', ['run', 'build']) !== 0) {
@@ -321,9 +157,9 @@ async function main(args = process.argv.slice(2)) {
 		return 1;
 	}
 
-	const results = await compareCaptures(catalog, updateBaselines, isCiEnvironment);
-
-	return results.every(result => ['passed', 'baseline_updated', 'captured'].includes(result.status)) ? 0 : 1;
+	const captureCount = validateCaptureCompleteness(catalog, latestDirectory);
+	console.log(`Captured ${captureCount} catalog screenshots for Argos.`);
+	return 0;
 }
 
 if (require.main === module) {
@@ -339,10 +175,8 @@ if (require.main === module) {
 
 module.exports = {
 	assertNoSymlinkComponents,
-	canUpdateBaselines,
-	comparePngBuffers,
 	main,
 	screenshotPath,
-	shouldRunStrictCiChecks,
+	validateCaptureCompleteness,
 	validateCatalog,
 };

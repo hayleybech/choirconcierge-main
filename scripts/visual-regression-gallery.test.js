@@ -35,18 +35,7 @@ function createElement(dataset = {}, hidden = false) {
 	};
 }
 
-test('switches between one grid capture variant and the comparison view', () => {
-	const gallery = createElement({ view: 'grid' });
-	const galleryView = createElement();
-	galleryView.value = 'grid';
-	const gridVariantSelect = createElement();
-	gridVariantSelect.value = 'latest';
-	const baseline = createElement({ gridVariant: 'baseline' }, true);
-	const latest = createElement({ gridVariant: 'latest' });
-	const secondBaseline = createElement({ gridVariant: 'baseline' }, true);
-	const secondLatest = createElement({ gridVariant: 'latest' });
-	const gridCaptures = createElement({}, false);
-	const comparisonCaptures = createElement({}, true);
+test('filters catalog captures and navigates between zoomed images', () => {
 	const imageZoomDialog = createElement();
 	const zoomImage = createElement();
 	const zoomCaption = createElement();
@@ -64,19 +53,13 @@ test('switches between one grid capture variant and the comparison view', () => 
 	thumbnail.alt = 'Latest capture for Auth/Login at Desktop';
 	const zoomTrigger = createElement();
 	zoomTrigger['img'] = thumbnail;
-	zoomTrigger.ancestors = { '[data-screenshot]': cards[0], '[data-grid-variant]': latest };
+	zoomTrigger.ancestors = { '[data-screenshot]': cards[0] };
 	const nextThumbnail = createElement();
 	nextThumbnail.src = '/screenshots/tenant-songs-index/desktop/latest';
 	nextThumbnail.alt = 'Latest capture for Songs/Index at Desktop';
 	const nextZoomTrigger = createElement();
 	nextZoomTrigger['img'] = nextThumbnail;
-	nextZoomTrigger.ancestors = { '[data-screenshot]': cards[1], '[data-grid-variant]': secondLatest };
-	const comparisonThumbnail = createElement();
-	comparisonThumbnail.src = '/screenshots/auth-login/desktop/baseline';
-	comparisonThumbnail.alt = 'Approved baseline for Auth/Login at Desktop';
-	const comparisonZoomTrigger = createElement();
-	comparisonZoomTrigger['img'] = comparisonThumbnail;
-	comparisonZoomTrigger.ancestors = { '[data-screenshot]': cards[0] };
+	nextZoomTrigger.ancestors = { '[data-screenshot]': cards[1] };
 	const moduleFilter = createElement({ filter: 'module' });
 	moduleFilter.options = [{ value: '' }, { value: 'auth' }, { value: 'songs' }];
 	const stateFilter = createElement({ filter: 'state' });
@@ -86,9 +69,6 @@ test('switches between one grid capture variant and the comparison view', () => 
 	viewportFilter.value = 'Desktop';
 	const screenshotCount = createElement();
 	const selectors = {
-		'[data-gallery]': gallery,
-		'[data-gallery-view]': galleryView,
-		'[data-grid-variant-select]': gridVariantSelect,
 		'[data-image-zoom]': imageZoomDialog,
 		'[data-screenshot-count]': screenshotCount,
 	};
@@ -100,10 +80,7 @@ test('switches between one grid capture variant and the comparison view', () => 
 			return {
 				'[data-filter]': [moduleFilter, stateFilter, viewportFilter],
 				'[data-screenshot]': cards,
-			'[data-grid-captures]': [gridCaptures],
-			'[data-comparison-captures]': [comparisonCaptures],
-			'[data-grid-variant]': [baseline, latest, secondBaseline, secondLatest],
-			'[data-zoom-trigger]': [zoomTrigger, nextZoomTrigger, comparisonZoomTrigger],
+				'[data-zoom-trigger]': [zoomTrigger, nextZoomTrigger],
 			}[selector];
 		},
 	};
@@ -149,28 +126,6 @@ test('switches between one grid capture variant and the comparison view', () => 
 
 	imageZoomDialog.listeners.click({ target: imageZoomDialog });
 	assert.equal(imageZoomDialog.open, false);
-
-	gridVariantSelect.value = 'baseline';
-	gridVariantSelect.listeners.change();
-	assert.equal(baseline.hidden, false);
-	assert.equal(latest.hidden, true);
-	assert.equal(gridCaptures.hidden, false);
-	assert.equal(comparisonCaptures.hidden, true);
-
-	galleryView.value = 'compare';
-	galleryView.listeners.change();
-	assert.equal(gallery.dataset.view, 'compare');
-	assert.equal(gridCaptures.hidden, true);
-	assert.equal(comparisonCaptures.hidden, false);
-	comparisonZoomTrigger.listeners.click();
-	assert.equal(imageZoomDialog.open, true);
-	assert.equal(zoomImage.src, comparisonThumbnail.src);
-	assert.equal(zoomHelp.hidden, true);
-	let compareArrowPrevented = false;
-	imageZoomDialog.listeners.keydown({ key: 'ArrowRight', preventDefault() { compareArrowPrevented = true; } });
-	assert.equal(compareArrowPrevented, false);
-	assert.equal(zoomImage.src, comparisonThumbnail.src);
-	imageZoomDialog.listeners.click({ target: imageZoomDialog });
 
 	moduleFilter.value = 'songs';
 	moduleFilter.listeners.change();

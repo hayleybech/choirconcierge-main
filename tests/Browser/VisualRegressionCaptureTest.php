@@ -36,7 +36,6 @@ const VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS = '*:not(.fa):not(.fas):not
 test('captures every catalog case at every viewport without JavaScript errors', function () {
     $catalog = app(ScreenshotCatalog::class);
     $latestDirectory = config('visual-regression.latest_directory');
-    $baselineDirectory = config('visual-regression.baseline_directory');
 
     $testDatabase = config('database.connections.mysql.database');
     expect(app()->environment())
@@ -407,7 +406,6 @@ JS;
 
             foreach ($catalog->viewports() as $viewport) {
                 File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $case['id']);
-                File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $case['id']);
 
                 if ($case['component'] === 'Roles/Show') {
                     $case['parameters']['role'] = $visualRegressionAdminRoleId;
@@ -557,7 +555,7 @@ JS;
                 $page->script(
                     "(async () => { await document.fonts.ready; document.head.insertAdjacentHTML('beforeend', {$screenshotStyle}); })()",
                 );
-                $page->screenshot(true, 'Latest/' . $case['id'] . '/' . $viewport['id'] . '.png');
+                $page->screenshot(true, 'ArgosCaptures/' . $case['id'] . '/' . $viewport['id'] . '.png');
             }
         }
     } finally {

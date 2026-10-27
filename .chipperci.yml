@@ -6,6 +6,7 @@ environment:
 
 services:
   - mysql: 8
+  - dusk:
 
 pipeline:
   - name: Setup
@@ -33,3 +34,25 @@ pipeline:
   - name: JS Unit Tests
     cmd: |
       npm test
+
+  - name: Argos Visual Regression
+    cmd: |
+      set -e
+
+      if [ -z "$ARGOS_TOKEN" ]; then
+        echo "ARGOS_TOKEN must be configured as a protected ChipperCI secret."
+        exit 1
+      fi
+
+      if [ -z "$CI_COMMIT_SHA" ] || [ "${#CI_COMMIT_SHA}" -ne 40 ] || [ -z "$CI_COMMIT_BRANCH" ]; then
+        echo "ChipperCI must provide a full commit SHA and branch for Argos."
+        exit 1
+      fi
+
+      export ARGOS_COMMIT="$CI_COMMIT_SHA"
+      export ARGOS_BRANCH="$CI_COMMIT_BRANCH"
+
+      composer visual:install
+      npm run visual:audit
+      composer visual:test
+      npm exec -- argos upload tests/Browser/Screenshots/ArgosCaptures
