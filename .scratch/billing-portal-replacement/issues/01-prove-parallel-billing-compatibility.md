@@ -4,7 +4,7 @@
 
 **Blocked by:** None (can start immediately).
 
-**Status:** ready-for-human
+**Status:** resolved
 
 - [x] The coordinated namespace-isolated Cashier Paddle 1.x and Spark forks resolve alongside Cashier Paddle 2.x and Subscriptionify.
 - [x] Verification demonstrates that existing Spark portal and Classic webhook behavior continues to work, while Billing events and operations are handled only by the new integration.

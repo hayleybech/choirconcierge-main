@@ -12,11 +12,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use ChoirConcierge\LegacySpark\Billable;
+use Revoltify\Subscriptionify\Enums\SubscriptionStatus;
+use Revoltify\Subscriptionify\Models\Subscription as EntitlementSubscription;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
@@ -126,93 +129,97 @@ class Tenant extends BaseTenant
 
     public function billingStatus(): Attribute
     {
-        $this->loadMissing(['subscriptions', 'customer']);
-        $activeUserQuotaStatus = $this->getActiveUserQuotaStatus();
+        $subscription = $this->currentEntitlement();
+        $activeUserQuotaStatus = $this->getActiveUserQuotaStatus($subscription);
+        $onTrial = $subscription?->onTrial() ?? false;
+        $hasGratis = $subscription?->getPlan()->isFree() ?? false;
 
-        return Attribute::get(fn() => [
-            'valid' => $this->onTrial()
-                || $this->has_gratis
-                || ($this->subscription()?->valid() && !$activeUserQuotaStatus['quotaExceeded']),
-            'onTrial' => $this->onTrial(),
-            'trialEndsAt' => $this->onTrial() ? $this->trialEndsAt() : null,
-            'hasExpiredTrial' => $this->hasExpiredTrial(),
-            'onGracePeriod' => $this->subscription()?->onGracePeriod() ?? false,
-            'ended' => $this->subscription()?->ended() ?? false,
-            'onPausedGracePeriod' => $this->subscription()?->onPausedGracePeriod() ?? false,
-            'paused' => $this->subscription()?->paused() ?? false,
-            'pastDue' => $this->subscription()?->pastDue() ?? false,
-            'hasGratis' => $this->has_gratis,
+        return Attribute::get(fn (): array => [
+            'valid' => $this->hasValidEntitlement($subscription) && !$activeUserQuotaStatus['quotaExceeded'],
+            'onTrial' => $onTrial,
+            'trialEndsAt' => $onTrial ? $subscription?->getTrialEndsAt() : null,
+            'hasExpiredTrial' => in_array($subscription?->getStatus(), [
+                SubscriptionStatus::Trialing,
+                SubscriptionStatus::Expired,
+            ], true)
+                && $subscription->getTrialEndsAt()?->isPast() === true,
+            'onGracePeriod' => $subscription?->onGracePeriod() ?? false,
+            'ended' => $subscription?->ended() ?? false,
+            'onPausedGracePeriod' => false,
+            'paused' => false,
+            'pastDue' => $subscription?->pastDue() ?? false,
+            'hasGratis' => $hasGratis,
 
             'activeUserQuota' => $activeUserQuotaStatus,
         ]);
     }
 
-    public function scopeActive($query)
+    public function scopeActive(Builder $query): Builder
     {
-        // valid subscription (active plan, paused grace period, or grace period), on trial or gratis
-        return $query
-            ->whereHas('subscriptions', function ($query) {
-                $query->active()
-                    ->orWhere(function ($query) {
-                        $query->onTrial();
-                    });
-            })
-            ->orWhereHas('customer', function ($query) {
-                $query->whereNotNull('trial_ends_at')
-                    ->where('trial_ends_at', '>', \Carbon\Carbon::now());
-            })
-            ->orWhere(function ($query) {
-                // @TODO make has_gratis a regular column
-                $query->where('data->has_gratis', true);
-            });
-    }
-
-    public function scopeInactive($query)
-    {
-        return $query
-            ->whereDoesntHave('subscriptions', function ($query) {
-                $query->active()
-                    ->orWhere(function ($query) {
-                        $query->onTrial();
-                    });
-            })
-            ->whereDoesntHave('customer', function ($query) {
-                $query->whereNotNull('trial_ends_at')
-                    ->where('trial_ends_at', '>', \Carbon\Carbon::now());
-            })
-            ->whereNot('data->has_gratis', true);
-    }
-
-    public function scopeSubscribed($query)
-    {
-        return $query->whereHas('subscriptions', function ($query) {
-            $query->active();
+        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+            $this->applyValidEntitlementFilter($query);
         });
     }
 
-    public function scopeEnded($query)
+    public function scopeInactive(Builder $query): Builder
     {
-        return $query->whereHas('subscriptions', function ($query) {
-            $query->ended();
+        return $query->whereDoesntHave('entitlementSubscriptions', function (Builder $query): void {
+            $this->applyValidEntitlementFilter($query);
         });
     }
 
-
-    public function scopeTrial($query)
+    public function scopeSubscribed(Builder $query): Builder
     {
-        return $query
-            ->whereHas('subscriptions', function ($query) {
-                $query->onTrial();
-            })
-            ->orWhereHas('customer', function ($query) {
-                $query->whereNotNull('trial_ends_at')
-                    ->where('trial_ends_at', '>', \Carbon\Carbon::now());
+        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+            $query->where(function (Builder $query): void {
+                $query->where(function (Builder $query): void {
+                    $query->whereIn('status', [
+                        SubscriptionStatus::Active->value,
+                        SubscriptionStatus::PastDue->value,
+                    ])->where(function (Builder $query): void {
+                        $query->whereNull('ends_at')->orWhere('ends_at', '>', now());
+                    });
+                })->orWhere(function (Builder $query): void {
+                    $query->where('status', SubscriptionStatus::Cancelled->value)
+                        ->where('ends_at', '>', now());
+                });
             });
+        });
     }
 
-    public function scopeGratis($query)
+    public function scopeEnded(Builder $query): Builder
     {
-        // @TODO make has_gratis a regular column
+        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+            $query->where('status', SubscriptionStatus::Expired->value)
+                ->orWhere(function (Builder $query): void {
+                    $query->where('status', SubscriptionStatus::Cancelled->value)
+                        ->whereNotNull('ends_at')
+                        ->where('ends_at', '<=', now());
+                });
+        });
+    }
+
+    public function scopeTrial(Builder $query): Builder
+    {
+        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+            $query->where('status', SubscriptionStatus::Trialing->value)
+                ->where('trial_ends_at', '>', now());
+        });
+    }
+
+    public function scopeExpiredTrial(Builder $query): Builder
+    {
+        return $query->whereHas('entitlementSubscriptions', function (Builder $query): void {
+            $query->whereIn('status', [
+                SubscriptionStatus::Trialing->value,
+                SubscriptionStatus::Expired->value,
+            ])->whereNotNull('trial_ends_at')
+                ->where('trial_ends_at', '<=', now());
+        });
+    }
+
+    public function scopeGratis(Builder $query): Builder
+    {
         return $query->where('data->has_gratis', true);
     }
 
@@ -225,12 +232,23 @@ class Tenant extends BaseTenant
             ->exists());
     }
 
-    public function getActiveUserQuotaStatus(): array
+    /**
+     * @return array{
+     *     quota: int|null,
+     *     activeUserCount: int,
+     *     quotaExceeded: bool,
+     *     onGracePeriod: bool,
+     *     gracePeriodEndsAt: Carbon|null,
+     *     quotaNearlyExceeded: bool
+     * }
+     */
+    public function getActiveUserQuotaStatus(?EntitlementSubscription $subscription = null): array
     {
-        // Load config
-        $quota = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuota'] : null;
-        $quotaBuffer = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserQuotaBuffer'] : null;
-        $gracePeriodDays = $this->sparkPlan() ? $this->sparkPlan()->options['activeUserGracePeriodDays'] : null;
+        $subscription ??= $this->currentEntitlement();
+        $features = $subscription?->getPlan()->features ?? collect();
+        $quota = $this->featureLimit($features, 'active-user-quota');
+        $quotaBuffer = $this->featureLimit($features, 'active-user-quota-buffer');
+        $gracePeriodDays = $this->featureLimit($features, 'active-user-grace-period-days');
 
         $activeUserCount = $this->members()
             ->active()
@@ -239,24 +257,79 @@ class Tenant extends BaseTenant
             ->orderBy('created_at', 'desc')
             ->value('created_at');
         $gracePeriodEndsAt = $lastUserCreatedAt ? Carbon::make($lastUserCreatedAt)->addDays($gracePeriodDays ?? 0) : null;
+        $isOverQuota = $quota !== null && $activeUserCount > $quota;
+        $onGracePeriod = $isOverQuota && $gracePeriodDays !== null && $gracePeriodEndsAt?->isFuture() === true;
 
         return [
             'quota' => $quota,
             'activeUserCount' => $activeUserCount,
-            'quotaExceeded' => $quota
-                && $gracePeriodDays !== null
-                && ($quota !== null && $activeUserCount > $quota)
-                && $gracePeriodEndsAt?->isFuture(),
-            'onGracePeriod' => $quota
-                && $gracePeriodDays !== null
-                && ($quota !== null && $activeUserCount > $quota)
-                && $gracePeriodEndsAt?->isFuture(),
+            'quotaExceeded' => $isOverQuota && !$onGracePeriod,
+            'onGracePeriod' => $onGracePeriod,
             'gracePeriodEndsAt' => $gracePeriodEndsAt,
-            'quotaNearlyExceeded' => $quota
+            'quotaNearlyExceeded' => $quota !== null
                 && $quotaBuffer !== null
                 && $activeUserCount < $quota
-                && ($quota !== null && ($activeUserCount + $quotaBuffer) > $quota),
+                && ($activeUserCount + $quotaBuffer) > $quota,
         ];
+    }
+
+    public function entitlementSubscriptions(): MorphMany
+    {
+        $subscriptionModel = config('subscriptionify.models.subscription', EntitlementSubscription::class);
+
+        return $this->morphMany($subscriptionModel, 'subscribable');
+    }
+
+    private function currentEntitlement(): ?EntitlementSubscription
+    {
+        return $this->entitlementSubscriptions()
+            ->with('plan.features')
+            ->latest('id')
+            ->first();
+    }
+
+    private function hasValidEntitlement(?EntitlementSubscription $subscription): bool
+    {
+        if ($subscription === null) {
+            return false;
+        }
+
+        return match ($subscription->getStatus()) {
+            SubscriptionStatus::Active, SubscriptionStatus::PastDue => $subscription->getEndsAt()?->isFuture() ?? true,
+            SubscriptionStatus::Trialing => $subscription->onTrial(),
+            SubscriptionStatus::Cancelled => $subscription->onGracePeriod(),
+            SubscriptionStatus::Expired => false,
+        };
+    }
+
+    private function applyValidEntitlementFilter(Builder $query): void
+    {
+        $query->where(function (Builder $query): void {
+            $query->where(function (Builder $query): void {
+                $query->whereIn('status', [
+                    SubscriptionStatus::Active->value,
+                    SubscriptionStatus::PastDue->value,
+                ])->where(function (Builder $query): void {
+                    $query->whereNull('ends_at')->orWhere('ends_at', '>', now());
+                });
+            })->orWhere(function (Builder $query): void {
+                $query->where('status', SubscriptionStatus::Trialing->value)
+                    ->where('trial_ends_at', '>', now());
+            })->orWhere(function (Builder $query): void {
+                $query->where('status', SubscriptionStatus::Cancelled->value)
+                    ->where('ends_at', '>', now());
+            });
+        });
+    }
+
+    /**
+     * @param Collection<int, \Revoltify\Subscriptionify\Models\Feature> $features
+     */
+    private function featureLimit(Collection $features, string $slug): ?int
+    {
+        $value = $features->firstWhere('slug', $slug)?->pivot?->value;
+
+        return $value === null ? null : (int) $value;
     }
 
     /**

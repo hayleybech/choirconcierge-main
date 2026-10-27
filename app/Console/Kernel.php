@@ -57,6 +57,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->job(SendAttendanceReports::class)
             ->hourly();
+
+        $schedule->command('billing:reconcile-legacy-entitlements')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping(30);
     }
 
     /**

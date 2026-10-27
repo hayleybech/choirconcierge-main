@@ -75,22 +75,12 @@ class TenantStats
 
     private function getTenantsOnTrialCount(): int
     {
-        return Tenant::whereHas('subscriptions', function (Builder $query): void {
-            $query->onTrial();
-        })->orWhereHas('customer', function (Builder $query): void {
-            $query->whereNotNull('trial_ends_at')
-                ->where('trial_ends_at', '>', Carbon::now());
-        })->count();
+        return Tenant::trial()->count();
     }
 
     private function getTenantsTrialExpiredCount(): int
     {
-        return Tenant::whereHas('subscriptions', function (Builder $query): void {
-            $query->expiredTrial();
-        })->orWhereHas('customer', function (Builder $query): void {
-            $query->whereNotNull('trial_ends_at')
-                ->where('trial_ends_at', '<', Carbon::now());
-        })->count();
+        return Tenant::expiredTrial()->count();
     }
 
     private function getActiveMembersCount(): int
