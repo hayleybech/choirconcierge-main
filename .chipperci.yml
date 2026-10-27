@@ -17,7 +17,7 @@ pipeline:
       
       # Turning this off by default to be safe
       # Might need to run this again if local/Herd composer has self-updated
-      sudo composer self-update --2
+      #sudo composer self-update --2
       
       composer install --no-interaction --prefer-dist --optimize-autoloader
       
