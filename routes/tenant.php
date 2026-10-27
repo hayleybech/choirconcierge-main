@@ -21,6 +21,7 @@ use App\Http\Controllers\EventCheckInController;
 use App\Http\Controllers\EventCheckInKioskController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
+use App\Http\Controllers\ForumCategoryController;
 use App\Http\Controllers\ExportMemberController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
@@ -295,6 +296,13 @@ Route::middleware([
             Route::post('polls/{poll}/vote', [PollController::class, 'vote'])->name('polls.vote');
             Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
             Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
+
+            // Forum categories module
+            Route::prefix('forum')->name('forum.')->group(function () {
+                Route::resource('categories', ForumCategoryController::class)
+                    ->parameters(['categories' => 'forum_category'])
+                    ->only(['index', 'store', 'update', 'destroy']);
+            });
 
             // Organisation Settings
             Route::get('/organisation', [TenantController::class, 'edit'])->name('organisation.edit');

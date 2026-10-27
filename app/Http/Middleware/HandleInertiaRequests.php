@@ -9,6 +9,7 @@ use App\Models\CustomFieldEntry;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\Folder;
+use App\Models\ForumCategory;
 use App\Models\MailLog;
 use App\Models\RiserStack;
 use App\Models\Role;
@@ -120,6 +121,8 @@ class HandleInertiaRequests extends Middleware
                 'create_poll' => auth()->user()?->can('create', Poll::class),
                 'update_poll' => auth()->user()?->can('update', [Poll::class, null]),
                 'delete_poll' => auth()->user()?->can('delete', [Poll::class, null]),
+                'list_forum_categories' => auth()->user()?->can('viewAny', ForumCategory::class),
+                'manage_forum_categories' => auth()->user()?->can('create', ForumCategory::class),
                 'impersonate' => auth()->user()?->isSuperAdmin || auth()->user()?->membership?->hasRole('Admin'),
                 'manage_finances' => Gate::allows('update-fees'),
                 'update_tenant' => auth()->user()?->can('update', [Tenant::class, null]),

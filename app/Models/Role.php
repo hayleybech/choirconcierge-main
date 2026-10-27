@@ -107,6 +107,7 @@ class Role extends Model
         'polls_create',
         'polls_update',
         'polls_delete',
+        'forum_categories_manage',
     ];
 
     public function members(): BelongsToMany

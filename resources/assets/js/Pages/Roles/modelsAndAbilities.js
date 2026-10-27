@@ -67,4 +67,8 @@ export const modelsAndAbilities = {
         label: 'Polls',
         abilities: ['view', 'create', 'update', 'delete'],
     },
+    forum_categories: {
+        label: 'Forum Categories',
+        abilities: ['manage'],
+    },
 };

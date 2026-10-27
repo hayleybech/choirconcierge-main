@@ -68,6 +68,7 @@ const RoleForm = ({ role }) => {
 								<th className="py-4">Create</th>
 								<th className="py-4">Update</th>
 								<th className="py-4">Delete</th>
+								<th className="py-4">Manage</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -89,26 +90,28 @@ const RoleForm = ({ role }) => {
 											checked={allAbilitiesForModelChecked(modelKey)}
 										/>
 									</th>
-									{abilities.map(abilityKey => (
+									{['view', 'create', 'update', 'delete', 'manage'].map(abilityKey => (
 										<td className="py-4 px-2" key={`${modelKey}_${abilityKey}`}>
-											<CheckboxWithLabel
-												label={abilityKey[0].toUpperCase() + abilityKey.substring(1)}
-												id={`${modelKey}_${abilityKey}`}
-												name="abilities[]"
-												value={`${modelKey}_${abilityKey}`}
-												checked={data.abilities.includes(`${modelKey}_${abilityKey}`)}
-												onChange={e =>
-													setData(
-														'abilities',
-														toggleArrayValue(
-															`${modelKey}_${abilityKey}`,
-															data.abilities,
-															e.target.checked
+											{abilities.includes(abilityKey) && (
+												<CheckboxWithLabel
+													label={abilityKey[0].toUpperCase() + abilityKey.substring(1)}
+													id={`${modelKey}_${abilityKey}`}
+													name="abilities[]"
+													value={`${modelKey}_${abilityKey}`}
+													checked={data.abilities.includes(`${modelKey}_${abilityKey}`)}
+													onChange={e =>
+														setData(
+															'abilities',
+															toggleArrayValue(
+																`${modelKey}_${abilityKey}`,
+																data.abilities,
+																e.target.checked
+															)
 														)
-													)
-												}
-												className="flex-col md:flex-row items-center"
-											/>
+													}
+													className="flex-col md:flex-row items-center"
+												/>
+											)}
 										</td>
 									))}
 								</tr>

@@ -118,6 +118,7 @@ const Show = ({ role, setSidebarOpen }) => {
 							<th className="py-4">Create</th>
 							<th className="py-4">Update</th>
 							<th className="py-4">Delete</th>
+							<th className="py-4">Manage</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -126,7 +127,7 @@ const Show = ({ role, setSidebarOpen }) => {
 								<th className="py-4 text-left">
 									<span className="font-bold text-gray-700">{modelName}</span>
 								</th>
-								{abilities.map(abilityKey => (
+								{['view', 'create', 'update', 'delete', 'manage'].map(abilityKey => (
 									<td
 										key={`${modelKey}_${abilityKey}`}
 										className={classNames(
@@ -136,17 +137,19 @@ const Show = ({ role, setSidebarOpen }) => {
 												: 'text-gray-500'
 										)}
 									>
-										<div className="flex flex-col items-center md:flex-row">
-											<Icon
-												icon={
-													role.abilities.includes(`${modelKey}_${abilityKey}`)
-														? 'check'
-														: 'times'
-												}
-												mr
-											/>
-											{abilityKey[0].toUpperCase() + abilityKey.substring(1)}
-										</div>
+										{abilities.includes(abilityKey) && (
+											<div className="flex flex-col items-center md:flex-row">
+												<Icon
+													icon={
+														role.abilities.includes(`${modelKey}_${abilityKey}`)
+															? 'check'
+															: 'times'
+													}
+													mr
+												/>
+												{abilityKey[0].toUpperCase() + abilityKey.substring(1)}
+											</div>
+										)}
 									</td>
 								))}
 							</tr>

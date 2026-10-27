@@ -179,6 +179,14 @@ class Navigation
                     ['name' => 'Add New', 'route' => 'polls.create', 'icon' => 'fa-plus-square', 'can' => 'create_poll', 'showAsActiveForRoutes' => ['polls.create']],
                 ]
             ],
+            [
+                'name' => 'Forum',
+                'route' => 'forum.categories.index',
+                'icon' => 'fa-comments',
+                'can' => 'list_forum_categories',
+                'showAsActiveForRoutes' => ['forum.categories.*'],
+                'items' => [],
+            ],
         ];
     }
 

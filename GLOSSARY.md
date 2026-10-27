@@ -20,6 +20,10 @@ The single cross-tenant recipient group selected for a central announcement: All
 
 A classification that determines which account-wide email preference applies to a message. The categories are Communications, Songs, Events, Documents, System & Security, Product Updates, Promotions & Offers, and Community & Content.
 
+## Forum Category
+
+A tenant-owned forum section visible to all active members or restricted to members of one or more selected ensembles.
+
 ## Mandatory Email Category
 
 A category that is always enabled and cannot be opted out of: Communications or System & Security. Its disabled preference control communicates that the category exists; it is not an opt-out.
