@@ -1,33 +1,43 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { Settings } from 'luxon';
 import DateRangeCalendarInput from './DateRangeCalendarInput';
 
 const originalLocale = Settings.defaultLocale;
 
-jest.mock('@inertiajs/react', () => ({
+vi.mock('@inertiajs/react', () => ({
 	usePage: () => ({ props: { user: {} } }),
 }));
 
-jest.mock('@headlessui/react', () => {
-	const React = require('react');
-	const Wrapper = ({ as: Component = 'div', children, ...props }) => <Component {...props}>{typeof children === 'function' ? children({ close: jest.fn(), open: true }) : children}</Component>;
+vi.mock('@headlessui/react', async () => {
+	const React = await vi.importActual('react');
+	const Wrapper = ({ as: Component = 'div', children, ...props }) =>
+		React.createElement(Component, props, typeof children === 'function' ? children({ close: vi.fn(), open: true }) : children);
 
 	return {
 		Popover: Object.assign(Wrapper, { Button: Wrapper, Panel: Wrapper }),
-		Transition: ({ children }) => <>{children}</>,
+		Transition: ({ children }) => React.createElement(React.Fragment, null, children),
 	};
 });
 
-jest.mock('react-day-picker', () => ({
-	DayPicker: ({ mode, onSelect }) => (
-		<div data-testid="day-picker" data-mode={mode}>
-			<button type="button" onClick={() => onSelect({ from: new Date(2025, 2, 1), to: new Date(2025, 2, 31) })}>Choose range</button>
-		</div>
-	),
-}));
+vi.mock('react-day-picker', async () => {
+	const React = await vi.importActual('react');
+	return {
+		DayPicker: ({ mode, onSelect }) =>
+			React.createElement(
+				'div',
+				{ 'data-testid': 'day-picker', 'data-mode': mode },
+				React.createElement(
+					'button',
+					{ type: 'button', onClick: () => onSelect({ from: new Date(2025, 2, 1), to: new Date(2025, 2, 31) }) },
+					'Choose range',
+				),
+			),
+	};
+});
 
-jest.mock('react-day-picker/style.css', () => ({}), { virtual: true });
+vi.mock('react-day-picker/style.css', () => ({}));
 
 describe('DateRangeCalendarInput', () => {
 	beforeAll(() => {
@@ -45,7 +55,7 @@ describe('DateRangeCalendarInput', () => {
 				endDate="2025-02-20"
 				startMonth={new Date(2017, 0)}
 				endMonth={new Date(2030, 11)}
-				updateFn={jest.fn()}
+				updateFn={vi.fn()}
 			>
 				<button type="button">Last 7 days</button>
 			</DateRangeCalendarInput>
@@ -60,7 +70,7 @@ describe('DateRangeCalendarInput', () => {
 	});
 
 	it('does not update the applied range until Apply is pressed', () => {
-		const updateFn = jest.fn();
+		const updateFn = vi.fn();
 
 		render(
 			<DateRangeCalendarInput

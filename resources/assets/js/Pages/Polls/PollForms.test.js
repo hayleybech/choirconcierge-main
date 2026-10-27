@@ -1,18 +1,25 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { useForm } from '@inertiajs/react';
+import { vi } from 'vitest';
 import Create from './Create';
 import Edit from './Edit';
 
-jest.mock('@inertiajs/react', () => ({
-	useForm: jest.fn(),
-	Link: ({ children, ...props }) => <a {...props}>{children}</a>,
-}));
+vi.mock('@inertiajs/react', async () => {
+	const React = await vi.importActual('react');
+	return {
+		useForm: vi.fn(),
+		Link: ({ children, ...props }) => React.createElement('a', props, children),
+	};
+});
 
-jest.mock('../../Layouts/TenantLayout', () => ({ children }) => require('react').createElement('div', null, children));
-jest.mock('../../components/AppHead', () => () => null);
-jest.mock('../../components/PageTopBar', () => {
-	const React = require('react');
+vi.mock('../../Layouts/TenantLayout', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
+});
+vi.mock('../../components/AppHead', () => ({ default: () => null }));
+vi.mock('../../components/PageTopBar', async () => {
+	const React = await vi.importActual('react');
 
 	return {
 		__esModule: true,
@@ -20,8 +27,8 @@ jest.mock('../../components/PageTopBar', () => {
 		PageTopNavigation: () => null,
 	};
 });
-jest.mock('../../components/PageHeader/PageHeader', () => {
-	const React = require('react');
+vi.mock('../../components/PageHeader/PageHeader', async () => {
+	const React = await vi.importActual('react');
 	const Container = ({ children }) => React.createElement('div', null, children);
 
 	return {
@@ -31,31 +38,40 @@ jest.mock('../../components/PageHeader/PageHeader', () => {
 		PageHeaderTitle: Container,
 	};
 });
-jest.mock('../../hooks/useRoute', () => () => ({ route: name => `/${name.replace(/\./g, '/')}` }));
-jest.mock('../../components/FormWrapper', () => ({ children }) => require('react').createElement('div', null, children));
-jest.mock('../../components/Form', () => ({ children, onSubmit }) =>
-	require('react').createElement('form', { onSubmit }, children),
-);
-jest.mock('../../components/FormSection', () => ({ children }) => require('react').createElement('div', null, children));
-jest.mock('../../components/inputs/TextInput', () => () => null);
-jest.mock('../../components/inputs/Label', () => () => null);
-jest.mock('../../components/inputs/CheckboxWithLabel', () => {
-	const React = require('react');
-
-	return ({ label, id, checked, onChange }) =>
-		React.createElement(
-			'label',
-			{ htmlFor: id },
-			label,
-			React.createElement('input', { id, type: 'checkbox', checked: !!checked, onChange }),
-		);
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: name => `/${name.replace(/\./g, '/')}` }) }));
+vi.mock('../../components/FormWrapper', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
 });
-jest.mock('../../components/inputs/DateCalendarInput', () => () => null);
-jest.mock('../../components/inputs/Time', () => () => null);
-jest.mock('../../components/inputs/Help', () => () => null);
-jest.mock('../../components/inputs/CheckboxGroup', () => () => null);
-jest.mock('../../components/inputs/RichTextInput', () => () => null);
-jest.mock('../../components/Icon', () => () => null);
+vi.mock('../../components/Form', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children, onSubmit }) => React.createElement('form', { onSubmit }, children) };
+});
+vi.mock('../../components/FormSection', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
+});
+vi.mock('../../components/inputs/TextInput', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Label', () => ({ default: () => null }));
+vi.mock('../../components/inputs/CheckboxWithLabel', async () => {
+	const React = await vi.importActual('react');
+
+	return {
+		default: ({ label, id, checked, onChange }) =>
+			React.createElement(
+				'label',
+				{ htmlFor: id },
+				label,
+				React.createElement('input', { id, type: 'checkbox', checked: !!checked, onChange }),
+			),
+	};
+});
+vi.mock('../../components/inputs/DateCalendarInput', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Time', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Help', () => ({ default: () => null }));
+vi.mock('../../components/inputs/CheckboxGroup', () => ({ default: () => null }));
+vi.mock('../../components/inputs/RichTextInput', () => ({ default: () => null }));
+vi.mock('../../components/Icon', () => ({ default: () => null }));
 
 const formData = {
 	title: '',
@@ -71,11 +87,11 @@ describe('Poll forms', () => {
 	beforeEach(() => {
 		useForm.mockReturnValue({
 			data: formData,
-			setData: jest.fn(),
-			post: jest.fn(),
+			setData: vi.fn(),
+			post: vi.fn(),
 			processing: false,
 			errors: {},
-			transform: jest.fn(),
+			transform: vi.fn(),
 		});
 	});
 

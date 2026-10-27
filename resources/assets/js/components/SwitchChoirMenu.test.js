@@ -1,5 +1,6 @@
 import React from "react";
 import { act, render, screen, waitFor } from "@testing-library/react";
+import { vi } from 'vitest';
 import SwitchChoirMenu from "./SwitchChoirMenu";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
@@ -10,9 +11,9 @@ global.ResizeObserver = class {
   disconnect() {}
 };
 
-jest.mock('ziggy-js', () => ({
+vi.mock('ziggy-js', async () => ({
   __esModule: true,
-  ...jest.requireActual('ziggy-js'),
+  ...(await vi.importActual('ziggy-js')),
   default: () => '', // aka route()
 }));
 

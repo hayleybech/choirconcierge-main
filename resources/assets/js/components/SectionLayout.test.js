@@ -1,10 +1,11 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { useMediaQuery } from 'react-responsive';
 import SectionLayout from './SectionLayout';
 
-jest.mock('react-responsive', () => ({
-	useMediaQuery: jest.fn(),
+vi.mock('react-responsive', () => ({
+	useMediaQuery: vi.fn(),
 }));
 
 describe('SectionLayout', () => {

@@ -1,34 +1,32 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { useForm } from '@inertiajs/react';
+import { vi } from 'vitest';
 import BulkEditSingersModal from './BulkEditSingersModal';
 
-jest.mock('@inertiajs/react', () => ({ useForm: jest.fn() }));
+vi.mock('@inertiajs/react', () => ({ useForm: vi.fn() }));
 
-jest.mock('../../hooks/useRoute', () => () => ({ route: name => name }));
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: name => name }) }));
 
-jest.mock('../../components/Dialog', () => {
-	const React = require('react');
-	return ({ isOpen, title, children }) =>
-		isOpen ? (
-			<div>
-				<h1>{title}</h1>
-				{children}
-			</div>
-		) : null;
+vi.mock('../../components/Dialog', async () => {
+	const React = await vi.importActual('react');
+	return {
+		default: ({ isOpen, title, children }) =>
+			isOpen ? React.createElement('div', null, React.createElement('h1', null, title), children) : null,
+	};
 });
 
-jest.mock('../../components/inputs/RadioGroup', () => ({ label }) => <div>{label}</div>);
+vi.mock('../../components/inputs/RadioGroup', () => ({ default: ({ label }) => <div>{label}</div> }));
 
 const mockedUseForm = useForm;
 
 beforeEach(() => {
 	mockedUseForm.mockReturnValue({
 		data: { singer_ids: [4, 9], status: null },
-		setData: jest.fn(),
-		post: jest.fn(),
+		setData: vi.fn(),
+		post: vi.fn(),
 		processing: false,
-		reset: jest.fn(),
+		reset: vi.fn(),
 		errors: {},
 	});
 });
@@ -37,7 +35,7 @@ it('keeps fee renewal out of the bulk status-edit dialog', () => {
 	render(
 		<BulkEditSingersModal
 			isOpen
-			setIsOpen={jest.fn()}
+			setIsOpen={vi.fn()}
 			selectedSingerIds={[4, 9]}
 			statuses={[]}
 		/>

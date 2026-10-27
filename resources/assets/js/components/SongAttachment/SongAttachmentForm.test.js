@@ -1,15 +1,18 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import '@testing-library/jest-dom';
 import SongAttachmentForm from './SongAttachmentForm';
 
-const mockPost = jest.fn();
-const mockReset = jest.fn();
-const mockSetData = jest.fn();
-const mockSetIsOpen = jest.fn();
+const { mockPost, mockReset, mockSetData, mockSetIsOpen } = vi.hoisted(() => ({
+	mockPost: vi.fn(),
+	mockReset: vi.fn(),
+	mockSetData: vi.fn(),
+	mockSetIsOpen: vi.fn(),
+}));
 
-jest.mock('@inertiajs/react', () => ({
+vi.mock('@inertiajs/react', () => ({
 	useForm: () => ({
 		data: { attachment_uploads: [], type: 'youtube', url: '', title: '' },
 		setData: mockSetData,
@@ -20,26 +23,27 @@ jest.mock('@inertiajs/react', () => ({
 	}),
 }));
 
-jest.mock('../../hooks/useRoute', () => () => ({ route: name => name }));
-jest.mock('../../AttachmentType', () => ({
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: name => name }) }));
+vi.mock('../../AttachmentType', () => ({
 	__esModule: true,
 	default: {
 		types: { youtube: {} },
 		get: () => ({ title: 'YouTube', textColour: 'text-gray-700', icon: 'youtube' }),
 	},
 }));
-jest.mock('../Dialog', () => ({ title, children, okLabel, onOk }) => (
+
+vi.mock('../Dialog', () => ({ default: ({ title, children, okLabel, onOk }) => (
 	<div role="dialog" aria-label={title}>
 		{children}
 		<button onClick={onOk}>{okLabel}</button>
 	</div>
-));
-jest.mock('../Form', () => ({ children }) => <form>{children}</form>);
-jest.mock('../inputs/Label', () => ({ label }) => <label>{label}</label>);
-jest.mock('../inputs/Error', () => ({ children }) => <span>{children}</span>);
-jest.mock('../inputs/RadioGroup', () => () => <div />);
-jest.mock('../inputs/TextInput', () => () => <input />);
-jest.mock('../inputs/FileInput', () => () => <input type="file" />);
+)}));
+vi.mock('../Form', () => ({ default: ({ children }) => <form>{children}</form> }));
+vi.mock('../inputs/Label', () => ({ default: ({ label }) => <label>{label}</label> }));
+vi.mock('../inputs/Error', () => ({ default: ({ children }) => <span>{children}</span> }));
+vi.mock('../inputs/RadioGroup', () => ({ default: () => <div /> }));
+vi.mock('../inputs/TextInput', () => ({ default: () => <input /> }));
+vi.mock('../inputs/FileInput', () => ({ default: () => <input type="file" /> }));
 
 describe('SongAttachmentForm', () => {
 	it('renders inside the modal and submits from the modal action', async () => {

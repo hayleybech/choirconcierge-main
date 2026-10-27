@@ -1,11 +1,12 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import TenantTableMobile from './TenantTableMobile';
 
-jest.mock('../../../components/Pagination', () => () => null);
+vi.mock('../../../components/Pagination', () => ({ default: () => null }));
 
 test('allows filters to be toggled from the mobile table header', () => {
-	const setShowFilters = jest.fn();
+	const setShowFilters = vi.fn();
 
 	render(
 		<TenantTableMobile

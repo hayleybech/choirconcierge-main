@@ -1,51 +1,67 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useForm, usePage } from '@inertiajs/react';
+import { vi } from 'vitest';
 import EventForm from './EventForm';
 
-jest.mock('@inertiajs/react', () => ({ useForm: jest.fn(), usePage: jest.fn() }));
-jest.mock('../../components/FormSection', () => {
-	const React = require('react');
+vi.mock('@inertiajs/react', () => ({ useForm: vi.fn(), usePage: vi.fn() }));
+vi.mock('../../components/FormSection', async () => {
+	const React = await vi.importActual('react');
 
-	return ({ title, children }) => React.createElement('section', null, React.createElement('h2', null, title), children);
+	return { default: ({ title, children }) => React.createElement('section', null, React.createElement('h2', null, title), children) };
 });
-jest.mock('../../components/inputs/CheckboxWithLabel', () => {
-	const React = require('react');
+vi.mock('../../components/inputs/CheckboxWithLabel', async () => {
+	const React = await vi.importActual('react');
 
-	return ({ label, id, checked, onChange }) =>
-		React.createElement(
-			'label',
-			{ htmlFor: id },
-			label,
-			React.createElement('input', { id, type: 'checkbox', checked: !!checked, onChange }),
-		);
+	return {
+		default: ({ label, id, checked, onChange }) =>
+			React.createElement(
+				'label',
+				{ htmlFor: id },
+				label,
+				React.createElement('input', { id, type: 'checkbox', checked: !!checked, onChange }),
+			),
+	};
 });
-jest.mock('../../components/inputs/Label', () => ({ label }) => require('react').createElement('span', null, label));
-jest.mock('../../components/inputs/TextareaInput', () => ({ name, value, updateFn }) =>
-	require('react').createElement('textarea', { name, value, onChange: event => updateFn(event.target.value) }),
-);
-jest.mock('../../components/FormWrapper', () => ({ children }) => require('react').createElement('div', null, children));
-jest.mock('../../components/Form', () => ({ children, onSubmit }) =>
-	require('react').createElement('form', { onSubmit }, children),
-);
-jest.mock('../../components/FormFooter', () => ({ children }) => require('react').createElement('div', null, children));
-jest.mock('../../components/inputs/TextInput', () => () => null);
-jest.mock('../../components/inputs/Error', () => () => null);
-jest.mock('../../components/inputs/CheckboxGroup', () => () => null);
-jest.mock('../../components/inputs/RadioGroup', () => () => null);
-jest.mock('../../components/inputs/Help', () => () => null);
-jest.mock('../../components/inputs/ButtonLinkV2', () => ({ href, children }) =>
-	require('react').createElement('a', { href }, children),
-);
-jest.mock('../../components/inputs/ButtonV2', () => ({ children, ...props }) =>
-	require('react').createElement('button', props, children),
-);
-jest.mock('../../components/inputs/LocationInput', () => () => null);
-jest.mock('../../components/inputs/DateCalendarInput', () => () => null);
-jest.mock('../../components/inputs/Time', () => () => null);
-jest.mock('../../components/inputs/DetailToggle', () => () => null);
-jest.mock('../../components/inputs/RichTextInput', () => () => null);
-jest.mock('../../hooks/useRoute', () => () => ({ route: name => `/${name.replace(/\./g, '/')}` }));
+vi.mock('../../components/inputs/Label', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ label }) => React.createElement('span', null, label) };
+});
+vi.mock('../../components/inputs/TextareaInput', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ name, value, updateFn }) => React.createElement('textarea', { name, value, onChange: event => updateFn(event.target.value) }) };
+});
+vi.mock('../../components/FormWrapper', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
+});
+vi.mock('../../components/Form', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children, onSubmit }) => React.createElement('form', { onSubmit }, children) };
+});
+vi.mock('../../components/FormFooter', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
+});
+vi.mock('../../components/inputs/TextInput', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Error', () => ({ default: () => null }));
+vi.mock('../../components/inputs/CheckboxGroup', () => ({ default: () => null }));
+vi.mock('../../components/inputs/RadioGroup', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Help', () => ({ default: () => null }));
+vi.mock('../../components/inputs/ButtonLinkV2', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ href, children }) => React.createElement('a', { href }, children) };
+});
+vi.mock('../../components/inputs/ButtonV2', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children, ...props }) => React.createElement('button', props, children) };
+});
+vi.mock('../../components/inputs/LocationInput', () => ({ default: () => null }));
+vi.mock('../../components/inputs/DateCalendarInput', () => ({ default: () => null }));
+vi.mock('../../components/inputs/Time', () => ({ default: () => null }));
+vi.mock('../../components/inputs/DetailToggle', () => ({ default: () => null }));
+vi.mock('../../components/inputs/RichTextInput', () => ({ default: () => null }));
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: name => `/${name.replace(/\./g, '/')}` }) }));
 
 describe('EventForm notifications', () => {
 	beforeEach(() => {
@@ -56,11 +72,11 @@ describe('EventForm notifications', () => {
 			return {
 				data,
 				setData: (key, value) => setData(current => ({ ...current, [key]: value })),
-				post: jest.fn(),
-				put: jest.fn(),
+				post: vi.fn(),
+				put: vi.fn(),
 				processing: false,
 				errors: {},
-				transform: jest.fn(),
+				transform: vi.fn(),
 			};
 		});
 	});

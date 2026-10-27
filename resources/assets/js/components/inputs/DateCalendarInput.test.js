@@ -1,34 +1,37 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import DateCalendarInput from './DateCalendarInput';
 
-jest.mock('@inertiajs/react', () => ({
+vi.mock('@inertiajs/react', () => ({
 	usePage: () => ({ props: { user: {} } }),
 }));
 
-jest.mock('@headlessui/react', () => {
-	const React = require('react');
-	const Wrapper = ({ as: Component = 'div', children, ...props }) => <Component {...props}>{children}</Component>;
+vi.mock('@headlessui/react', async () => {
+	const React = await vi.importActual('react');
+	const Wrapper = ({ as: Component = 'div', children, ...props }) => React.createElement(Component, props, children);
 
 	return {
 		Popover: Object.assign(Wrapper, { Button: Wrapper, Panel: Wrapper }),
-		Transition: ({ children }) => <>{children}</>,
+		Transition: ({ children }) => React.createElement(React.Fragment, null, children),
 	};
 });
 
-jest.mock('react-day-picker', () => ({
-	DayPicker: ({ mode, selected, startMonth, endMonth }) => (
-		<div
-			data-testid="day-picker"
-			data-mode={mode}
-			data-selected={selected?.toISOString()}
-			data-start-month={startMonth?.toISOString()}
-			data-end-month={endMonth?.toISOString()}
-		/>
-	),
-}));
+vi.mock('react-day-picker', async () => {
+	const React = await vi.importActual('react');
+	return {
+		DayPicker: ({ mode, selected, startMonth, endMonth }) =>
+			React.createElement('div', {
+				'data-testid': 'day-picker',
+				'data-mode': mode,
+				'data-selected': selected?.toISOString(),
+				'data-start-month': startMonth?.toISOString(),
+				'data-end-month': endMonth?.toISOString(),
+			}),
+	};
+});
 
-jest.mock('react-day-picker/style.css', () => ({}), { virtual: true });
+vi.mock('react-day-picker/style.css', () => ({}));
 
 describe('DateCalendarInput', () => {
 	it('passes the date-only value as the selected local calendar day in single mode', () => {
@@ -40,7 +43,7 @@ describe('DateCalendarInput', () => {
 				value="2025-01-15"
 				startMonth={new Date(new Date().getFullYear(), 0)}
 				endMonth={new Date(new Date().getFullYear() + 5, 11)}
-				updateFn={jest.fn()}
+				updateFn={vi.fn()}
 			/>
 		);
 

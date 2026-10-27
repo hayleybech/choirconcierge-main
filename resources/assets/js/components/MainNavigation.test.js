@@ -1,14 +1,15 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { usePage } from '@inertiajs/react';
 import MainNavigation from './MainNavigation';
 
-jest.mock('@inertiajs/react', () => ({
-	usePage: jest.fn(),
+vi.mock('@inertiajs/react', () => ({
+    usePage: vi.fn(),
 	Link: ({ children, ...props }) => <a {...props}>{children}</a>,
 }));
-jest.mock('../hooks/useRoute', () => () => ({ route: name => `/${name}` }));
-jest.mock('./Icon', () => () => null);
+vi.mock('../hooks/useRoute', () => ({ default: () => ({ route: name => `/${name}` }) }));
+vi.mock('./Icon', () => ({ default: () => null }));
 
 describe('MainNavigation inbox badge', () => {
 	beforeEach(() => {

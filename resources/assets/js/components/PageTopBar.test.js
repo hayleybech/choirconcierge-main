@@ -1,16 +1,17 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
 
-jest.mock('react-responsive', () => ({
-	useMediaQuery: jest.fn(),
+vi.mock('react-responsive', () => ({
+	useMediaQuery: vi.fn(),
 }));
 
 import { useMediaQuery } from 'react-responsive';
 
 describe('PageTopBar', () => {
 	it('opens the sidebar without requiring a provider', () => {
-		const setSidebarOpen = jest.fn();
+		const setSidebarOpen = vi.fn();
 
 		render(<PageTopBar setSidebarOpen={setSidebarOpen}>Page title</PageTopBar>);
 		fireEvent.click(screen.getByRole('button', { name: 'Open sidebar' }));

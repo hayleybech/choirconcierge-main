@@ -1,19 +1,20 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import '@testing-library/jest-dom';
 import NotificationSettings from './NotificationSettings';
 
-jest.mock('@inertiajs/react', () => ({
+vi.mock('@inertiajs/react', () => ({
 	useForm: ({ email_preferences }) => ({
 		data: { email_preferences },
-		setData: jest.fn(),
-		put: jest.fn(),
+		setData: vi.fn(),
+		put: vi.fn(),
 		processing: false,
 		errors: {},
 	}),
 }));
 
-jest.mock('../../hooks/useRoute', () => () => ({ route: name => name }));
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: name => name }) }));
 
 const preferences = {
 	communications: true,

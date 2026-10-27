@@ -1,5 +1,6 @@
 import { render, act } from '@testing-library/react';
 import React from 'react';
+import { vi } from 'vitest';
 import useLongPress from './useLongPress';
 
 const TestComponent = ({ onLongPress, onClick }) => {
@@ -9,20 +10,20 @@ const TestComponent = ({ onLongPress, onClick }) => {
 
 describe('useLongPress', () => {
 	beforeEach(() => {
-		jest.useFakeTimers();
+		vi.useFakeTimers();
 	});
 
 	afterEach(() => {
-		jest.useRealTimers();
+		vi.useRealTimers();
 	});
 
 	it('should NOT call preventDefault on short press', () => {
-		const onLongPress = jest.fn();
-		const onClick = jest.fn();
+		const onLongPress = vi.fn();
+		const onClick = vi.fn();
 		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
 		const target = getByTestId('target');
 
-		const preventDefault = jest.fn();
+		const preventDefault = vi.fn();
 		
 		// fireEvent doesn't easily allow mocking preventDefault on the event object that reaches the DOM listener
 		// so we'll manually dispatch
@@ -42,18 +43,18 @@ describe('useLongPress', () => {
 	});
 
 	it('should call preventDefault on long press if it was triggered', () => {
-		const onLongPress = jest.fn();
-		const onClick = jest.fn();
+		const onLongPress = vi.fn();
+		const onClick = vi.fn();
 		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
 		const target = getByTestId('target');
 
-		const preventDefault = jest.fn();
+		const preventDefault = vi.fn();
 		
 		const touchStartEvent = new Event('touchstart', { bubbles: true, cancelable: true });
 		target.dispatchEvent(touchStartEvent);
 
 		act(() => {
-			jest.advanceTimersByTime(600);
+			vi.advanceTimersByTime(600);
 		});
 
 		expect(onLongPress).toHaveBeenCalled();
@@ -69,8 +70,8 @@ describe('useLongPress', () => {
 	});
 
 	it('should NOT call onLongPress if dragged', () => {
-		const onLongPress = jest.fn();
-		const onClick = jest.fn();
+		const onLongPress = vi.fn();
+		const onClick = vi.fn();
 		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
 		const target = getByTestId('target');
 
@@ -84,7 +85,7 @@ describe('useLongPress', () => {
 		target.dispatchEvent(touchMoveEvent);
 
 		act(() => {
-			jest.advanceTimersByTime(600);
+			vi.advanceTimersByTime(600);
 		});
 
 		expect(onLongPress).not.toHaveBeenCalled();
@@ -92,8 +93,8 @@ describe('useLongPress', () => {
 	});
 
 	it('should NOT call onLongPress if mouse dragged', () => {
-		const onLongPress = jest.fn();
-		const onClick = jest.fn();
+		const onLongPress = vi.fn();
+		const onClick = vi.fn();
 		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
 		const target = getByTestId('target');
 
@@ -104,7 +105,7 @@ describe('useLongPress', () => {
 		target.dispatchEvent(mouseMoveEvent);
 
 		act(() => {
-			jest.advanceTimersByTime(600);
+			vi.advanceTimersByTime(600);
 		});
 
 		expect(onLongPress).not.toHaveBeenCalled();
@@ -112,8 +113,8 @@ describe('useLongPress', () => {
 	});
 
 	it('should NOT call onLongPress if slightly moved but below threshold', () => {
-		const onLongPress = jest.fn();
-		const onClick = jest.fn();
+		const onLongPress = vi.fn();
+		const onClick = vi.fn();
 		const { getByTestId } = render(<TestComponent onLongPress={onLongPress} onClick={onClick} />);
 		const target = getByTestId('target');
 
@@ -124,7 +125,7 @@ describe('useLongPress', () => {
 		target.dispatchEvent(mouseMoveEvent);
 
 		act(() => {
-			jest.advanceTimersByTime(600);
+			vi.advanceTimersByTime(600);
 		});
 
 		expect(onLongPress).toHaveBeenCalled();

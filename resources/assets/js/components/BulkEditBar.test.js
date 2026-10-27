@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { vi } from 'vitest';
 import BulkEditBar from './BulkEditBar';
 
 describe('BulkEditBar', () => {
@@ -10,8 +11,8 @@ describe('BulkEditBar', () => {
 					isAllowed: true,
 					selectedIds: [1],
 					noun: 'singer',
-					clearSelections: jest.fn(),
-					setIsForcedMobile: jest.fn(),
+					clearSelections: vi.fn(),
+					setIsForcedMobile: vi.fn(),
 					canUpdate: false,
 					canDelete: false,
 				}}

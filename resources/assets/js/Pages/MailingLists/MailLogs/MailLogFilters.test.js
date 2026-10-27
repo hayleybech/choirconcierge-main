@@ -1,29 +1,34 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import MailLogFilters from './MailLogFilters';
 
-jest.mock('../../../components/Filters', () => {
-	const React = require('react');
-	return ({ render }) =>
-		React.createElement(
-			'div',
-			null,
-			render({ subject: '', from: '', type: [], read: '', to: [] }, jest.fn()),
-		);
+vi.mock('../../../components/Filters', async () => {
+	const React = await vi.importActual('react');
+	return {
+		default: ({ render }) =>
+			React.createElement(
+				'div',
+				null,
+				render({ subject: '', from: '', type: [], read: '', to: [] }, vi.fn()),
+			),
+	};
 });
 
-jest.mock('../../../components/inputs/MailingListSelect', () => () => null);
-jest.mock('../../../components/inputs/CheckboxGroup', () => () => null);
-jest.mock('../../../components/inputs/FilterActions', () => () => null);
-jest.mock('../../../components/inputs/RadioGroup', () => {
-	const React = require('react');
-	return ({ label, options }) =>
-		React.createElement(
-			'div',
-			null,
-			label,
-			...options.map(option => React.createElement('span', { key: option.id }, option.name)),
-		);
+vi.mock('../../../components/inputs/MailingListSelect', () => ({ default: () => null }));
+vi.mock('../../../components/inputs/CheckboxGroup', () => ({ default: () => null }));
+vi.mock('../../../components/inputs/FilterActions', () => ({ default: () => null }));
+vi.mock('../../../components/inputs/RadioGroup', async () => {
+	const React = await vi.importActual('react');
+	return {
+		default: ({ label, options }) =>
+			React.createElement(
+				'div',
+				null,
+				label,
+				...options.map(option => React.createElement('span', { key: option.id }, option.name)),
+			),
+	};
 });
 
 const props = { form: {}, mailingLists: [], mailTypes: [] };

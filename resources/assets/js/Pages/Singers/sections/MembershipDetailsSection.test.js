@@ -1,14 +1,15 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { MembershipDetailsSection } from './MembershipDetailsSection';
 
-jest.mock('../../../components/SimplePanel', () => {
-	const React = require('react');
-	return ({ children }) => React.createElement('div', null, children);
+vi.mock('../../../components/SimplePanel', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('div', null, children) };
 });
 
-jest.mock('../components/DetailList', () => {
-	const React = require('react');
+vi.mock('../components/DetailList', async () => {
+	const React = await vi.importActual('react');
 	return {
 		DetailList: ({ children }) => React.createElement('dl', null, children),
 		DetailListItem: ({ label, children }) =>
@@ -16,21 +17,21 @@ jest.mock('../components/DetailList', () => {
 	};
 });
 
-jest.mock('../../../components/Badge', () => () => null);
-jest.mock('../../../components/FeeStatus', () => () => null);
-jest.mock('../../../components/DateTag', () => () => null);
-jest.mock('../../../components/SingerStatusTag', () => () => null);
-jest.mock('../../../components/Icon', () => () => null);
-jest.mock('../../../SingerStatus', () => jest.fn(function () {}));
+vi.mock('../../../components/Badge', () => ({ default: () => null }));
+vi.mock('../../../components/FeeStatus', () => ({ default: () => null }));
+vi.mock('../../../components/DateTag', () => ({ default: () => null }));
+vi.mock('../../../components/SingerStatusTag', () => ({ default: () => null }));
+vi.mock('../../../components/Icon', () => ({ default: () => null }));
+vi.mock('../../../SingerStatus', () => ({ default: vi.fn(function () {}) }));
 
-jest.mock('../../../components/inputs/ButtonV2', () => {
-	const React = require('react');
-	return ({ children, onClick }) => React.createElement('button', { onClick, type: 'button' }, children);
+vi.mock('../../../components/inputs/ButtonV2', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children, onClick }) => React.createElement('button', { onClick, type: 'button' }, children) };
 });
 
-jest.mock('../components/RenewFeesDialog', () => {
-	const React = require('react');
-	return ({ isOpen }) => (isOpen ? React.createElement('div', { 'data-testid': 'renew-fees-dialog' }) : null);
+vi.mock('../components/RenewFeesDialog', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ isOpen }) => (isOpen ? React.createElement('div', { 'data-testid': 'renew-fees-dialog' }) : null) };
 });
 
 const singer = {

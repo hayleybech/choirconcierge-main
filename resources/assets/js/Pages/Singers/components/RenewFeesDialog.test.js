@@ -1,61 +1,64 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useForm, usePage } from '@inertiajs/react';
+import { vi } from 'vitest';
 import RenewFeesDialog from './RenewFeesDialog';
 
-jest.mock('@inertiajs/react', () => ({
-	useForm: jest.fn(),
-	usePage: jest.fn(),
+vi.mock('@inertiajs/react', () => ({
+	useForm: vi.fn(),
+	usePage: vi.fn(),
 }));
 
-jest.mock('../../../hooks/useRoute', () => () => ({ route: name => name }));
+vi.mock('../../../hooks/useRoute', () => ({ default: () => ({ route: name => name }) }));
 
-jest.mock('../../../components/Dialog', () => {
-	const React = require('react');
-	return ({ isOpen, title, okLabel, onOk, children }) =>
-		isOpen ? (
-			<div>
-				<h1>{title}</h1>
-				{children}
-				<button type="button" onClick={onOk}>
-					{okLabel}
-				</button>
-			</div>
-		) : null;
+vi.mock('../../../components/Dialog', async () => {
+	const React = await vi.importActual('react');
+	return {
+		default: ({ isOpen, title, okLabel, onOk, children }) =>
+			isOpen
+				? React.createElement(
+						'div',
+						null,
+						React.createElement('h1', null, title),
+						children,
+						React.createElement('button', { type: 'button', onClick: onOk }, okLabel),
+					)
+				: null,
+	};
 });
 
-jest.mock('../../../components/Form', () => {
-	const React = require('react');
-	return ({ children, onSubmit }) => <form onSubmit={onSubmit}>{children}</form>;
+vi.mock('../../../components/Form', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children, onSubmit }) => React.createElement('form', { onSubmit }, children) };
 });
 
-jest.mock('../../../components/inputs/DateTextInput', () => {
-	const React = require('react');
-	return ({ name, value }) => React.createElement('input', { name, value, readOnly: true });
+vi.mock('../../../components/inputs/DateTextInput', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ name, value }) => React.createElement('input', { name, value, readOnly: true }) };
 });
 
-jest.mock('../../../components/inputs/RadioGroup', () => ({ label }) => <div>{label}</div>);
+vi.mock('../../../components/inputs/RadioGroup', () => ({ default: ({ label }) => <div>{label}</div> }));
 
 const mockedUseForm = useForm;
 const mockedUsePage = usePage;
-const mockPost = jest.fn();
+const mockPost = vi.hoisted(() => vi.fn());
 
 beforeEach(() => {
-	jest.clearAllMocks();
+	vi.clearAllMocks();
 	mockedUsePage.mockReturnValue({ props: { tenant: { fee_freq: 'year' } } });
 	mockedUseForm.mockReturnValue({
 		data: { freq: 'year', paid_until: null },
-		setData: jest.fn(),
-		put: jest.fn(),
+		setData: vi.fn(),
+		put: vi.fn(),
 		post: mockPost,
 		errors: {},
-		transform: jest.fn(),
+		transform: vi.fn(),
 	});
 });
 
 it('submits the selected singers through the bulk renewal action', () => {
-	const setIsOpen = jest.fn();
-	const onSuccess = jest.fn();
+	const setIsOpen = vi.fn();
+	const onSuccess = vi.fn();
 
 	render(
 		<RenewFeesDialog

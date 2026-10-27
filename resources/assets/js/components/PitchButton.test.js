@@ -1,11 +1,12 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import { loaded, start } from 'tone';
 import PitchButton from './PitchButton';
 
-jest.mock('tone', () => ({
-	loaded: jest.fn(),
-	start: jest.fn(),
+vi.mock('tone', () => ({
+	loaded: vi.fn(),
+	start: vi.fn(),
 }));
 
 describe('PitchButton', () => {
@@ -19,7 +20,7 @@ describe('PitchButton', () => {
 			calls.push('loaded');
 			return Promise.resolve();
 		});
-		const instrument = { instrument: { triggerAttack: jest.fn() } };
+		const instrument = { instrument: { triggerAttack: vi.fn() } };
 		const { getByRole } = render(<PitchButton instrument={instrument} note="C" />);
 
 		fireEvent.mouseDown(getByRole('button'));

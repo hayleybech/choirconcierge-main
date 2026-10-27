@@ -1,10 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import IndexContainer from './IndexContainer';
 
-const mockUseMediaQuery = jest.fn();
+const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
 
-jest.mock('react-responsive', () => ({
+vi.mock('react-responsive', () => ({
 	useMediaQuery: (...args) => mockUseMediaQuery(...args),
 }));
 

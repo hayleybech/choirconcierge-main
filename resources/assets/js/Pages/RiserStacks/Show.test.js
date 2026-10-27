@@ -1,21 +1,22 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { usePage } from '@inertiajs/react';
 import Show from './Show';
 
-jest.mock('@inertiajs/react', () => ({
-    usePage: jest.fn(),
+vi.mock('@inertiajs/react', () => ({
+    usePage: vi.fn(),
     Link: ({ children, ...props }) => <a {...props}>{children}</a>,
 }));
 
-jest.mock('../../Layouts/TenantLayout', () => ({ children }) => <div>{children}</div>);
-jest.mock('../../components/PageTopBar', () => ({
+vi.mock('../../Layouts/TenantLayout', () => ({ default: ({ children }) => <div>{children}</div> }));
+vi.mock('../../components/PageTopBar', () => ({
     __esModule: true,
     default: ({ children }) => <div>{children}</div>,
     PageActionsMenu: ({ children }) => <div>{children}</div>,
     PageTopNavigation: () => null,
 }));
-jest.mock('../../components/PageHeader/PageHeader', () => ({
+vi.mock('../../components/PageHeader/PageHeader', () => ({
     PageHeader: ({ children }) => <div>{children}</div>,
     PageHeaderActions: ({ children }) => <div>{children}</div>,
     PageHeaderBreadcrumbs: () => null,
@@ -23,14 +24,14 @@ jest.mock('../../components/PageHeader/PageHeader', () => ({
     PageHeaderMeta: ({ children }) => <div>{children}</div>,
     PageHeaderTitle: ({ children }) => <div>{children}</div>,
 }));
-jest.mock('../../components/AppHead', () => () => null);
-jest.mock('../../components/DateTag', () => () => null);
-jest.mock('../../components/DeleteDialog', () => () => null);
-jest.mock('../../components/Badge', () => ({ children }) => <span>{children}</span>);
-jest.mock('../../components/RiserStack/RiserStackEditor', () => () => (
+vi.mock('../../components/AppHead', () => ({ default: () => null }));
+vi.mock('../../components/DateTag', () => ({ default: () => null }));
+vi.mock('../../components/DeleteDialog', () => ({ default: () => null }));
+vi.mock('../../components/Badge', () => ({ default: ({ children }) => <span>{children}</span> }));
+vi.mock('../../components/RiserStack/RiserStackEditor', () => ({ default: () => (
     <svg data-testid="riser-stack-editor" />
-));
-jest.mock('../../hooks/useRoute', () => () => ({ route: jest.fn(() => '#') }));
+)}));
+vi.mock('../../hooks/useRoute', () => ({ default: () => ({ route: vi.fn(() => '#') }) }));
 
 describe('RiserStacks/Show', () => {
     beforeEach(() => {

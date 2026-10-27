@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import { SidebarProvider, useSidebar } from './sidebar-context';
 
 const SidebarAction = ({ value }) => {
@@ -14,7 +15,7 @@ describe('SidebarProvider', () => {
 	});
 
 	it('opens the local sidebar outside a React Native WebView', () => {
-		const setSidebarOpen = jest.fn();
+		const setSidebarOpen = vi.fn();
 
 		render(
 			<SidebarProvider setSidebarOpen={setSidebarOpen}>
@@ -28,8 +29,8 @@ describe('SidebarProvider', () => {
 	});
 
 	it('asks the React Native host to open the sidebar in a WebView', () => {
-		const setSidebarOpen = jest.fn();
-		const postMessage = jest.fn();
+		const setSidebarOpen = vi.fn();
+		const postMessage = vi.fn();
 		window.ReactNativeWebView = { postMessage };
 
 		render(
@@ -45,8 +46,8 @@ describe('SidebarProvider', () => {
 	});
 
 	it('still closes the local sidebar in a WebView', () => {
-		const setSidebarOpen = jest.fn();
-		window.ReactNativeWebView = { postMessage: jest.fn() };
+		const setSidebarOpen = vi.fn();
+		window.ReactNativeWebView = { postMessage: vi.fn() };
 
 		render(
 			<SidebarProvider setSidebarOpen={setSidebarOpen}>

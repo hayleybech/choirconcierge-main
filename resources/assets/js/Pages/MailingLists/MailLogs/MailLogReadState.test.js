@@ -1,28 +1,29 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { vi } from 'vitest';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import MailLogTableMobile from './MailLogTableMobile';
 
-jest.mock('@inertiajs/react', () => {
-	const React = require('react');
+vi.mock('@inertiajs/react', async () => {
+	const React = await vi.importActual('react');
 	return { Link: ({ children, ...props }) => React.createElement('a', props, children) };
 });
 
-jest.mock('../../../hooks/useRoute', () => () => ({ route: name => `/${name}` }));
-jest.mock('../../../components/Icon', () => () => null);
-jest.mock('../../../components/DateTag', () => () => null);
-jest.mock('../../../components/Pagination', () => () => null);
-jest.mock('../../../components/MailStatusTag', () => ({
+vi.mock('../../../hooks/useRoute', () => ({ default: () => ({ route: name => `/${name}` }) }));
+vi.mock('../../../components/Icon', () => ({ default: () => null }));
+vi.mock('../../../components/DateTag', () => ({ default: () => null }));
+vi.mock('../../../components/Pagination', () => ({ default: () => null }));
+vi.mock('../../../components/MailStatusTag', () => ({
 	__esModule: true,
 	default: () => null,
 	mailTypeIcons: { broadcast: 'mail' },
 }));
-jest.mock('../../../components/TableHeadingSort', () => {
-	const React = require('react');
-	return ({ children }) => React.createElement('span', null, children);
+vi.mock('../../../components/TableHeadingSort', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('span', null, children) };
 });
-jest.mock('../../../components/Table', () => {
-	const React = require('react');
+vi.mock('../../../components/Table', async () => {
+	const React = await vi.importActual('react');
 	return {
 		__esModule: true,
 		default: ({ children }) => React.createElement('table', null, children),
@@ -32,8 +33,8 @@ jest.mock('../../../components/Table', () => {
 		TableHeading: ({ children }) => React.createElement('th', null, children),
 	};
 });
-jest.mock('../../../components/TableMobile', () => {
-	const React = require('react');
+vi.mock('../../../components/TableMobile', async () => {
+	const React = await vi.importActual('react');
 	return {
 		__esModule: true,
 		default: ({ children }) => React.createElement('ul', null, children),
@@ -41,9 +42,9 @@ jest.mock('../../../components/TableMobile', () => {
 		TableMobileLink: ({ children, url }) => React.createElement('a', { href: url }, children),
 	};
 });
-jest.mock('../../../components/inputs/ButtonV2', () => {
-	const React = require('react');
-	return ({ children }) => React.createElement('button', null, children);
+vi.mock('../../../components/inputs/ButtonV2', async () => {
+	const React = await vi.importActual('react');
+	return { default: ({ children }) => React.createElement('button', null, children) };
 });
 
 const log = {
@@ -69,7 +70,7 @@ describe('mail log read-state presentation', () => {
 		[
 			'mobile',
 			MailLogTableMobile,
-			{ showAdminDetails: true, hasNonDefaultFilters: false, setShowFilters: jest.fn() },
+			{ showAdminDetails: true, hasNonDefaultFilters: false, setShowFilters: vi.fn() },
 			'li',
 		],
 	])('hides read styling on the %s table when inbox is disabled', (name, Table, props, rowTag) => {
