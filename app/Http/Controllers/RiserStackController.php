@@ -42,8 +42,13 @@ class RiserStackController extends Controller
         return QueryBuilder::for(RiserStack::class)
             ->with('ensembles')
             ->allowedFilters([
+                AllowedFilter::callback('search', static function (Builder $query, string $value): void {
+                    $query->where('title', 'like', "%{$value}%");
+                }),
                 AllowedFilter::exact('ensembles.id'),
             ])
+            ->allowedSorts(['title', 'created_at'])
+            ->defaultSort('title')
             ->forEnsembles()
             ->paginate(20)
             ->appends(request()->query());

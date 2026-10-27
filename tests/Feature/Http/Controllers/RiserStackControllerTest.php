@@ -69,6 +69,41 @@ class RiserStackControllerTest extends TestCase
             );
     }
 
+    public function test_index_filters_by_title_search(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        $matchingStack = RiserStack::factory()->create(['title' => 'Concert Formation']);
+        RiserStack::factory()->create(['title' => 'Rehearsal Formation']);
+
+        $this->get(the_tenant_route('stacks.index', ['filter' => ['search' => 'Concert']]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('stacks.data', 1)
+                ->where('stacks.data.0.id', $matchingStack->id)
+            );
+    }
+
+    public function test_index_sorts_stacks_by_title_and_creation_date(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        RiserStack::factory()->create(['title' => 'Zulu Stack', 'created_at' => now()->subDay()]);
+        RiserStack::factory()->create(['title' => 'Alpha Stack', 'created_at' => now()]);
+
+        $this->get(the_tenant_route('stacks.index', ['sort' => 'title']))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('stacks.data.0.title', 'Alpha Stack')
+                ->where('stacks.data.1.title', 'Zulu Stack')
+            );
+
+        $this->get(the_tenant_route('stacks.index', ['sort' => 'created_at']))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('stacks.data.0.title', 'Zulu Stack')
+                ->where('stacks.data.1.title', 'Alpha Stack')
+            );
+    }
+
     public function test_index_hides_stacks_outside_user_ensembles_for_non_managers(): void
     {
         $user = $this->createUserWithRole('Members'); 

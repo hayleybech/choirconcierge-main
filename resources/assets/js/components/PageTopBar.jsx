@@ -4,11 +4,8 @@ import { Menu, Transition } from '@headlessui/react';
 import React, { Fragment } from 'react';
 import Breadcrumbs from './PageHeader/Breadcrumbs';
 import { useMediaQuery } from 'react-responsive';
-import { useSidebar } from '../contexts/sidebar-context';
 
-const PageTopBar = ({ children }) => {
-	const { setSidebarOpen } = useSidebar()
-
+const PageTopBar = ({ children, setSidebarOpen }) => {
 	return (
 		<div className="sticky top-0 left-0 right-0 z-40 flex h-[47px] shrink-0 items-center justify-between border-b border-gray-300 bg-white xl:hidden">
 			<DrawerOpenButton setOpen={setSidebarOpen} />

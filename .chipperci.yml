@@ -1,0 +1,43 @@
+# Rename this file .chipperci.yml
+# and put it in the root of your project
+version: 1
+
+environment:
+  php: 8.4
+  node: 22
+
+services:
+  - mysql: 8
+
+pipeline:
+  - name: Setup
+    cmd: |
+      cp -v .env.example .env
+      # aws s3 cp s3://my-secret-bucket/env-ci .env
+      
+      # Turning this off by default to be safe
+      # Might need to run this again if local/Herd composer has self-updated
+      sudo composer self-update --2
+      
+      composer install --no-interaction --prefer-dist --optimize-autoloader
+      
+      php artisan key:generate
+      php artisan ziggy:generate
+
+  - name: Install Puppeteer Dependencies
+    cmd: |
+      sudo apt-get update
+      sudo apt-get install -y xvfb libnss3 libgtk-3-dev libasound2
+
+  - name: Assets
+    cmd: |
+      npm ci 
+      npm run build
+
+  - name: PHP Unit Tests
+    cmd: |
+      php artisan test
+
+  - name: JS Unit Tests
+    cmd: |
+      npm test
