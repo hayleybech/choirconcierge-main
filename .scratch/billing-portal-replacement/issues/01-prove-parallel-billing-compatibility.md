@@ -8,7 +8,8 @@
 
 - [x] The coordinated namespace-isolated Cashier Paddle 1.x and Spark forks resolve alongside Cashier Paddle 2.x and Subscriptionify.
 - [x] Verification demonstrates that existing Spark portal and Classic webhook behavior continues to work, while Billing events and operations are handled only by the new integration.
-- [ ] Current Paddle migration-tool requirements are confirmed, including required Billing transactions/renewal and the supported handling of trialing, paused, past-due, scheduled-to-cancel, and discounted subscriptions.
+- [x] Paddle confirms paused and past-due subscriptions can be migrated, successful imports silently cancel the Classic subscription, and failed imports do not; scheduled-to-cancel subscriptions cannot be migrated, and Spark-only no-card trials are not Paddle Classic subscriptions.
+- [ ] Remaining Paddle migration requirements are confirmed, including completed Billing transaction/renewal prerequisites and preservation of previously granted legacy discounts.
 - [x] If the coexistence or migration assumptions fail, the result identifies the incompatibility and a concrete decision needed before dependent implementation proceeds.
 
 ## Comments
@@ -29,6 +30,13 @@
 - Kept legacy data in `customers`, `subscriptions`, and `receipts`. Billing Cashier models/migration use `billing_customers`, `billing_subscriptions`, `billing_subscription_items`, and `billing_transactions`. Published Subscriptionify migrations use `ent_plans`, `ent_features`, `ent_plan_features`, `ent_subscriptions`, `ent_feature_usage`, and `ent_feature_grants`, separate from both Cashier and Pennant's `features` table.
 - Added `tests/Feature/BillingProviderCompatibilityTest.php` to assert route/controller separation, model table mapping, and real coexistence of the legacy, Billing, and entitlement tables. `php artisan test --compact` completed with 520 passed, 11 incomplete, and 18 skipped; the focused compatibility tests pass (2 tests, 21 assertions). `npm run build` and `composer validate --no-check-publish` also succeed.
 - The bundled `composer.phar` does not provide the `audit` command, so a separate Composer advisory scan could not be run. The Laravel 11 security constraint was resolved by upgrading rather than bypassing the advisory.
-- Paddle still needs to confirm exact preservation/handling of an already-running trial expiry, period-end scheduled cancellation, and previously granted legacy discount terms. Those migration gates keep the ticket `ready-for-human` until Paddle-specific confirmation is recorded.
+- At this stage, Paddle had not confirmed exact handling of an already-running trial expiry, period-end scheduled cancellation, or previously granted legacy discount terms. Later product-owner confirmations below supersede the open questions about trial source and scheduled cancellations; legacy discount preservation remains unconfirmed.
+
+### Paddle migration confirmations — 2026-10-27
+
+- The product owner confirmed that Paddle Billing can migrate paused and past-due plans. The only legacy trials in scope are Spark trials that allow trial access without a credit card; these are Spark-side trials and will not exist as subscriptions in Paddle Classic. If recreated in Billing, their original expiry must be preserved rather than starting a new trial period.
+- The product owner confirmed that a successful migration silently cancels the subscription in Paddle Classic without disrupting the customer; if the import into Paddle Billing fails, the Classic subscription is not silently cancelled.
+- The product owner confirmed that subscriptions scheduled to cancel at period end cannot be migrated. Once cutover begins, final cutover completion must wait until these pending cancellations expire; access remains through each paid-through date.
+- These confirmations supersede the earlier open questions about trial and scheduled-cancellation support. The transaction/renewal prerequisite and preservation of previously granted legacy discounts remain confirmation gates, so the ticket stays `ready-for-human`.
 
 References: [Paddle migration prerequisites and import behavior](https://developer.paddle.com/migrate/start/port-data), [Paddle technical data mapping](https://developer.paddle.com/migrate/plan/data-mapping), [Cashier Paddle](https://github.com/laravel/cashier-paddle), and [Subscriptionify](https://github.com/revoltify/subscriptionify).
