@@ -9,7 +9,9 @@
 - [x] The coordinated namespace-isolated Cashier Paddle 1.x and Spark forks resolve alongside Cashier Paddle 2.x and Subscriptionify.
 - [x] Verification demonstrates that existing Spark portal and Classic webhook behavior continues to work, while Billing events and operations are handled only by the new integration.
 - [x] Paddle confirms paused and past-due subscriptions can be migrated, successful imports silently cancel the Classic subscription, and failed imports do not; scheduled-to-cancel subscriptions cannot be migrated, and Spark-only no-card trials are not Paddle Classic subscriptions.
-- [ ] Remaining Paddle migration requirements are confirmed, including completed Billing transaction/renewal prerequisites and preservation of previously granted legacy discounts.
+- [x] Paddle confirms migration prerequisites: at least one completed Paddle Billing checkout/transaction and at least one Paddle Billing subscription renewal.
+- [x] Paddle confirms discounts can be migrated with the migration tool, though the discount definitions may need to be created in the Paddle Billing dashboard first.
+- [ ] Determine which discount definitions must be created in the Paddle Billing dashboard and verify previously granted legacy discount terms are preserved.
 - [x] If the coexistence or migration assumptions fail, the result identifies the incompatibility and a concrete decision needed before dependent implementation proceeds.
 
 ## Comments
@@ -37,6 +39,8 @@
 - The product owner confirmed that Paddle Billing can migrate paused and past-due plans. The only legacy trials in scope are Spark trials that allow trial access without a credit card; these are Spark-side trials and will not exist as subscriptions in Paddle Classic. If recreated in Billing, their original expiry must be preserved rather than starting a new trial period.
 - The product owner confirmed that a successful migration silently cancels the subscription in Paddle Classic without disrupting the customer; if the import into Paddle Billing fails, the Classic subscription is not silently cancelled.
 - The product owner confirmed that subscriptions scheduled to cancel at period end cannot be migrated. Once cutover begins, final cutover completion must wait until these pending cancellations expire; access remains through each paid-through date.
-- These confirmations supersede the earlier open questions about trial and scheduled-cancellation support. The transaction/renewal prerequisite and preservation of previously granted legacy discounts remain confirmation gates, so the ticket stays `ready-for-human`.
+- The product owner confirmed migration requires at least one completed checkout/transaction in Paddle Billing and at least one Paddle Billing subscription renewal. These must be completed before starting migration.
+- The product owner confirmed that discounts can be migrated with the migration tool, but the corresponding discounts may need to be recreated in the Paddle Billing dashboard first. The exact preservation of previously granted legacy discount terms remains to be verified.
+- These confirmations supersede the earlier open questions about trial, scheduled-cancellation, and transaction/renewal requirements. Legacy discount setup and preservation remain open, so the ticket stays `ready-for-human`.
 
 References: [Paddle migration prerequisites and import behavior](https://developer.paddle.com/migrate/start/port-data), [Paddle technical data mapping](https://developer.paddle.com/migrate/plan/data-mapping), [Cashier Paddle](https://github.com/laravel/cashier-paddle), and [Subscriptionify](https://github.com/revoltify/subscriptionify).
