@@ -28,6 +28,12 @@ const Index = ({ categories, ensembles, canManageCategories }) => {
 							Categories help members find conversations relevant to their choir.
 						</p>
 					</div>
+					<Link
+						href={route('forum.following.index')}
+						className="text-sm font-semibold text-purple-700 hover:text-purple-900"
+					>
+						Followed discussions
+					</Link>
 					{canManageCategories && !activeForm && (
 						<button
 							type="button"

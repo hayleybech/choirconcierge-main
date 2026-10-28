@@ -104,6 +104,22 @@ const Show = ({ category, topic, replies, canModerate, canReply }) => {
 							<p className="mt-4 text-xs text-gray-500">
 								Started by {topic.author_name} · {new Date(topic.created_at).toLocaleString()}
 							</p>
+							<div className="mt-3 flex flex-wrap items-center gap-3">
+								{!topic.is_deleted && (
+									<button
+										type="button"
+										className="text-sm font-semibold text-purple-700 hover:text-purple-900"
+										onClick={() =>
+											topic.is_following
+											? router.delete(route('forum.topics.unfollow', { forum_topic: topic.id }), { preserveScroll: true })
+											: router.put(route('forum.topics.follow', { forum_topic: topic.id }), {}, { preserveScroll: true })
+										}
+									>
+										{topic.is_following ? 'Unfollow discussion' : 'Follow discussion'}
+									</button>
+								)}
+								{!topic.is_deleted && <ReactionBar targetType="topics" targetId={topic.id} reactions={topic.reactions} />}
+							</div>
 						</>
 					)}
 				</article>
@@ -239,6 +255,7 @@ const ReplyCard = ({ reply, canModerate, onReply }) => {
 			) : (
 				<>
 					<Prose content={reply.body_html} className="text-sm text-gray-800" />
+					{!reply.is_deleted && <ReactionBar targetType="replies" targetId={reply.id} reactions={reply.reactions} />}
 					<div className="mt-3 flex flex-wrap items-center justify-between gap-2">
 						<p className="text-xs text-gray-500">
 							{reply.author_name} · {new Date(reply.created_at).toLocaleString()}
@@ -281,6 +298,43 @@ const ReplyCard = ({ reply, canModerate, onReply }) => {
 				</>
 			)}
 		</article>
+	);
+};
+
+const ReactionBar = ({ targetType, targetId, reactions }) => {
+	const { route } = useRoute();
+	const availableEmojis = ['👍', '❤️', '😂', '🎉', '👀'];
+	const reactionRoute = `forum.${targetType}.reactions`;
+	const toggleReaction = emoji => {
+		const existingReaction = reactions.find(reaction => reaction.emoji === emoji && reaction.reacted);
+		const url = route(`${reactionRoute}.${existingReaction ? 'destroy' : 'store'}`, {
+			[targetType === 'topics' ? 'forum_topic' : 'forum_reply']: targetId,
+		});
+
+		if (existingReaction) {
+			router.delete(url, { data: { emoji }, preserveScroll: true });
+		} else {
+			router.post(url, { emoji }, { preserveScroll: true });
+		}
+	};
+
+	return (
+		<div className="mt-3 flex flex-wrap gap-2" aria-label="Reactions">
+			{[...new Set([...availableEmojis, ...reactions.map(reaction => reaction.emoji)])].map(emoji => {
+				const reaction = reactions.find(item => item.emoji === emoji);
+				return (
+					<button
+						key={emoji}
+						type="button"
+						aria-pressed={Boolean(reaction?.reacted)}
+						className={`rounded-full border px-2 py-1 text-sm ${reaction?.reacted ? 'border-purple-500 bg-purple-50' : 'border-gray-200 bg-white'}`}
+						onClick={() => toggleReaction(emoji)}
+					>
+						{emoji}{reaction ? ` ${reaction.count}` : ''}
+					</button>
+				);
+			})}
+		</div>
 	);
 };
 

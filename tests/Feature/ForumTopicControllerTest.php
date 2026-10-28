@@ -322,6 +322,12 @@ test('topic routes do not expose content from another tenant', function () {
     $this->actingAs($membership->user)
         ->get(the_tenant_route('forum.topics.show', ['forum_topic' => $otherTopic->id]))
         ->assertNotFound();
+    $this->actingAs($membership->user)
+        ->put(the_tenant_route('forum.topics.follow', ['forum_topic' => $otherTopic->id]))
+        ->assertNotFound();
+    $this->actingAs($membership->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $otherTopic->id]), ['emoji' => '👍'])
+        ->assertNotFound();
 });
 
 test('inactive members cannot read forum topics', function () {
@@ -332,4 +338,91 @@ test('inactive members cannot read forum topics', function () {
     $this->actingAs($membership->user)
         ->get(the_tenant_route('forum.topics.show', ['forum_topic' => $topic]))
         ->assertForbidden();
+});
+
+test('members can add and remove distinct emoji reactions on accessible topics and replies', function () {
+    $member = createForumTopicMember();
+    $otherMember = createForumTopicMember();
+    $topic = createForumTopic(ForumCategory::factory()->create(), $member);
+    $reply = ForumReply::create([
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $member->id,
+        'body' => 'A reply to react to.',
+    ]);
+
+    $this->actingAs($member->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $topic]), ['emoji' => 'not-an-emoji'])
+        ->assertSessionHasErrors('emoji');
+
+    $this->actingAs($member->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $topic]), ['emoji' => '👍'])
+        ->assertRedirect();
+    $this->actingAs($member->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $topic]), ['emoji' => '👍'])
+        ->assertRedirect();
+    $this->actingAs($member->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $topic]), ['emoji' => '❤️'])
+        ->assertRedirect();
+    $this->actingAs($otherMember->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $topic]), ['emoji' => '👍'])
+        ->assertRedirect();
+    $this->actingAs($otherMember->user)
+        ->post(the_tenant_route('forum.replies.reactions.store', ['forum_reply' => $reply]), ['emoji' => '👍'])
+        ->assertRedirect();
+
+    $this->actingAs($member->user)
+        ->get(the_tenant_route('forum.topics.show', ['forum_topic' => $topic]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('topic.reactions.0.emoji', '👍')
+            ->where('topic.reactions.0.count', 2)
+            ->where('topic.reactions.0.reacted', true)
+            ->where('replies.0.reactions.0.emoji', '👍')
+            ->where('replies.0.reactions.0.reacted', false)
+        );
+
+    $this->actingAs($member->user)
+        ->delete(the_tenant_route('forum.topics.reactions.destroy', ['forum_topic' => $topic]), ['emoji' => '👍'])
+        ->assertRedirect();
+
+    expect($topic->reactions()->where('emoji', '👍')->count())->toBe(1)
+        ->and($topic->reactions()->where('emoji', '❤️')->count())->toBe(1);
+});
+
+test('members can follow accessible topics and followed topics exclude inaccessible categories', function () {
+    $member = createForumTopicMember();
+    $ensemble = Ensemble::factory()->create();
+    $restrictedCategory = ForumCategory::factory()->create(['is_choir_wide' => false]);
+    $restrictedCategory->ensembles()->attach($ensemble);
+    $accessibleTopic = createForumTopic(ForumCategory::factory()->create(), $member);
+    $restrictedTopic = createForumTopic($restrictedCategory, $member);
+
+    $this->actingAs($member->user)
+        ->put(the_tenant_route('forum.topics.follow', ['forum_topic' => $accessibleTopic]))
+        ->assertRedirect();
+    $this->actingAs($member->user)
+        ->put(the_tenant_route('forum.topics.follow', ['forum_topic' => $accessibleTopic]))
+        ->assertRedirect();
+    $this->actingAs($member->user)
+        ->put(the_tenant_route('forum.topics.follow', ['forum_topic' => $restrictedTopic]))
+        ->assertForbidden();
+    $this->actingAs($member->user)
+        ->post(the_tenant_route('forum.topics.reactions.store', ['forum_topic' => $restrictedTopic]), ['emoji' => '👍'])
+        ->assertForbidden();
+
+    $member->forumTopicFollows()->create(['forum_topic_id' => $restrictedTopic->id]);
+
+    $this->actingAs($member->user)
+        ->get(the_tenant_route('forum.following.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Forum/Topics/Following')
+            ->has('topics', 1)
+            ->where('topics.0.id', $accessibleTopic->id)
+        );
+
+    $this->actingAs($member->user)
+        ->delete(the_tenant_route('forum.topics.unfollow', ['forum_topic' => $accessibleTopic]))
+        ->assertRedirect();
+
+    expect($member->followedForumTopics()->where('forum_topic_id', $accessibleTopic->id)->exists())->toBeFalse();
 });

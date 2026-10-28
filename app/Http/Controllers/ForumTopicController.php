@@ -94,6 +94,7 @@ class ForumTopicController extends Controller
                     'is_deleted' => $reply->trashed(),
                     'can_edit' => $canEditReply,
                     'can_restore' => $canRestoreReply,
+                    'reactions' => $this->reactionsFor($reply, $user->membership->id),
                 ];
             });
 
@@ -110,6 +111,8 @@ class ForumTopicController extends Controller
                 'is_pinned' => $topic->is_pinned,
                 'is_deleted' => $topic->trashed(),
                 'can_edit' => $canEditTopic,
+                'is_following' => $user->membership->forumTopicFollows()->where('forum_topic_id', $topic->id)->exists(),
+                'reactions' => $this->reactionsFor($topic, $user->membership->id),
             ],
             'replies' => $replies,
             'canModerate' => $canModerate,
@@ -219,5 +222,19 @@ class ForumTopicController extends Controller
 
         return back()->with(['status' => 'Reply restored.']);
     }
-}
 
+    /** @return array<int, array{emoji: string, count: int, reacted: bool}> */
+    private function reactionsFor(ForumTopic|ForumReply $target, int $membershipId): array
+    {
+        return $target->reactions()
+            ->get()
+            ->groupBy('emoji')
+            ->map(fn ($reactions, string $emoji): array => [
+                'emoji' => $emoji,
+                'count' => $reactions->count(),
+                'reacted' => $reactions->contains('membership_id', $membershipId),
+            ])
+            ->values()
+            ->all();
+    }
+}

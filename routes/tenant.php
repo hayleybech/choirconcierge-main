@@ -23,6 +23,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\ForumCategoryController;
 use App\Http\Controllers\ForumTopicController;
+use App\Http\Controllers\ForumReactionController;
+use App\Http\Controllers\ForumTopicFollowController;
 use App\Http\Controllers\ExportMemberController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
@@ -300,6 +302,10 @@ Route::middleware([
 
             // Forum categories module
             Route::prefix('forum')->name('forum.')->group(function () {
+                Route::get('following', [ForumTopicFollowController::class, 'index'])->name('following.index');
+                Route::put('topics/{forum_topic}/follow', [ForumTopicFollowController::class, 'follow'])->name('topics.follow');
+                Route::delete('topics/{forum_topic}/follow', [ForumTopicFollowController::class, 'unfollow'])->name('topics.unfollow');
+
                 Route::resource('categories', ForumCategoryController::class)
                     ->parameters(['categories' => 'forum_category'])
                     ->only(['index', 'store', 'update', 'destroy']);
@@ -326,6 +332,14 @@ Route::middleware([
                     ->name('replies.update');
                 Route::delete('replies/{forum_reply}', [ForumTopicController::class, 'destroyReply'])
                     ->name('replies.destroy');
+                Route::post('topics/{forum_topic}/reactions', [ForumReactionController::class, 'storeTopic'])
+                    ->name('topics.reactions.store');
+                Route::delete('topics/{forum_topic}/reactions', [ForumReactionController::class, 'destroyTopic'])
+                    ->name('topics.reactions.destroy');
+                Route::post('replies/{forum_reply}/reactions', [ForumReactionController::class, 'storeReply'])
+                    ->name('replies.reactions.store');
+                Route::delete('replies/{forum_reply}/reactions', [ForumReactionController::class, 'destroyReply'])
+                    ->name('replies.reactions.destroy');
                 Route::post('replies/{forum_reply}/restore', [ForumTopicController::class, 'restoreReply'])
                     ->name('replies.restore');
             });

@@ -403,6 +403,17 @@ class Membership extends Model
         return $this->roles->contains(fn(Role $role) => collect($role->abilities)->contains($ability));
     }
 
+    public function forumTopicFollows(): HasMany
+    {
+        return $this->hasMany(ForumTopicFollow::class);
+    }
+
+    public function followedForumTopics(): BelongsToMany
+    {
+        return $this->belongsToMany(ForumTopic::class, 'forum_topic_follows', 'membership_id', 'forum_topic_id')
+            ->withTimestamps();
+    }
+
     /**
      * Find out if the Singer a specific role
      *
