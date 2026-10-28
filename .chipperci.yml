@@ -29,6 +29,7 @@ pipeline:
 
   - name: PHP Unit Tests
     cmd: |
+      mysql -e "grant all privileges on *.* to chipperci@'%' with grant option;"
       php artisan test --parallel --processes=4
 
   - name: JS Unit Tests
