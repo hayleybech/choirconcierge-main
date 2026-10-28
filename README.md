@@ -4,11 +4,11 @@
 ### Initial setup
 - Clone repo
 - Install (and link) php 8.2
-- Install node 20
-- `nvm use 20`
+- Install Node 22
+- `nvm use 22`
 - `herd composer install`
-- `npm install`
-- `npm run dev`
+- `corepack pnpm install`
+- `corepack pnpm dev`
 
 ### Environment variables
 - `herd php artisan key:generate`

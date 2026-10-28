@@ -4,7 +4,7 @@ The visual-regression suite uses Pest's browser plugin and Playwright to capture
 
 ## Prerequisites
 
-- Install the project's PHP and JavaScript dependencies with `composer install` and `npm install`.
+- Install the project's PHP and JavaScript dependencies with `composer install` and `corepack pnpm install`.
 - Configure `.env.testing` to use a dedicated MySQL test database. Browser tests require `APP_ENV=testing`, the MySQL connection, and a configured database name; they refresh the test database and create synthetic screenshot fixtures. Do not point `.env.testing` at production or everyday local data.
 - Install Playwright's Chromium browser once with `composer visual:install`.
 - The capture runner builds the frontend before running the browser test.
@@ -21,7 +21,7 @@ composer visual:test
 composer visual:audit
 
 # Run the visual runner, audit, and gallery JavaScript tests.
-npm run test:visual
+corepack pnpm test:visual
 ```
 
 `composer visual:test` is the shared entry point for local use and external CI. A normal local run captures screenshots but does not compare against baselines. It replaces the previous `Latest` and `Diffs` output, so save any artifacts you need before running it again.

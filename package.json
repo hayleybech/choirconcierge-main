@@ -1,11 +1,17 @@
 {
     "private": true,
+    "packageManager": "pnpm@12.15.0",
+    "engines": {
+        "node": "22.x"
+    },
     "scripts": {
+        "preinstall": "node scripts/enforce-pnpm.js",
         "dev": "vite",
         "build": "vite build",
         "watch": "vite build --watch",
         "prettier": "prettier",
         "test": "vitest run",
+        "test:package-manager": "node --test scripts/enforce-pnpm.test.js",
         "test:visual": "node --test scripts/visual-regression-runner.test.js scripts/visual-regression-audit.test.js scripts/visual-regression-gallery.test.js",
         "icon": "node scripts/render-fontawesome-icon.js"
     },

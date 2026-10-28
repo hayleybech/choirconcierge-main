@@ -32,7 +32,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Frontend Bundling
 
-- If a frontend change doesn't show in the UI or you get a "Unable to locate file in Vite manifest" error, run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- If a frontend change doesn't show in the UI or you get a "Unable to locate file in Vite manifest" error, run `corepack pnpm run build` or ask the user to run `corepack pnpm run dev` or `composer run dev`.
 
 ## Documentation Files
 
@@ -260,10 +260,10 @@ php artisan queue:work
 #### Frontend (Vite)
 
 ```sh
-npm run dev
-npm run build
-npm test
-npm run prettier
+corepack pnpm dev
+corepack pnpm build
+corepack pnpm test
+corepack pnpm prettier
 ```
 
 For tests, create a `choirconcierge_test` database and configure `.env.testing` to use it. `phpunit.xml` configures the test queue, cache, mail, Telescope, and stop-on-failure behavior.

@@ -23,8 +23,8 @@ pipeline:
 
   - name: Assets
     cmd: |
-      npm ci 
-      npm run build
+      corepack pnpm install --frozen-lockfile
+      corepack pnpm build
 
   - name: PHP Unit Tests
     cmd: |
@@ -32,7 +32,8 @@ pipeline:
 
   - name: JS Unit Tests
     cmd: |
-      npm test
+      corepack pnpm test
+      corepack pnpm test:package-manager
 
 #  - name: Visual Regression Tests
 #    cmd: |

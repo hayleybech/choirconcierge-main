@@ -6,7 +6,7 @@ const projectRoot = path.resolve(__dirname, '..');
 const defaultStyle = 'solid';
 
 function usage() {
-    console.error('Usage: npm run icon -- --icon=heart --color=#ff0000 --size=32 [--style=solid]');
+    console.error('Usage: corepack pnpm icon -- --icon=heart --color=#ff0000 --size=32 [--style=solid]');
     process.exit(1);
 }
 
