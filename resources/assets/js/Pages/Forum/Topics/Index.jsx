@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { useForm } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Button from '../../../components/inputs/ButtonV2';
+import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import ForumPageLayout from '../ForumPageLayout';
 import TopicList from './TopicList';
 
-const Index = ({ category, topicCategories = [], topics, canCreateTopic, setSidebarOpen }) => {
+const Index = ({ category, topicCategories = [], topics = [], canCreateTopic, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [isCreating, setIsCreating] = useState(false);
+	const latestPinnedTopic = topics.find(topic => topic.is_pinned);
 	const actions = canCreateTopic && !isCreating
 		? [{ label: 'Start a topic', icon: 'plus', onClick: () => setIsCreating(true) }]
 		: [];
@@ -27,22 +29,81 @@ const Index = ({ category, topicCategories = [], topics, canCreateTopic, setSide
 				actions={actions}
 				setSidebarOpen={setSidebarOpen}
 			>
-				<div className="mx-auto max-w-5xl space-y-5">
-					{isCreating && (
-						<TopicForm
-							key={category?.id ?? 'latest'}
-							categories={topicCategories}
-							categoryId={category?.id}
-							onCancel={() => setIsCreating(false)}
+				<div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+					<div className="min-w-0 space-y-5">
+						{isCreating && (
+							<TopicForm
+								key={category?.id ?? 'latest'}
+								categories={topicCategories}
+								categoryId={category?.id}
+								onCancel={() => setIsCreating(false)}
+							/>
+						)}
+						<TopicList
+							topics={topics}
+							showTable
+							emptyTitle={category ? 'No topics in this category yet' : 'No topics yet'}
+							emptyDescription={category
+								? 'Start the first topic in this category.'
+								: 'Start a topic and invite your choir to join in.'}
 						/>
-					)}
-					<TopicList
-						topics={topics}
-						emptyTitle={category ? 'No topics in this category yet' : 'No topics yet'}
-						emptyDescription={category
-							? 'Start the first topic in this category.'
-							: 'Start a topic and invite your choir to join in.'}
-					/>
+					</div>
+
+					<aside className="space-y-5">
+						<section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+							<h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-gray-900">
+								<Icon icon="thumbtack" className="text-purple-700" />
+								Latest pinned topic
+							</h2>
+							{latestPinnedTopic ? (
+								<div className="space-y-2">
+									<Link
+										href={route('forum.topics.show', { forum_topic: latestPinnedTopic.id })}
+										className="block font-semibold text-gray-900 hover:text-purple-700"
+									>
+										{latestPinnedTopic.title}
+									</Link>
+									{latestPinnedTopic.category_title && (
+										<Link
+											href={route('forum.categories.topics.index', { forum_category: latestPinnedTopic.category_id })}
+											className="block text-sm text-purple-800 hover:text-purple-600"
+										>
+											{latestPinnedTopic.category_title}
+										</Link>
+									)}
+									<p className="text-xs text-gray-500">
+										{latestPinnedTopic.author_name} <span aria-hidden="true">·</span>{' '}
+										{new Date(latestPinnedTopic.created_at).toLocaleString()}
+									</p>
+								</div>
+							) : (
+								<p className="text-sm text-gray-500">No pinned topics yet.</p>
+							)}
+						</section>
+
+						<section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+							<h2 className="mb-3 text-base font-semibold text-gray-900">Categories</h2>
+							{topicCategories.length > 0 ? (
+								<ul className="divide-y divide-gray-100">
+									{topicCategories.map(topicCategory => (
+										<li key={topicCategory.id}>
+											<Link
+												href={route('forum.categories.topics.index', { forum_category: topicCategory.id })}
+												aria-current={category?.id === topicCategory.id ? 'page' : undefined}
+												className={`block py-2 text-sm ${category?.id === topicCategory.id
+													? 'font-semibold text-purple-800'
+													: 'text-gray-700 hover:text-purple-700'}`}
+											>
+												{topicCategory.title}
+											</Link>
+										</li>
+									))}
+								</ul>
+							) : (
+								<p className="text-sm text-gray-500">No categories available.</p>
+							)}
+						</section>
+					</aside>
 				</div>
 			</ForumPageLayout>
 		</>
