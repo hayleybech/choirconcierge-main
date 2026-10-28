@@ -37,6 +37,7 @@ class PollControllerTest extends TestCase
             'title' => 'Where should we go?',
             'description' => '<p>Please choose a destination.</p>',
             'can_vote_multiple' => false,
+            'is_anonymous' => true,
             'close_at' => null,
             'options' => ['Option A', 'Option B'],
         ];
@@ -48,12 +49,102 @@ class PollControllerTest extends TestCase
         $this->assertDatabaseHas('polls', [
             'title' => 'Where should we go?',
             'description' => '<p>Please choose a destination.</p>',
+            'is_anonymous' => true,
             'tenant_id' => tenant('id'),
         ]);
 
         $poll = Poll::firstWhere('title', 'Where should we go?');
         $this->assertDatabaseHas('poll_options', [ 'poll_id' => $poll->id, 'label' => 'Option A' ]);
         $this->assertDatabaseHas('poll_options', [ 'poll_id' => $poll->id, 'label' => 'Option B' ]);
+    }
+
+    public function test_update_does_not_change_poll_anonymity(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $poll = Poll::create([
+            'title' => 'Anonymous poll',
+            'tenant_id' => tenant('id'),
+            'is_anonymous' => true,
+        ]);
+        $poll->options()->create(['label' => 'Option A']);
+
+        $this->put(the_tenant_route('polls.update', [$poll]), [
+            'title' => 'Anonymous poll',
+            'is_anonymous' => false,
+            'options' => ['Option A'],
+        ])->assertSessionHasNoErrors()->assertRedirect();
+
+        $this->assertTrue($poll->fresh()->is_anonymous);
+    }
+
+    public function test_update_preserves_votes_when_an_option_label_is_edited(): void
+    {
+        $pollCreator = $this->createUserWithRole('Membership Team');
+        $voter = $this->createUserWithRole('User');
+
+        $poll = Poll::create([
+            'title' => 'Favorite color',
+            'tenant_id' => tenant('id'),
+        ]);
+        $option = $poll->options()->create(['label' => 'Blue']);
+        $option->votes()->create(['membership_id' => $voter->membership->id]);
+
+        $this->actingAs($pollCreator)
+            ->put(the_tenant_route('polls.update', [$poll]), [
+                'title' => 'Favorite color',
+                'options' => ['Navy blue'],
+                'option_ids' => [$option->id],
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('poll_options', [
+            'id' => $option->id,
+            'poll_id' => $poll->id,
+            'label' => 'Navy blue',
+        ]);
+        $this->assertDatabaseHas('poll_votes', [
+            'poll_option_id' => $option->id,
+            'membership_id' => $voter->membership->id,
+        ]);
+    }
+
+    public function test_show_includes_voters_for_non_anonymous_poll_options(): void
+    {
+        $pollCreator = $this->createUserWithRole('Membership Team');
+        $voter = $this->createUserWithRole('User');
+        $this->actingAs($pollCreator);
+
+        $poll = Poll::create(['title' => 'Public poll', 'tenant_id' => tenant('id')]);
+        $option = $poll->options()->create(['label' => 'Option A']);
+        $option->votes()->create(['membership_id' => $voter->membership->id]);
+
+        $this->get(the_tenant_route('polls.show', [$poll]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('poll.options.0.voters.0.name', $voter->name)
+                ->has('poll.options.0.voters.0.avatar_url')
+            );
+    }
+
+    public function test_show_does_not_include_voters_for_anonymous_poll_options(): void
+    {
+        $pollCreator = $this->createUserWithRole('Membership Team');
+        $voter = $this->createUserWithRole('User');
+        $this->actingAs($pollCreator);
+
+        $poll = Poll::create([
+            'title' => 'Anonymous poll',
+            'tenant_id' => tenant('id'),
+            'is_anonymous' => true,
+        ]);
+        $option = $poll->options()->create(['label' => 'Option A']);
+        $option->votes()->create(['membership_id' => $voter->membership->id]);
+
+        $this->get(the_tenant_route('polls.show', [$poll]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->missing('poll.options.0.voters')
+            );
     }
 
     public function test_store_sends_notification(): void

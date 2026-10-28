@@ -124,4 +124,52 @@ describe('Poll forms', () => {
 		expect(screen.queryByRole('checkbox', { name: 'Send notification to singers?' })).toBeNull();
 		expect(screen.queryByText('Message (optional)')).toBeNull();
 	});
+
+	it('lets poll creators choose anonymous voting', () => {
+		render(<Create ensembles={[]} />);
+
+		expect(screen.getByRole('checkbox', { name: 'Anonymous voting' })).not.toBeNull();
+	});
+
+	it('does not let poll editors change anonymous voting', () => {
+		render(
+			<Edit
+				poll={{
+					id: 1,
+					title: 'Anonymous poll',
+					description: '',
+					can_vote_multiple: false,
+					is_anonymous: true,
+					close_at: null,
+					options: [],
+					ensembles: [],
+				}}
+				ensembles={[]}
+			/>
+		);
+
+		expect(screen.queryByRole('checkbox', { name: 'Anonymous voting' })).toBeNull();
+	});
+
+	it('includes option IDs in poll edit form data', () => {
+		render(
+			<Edit
+				poll={{
+					id: 1,
+					title: 'Poll',
+					description: '',
+					can_vote_multiple: false,
+					close_at: null,
+					options: [{ id: 42, label: 'Blue' }],
+					ensembles: [],
+				}}
+				ensembles={[]}
+			/>
+		);
+
+		expect(useForm).toHaveBeenCalledWith(expect.objectContaining({
+			options: ['Blue'],
+			option_ids: [42],
+		}));
+	});
 });

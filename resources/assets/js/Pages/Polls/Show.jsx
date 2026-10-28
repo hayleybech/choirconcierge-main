@@ -25,7 +25,8 @@ import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
 import Badge from '../../components/Badge';
 import Prose from '../../components/Prose';
- 
+import PollOptionVoters from '../../components/PollOptionVoters';
+
 const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors } = useForm({
@@ -178,7 +179,12 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 									options={poll.options.map(opt => ({
 										id: opt.id,
 										name: opt.label,
-										description: `${opt.votes_count ?? 0} votes`,
+										description: (
+										<div className="flex items-center gap-2">
+											{(opt.votes_count ?? 0) === 0 && <span>0 votes</span>}
+											{!poll.is_anonymous && <PollOptionVoters option={opt} />}
+											</div>
+										),
 									}))}
 									value={data.option_ids}
 									onChange={value => toggle(value)}
@@ -191,7 +197,12 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 									options={poll.options.map(opt => ({
 										id: opt.id,
 										name: opt.label,
-										description: `${opt.votes_count ?? 0} votes`,
+										description: (
+										<div className="flex items-center gap-2">
+											{(opt.votes_count ?? 0) === 0 && <span>0 votes</span>}
+											{!poll.is_anonymous && <PollOptionVoters option={opt} />}
+											</div>
+										),
 									}))}
 									selected={data.option_ids[0]}
 									setSelected={value => toggle(value)}

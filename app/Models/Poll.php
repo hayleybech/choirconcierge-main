@@ -22,6 +22,7 @@ class Poll extends Model
         'description',
         'close_at',
         'can_vote_multiple',
+        'is_anonymous',
         'is_closed',
         'tenant_id',
     ];
@@ -31,6 +32,7 @@ class Poll extends Model
         return [
             'close_at' => 'datetime',
             'can_vote_multiple' => 'boolean',
+            'is_anonymous' => 'boolean',
             'is_closed' => 'boolean',
         ];
     }
@@ -48,6 +50,33 @@ class Poll extends Model
     public function options(): HasMany
     {
         return $this->hasMany(PollOption::class);
+    }
+
+    public function addVotersToOptions(): void
+    {
+        if ($this->is_anonymous) {
+            return;
+        }
+
+        $this->loadMissing('options.votes.membership.user');
+
+        $this->options->each(function (PollOption $option): void {
+            $option->setAttribute('voters', $option->votes
+                ->unique('membership_id')
+                ->map(function (PollVote $vote): array {
+                    $user = $vote->membership->user;
+                    $user->append('avatar_url');
+
+                    return [
+                        'id' => $vote->membership_id,
+                        'name' => $user->name,
+                        'avatar_url' => $user->avatar_url,
+                    ];
+                })
+                ->values());
+
+            $option->unsetRelation('votes');
+        });
     }
 
     public function votes(): HasManyThrough

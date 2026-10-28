@@ -181,7 +181,7 @@ class DashController extends Controller
             return new Collection();
         }
 
-        return Poll::query()
+        $polls = Poll::query()
             ->forEnsembles()
             ->withCount(['votes' => function ($query) {
                 $query->select(DB::raw('count(distinct membership_id)'));
@@ -194,13 +194,20 @@ class DashController extends Controller
             ->where('is_closed', false)
             ->orderByDesc('created_at')
             ->limit(2)
-        ->get()
-        ->each(function (Poll $poll) use ($membership) {
-            $poll->my_vote_option_ids = $poll->votes()
-                ->where('membership_id', $membership->id)
-                ->pluck('poll_option_id')
-                ->toArray();
-        })
-        ->values();
+            ->get();
+
+        $polls
+            ->filter(fn (Poll $poll): bool => ! $poll->is_anonymous)
+            ->loadMissing('options.votes.membership.user');
+
+        return $polls
+            ->each(function (Poll $poll) use ($membership): void {
+                $poll->addVotersToOptions();
+                $poll->my_vote_option_ids = $poll->votes()
+                    ->where('membership_id', $membership->id)
+                    ->pluck('poll_option_id')
+                    ->toArray();
+            })
+            ->values();
     }
 }
