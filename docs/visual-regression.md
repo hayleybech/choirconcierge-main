@@ -8,6 +8,7 @@ The screenshot suite uses Pest's browser plugin and Playwright to capture every 
 - Configure `.env.testing` to use a dedicated MySQL test database. Browser tests refresh the test database and create synthetic fixtures; never point it at production or everyday local data.
 - Install Playwright Chromium with `composer visual:install`.
 - Capture the complete catalog with `composer visual:test`. This builds the frontend, runs the browser capture, and verifies that exactly one PNG exists for every case/viewport pair in `tests/Browser/Screenshots/ArgosCaptures`.
+- Capture workers default to two; set `VISUAL_REGRESSION_CONCURRENCY` to a positive integer to adjust the bound for available browser and database resources.
 - Run `composer visual:audit` to check catalog coverage against statically rendered Inertia page components, and `npm run test:visual` for the runner, audit, and gallery tests.
 - To diagnose one case, set `VISUAL_REGRESSION_CASE_ID` and run `php artisan test --compact tests/Browser/VisualRegressionCaptureTest.php` after building the frontend.
 

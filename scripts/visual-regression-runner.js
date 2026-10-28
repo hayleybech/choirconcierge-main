@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { spawnSync } = require('node:child_process');
+const { spawn, spawnSync } = require('node:child_process');
 const { auditCatalog } = require('./visual-regression-audit');
 
 const root = path.resolve(__dirname, '..');
@@ -52,6 +52,86 @@ function runCommand(command, args, options = {}) {
 	}
 
 	return result.status ?? 1;
+}
+
+function partitionCases(cases, concurrency) {
+	if (!Number.isInteger(concurrency) || concurrency < 1) {
+		throw new Error('Visual-regression concurrency must be a positive integer.');
+	}
+
+	const partitions = Array.from({ length: Math.min(concurrency, cases.length) }, () => []);
+
+	for (const [index, screenshotCase] of cases.entries()) {
+		partitions[index % partitions.length].push(screenshotCase);
+	}
+
+	return partitions;
+}
+
+async function runWorkers(partitions, concurrency, runWorker) {
+	if (!Number.isInteger(concurrency) || concurrency < 1) {
+		throw new Error('Visual-regression concurrency must be a positive integer.');
+	}
+
+	let nextPartition = 0;
+	let workerError;
+
+	await Promise.all(
+		Array.from({ length: Math.min(concurrency, partitions.length) }, async () => {
+			while (nextPartition < partitions.length && !workerError) {
+				const partition = partitions[nextPartition++];
+
+				try {
+					await runWorker(partition);
+				} catch (error) {
+					workerError ??= error;
+				}
+			}
+		})
+	);
+
+	if (workerError) {
+		throw workerError;
+	}
+}
+
+function runCaptureWorker(screenshotCases) {
+	return new Promise((resolve, reject) => {
+		const child = spawn(
+			'php',
+			[
+				'artisan',
+				'test',
+				'--compact',
+				'--filter=captures',
+				'tests/Browser/VisualRegressionCaptureTest.php',
+			],
+			{
+				cwd: root,
+				stdio: 'inherit',
+				shell: process.platform === 'win32',
+				env: {
+					...process.env,
+					APP_ENV: 'testing',
+					SESSION_DRIVER: 'file',
+					TENANCY_CENTRAL_DOMAIN: '127.0.0.1',
+					VISUAL_REGRESSION_DATABASE_PREPARED: '1',
+					VISUAL_REGRESSION_CASE_IDS: JSON.stringify(screenshotCases.map(({ id }) => id)),
+					VISUAL_REGRESSION_WORKER_ID: screenshotCases[0].id,
+				},
+			}
+		);
+
+		child.once('error', reject);
+		child.once('exit', (code, signal) => {
+			if (code === 0) {
+				resolve();
+				return;
+			}
+
+			reject(new Error(`Visual-regression worker failed${signal ? ` with signal ${signal}` : ` with exit code ${code}`}.`));
+		});
+	});
 }
 
 function screenshotPath(directory, caseId, viewportId) {
@@ -129,6 +209,11 @@ function assertNoSymlinkComponents(targetPath) {
 async function main() {
 	const catalog = readCatalog();
 	const coverageAudit = auditCatalog(catalog);
+	const concurrency = Number(process.env.VISUAL_REGRESSION_CONCURRENCY ?? '2');
+
+	if (!Number.isInteger(concurrency) || concurrency < 1) {
+		throw new Error('VISUAL_REGRESSION_CONCURRENCY must be a positive integer.');
+	}
 
 	if (!coverageAudit.complete) {
 		console.error('The screenshot catalog must include every statically rendered Inertia page before capture can pass.');
@@ -144,15 +229,37 @@ async function main() {
 		return 1;
 	}
 
+	const testEnvironment = {
+		...process.env,
+		APP_ENV: 'testing',
+		SESSION_DRIVER: 'file',
+		TENANCY_CENTRAL_DOMAIN: '127.0.0.1',
+	};
+
+	if (runCommand('php', ['artisan', 'migrate:fresh', '--env=testing'], { env: testEnvironment }) !== 0) {
+		return 1;
+	}
+
+	const partitions = partitionCases(catalog.cases, concurrency);
+	await runWorkers(partitions, concurrency, runCaptureWorker);
+
 	if (
-		runCommand('php', ['artisan', 'test', '--compact', 'tests/Browser/VisualRegressionCaptureTest.php'], {
-			env: {
-				...process.env,
-				APP_ENV: 'testing',
-				SESSION_DRIVER: 'file',
-				TENANCY_CENTRAL_DOMAIN: '127.0.0.1',
-			},
-		}) !== 0
+		runCommand(
+			'php',
+			[
+				'artisan',
+				'test',
+				'--compact',
+				'--filter=stabilization',
+				'tests/Browser/VisualRegressionCaptureTest.php',
+			],
+			{
+				env: {
+					...testEnvironment,
+					VISUAL_REGRESSION_DATABASE_PREPARED: '1',
+				},
+			}
+		) !== 0
 	) {
 		return 1;
 	}
@@ -176,6 +283,8 @@ if (require.main === module) {
 module.exports = {
 	assertNoSymlinkComponents,
 	main,
+	partitionCases,
+	runWorkers,
 	screenshotPath,
 	validateCaptureCompleteness,
 	validateCatalog,

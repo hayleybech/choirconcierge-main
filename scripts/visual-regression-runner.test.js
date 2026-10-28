@@ -5,10 +5,64 @@ const path = require('node:path');
 const test = require('node:test');
 const {
 	assertNoSymlinkComponents,
+	partitionCases,
+	runWorkers,
 	screenshotPath,
 	validateCaptureCompleteness,
 	validateCatalog,
 } = require('./visual-regression-runner');
+
+test('partitions every case deterministically without overlap', () => {
+	const cases = Array.from({ length: 7 }, (_, index) => ({ id: `case-${index}` }));
+	const partitions = partitionCases(cases, 3);
+
+	assert.deepEqual(partitions, [
+		[cases[0], cases[3], cases[6]],
+		[cases[1], cases[4]],
+		[cases[2], cases[5]],
+	]);
+	assert.deepEqual(partitionCases(cases, 3), partitions);
+	assert.deepEqual(partitions.flat().map(({ id }) => id).sort(), cases.map(({ id }) => id).sort());
+	assert.throws(() => partitionCases(cases, 0), /positive integer/);
+});
+
+test('runs partitions within the configured worker limit', async () => {
+	let activeWorkers = 0;
+	let maximumActiveWorkers = 0;
+	const completed = [];
+
+	await runWorkers(
+		[['case-one'], ['case-two'], ['case-three'], ['case-four']],
+		2,
+		async partition => {
+			activeWorkers += 1;
+			maximumActiveWorkers = Math.max(maximumActiveWorkers, activeWorkers);
+			await new Promise(resolve => setTimeout(resolve, 5));
+			completed.push(...partition);
+			activeWorkers -= 1;
+		}
+	);
+
+	assert.equal(maximumActiveWorkers, 2);
+	assert.deepEqual(completed.sort(), ['case-four', 'case-one', 'case-three', 'case-two']);
+});
+
+test('waits for workers and propagates a worker failure', async () => {
+	let otherWorkerFinished = false;
+
+	await assert.rejects(
+		runWorkers([['fails'], ['finishes']], 2, async ([caseId]) => {
+			if (caseId === 'fails') {
+				throw new Error('worker failed');
+			}
+
+			await new Promise(resolve => setTimeout(resolve, 5));
+			otherWorkerFinished = true;
+		}),
+		/worker failed/
+	);
+	assert.equal(otherWorkerFinished, true);
+});
 
 test('rejects unsafe catalog IDs before constructing screenshot paths', () => {
 	assert.throws(
