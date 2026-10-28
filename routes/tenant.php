@@ -22,6 +22,7 @@ use App\Http\Controllers\EventCheckInKioskController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTypeController;
 use App\Http\Controllers\ForumCategoryController;
+use App\Http\Controllers\ForumTopicController;
 use App\Http\Controllers\ExportMemberController;
 use App\Http\Controllers\FindSongController;
 use App\Http\Controllers\FolderController;
@@ -302,6 +303,31 @@ Route::middleware([
                 Route::resource('categories', ForumCategoryController::class)
                     ->parameters(['categories' => 'forum_category'])
                     ->only(['index', 'store', 'update', 'destroy']);
+
+                Route::get('categories/{forum_category}/topics', [ForumTopicController::class, 'index'])
+                    ->name('categories.topics.index');
+                Route::post('categories/{forum_category}/topics', [ForumTopicController::class, 'store'])
+                    ->name('categories.topics.store');
+                Route::get('topics/{forum_topic}', [ForumTopicController::class, 'show'])
+                    ->name('topics.show');
+                Route::put('topics/{forum_topic}', [ForumTopicController::class, 'update'])
+                    ->name('topics.update');
+                Route::delete('topics/{forum_topic}', [ForumTopicController::class, 'destroy'])
+                    ->name('topics.destroy');
+                Route::post('topics/{forum_topic}/restore', [ForumTopicController::class, 'restore'])
+                    ->name('topics.restore');
+                Route::put('topics/{forum_topic}/lock', [ForumTopicController::class, 'lock'])
+                    ->name('topics.lock');
+                Route::put('topics/{forum_topic}/pin', [ForumTopicController::class, 'pin'])
+                    ->name('topics.pin');
+                Route::post('topics/{forum_topic}/replies', [ForumTopicController::class, 'storeReply'])
+                    ->name('topics.replies.store');
+                Route::put('replies/{forum_reply}', [ForumTopicController::class, 'updateReply'])
+                    ->name('replies.update');
+                Route::delete('replies/{forum_reply}', [ForumTopicController::class, 'destroyReply'])
+                    ->name('replies.destroy');
+                Route::post('replies/{forum_reply}/restore', [ForumTopicController::class, 'restoreReply'])
+                    ->name('replies.restore');
             });
 
             // Organisation Settings

@@ -33,6 +33,11 @@ class ForumCategoryController extends Controller
             ->get()
             ->values();
 
+        $categories->each(fn (ForumCategory $category) => $category->setAttribute(
+            'can_view_topics',
+            auth()->user()->can('view', $category),
+        ));
+
         return Inertia::render('Forum/Categories/Index', [
             'categories' => $categories,
             'ensembles' => $canManageCategories ? Ensemble::query()->orderBy('name')->get(['id', 'name'])->values() : [],

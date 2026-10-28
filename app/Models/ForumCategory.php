@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,5 +27,10 @@ class ForumCategory extends Model
     public function ensembles(): BelongsToMany
     {
         return $this->belongsToMany(Ensemble::class, 'ensemble_forum_category');
+    }
+
+    public function topics(): HasMany
+    {
+        return $this->hasMany(ForumTopic::class);
     }
 }

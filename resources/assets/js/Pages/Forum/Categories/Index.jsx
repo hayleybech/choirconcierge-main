@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { router, useForm } from '@inertiajs/react';
+import { Link, router, useForm } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
@@ -58,9 +58,21 @@ const Index = ({ categories, ensembles, canManageCategories }) => {
 										{category.is_choir_wide
 											? 'Visible to all active choir members'
 											: category.ensembles.length > 0
-												? `Visible to ${category.ensembles.map(ensemble => ensemble.name).join(', ')}`
-												: 'Restricted to ensembles that are no longer available'}
+											? `Visible to ${category.ensembles
+													.map(ensemble => ensemble.name)
+													.join(', ')}`
+											: 'Restricted to ensembles that are no longer available'}
 									</p>
+									{category.can_view_topics && (
+										<Link
+											href={route('forum.categories.topics.index', {
+												forum_category: category.id,
+											})}
+											className="mt-2 inline-block text-sm font-semibold text-purple-700 hover:text-purple-900"
+										>
+											View discussions
+										</Link>
+									)}
 								</div>
 								{canManageCategories && (
 									<div className="flex shrink-0 gap-3 text-sm">
@@ -164,13 +176,19 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 						</option>
 					))}
 				</select>
-				<p className="mt-1 text-xs text-gray-500">Uncheck the box to restrict this category to selected ensembles.</p>
+				<p className="mt-1 text-xs text-gray-500">
+					Uncheck the box to restrict this category to selected ensembles.
+				</p>
 				{(errors.ensemble_ids || errors['ensemble_ids.0']) && (
 					<p className="mt-1 text-sm text-red-700">{errors.ensemble_ids || errors['ensemble_ids.0']}</p>
 				)}
 			</div>
 			<div className="flex justify-end gap-2">
-				<button type="button" className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={onCancel}>
+				<button
+					type="button"
+					className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+					onClick={onCancel}
+				>
 					Cancel
 				</button>
 				<button

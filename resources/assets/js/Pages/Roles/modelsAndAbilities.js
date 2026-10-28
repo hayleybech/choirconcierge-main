@@ -71,4 +71,8 @@ export const modelsAndAbilities = {
         label: 'Forum Categories',
         abilities: ['manage'],
     },
+    forum: {
+        label: 'Forum Moderation',
+        abilities: ['moderate'],
+    },
 };
