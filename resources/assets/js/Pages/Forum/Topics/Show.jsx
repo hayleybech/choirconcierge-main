@@ -8,6 +8,7 @@ import Icon from '../../../components/Icon';
 import Prose from '../../../components/Prose';
 import useRoute from '../../../hooks/useRoute';
 import ForumPageLayout from '../ForumPageLayout';
+import ReactionSummary from './ReactionSummary';
 
 const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -27,7 +28,7 @@ const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen 
 	];
 
 	const removeTopic = () => {
-		if (window.confirm('Remove this discussion?')) {
+		if (window.confirm('Remove this topic?')) {
 			router.delete(route('forum.topics.destroy', { forum_topic: topic.id }));
 		}
 	};
@@ -46,7 +47,7 @@ const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen 
 				setSidebarOpen={setSidebarOpen}
 			>
 				<div className="mx-auto max-w-5xl space-y-8">
-					<article className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+					<article className="rounded-lg border border-gray-200 bg-white shadow-sm">
 						{isEditingTopic ? (
 							<div className="p-5 sm:p-6">
 								<TopicEditor topic={topic} onCancel={() => setIsEditingTopic(false)} />
@@ -87,7 +88,7 @@ const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen 
 								)}
 								{canModerate && topic.is_deleted && (
 									<Button intent="primary" weight="outline" size="sm" onClick={restoreTopic}>
-										<Icon icon="undo" /> Restore discussion
+										<Icon icon="undo" /> Restore topic
 									</Button>
 								)}
 							</div>
@@ -106,7 +107,7 @@ const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen 
 											}
 										>
 											<Icon icon="bookmark" />
-											{topic.is_following ? 'Unfollow discussion' : 'Follow discussion'}
+											{topic.is_following ? 'Unfollow topic' : 'Follow topic'}
 										</Button>
 									)}
 									{!topic.is_deleted && (
@@ -160,7 +161,7 @@ const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen 
 					{canReply && !replyTo && <ReplyComposer topicId={topic.id} parentId={null} />}
 					{!canReply && topic.is_locked && (
 						<p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-							This discussion is locked.
+							This topic is locked.
 						</p>
 					)}
 				</div>
@@ -183,7 +184,7 @@ const TopicEditor = ({ topic, onCancel }) => {
 
 	return (
 		<form onSubmit={submit} className="space-y-5">
-			<h2 className="text-lg font-semibold text-gray-900">Edit discussion</h2>
+			<h2 className="text-lg font-semibold text-gray-900">Edit topic</h2>
 			<div>
 				<label htmlFor="edit-topic-title" className="mb-1 block text-sm font-medium text-gray-700">
 					Title
@@ -311,27 +312,8 @@ const ReactionBar = ({ targetType, targetId, reactions }) => {
 	};
 
 	return (
-		<div className="mt-3 flex flex-wrap gap-2" aria-label="Reactions">
-			{[...new Set([...availableEmojis, ...reactions.map(reaction => reaction.emoji)])].map(emoji => {
-				const reaction = reactions.find(item => item.emoji === emoji);
-				return (
-					<button
-						key={emoji}
-						type="button"
-						aria-pressed={Boolean(reaction?.reacted)}
-						aria-label={`${emoji} reaction`}
-						className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 ${
-							reaction?.reacted
-								? 'border-purple-400 bg-purple-50 text-purple-800'
-								: 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-gray-50'
-						}`}
-						onClick={() => toggleReaction(emoji)}
-					>
-						{emoji}
-						{reaction && <span>{reaction.count}</span>}
-					</button>
-				);
-			})}
+		<div className="mt-3">
+			<ReactionSummary reactions={reactions} availableEmojis={availableEmojis} onReaction={toggleReaction} />
 		</div>
 	);
 };

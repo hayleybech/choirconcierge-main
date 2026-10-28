@@ -17,6 +17,19 @@ test('navigation returns route names and string permissions by default', functio
     expect($apiData[0]['showAsActiveForUrls'])->toBe(['/app']);
 });
 
+test('discussions navigation opens the latest topics index', function () {
+    $tenant = \App\Models\Tenant::create('discussion-nav', 'Discussion Nav', 'Australia/Perth');
+    $tenant->domains()->create(['domain' => 'discussion-nav']);
+    tenancy()->initialize($tenant);
+    $this->actingAs(User::factory()->create());
+
+    $discussions = collect((new Navigation())->get('discussion-nav'))
+        ->firstWhere('name', 'Discussions');
+
+    expect($discussions)->not->toBeNull()
+        ->and($discussions['route'])->toBe('forum.topics.index');
+});
+
 test('navigation returns urls and boolean permissions for the api', function () {
     $tenant = \App\Models\Tenant::create('test', 'Test', 'Australia/Perth');
     $tenant->domains()->create(['domain' => 'test']);

@@ -17,19 +17,19 @@ const ForumPageLayout = ({
 	title,
 	description,
 	breadcrumbs = [],
-	activeTab = 'categories',
+	activeTab = 'latest',
 	actions = [],
 	setSidebarOpen,
 	children,
 }) => {
 	const { route } = useRoute();
-	const pageBreadcrumbs = [{ name: 'Forum', url: route('forum.categories.index') }, ...breadcrumbs];
+	const pageBreadcrumbs = [{ name: 'Discussions', url: route('forum.topics.index') }, ...breadcrumbs];
 
 	return (
 		<>
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation
-					title="Forum"
+					title="Discussions"
 					breadcrumbs={breadcrumbs.length > 0 ? pageBreadcrumbs : undefined}
 				>
 					<PageActionsMenu>
@@ -77,20 +77,27 @@ const ForumPageLayout = ({
 			</PageHeader>
 
 			<div className="border-b border-gray-300 bg-white px-4 sm:px-6 md:px-8">
-				<nav className="mx-auto flex max-w-screen-2xl gap-6" aria-label="Forum sections">
+				<nav className="mx-auto flex max-w-screen-2xl gap-6" aria-label="Discussions sections">
 					<ForumSectionLink
-						href={route('forum.categories.index')}
-						active={activeTab === 'categories'}
-						icon="layer-group"
+						href={route('forum.topics.index')}
+						active={activeTab === 'latest'}
+						icon="clock"
 					>
-						Categories
+						Latest
 					</ForumSectionLink>
 					<ForumSectionLink
 						href={route('forum.following.index')}
 						active={activeTab === 'following'}
 						icon="bookmark"
 					>
-						Followed discussions
+						Followed
+					</ForumSectionLink>
+					<ForumSectionLink
+						href={route('forum.categories.index')}
+						active={activeTab === 'categories'}
+						icon="layer-group"
+					>
+						Categories
 					</ForumSectionLink>
 				</nav>
 			</div>

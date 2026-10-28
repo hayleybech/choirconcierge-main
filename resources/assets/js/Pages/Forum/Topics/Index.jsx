@@ -1,93 +1,65 @@
 import React, { useState } from 'react';
-import { Link, useForm } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
-import Badge from '../../../components/Badge';
-import EmptyState from '../../../components/EmptyState';
-import Icon from '../../../components/Icon';
 import Button from '../../../components/inputs/ButtonV2';
-import Prose from '../../../components/Prose';
 import useRoute from '../../../hooks/useRoute';
 import ForumPageLayout from '../ForumPageLayout';
+import TopicList from './TopicList';
 
-const Index = ({ category, topics, canCreateTopic, setSidebarOpen }) => {
+const Index = ({ category, topicCategories = [], topics, canCreateTopic, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [isCreating, setIsCreating] = useState(false);
 	const actions = canCreateTopic && !isCreating
-		? [{ label: 'Start a discussion', icon: 'plus', onClick: () => setIsCreating(true) }]
+		? [{ label: 'Start a topic', icon: 'plus', onClick: () => setIsCreating(true) }]
 		: [];
 
 	return (
 		<>
-			<AppHead title={category.title} />
+			<AppHead title={category?.title ?? 'Discussions'} />
 			<ForumPageLayout
-				title={category.title}
-				description="Join the conversation or start a new discussion."
-				breadcrumbs={[
-					{
-						name: category.title,
-						url: route('forum.categories.topics.index', { forum_category: category.id }),
-					},
-				]}
+				title={category?.title ?? 'Discussions'}
+				description={category ? 'Topics in this category.' : 'Browse the latest topics from categories you can access.'}
+				breadcrumbs={category ? [{
+					name: category.title,
+					url: route('forum.categories.topics.index', { forum_category: category.id }),
+				}] : []}
 				actions={actions}
 				setSidebarOpen={setSidebarOpen}
 			>
 				<div className="mx-auto max-w-5xl space-y-5">
-					{isCreating && <TopicForm categoryId={category.id} onCancel={() => setIsCreating(false)} />}
-
-					{topics.length > 0 ? (
-						<div className="space-y-3">
-							{topics.map(topic => (
-								<article
-									key={topic.id}
-									className="flex flex-col gap-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:border-purple-300 sm:flex-row sm:items-center sm:justify-between sm:p-6"
-								>
-									<div className="min-w-0 flex-1">
-										<div className="flex flex-wrap items-center gap-2">
-											<Link
-												href={route('forum.topics.show', { forum_topic: topic.id })}
-												className="text-lg font-semibold text-gray-900 hover:text-purple-700"
-											>
-												{topic.title}
-											</Link>
-											{topic.is_pinned && <Badge colour="bg-purple-100 text-purple-800">Pinned</Badge>}
-										</div>
-										<Prose content={topic.body_html} className="mt-3 text-sm text-gray-700" />
-										<p className="mt-4 text-xs text-gray-500">
-											Started by {topic.author_name} <span aria-hidden="true">·</span>{' '}
-											{new Date(topic.created_at).toLocaleString()}
-										</p>
-									</div>
-									<div className="flex items-center gap-2 border-t border-gray-100 pt-3 text-sm text-gray-600 sm:flex-col sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0">
-										<Icon icon="comments" className="text-purple-600" />
-										<span className="font-semibold text-gray-900">{topic.replies_count}</span>
-										<span>{topic.replies_count === 1 ? 'reply' : 'replies'}</span>
-									</div>
-								</article>
-							))}
-						</div>
-					) : (
-						<div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-							<EmptyState
-								title="No discussions yet"
-								description="Start a conversation and invite your choir to join in."
-								icon="comments"
-							/>
-						</div>
+					{isCreating && (
+						<TopicForm
+							key={category?.id ?? 'latest'}
+							categories={topicCategories}
+							categoryId={category?.id}
+							onCancel={() => setIsCreating(false)}
+						/>
 					)}
+					<TopicList
+						topics={topics}
+						emptyTitle={category ? 'No topics in this category yet' : 'No topics yet'}
+						emptyDescription={category
+							? 'Start the first topic in this category.'
+							: 'Start a topic and invite your choir to join in.'}
+					/>
 				</div>
 			</ForumPageLayout>
 		</>
 	);
 };
 
-const TopicForm = ({ categoryId, onCancel }) => {
+const TopicForm = ({ categories, categoryId, onCancel }) => {
 	const { route } = useRoute();
-	const { data, setData, post, processing, errors } = useForm({ title: '', body: '' });
+	const { data, setData, post, processing, errors } = useForm({
+		title: '',
+		body: '',
+		selectedCategoryId: categoryId ?? categories[0]?.id ?? '',
+	});
 
 	const submit = event => {
 		event.preventDefault();
-		post(route('forum.categories.topics.store', { forum_category: categoryId }), {
+		post(route('forum.categories.topics.store', { forum_category: categoryId ?? data.selectedCategoryId }), {
 			preserveScroll: true,
 			onSuccess: onCancel,
 		});
@@ -95,7 +67,24 @@ const TopicForm = ({ categoryId, onCancel }) => {
 
 	return (
 		<form onSubmit={submit} className="space-y-5 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-			<h2 className="text-lg font-semibold text-gray-900">Start a discussion</h2>
+			<h2 className="text-lg font-semibold text-gray-900">Start a topic</h2>
+			{!categoryId && categories.length > 1 && (
+				<div>
+					<label htmlFor="topic-category" className="mb-1 block text-sm font-medium text-gray-700">
+						Category
+					</label>
+					<select
+						id="topic-category"
+						value={data.selectedCategoryId}
+						onChange={event => setData('selectedCategoryId', event.target.value)}
+						className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+					>
+						{categories.map(topicCategory => (
+							<option key={topicCategory.id} value={topicCategory.id}>{topicCategory.title}</option>
+						))}
+					</select>
+				</div>
+			)}
 			<div>
 				<label htmlFor="topic-title" className="mb-1 block text-sm font-medium text-gray-700">
 					Title
@@ -129,7 +118,7 @@ const TopicForm = ({ categoryId, onCancel }) => {
 					Cancel
 				</Button>
 				<Button type="submit" intent="primary" disabled={processing}>
-					{processing ? 'Posting…' : 'Post discussion'}
+					{processing ? 'Posting…' : 'Post topic'}
 				</Button>
 			</div>
 		</form>

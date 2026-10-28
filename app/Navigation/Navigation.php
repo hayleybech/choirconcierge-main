@@ -180,11 +180,11 @@ class Navigation
                 ]
             ],
             [
-                'name' => 'Forum',
-                'route' => 'forum.categories.index',
+                'name' => 'Discussions',
+                'route' => 'forum.topics.index',
                 'icon' => 'fa-comments',
                 'can' => 'list_forum_categories',
-                'showAsActiveForRoutes' => ['forum.categories.*'],
+                'showAsActiveForRoutes' => ['forum.*'],
                 'items' => [],
             ],
         ];

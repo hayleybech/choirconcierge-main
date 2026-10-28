@@ -390,10 +390,12 @@ test('members can add and remove distinct emoji reactions on accessible topics a
 
 test('members can follow accessible topics and followed topics exclude inaccessible categories', function () {
     $member = createForumTopicMember();
+    $reactor = createForumTopicMember();
     $ensemble = Ensemble::factory()->create();
     $restrictedCategory = ForumCategory::factory()->create(['is_choir_wide' => false]);
     $restrictedCategory->ensembles()->attach($ensemble);
     $accessibleTopic = createForumTopic(ForumCategory::factory()->create(), $member);
+    $accessibleTopic->reactions()->create(['membership_id' => $reactor->id, 'emoji' => '👍']);
     $restrictedTopic = createForumTopic($restrictedCategory, $member);
 
     $this->actingAs($member->user)
@@ -418,6 +420,10 @@ test('members can follow accessible topics and followed topics exclude inaccessi
             ->component('Forum/Topics/Following')
             ->has('topics', 1)
             ->where('topics.0.id', $accessibleTopic->id)
+            ->where('topics.0.author_avatar_url', $member->user->avatar_url)
+            ->where('topics.0.reactions.0.count', 1)
+            ->where('topics.0.reactions.0.reactors.0.name', $reactor->user->name)
+            ->where('topics.0.reactions.0.reactors.0.avatar_url', $reactor->user->avatar_url)
         );
 
     $this->actingAs($member->user)
@@ -425,4 +431,59 @@ test('members can follow accessible topics and followed topics exclude inaccessi
         ->assertRedirect();
 
     expect($member->followedForumTopics()->where('forum_topic_id', $accessibleTopic->id)->exists())->toBeFalse();
+});
+
+test('latest topics include visible categories, authors, and reaction details', function () {
+    $member = createForumTopicMember();
+    $reactor = createForumTopicMember();
+    $category = ForumCategory::factory()->create(['title' => 'Choir news']);
+    $topic = createForumTopic($category, $member, ['title' => 'Summer concert']);
+    $topic->reactions()->create(['membership_id' => $reactor->id, 'emoji' => '🎉']);
+
+    $ensemble = Ensemble::factory()->create();
+    $restrictedCategory = ForumCategory::factory()->create(['is_choir_wide' => false]);
+    $restrictedCategory->ensembles()->attach($ensemble);
+    createForumTopic($restrictedCategory, $member, ['title' => 'Private rehearsal']);
+
+    $this->actingAs($member->user)
+        ->get(the_tenant_route('forum.topics.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Forum/Topics/Index')
+            ->has('topics', 1)
+            ->where('topics.0.title', 'Summer concert')
+            ->where('topics.0.category_title', 'Choir news')
+            ->where('topics.0.author_avatar_url', $member->user->avatar_url)
+            ->where('topics.0.reactions.0.emoji', '🎉')
+            ->where('topics.0.reactions.0.count', 1)
+            ->where('topics.0.reactions.0.reactors.0.name', $reactor->user->name)
+            ->where('topics.0.reactions.0.reactors.0.avatar_url', $reactor->user->avatar_url)
+        );
+});
+
+test('categories tab groups visible topics by category', function () {
+    $member = createForumTopicMember();
+    $reactor = createForumTopicMember();
+    $category = ForumCategory::factory()->create(['title' => 'Choir news']);
+    $topic = createForumTopic($category, $member, ['title' => 'Summer concert']);
+    $topic->reactions()->create(['membership_id' => $reactor->id, 'emoji' => '❤️']);
+
+    $ensemble = Ensemble::factory()->create();
+    $restrictedCategory = ForumCategory::factory()->create(['is_choir_wide' => false]);
+    $restrictedCategory->ensembles()->attach($ensemble);
+    createForumTopic($restrictedCategory, $member, ['title' => 'Private rehearsal']);
+
+    $this->actingAs($member->user)
+        ->get(the_tenant_route('forum.categories.index'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Forum/Categories/Index')
+            ->has('categories', 1)
+            ->where('categories.0.title', 'Choir news')
+            ->has('categories.0.topics', 1)
+            ->where('categories.0.topics.0.id', $topic->id)
+            ->where('categories.0.topics.0.author_avatar_url', $member->user->avatar_url)
+            ->where('categories.0.topics.0.reactions.0.count', 1)
+            ->where('categories.0.topics.0.reactions.0.reactors.0.name', $reactor->user->name)
+        );
 });

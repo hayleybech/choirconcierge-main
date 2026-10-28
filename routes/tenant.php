@@ -300,8 +300,9 @@ Route::middleware([
             Route::put('polls/{poll}/close', [PollController::class, 'close'])->name('polls.close');
             Route::put('polls/{poll}/open', [PollController::class, 'open'])->name('polls.open');
 
-            // Forum categories module
+            // Discussions module
             Route::prefix('forum')->name('forum.')->group(function () {
+                Route::get('/', [ForumTopicController::class, 'index'])->name('topics.index');
                 Route::get('following', [ForumTopicFollowController::class, 'index'])->name('following.index');
                 Route::put('topics/{forum_topic}/follow', [ForumTopicFollowController::class, 'follow'])->name('topics.follow');
                 Route::delete('topics/{forum_topic}/follow', [ForumTopicFollowController::class, 'unfollow'])->name('topics.unfollow');
@@ -310,7 +311,7 @@ Route::middleware([
                     ->parameters(['categories' => 'forum_category'])
                     ->only(['index', 'store', 'update', 'destroy']);
 
-                Route::get('categories/{forum_category}/topics', [ForumTopicController::class, 'index'])
+                Route::get('categories/{forum_category}/topics', [ForumTopicController::class, 'categoryIndex'])
                     ->name('categories.topics.index');
                 Route::post('categories/{forum_category}/topics', [ForumTopicController::class, 'store'])
                     ->name('categories.topics.store');

@@ -8,6 +8,7 @@ import Icon from '../../../components/Icon';
 import Button from '../../../components/inputs/ButtonV2';
 import useRoute from '../../../hooks/useRoute';
 import ForumPageLayout from '../ForumPageLayout';
+import TopicList from '../Topics/TopicList';
 
 const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -27,10 +28,11 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 
 	return (
 		<>
-			<AppHead title="Forum Categories" />
+			<AppHead title="Categories" />
 			<ForumPageLayout
-				title="Forum"
-				description="Find conversations for your choir and the ensembles you belong to."
+				title="Categories"
+				description="Browse topics grouped by category."
+				activeTab="categories"
 				actions={actions}
 				setSidebarOpen={setSidebarOpen}
 			>
@@ -44,12 +46,12 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 						/>
 					)}
 
-					<section>
-						<div className="mb-3 flex items-end justify-between gap-3">
+					<section className="space-y-4">
+						<div className="flex items-end justify-between gap-3">
 							<div>
-								<h2 className="text-lg font-semibold text-gray-900">Browse categories</h2>
+								<h2 className="text-lg font-semibold text-gray-900">Topics by category</h2>
 								<p className="mt-1 text-sm text-gray-500">
-									Each category brings together a different choir conversation.
+									Topics are grouped by the category they belong to.
 								</p>
 							</div>
 							<span className="text-sm text-gray-500">
@@ -58,74 +60,84 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 						</div>
 
 						{categories.length > 0 ? (
-							<div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+							<div className="space-y-4">
 								{categories.map(category => (
 									<article
 										key={category.id}
-										className="flex flex-col gap-5 border-b border-gray-200 p-5 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+										className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
 									>
-										<div className="flex min-w-0 items-start gap-4">
-											<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
-												<Icon icon="comments" />
-											</div>
-											<div className="min-w-0">
-												<div className="flex flex-wrap items-center gap-2">
-													<h3 className="font-semibold text-gray-900">{category.title}</h3>
-													<Badge colour={category.is_choir_wide ? 'bg-purple-100 text-purple-800' : 'bg-gray-100'}>
-														{category.is_choir_wide ? 'Choir-wide' : 'Ensemble'}
-													</Badge>
+										<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+											<div className="flex min-w-0 items-start gap-4">
+												<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
+													<Icon icon="comments" />
 												</div>
-												<p className="mt-1 text-sm text-gray-600">
-													{category.is_choir_wide
-														? 'Visible to all active choir members'
-														: category.ensembles.length > 0
-															? `Visible to ${category.ensembles
-																.map(ensemble => ensemble.name)
-																.join(', ')}`
-															: 'Restricted to ensembles that are no longer available'}
-												</p>
+												<div className="min-w-0">
+													<div className="flex flex-wrap items-center gap-2">
+														<h3 className="font-semibold text-gray-900">{category.title}</h3>
+														<Badge colour={category.is_choir_wide ? 'bg-purple-100 text-purple-800' : 'bg-gray-100'}>
+															{category.is_choir_wide ? 'Choir-wide' : 'Ensemble'}
+														</Badge>
+													</div>
+													<p className="mt-1 text-sm text-gray-600">
+														{category.is_choir_wide
+															? 'Visible to all active choir members'
+															: category.ensembles.length > 0
+																? `Visible to ${category.ensembles
+																	.map(ensemble => ensemble.name)
+																	.join(', ')}`
+																: 'Restricted to ensembles that are no longer available'}
+													</p>
+												</div>
 											</div>
-										</div>
-										<div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
-											{category.can_view_topics && (
-												<Button
-													href={route('forum.categories.topics.index', { forum_category: category.id })}
-													intent="primary"
-													weight="outline"
-												>
-													View discussions
-													<Icon icon="arrow-right" />
-												</Button>
-											)}
-											{canManageCategories && (
-												<>
+											<div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+												{category.can_view_topics && (
 													<Button
-														intent="secondary"
-														weight="clear"
-														size="sm"
-														onClick={() => setActiveForm(category)}
+														href={route('forum.categories.topics.index', { forum_category: category.id })}
+														intent="primary"
+														weight="outline"
 													>
-														<Icon icon="pencil" /> Edit
+														View topics
+														<Icon icon="arrow-right" />
 													</Button>
-													<Button
-														intent="danger"
-														weight="clear"
-														size="sm"
-														onClick={() => deleteCategory(category)}
-													>
-														<Icon icon="trash" /> Delete
-													</Button>
-												</>
-											)}
-										</div>
-									</article>
+												)}
+												{canManageCategories && (
+													<>
+														<Button
+															intent="secondary"
+															weight="clear"
+															size="sm"
+															onClick={() => setActiveForm(category)}
+														>
+															<Icon icon="pencil" /> Edit
+														</Button>
+														<Button
+															intent="danger"
+															weight="clear"
+															size="sm"
+															onClick={() => deleteCategory(category)}
+														>
+															<Icon icon="trash" /> Delete
+														</Button>
+													</>
+												)}
+											</div>
+									</div>
+									<div className="mt-5">
+										<TopicList
+											topics={category.topics}
+											showCategories={false}
+											emptyTitle="No topics in this category yet"
+											emptyDescription="There are no topics in this category yet."
+										/>
+									</div>
+								</article>
 								))}
 							</div>
 						) : (
 							<div className="rounded-lg border border-gray-200 bg-white shadow-sm">
 								<EmptyState
-									title="No categories yet"
-									description="There are no forum categories available to you yet."
+									title="No categories available"
+									description="There are no categories available to you yet."
 									icon="comments"
 								/>
 							</div>
@@ -160,7 +172,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 	return (
 		<form onSubmit={submit} className="space-y-5 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
 			<h2 className="text-lg font-semibold text-gray-900">
-				{category ? 'Edit Forum Category' : 'Create Forum Category'}
+				{category ? 'Edit category' : 'Create category'}
 			</h2>
 			<div>
 				<label htmlFor="forum-category-title" className="mb-1 block text-sm font-medium text-gray-700">
