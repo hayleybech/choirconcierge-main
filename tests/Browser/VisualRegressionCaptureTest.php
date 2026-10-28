@@ -431,6 +431,8 @@ JS;
                 }
             }
 
+            $page = null;
+
             foreach ($catalog->viewports() as $viewport) {
                 File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $case['id']);
 
@@ -542,18 +544,20 @@ JS;
                     }
                 }
 
-                if (in_array($case['component'], ['Events/Create', 'Events/Edit'], true)) {
-                    $page = visit(route('login', [], false));
-                    $browserOrigin ??= $page->script('window.location.origin');
-                    $page->page()->context()->addInitScript($googlePlacesMock);
-                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
-                } elseif ($case['component'] === 'Singers/Placements/Edit') {
-                    $page = visit(route('login', [], false));
-                    $browserOrigin ??= $page->script('window.location.origin');
-                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
-                } else {
-                    $page = visit($pageUrl);
-                    $browserOrigin ??= $page->script('window.location.origin');
+                if ($page === null || ! empty($case['pdf_viewer'])) {
+                    if (in_array($case['component'], ['Events/Create', 'Events/Edit'], true)) {
+                        $page = visit(route('login', [], false));
+                        $browserOrigin ??= $page->script('window.location.origin');
+                        $page->page()->context()->addInitScript($googlePlacesMock);
+                        $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                    } elseif ($case['component'] === 'Singers/Placements/Edit') {
+                        $page = visit(route('login', [], false));
+                        $browserOrigin ??= $page->script('window.location.origin');
+                        $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                    } else {
+                        $page = visit($pageUrl);
+                        $browserOrigin ??= $page->script('window.location.origin');
+                    }
                 }
 
                 $page->resize($viewport['width'], $viewport['height']);
