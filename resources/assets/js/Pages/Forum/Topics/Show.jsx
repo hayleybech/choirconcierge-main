@@ -1,15 +1,30 @@
 import React, { useState } from 'react';
-import { Link, router, useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
+import Badge from '../../../components/Badge';
+import Button from '../../../components/inputs/ButtonV2';
+import Icon from '../../../components/Icon';
 import Prose from '../../../components/Prose';
 import useRoute from '../../../hooks/useRoute';
+import ForumPageLayout from '../ForumPageLayout';
 
-const Show = ({ category, topic, replies, canModerate, canReply }) => {
+const Show = ({ category, topic, replies, canModerate, canReply, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [isEditingTopic, setIsEditingTopic] = useState(false);
 	const [replyTo, setReplyTo] = useState(null);
 	const rootReplies = replies.filter(reply => reply.parent_id === null);
+	const breadcrumbs = [
+		...(category.id
+			? [
+					{
+						name: category.title,
+						url: route('forum.categories.topics.index', { forum_category: category.id }),
+					},
+				]
+			: []),
+		{ name: topic.title, url: route('forum.topics.show', { forum_topic: topic.id }) },
+	];
 
 	const removeTopic = () => {
 		if (window.confirm('Remove this discussion?')) {
@@ -24,146 +39,132 @@ const Show = ({ category, topic, replies, canModerate, canReply }) => {
 	return (
 		<>
 			<AppHead title={topic.title} />
-			<div className="mx-auto max-w-4xl px-4 py-8">
-				<Link
-					href={
-						category.id
-							? route('forum.categories.topics.index', { forum_category: category.id })
-							: route('forum.categories.index')
-					}
-					className="text-sm font-semibold text-purple-700 hover:text-purple-900"
-				>
-					{category.title ?? 'Forum Categories'}
-				</Link>
-
-				<article className="mt-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-					{isEditingTopic ? (
-						<TopicEditor topic={topic} onCancel={() => setIsEditingTopic(false)} />
-					) : (
+			<ForumPageLayout
+				title={topic.title}
+				description={`${category.title ? `${category.title} · ` : ''}Started by ${topic.author_name} · ${new Date(topic.created_at).toLocaleString()}`}
+				breadcrumbs={breadcrumbs}
+				setSidebarOpen={setSidebarOpen}
+			>
+				<div className="mx-auto max-w-5xl space-y-8">
+					<article className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+						{isEditingTopic ? (
+							<div className="p-5 sm:p-6">
+								<TopicEditor topic={topic} onCancel={() => setIsEditingTopic(false)} />
+							</div>
+						) : (
 						<>
-							<div className="flex flex-wrap items-start justify-between gap-3">
-								<div>
-									<h1 className="text-2xl font-bold text-gray-900">{topic.title}</h1>
-									<div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold">
-										{topic.is_pinned && <StatusBadge>Pinned</StatusBadge>}
-										{topic.is_locked && <StatusBadge>Locked</StatusBadge>}
-										{topic.is_deleted && <StatusBadge>Removed</StatusBadge>}
-									</div>
+							<div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-5 py-4 sm:px-6">
+								<div className="flex flex-wrap gap-2">
+									{topic.is_pinned && <Badge colour="bg-purple-100 text-purple-800">Pinned</Badge>}
+									{topic.is_locked && <Badge colour="bg-amber-100 text-amber-800">Locked</Badge>}
+									{topic.is_deleted && <Badge colour="bg-red-100 text-red-800">Removed</Badge>}
 								</div>
 								{(topic.can_edit || canModerate) && !topic.is_deleted && (
-									<div className="flex flex-wrap gap-3 text-sm">
+									<div className="flex flex-wrap items-center gap-1">
 										{topic.can_edit && (
-											<button
-												type="button"
-												className="font-semibold text-purple-700 hover:text-purple-900"
-												onClick={() => setIsEditingTopic(true)}
-											>
-												Edit
-											</button>
+											<Button weight="clear" size="sm" onClick={() => setIsEditingTopic(true)}>
+												<Icon icon="pencil" /> Edit
+											</Button>
 										)}
 										{topic.can_edit && (
-											<button
-												type="button"
-												className="font-semibold text-red-700 hover:text-red-900"
-												onClick={removeTopic}
-											>
-												Remove
-											</button>
+											<Button intent="danger" weight="clear" size="sm" onClick={removeTopic}>
+												<Icon icon="trash" /> Remove
+											</Button>
 										)}
 										{canModerate && (
 											<>
-												<button
-													type="button"
-													className="font-semibold text-gray-700 hover:text-gray-900"
-													onClick={toggleLock}
-												>
+												<Button weight="clear" size="sm" onClick={toggleLock}>
+													<Icon icon={topic.is_locked ? 'lock-open' : 'lock'} />
 													{topic.is_locked ? 'Unlock' : 'Lock'}
-												</button>
-												<button
-													type="button"
-													className="font-semibold text-gray-700 hover:text-gray-900"
-													onClick={togglePin}
-												>
+												</Button>
+												<Button weight="clear" size="sm" onClick={togglePin}>
+													<Icon icon="thumbtack" />
 													{topic.is_pinned ? 'Unpin' : 'Pin'}
-												</button>
+												</Button>
 											</>
 										)}
 									</div>
 								)}
 								{canModerate && topic.is_deleted && (
-									<button
-										type="button"
-										className="text-sm font-semibold text-purple-700 hover:text-purple-900"
-										onClick={restoreTopic}
-									>
-										Restore discussion
-									</button>
+									<Button intent="primary" weight="outline" size="sm" onClick={restoreTopic}>
+										<Icon icon="undo" /> Restore discussion
+									</Button>
 								)}
 							</div>
-							<Prose content={topic.body_html} className="mt-4 text-sm text-gray-800" />
-							<p className="mt-4 text-xs text-gray-500">
-								Started by {topic.author_name} · {new Date(topic.created_at).toLocaleString()}
-							</p>
-							<div className="mt-3 flex flex-wrap items-center gap-3">
-								{!topic.is_deleted && (
-									<button
-										type="button"
-										className="text-sm font-semibold text-purple-700 hover:text-purple-900"
-										onClick={() =>
-											topic.is_following
-											? router.delete(route('forum.topics.unfollow', { forum_topic: topic.id }), { preserveScroll: true })
-											: router.put(route('forum.topics.follow', { forum_topic: topic.id }), {}, { preserveScroll: true })
-										}
-									>
-										{topic.is_following ? 'Unfollow discussion' : 'Follow discussion'}
-									</button>
-								)}
-								{!topic.is_deleted && <ReactionBar targetType="topics" targetId={topic.id} reactions={topic.reactions} />}
+
+							<div className="px-5 py-6 sm:px-6">
+								<Prose content={topic.body_html} className="text-base text-gray-800" />
+								<div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-gray-100 pt-4">
+									{!topic.is_deleted && (
+										<Button
+											intent={topic.is_following ? 'secondary' : 'primary'}
+											weight={topic.is_following ? 'outline' : 'solid'}
+											onClick={() =>
+												topic.is_following
+													? router.delete(route('forum.topics.unfollow', { forum_topic: topic.id }), { preserveScroll: true })
+													: router.put(route('forum.topics.follow', { forum_topic: topic.id }), {}, { preserveScroll: true })
+											}
+										>
+											<Icon icon="bookmark" />
+											{topic.is_following ? 'Unfollow discussion' : 'Follow discussion'}
+										</Button>
+									)}
+									{!topic.is_deleted && (
+										<ReactionBar targetType="topics" targetId={topic.id} reactions={topic.reactions} />
+									)}
+								</div>
 							</div>
 						</>
-					)}
-				</article>
+						)}
+					</article>
 
-				<section className="mt-8 space-y-4">
-					<h2 className="text-xl font-bold text-gray-900">
-						Replies ({replies.filter(reply => !reply.is_deleted).length})
-					</h2>
-					{rootReplies.map(reply => {
-						const nestedReplies = replies.filter(nestedReply => nestedReply.parent_id === reply.id);
+					<section className="space-y-4">
+						<div className="flex items-center justify-between gap-3">
+							<h2 className="text-xl font-bold text-gray-900">Replies</h2>
+							<Badge colour="bg-gray-200">{replies.filter(reply => !reply.is_deleted).length}</Badge>
+						</div>
+						{rootReplies.map(reply => {
+							const nestedReplies = replies.filter(nestedReply => nestedReply.parent_id === reply.id);
 
-						return (
-							<div key={reply.id}>
-								<ReplyCard
-									reply={reply}
-									canModerate={canModerate}
-									onReply={() => setReplyTo(reply.id)}
-								/>
-								{replyTo === reply.id && canReply && (
-									<ReplyComposer
-										topicId={topic.id}
-										parentId={reply.id}
-										onCancel={() => setReplyTo(null)}
+							return (
+								<div key={reply.id} className="space-y-3">
+									<ReplyCard
+										reply={reply}
+										canModerate={canModerate}
+										onReply={() => setReplyTo(reply.id)}
 									/>
-								)}
-								{nestedReplies.map(nestedReply => (
-									<div
-										key={nestedReply.id}
-										className="ml-6 mt-3 border-l-2 border-gray-200 pl-4 sm:ml-10"
-									>
-										<ReplyCard reply={nestedReply} canModerate={canModerate} />
-									</div>
-								))}
+									{replyTo === reply.id && canReply && (
+										<ReplyComposer
+											topicId={topic.id}
+											parentId={reply.id}
+											onCancel={() => setReplyTo(null)}
+										/>
+									)}
+									{nestedReplies.length > 0 && (
+										<div className="ml-4 space-y-3 border-l-2 border-purple-100 pl-4 sm:ml-10">
+											{nestedReplies.map(nestedReply => (
+												<ReplyCard key={nestedReply.id} reply={nestedReply} canModerate={canModerate} />
+											))}
+										</div>
+									)}
+								</div>
+							);
+						})}
+						{rootReplies.length === 0 && (
+							<div className="rounded-lg border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-600">
+								No replies yet. Start the conversation below.
 							</div>
-						);
-					})}
-					{rootReplies.length === 0 && <p className="text-sm text-gray-600">No replies yet.</p>}
-				</section>
+						)}
+					</section>
 
-				{canReply && !replyTo && <ReplyComposer topicId={topic.id} parentId={null} />}
-				{!canReply && topic.is_locked && (
-					<p className="mt-6 text-sm text-gray-600">This discussion is locked.</p>
-				)}
-			</div>
+					{canReply && !replyTo && <ReplyComposer topicId={topic.id} parentId={null} />}
+					{!canReply && topic.is_locked && (
+						<p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+							This discussion is locked.
+						</p>
+					)}
+				</div>
+			</ForumPageLayout>
 		</>
 	);
 };
@@ -181,7 +182,7 @@ const TopicEditor = ({ topic, onCancel }) => {
 	};
 
 	return (
-		<form onSubmit={submit} className="space-y-4">
+		<form onSubmit={submit} className="space-y-5">
 			<h2 className="text-lg font-semibold text-gray-900">Edit discussion</h2>
 			<div>
 				<label htmlFor="edit-topic-title" className="mb-1 block text-sm font-medium text-gray-700">
@@ -191,7 +192,7 @@ const TopicEditor = ({ topic, onCancel }) => {
 					id="edit-topic-title"
 					value={data.title}
 					onChange={event => setData('title', event.target.value)}
-					className="w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+					className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
 					maxLength={255}
 					required
 				/>
@@ -205,27 +206,19 @@ const TopicEditor = ({ topic, onCancel }) => {
 					id="edit-topic-body"
 					value={data.body}
 					onChange={event => setData('body', event.target.value)}
-					className="min-h-40 w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+					className="block min-h-40 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
 					maxLength={20000}
 					required
 				/>
 				{errors.body && <p className="mt-1 text-sm text-red-700">{errors.body}</p>}
 			</div>
 			<div className="flex justify-end gap-2">
-				<button
-					type="button"
-					className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-					onClick={onCancel}
-				>
+				<Button weight="clear" onClick={onCancel}>
 					Cancel
-				</button>
-				<button
-					type="submit"
-					className="rounded bg-purple-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-					disabled={processing}
-				>
+				</Button>
+				<Button type="submit" intent="primary" disabled={processing}>
 					Save changes
-				</button>
+				</Button>
 			</div>
 		</form>
 	);
@@ -246,54 +239,53 @@ const ReplyCard = ({ reply, canModerate, onReply }) => {
 
 	return (
 		<article
-			className={`rounded-lg border border-gray-200 bg-white p-4 shadow-sm ${
-				reply.is_deleted ? 'border-dashed opacity-75' : ''
+			className={`rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6 ${
+				reply.is_deleted ? 'border-dashed bg-gray-50 opacity-75' : ''
 			}`}
 		>
 			{isEditing ? (
 				<ReplyEditor reply={reply} onCancel={() => setIsEditing(false)} />
 			) : (
 				<>
-					<Prose content={reply.body_html} className="text-sm text-gray-800" />
-					{!reply.is_deleted && <ReactionBar targetType="replies" targetId={reply.id} reactions={reply.reactions} />}
-					<div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-						<p className="text-xs text-gray-500">
-							{reply.author_name} · {new Date(reply.created_at).toLocaleString()}
-						</p>
-						<div className="flex flex-wrap gap-3 text-xs font-semibold">
-							{onReply && !reply.is_deleted && (
-								<button
-									type="button"
-									className="text-purple-700 hover:text-purple-900"
-									onClick={onReply}
-								>
-									Reply
-								</button>
-							)}
-							{reply.can_edit && !reply.is_deleted && (
-								<button
-									type="button"
-									className="text-purple-700 hover:text-purple-900"
-									onClick={() => setIsEditing(true)}
-								>
-									Edit
-								</button>
-							)}
-							{reply.can_edit && !reply.is_deleted && (
-								<button type="button" className="text-red-700 hover:text-red-900" onClick={removeReply}>
-									Remove
-								</button>
-							)}
-							{canModerate && reply.can_restore && (
-								<button
-									type="button"
-									className="text-purple-700 hover:text-purple-900"
-									onClick={restoreReply}
-								>
-									Restore
-								</button>
+					<div className="flex items-start gap-3">
+						<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-100 text-sm font-semibold text-purple-800">
+							{reply.author_name?.charAt(0)?.toUpperCase()}
+						</div>
+						<div className="min-w-0 flex-1">
+							<div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+								<p className="text-sm font-semibold text-gray-900">{reply.author_name}</p>
+								<time dateTime={reply.created_at} className="text-xs text-gray-500">
+									{new Date(reply.created_at).toLocaleString()}
+								</time>
+								{reply.is_deleted && <Badge colour="bg-gray-200">Removed</Badge>}
+							</div>
+							<Prose content={reply.body_html} className="mt-3 text-sm text-gray-800" />
+							{!reply.is_deleted && (
+								<ReactionBar targetType="replies" targetId={reply.id} reactions={reply.reactions} />
 							)}
 						</div>
+					</div>
+					<div className="mt-4 flex flex-wrap items-center justify-end gap-1 border-t border-gray-100 pt-3">
+						{onReply && !reply.is_deleted && (
+							<Button size="sm" weight="clear" onClick={onReply}>
+								<Icon icon="reply" /> Reply
+							</Button>
+						)}
+						{reply.can_edit && !reply.is_deleted && (
+							<Button size="sm" weight="clear" onClick={() => setIsEditing(true)}>
+								<Icon icon="pencil" /> Edit
+							</Button>
+						)}
+						{reply.can_edit && !reply.is_deleted && (
+							<Button intent="danger" size="sm" weight="clear" onClick={removeReply}>
+								<Icon icon="trash" /> Remove
+							</Button>
+						)}
+						{canModerate && reply.can_restore && (
+							<Button size="sm" weight="clear" onClick={restoreReply}>
+								<Icon icon="undo" /> Restore
+							</Button>
+						)}
 					</div>
 				</>
 			)}
@@ -327,10 +319,16 @@ const ReactionBar = ({ targetType, targetId, reactions }) => {
 						key={emoji}
 						type="button"
 						aria-pressed={Boolean(reaction?.reacted)}
-						className={`rounded-full border px-2 py-1 text-sm ${reaction?.reacted ? 'border-purple-500 bg-purple-50' : 'border-gray-200 bg-white'}`}
+						aria-label={`${emoji} reaction`}
+						className={`inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 ${
+							reaction?.reacted
+								? 'border-purple-400 bg-purple-50 text-purple-800'
+								: 'border-gray-200 bg-white text-gray-700 hover:border-purple-300 hover:bg-gray-50'
+						}`}
 						onClick={() => toggleReaction(emoji)}
 					>
-						{emoji}{reaction ? ` ${reaction.count}` : ''}
+						{emoji}
+						{reaction && <span>{reaction.count}</span>}
 					</button>
 				);
 			})}
@@ -351,7 +349,7 @@ const ReplyEditor = ({ reply, onCancel }) => {
 	};
 
 	return (
-		<form onSubmit={submit} className="space-y-3">
+		<form onSubmit={submit} className="space-y-4">
 			<label htmlFor={`edit-reply-${reply.id}`} className="block text-sm font-medium text-gray-700">
 				Edit reply (Markdown supported)
 			</label>
@@ -359,26 +357,18 @@ const ReplyEditor = ({ reply, onCancel }) => {
 				id={`edit-reply-${reply.id}`}
 				value={data.body}
 				onChange={event => setData('body', event.target.value)}
-				className="min-h-32 w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+				className="block min-h-32 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
 				maxLength={20000}
 				required
 			/>
 			{errors.body && <p className="text-sm text-red-700">{errors.body}</p>}
 			<div className="flex justify-end gap-2">
-				<button
-					type="button"
-					className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-					onClick={onCancel}
-				>
+				<Button weight="clear" onClick={onCancel}>
 					Cancel
-				</button>
-				<button
-					type="submit"
-					className="rounded bg-purple-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-					disabled={processing}
-				>
+				</Button>
+				<Button type="submit" intent="primary" disabled={processing}>
 					Save reply
-				</button>
+				</Button>
 			</div>
 		</form>
 	);
@@ -400,7 +390,7 @@ const ReplyComposer = ({ topicId, parentId, onCancel }) => {
 	};
 
 	return (
-		<form onSubmit={submit} className="mt-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+		<form onSubmit={submit} className="space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
 			<label htmlFor={`reply-body-${parentId ?? 'topic'}`} className="block text-sm font-medium text-gray-700">
 				{parentId ? 'Reply to this message (Markdown supported)' : 'Add a reply (Markdown supported)'}
 			</label>
@@ -408,7 +398,7 @@ const ReplyComposer = ({ topicId, parentId, onCancel }) => {
 				id={`reply-body-${parentId ?? 'topic'}`}
 				value={data.body}
 				onChange={event => setData('body', event.target.value)}
-				className="min-h-32 w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+				className="block min-h-32 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
 				maxLength={20000}
 				required
 			/>
@@ -417,27 +407,17 @@ const ReplyComposer = ({ topicId, parentId, onCancel }) => {
 			{errors.topic && <p className="text-sm text-red-700">{errors.topic}</p>}
 			<div className="flex justify-end gap-2">
 				{onCancel && (
-					<button
-						type="button"
-						className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-						onClick={onCancel}
-					>
+					<Button weight="clear" onClick={onCancel}>
 						Cancel
-					</button>
+					</Button>
 				)}
-				<button
-					type="submit"
-					className="rounded bg-purple-700 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
-					disabled={processing}
-				>
+				<Button type="submit" intent="primary" disabled={processing}>
 					Post reply
-				</button>
+				</Button>
 			</div>
 		</form>
 	);
 };
-
-const StatusBadge = ({ children }) => <span className="rounded bg-gray-100 px-2 py-1 text-gray-700">{children}</span>;
 
 Show.layout = page => <TenantLayout children={page} />;
 

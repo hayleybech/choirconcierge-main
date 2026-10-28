@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
-import { Link, router, useForm } from '@inertiajs/react';
+import { router, useForm } from '@inertiajs/react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
+import Badge from '../../../components/Badge';
+import EmptyState from '../../../components/EmptyState';
+import Icon from '../../../components/Icon';
+import Button from '../../../components/inputs/ButtonV2';
 import useRoute from '../../../hooks/useRoute';
+import ForumPageLayout from '../ForumPageLayout';
 
-const Index = ({ categories, ensembles, canManageCategories }) => {
+const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [activeForm, setActiveForm] = useState(null);
 	const formCategory = activeForm === 'new' ? null : activeForm;
+	const actions = canManageCategories && !activeForm
+		? [{ label: 'New category', icon: 'plus', onClick: () => setActiveForm('new') }]
+		: [];
 
 	const deleteCategory = category => {
 		if (window.confirm(`Delete the "${category.title}" category?`)) {
@@ -20,94 +28,111 @@ const Index = ({ categories, ensembles, canManageCategories }) => {
 	return (
 		<>
 			<AppHead title="Forum Categories" />
-			<div className="mx-auto max-w-4xl px-4 py-8">
-				<div className="mb-6 flex items-center justify-between gap-4">
-					<div>
-						<h1 className="text-2xl font-bold text-gray-900">Forum Categories</h1>
-						<p className="mt-1 text-sm text-gray-600">
-							Categories help members find conversations relevant to their choir.
-						</p>
-					</div>
-					<Link
-						href={route('forum.following.index')}
-						className="text-sm font-semibold text-purple-700 hover:text-purple-900"
-					>
-						Followed discussions
-					</Link>
-					{canManageCategories && !activeForm && (
-						<button
-							type="button"
-							className="rounded bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800"
-							onClick={() => setActiveForm('new')}
-						>
-							Add Category
-						</button>
+			<ForumPageLayout
+				title="Forum"
+				description="Find conversations for your choir and the ensembles you belong to."
+				actions={actions}
+				setSidebarOpen={setSidebarOpen}
+			>
+				<div className="mx-auto max-w-5xl space-y-5">
+					{activeForm && (
+						<CategoryForm
+							key={formCategory?.id ?? 'new'}
+							category={formCategory}
+							ensembles={ensembles}
+							onCancel={() => setActiveForm(null)}
+						/>
 					)}
-				</div>
 
-				{activeForm && (
-					<CategoryForm
-						key={formCategory?.id ?? 'new'}
-						category={formCategory}
-						ensembles={ensembles}
-						onCancel={() => setActiveForm(null)}
-					/>
-				)}
-
-				<div className="space-y-3">
-					{categories.map(category => (
-						<article key={category.id} className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-							<div className="flex items-start justify-between gap-4">
-								<div>
-									<h2 className="font-semibold text-gray-900">{category.title}</h2>
-									<p className="mt-1 text-sm text-gray-600">
-										{category.is_choir_wide
-											? 'Visible to all active choir members'
-											: category.ensembles.length > 0
-											? `Visible to ${category.ensembles
-													.map(ensemble => ensemble.name)
-													.join(', ')}`
-											: 'Restricted to ensembles that are no longer available'}
-									</p>
-									{category.can_view_topics && (
-										<Link
-											href={route('forum.categories.topics.index', {
-												forum_category: category.id,
-											})}
-											className="mt-2 inline-block text-sm font-semibold text-purple-700 hover:text-purple-900"
-										>
-											View discussions
-										</Link>
-									)}
-								</div>
-								{canManageCategories && (
-									<div className="flex shrink-0 gap-3 text-sm">
-										<button
-											type="button"
-											className="font-semibold text-purple-700 hover:text-purple-900"
-											onClick={() => setActiveForm(category)}
-										>
-											Edit
-										</button>
-										<button
-											type="button"
-											className="font-semibold text-red-700 hover:text-red-900"
-											onClick={() => deleteCategory(category)}
-										>
-											Delete
-										</button>
-									</div>
-								)}
+					<section>
+						<div className="mb-3 flex items-end justify-between gap-3">
+							<div>
+								<h2 className="text-lg font-semibold text-gray-900">Browse categories</h2>
+								<p className="mt-1 text-sm text-gray-500">
+									Each category brings together a different choir conversation.
+								</p>
 							</div>
-						</article>
-					))}
-					{categories.length === 0 && (
-						<p className="rounded-lg border border-dashed border-gray-300 p-6 text-center text-sm text-gray-600">
-							There are no forum categories available to you yet.
-						</p>
-					)}
+							<span className="text-sm text-gray-500">
+								{categories.length} {categories.length === 1 ? 'category' : 'categories'}
+							</span>
+						</div>
+
+						{categories.length > 0 ? (
+							<div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
+								{categories.map(category => (
+									<article
+										key={category.id}
+										className="flex flex-col gap-5 border-b border-gray-200 p-5 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+									>
+										<div className="flex min-w-0 items-start gap-4">
+											<div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-700">
+												<Icon icon="comments" />
+											</div>
+											<div className="min-w-0">
+												<div className="flex flex-wrap items-center gap-2">
+													<h3 className="font-semibold text-gray-900">{category.title}</h3>
+													<Badge colour={category.is_choir_wide ? 'bg-purple-100 text-purple-800' : 'bg-gray-100'}>
+														{category.is_choir_wide ? 'Choir-wide' : 'Ensemble'}
+													</Badge>
+												</div>
+												<p className="mt-1 text-sm text-gray-600">
+													{category.is_choir_wide
+														? 'Visible to all active choir members'
+														: category.ensembles.length > 0
+															? `Visible to ${category.ensembles
+																.map(ensemble => ensemble.name)
+																.join(', ')}`
+															: 'Restricted to ensembles that are no longer available'}
+												</p>
+											</div>
+										</div>
+										<div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
+											{category.can_view_topics && (
+												<Button
+													href={route('forum.categories.topics.index', { forum_category: category.id })}
+													intent="primary"
+													weight="outline"
+												>
+													View discussions
+													<Icon icon="arrow-right" />
+												</Button>
+											)}
+											{canManageCategories && (
+												<>
+													<Button
+														intent="secondary"
+														weight="clear"
+														size="sm"
+														onClick={() => setActiveForm(category)}
+													>
+														<Icon icon="pencil" /> Edit
+													</Button>
+													<Button
+														intent="danger"
+														weight="clear"
+														size="sm"
+														onClick={() => deleteCategory(category)}
+													>
+														<Icon icon="trash" /> Delete
+													</Button>
+												</>
+											)}
+										</div>
+									</article>
+								))}
+							</div>
+						) : (
+							<div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+								<EmptyState
+									title="No categories yet"
+									description="There are no forum categories available to you yet."
+									icon="comments"
+								/>
+							</div>
+						)}
+					</section>
 				</div>
-			</div>
+			</ForumPageLayout>
 		</>
 	);
 };
@@ -133,7 +158,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 	};
 
 	return (
-		<form onSubmit={submit} className="mb-6 space-y-4 rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+		<form onSubmit={submit} className="space-y-5 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
 			<h2 className="text-lg font-semibold text-gray-900">
 				{category ? 'Edit Forum Category' : 'Create Forum Category'}
 			</h2>
@@ -146,7 +171,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 					name="title"
 					value={data.title}
 					onChange={event => setData('title', event.target.value)}
-					className="w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+					className="block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
 					maxLength={255}
 					required
 				/>
@@ -174,7 +199,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 							Array.from(event.target.selectedOptions, option => Number(option.value))
 						)
 					}
-					className="w-full rounded border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+					className="block min-h-32 w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 disabled:bg-gray-100"
 				>
 					{ensembles.map(ensemble => (
 						<option key={ensemble.id} value={ensemble.id}>
@@ -190,20 +215,12 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 				)}
 			</div>
 			<div className="flex justify-end gap-2">
-				<button
-					type="button"
-					className="rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
-					onClick={onCancel}
-				>
+				<Button weight="clear" onClick={onCancel}>
 					Cancel
-				</button>
-				<button
-					type="submit"
-					className="rounded bg-purple-700 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-800 disabled:opacity-50"
-					disabled={processing}
-				>
-					{processing ? 'Saving…' : 'Save Category'}
-				</button>
+				</Button>
+				<Button type="submit" intent="primary" disabled={processing}>
+					{processing ? 'Saving…' : 'Save category'}
+				</Button>
 			</div>
 		</form>
 	);
