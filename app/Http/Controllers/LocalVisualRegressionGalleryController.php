@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\MailLog;
 use App\Support\VisualRegression\ScreenshotCatalog;
-use JsonException;
 use Illuminate\Http\Response;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,19 +59,15 @@ class LocalVisualRegressionGalleryController extends Controller
     {
         $this->ensureLocalEnvironment();
 
-        $comparisonStatuses = $this->comparisonStatuses();
         $entries = collect($this->catalog->cases())
             ->flatMap(fn(array $case): Collection => collect($this->catalog->viewports())
                 ->map(fn(array $viewport): array => [
                     ...$case,
                     'browser' => $case['browser'] ?? 'chromium',
                     'viewport' => $viewport,
-                    'comparison' => $comparisonStatuses[$case['id'] . '::' . $viewport['id']]
-                        ?? ($this->imageExists($case['id'], $viewport['id'], 'latest') ? 'captured' : 'not_run'),
+                    'capture_status' => $this->imageExists($case['id'], $viewport['id']) ? 'captured' : 'not_run',
                     'images' => [
-                        'baseline' => $this->imageExists($case['id'], $viewport['id'], 'baseline'),
-                        'latest' => $this->imageExists($case['id'], $viewport['id'], 'latest'),
-                        'diff' => $this->imageExists($case['id'], $viewport['id'], 'diff'),
+                        'latest' => $this->imageExists($case['id'], $viewport['id']),
                     ],
                 ]))
             ->values();
@@ -93,9 +88,9 @@ class LocalVisualRegressionGalleryController extends Controller
         $screenshotViewport = collect($this->catalog->viewports())->firstWhere('id', $viewport);
 
         abort_if($screenshotCase === null || $screenshotViewport === null, Response::HTTP_NOT_FOUND);
-        abort_unless(in_array($variant, ['baseline', 'latest', 'diff'], true), Response::HTTP_NOT_FOUND);
+        abort_unless($variant === 'latest', Response::HTTP_NOT_FOUND);
 
-        $path = $this->imagePath($case, $viewport, $variant);
+        $path = $this->imagePath($case, $viewport);
 
         abort_unless(File::isFile($path), Response::HTTP_NOT_FOUND);
 
@@ -176,7 +171,7 @@ class LocalVisualRegressionGalleryController extends Controller
      */
     private function filters(Collection $entries): array
     {
-        return collect(['module', 'page_type', 'state', 'persona', 'browser', 'route', 'comparison'])
+        return collect(['module', 'page_type', 'state', 'persona', 'browser', 'route'])
             ->mapWithKeys(fn(string $field): array => [
                 $field => $entries->pluck($field)->filter()->unique()->sort()->values()->all(),
             ])
@@ -229,53 +224,15 @@ class LocalVisualRegressionGalleryController extends Controller
         ];
     }
 
-    /**
-     * @return array<string, string>
-     */
-    private function comparisonStatuses(): array
+    private function imageExists(string $case, string $viewport): bool
     {
-        $summaryPath = config('visual-regression.latest_directory') . DIRECTORY_SEPARATOR . 'summary.json';
-
-        if (!File::isFile($summaryPath)) {
-            return [];
-        }
-
-        try {
-            $summary = json_decode(File::get($summaryPath), true, flags: JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
-            return [];
-        }
-
-        if (!is_array($summary) || !is_array($summary['results'] ?? null)) {
-            return [];
-        }
-
-        return collect($summary['results'])
-            ->filter(fn(mixed $result): bool => is_array($result)
-                && is_string($result['case_id'] ?? null)
-                && is_string($result['viewport'] ?? null)
-                && is_string($result['status'] ?? null))
-            ->mapWithKeys(fn(array $result): array => [
-                $result['case_id'] . '::' . $result['viewport'] => $result['status'],
-            ])
-            ->all();
+        return File::isFile($this->imagePath($case, $viewport));
     }
 
-    private function imageExists(string $case, string $viewport, string $variant): bool
+    private function imagePath(string $case, string $viewport): string
     {
-        return File::isFile($this->imagePath($case, $viewport, $variant));
-    }
-
-    private function imagePath(string $case, string $viewport, string $variant): string
-    {
-        $directory = match ($variant) {
-            'baseline' => config('visual-regression.baseline_directory'),
-            'latest' => config('visual-regression.latest_directory'),
-            'diff' => config('visual-regression.diff_directory'),
-            default => '',
-        };
-
-        return $directory . DIRECTORY_SEPARATOR . $case . DIRECTORY_SEPARATOR . $viewport . '.png';
+        return config('visual-regression.latest_directory') . DIRECTORY_SEPARATOR
+            . $case . DIRECTORY_SEPARATOR . $viewport . '.png';
     }
 
     private function ensureLocalEnvironment(): void

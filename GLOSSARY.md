@@ -48,10 +48,10 @@ One planned rendering of a page template for a chosen state, role, and viewport.
 A named set of viewport dimensions, such as desktop, tablet, or mobile, used consistently for captures.
 
 **Baseline**:
-An approved screenshot that represents the expected appearance of a screenshot case.
+An approved Argos screenshot build used as the reference for visual comparison.
 
 **Visual regression**:
-An unintended visual difference between a new capture and its approved baseline.
+An unintended visual difference detected by Argos between a pull-request capture and its reference build.
 
 **Screenshot gallery**:
-A collection for browsing baselines, recent captures, and their visual differences.
+A local/testing-only collection for browsing the most recent catalog captures.
