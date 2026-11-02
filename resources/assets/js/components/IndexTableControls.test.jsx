@@ -186,6 +186,8 @@ it('provides mobile bulk selection, filter, sort, and action menu controls', asy
 	const filterButton = within(mobile).getByRole('button', { name: 'Filter members' });
 
 	expect(mobile).toHaveClass('flex', 'lg:hidden');
+	expect(mobile.parentElement).toHaveClass('px-4', 'py-2', 'border-b', 'border-gray-200', 'lg:border-b-0');
+	expect(mobile).not.toHaveClass('border-b');
 	expect(within(mobile).queryByRole('button', { name: /open filter values/ })).not.toBeInTheDocument();
 	expect(filterButton).toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(within(mobile).getByRole('checkbox', { name: 'Select all members' })).not.toBeChecked();

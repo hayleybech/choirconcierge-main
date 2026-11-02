@@ -85,7 +85,7 @@ const Index = ({
 						label: 'Audition Songs',
 						multiple: true,
 						multipleBool: true,
-						defaultValue: showForProspectsDefault,
+						defaultValue: [],
 						options: [
 							{ id: false, name: 'Non-Audition Songs' },
 							{ id: true, name: 'Audition Songs' },
@@ -144,24 +144,24 @@ const Index = ({
 								</PageHeaderLink>
 							)}
 						</PageHeaderLinks>
+						<PageHeaderActions>
+							{pageActions.map(action => (
+								<Button
+									key={action.label}
+									href={action.url}
+									onClick={action.onClick}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
 					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{pageActions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<Dialog

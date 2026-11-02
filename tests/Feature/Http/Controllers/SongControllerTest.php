@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Enums\SingerStatus;
 use App\Models\Ensemble;
 use App\Models\Role;
 use App\Models\Membership;
@@ -85,6 +86,49 @@ class SongControllerTest extends TestCase
                 ->has('categories')
                 ->has('userEnsemblesCount')
                 ->has('ensembles')
+            );
+    }
+
+    public function test_index_with_an_empty_audition_filter_includes_all_song_types(): void
+    {
+        $this->actingAs($this->createUserWithRole('Music Team'));
+
+        Song::factory()->create(['title' => 'Audition Song', 'show_for_prospects' => true]);
+        Song::factory()->create(['title' => 'Non-Audition Song', 'show_for_prospects' => false]);
+
+        $this->get(the_tenant_route('songs.index'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('songs.data', 2)
+            );
+
+        $this->get(the_tenant_route('songs.index') . '?filter%5Bshow_for_prospects%5D%5B%5D=')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('songs.data', 2)
+                ->where('songs.data.0.title', 'Audition Song')
+                ->where('songs.data.1.title', 'Non-Audition Song')
+            );
+    }
+
+    public function test_empty_audition_filter_does_not_expose_non_audition_songs_to_prospects(): void
+    {
+        $user = $this->createUserWithRole('User');
+        $user->membership->statuses()->delete();
+        $user->membership->statuses()->create(['status' => SingerStatus::PROSPECTS->value]);
+        $user->unsetRelation('membership')->load('membership.status');
+
+        $this->assertSame(SingerStatus::PROSPECTS, $user->membership->status->status);
+
+        Song::factory()->create(['title' => 'Audition Song', 'show_for_prospects' => true]);
+        Song::factory()->create(['title' => 'Non-Audition Song', 'show_for_prospects' => false]);
+
+        $this->actingAs($user)
+            ->get(the_tenant_route('songs.index') . '?filter%5Bshow_for_prospects%5D%5B%5D=')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('songs.data', 1)
+                ->where('songs.data.0.title', 'Audition Song')
             );
     }
 

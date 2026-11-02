@@ -162,28 +162,28 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 								</PageHeaderLink>
 							))}
 						</PageHeaderLinks>
+						<PageHeaderActions>
+							{pageActions.map(action => (
+								<Button
+									key={action.label}
+									href={action.url}
+									onClick={action.onClick}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
+									external={action.download}
+									download={action.download}
+									method={action.method}
+									disabled={action.disabled}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
 					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{pageActions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-							external={action.download}
-							download={action.download}
-							method={action.method}
-							disabled={action.disabled}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />

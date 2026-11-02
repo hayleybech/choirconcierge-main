@@ -14,9 +14,18 @@ export const PageHeader = ({ children, className = '', hideOnMobile = false }) =
 );
 
 /** Wrapper for page header desktop actions */
-export const PageHeaderActions = ({ children }) => (
-	<div className="hidden shrink-0 items-center gap-3 xl:ml-4 xl:flex">{children}</div>
-);
+export const PageHeaderActions = ({ children }) => {
+	const actions = React.Children.toArray(children);
+	const primaryActions = actions.filter(action => action.props?.intent === 'primary');
+	const secondaryActions = actions.filter(action => action.props?.intent !== 'primary');
+
+	return (
+		<div className="hidden shrink-0 items-center gap-3 xl:ml-auto xl:flex">
+			{secondaryActions}
+			{primaryActions}
+		</div>
+	);
+};
 
 /** Wrapper for page header meta items */
 export const PageHeaderMeta = ({ children }) => (
@@ -34,7 +43,7 @@ export const PageHeaderBreadcrumbs = ({ breadcrumbs }) => (
 export const PageHeaderContent = ({ children }) => <div className="min-w-0 flex-1 space-y-2">{children}</div>;
 
 export const PageHeaderTitleRow = ({ children }) => (
-	<div className="flex min-w-0 items-center gap-4">{children}</div>
+	<div className="flex w-full min-w-0 items-center gap-4">{children}</div>
 );
 
 export const PageHeaderLinks = ({ children }) => (

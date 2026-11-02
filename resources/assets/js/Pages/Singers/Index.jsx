@@ -248,27 +248,27 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 								</PageHeaderLink>
 							))}
 						</PageHeaderLinks>
+						<PageHeaderActions>
+							{mainPageAction && (
+								<Button
+									href={mainPageAction.url}
+									onClick={mainPageAction.onClick}
+									size="md"
+									intent={mainPageAction.intent}
+									weight={mainPageAction.weight ?? 'clear'}
+									className={mainPageAction.className}
+									external={mainPageAction.download}
+									download={mainPageAction.download}
+									method={mainPageAction.method}
+									disabled={mainPageAction.disabled}
+								>
+									<Icon icon={mainPageAction.icon} mr />
+									{mainPageAction.label}
+								</Button>
+							)}
+						</PageHeaderActions>
 					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{mainPageAction && (
-						<Button
-							href={mainPageAction.url}
-							onClick={mainPageAction.onClick}
-							size="md"
-							intent={mainPageAction.intent}
-							weight={mainPageAction.weight ?? 'clear'}
-							className={mainPageAction.className}
-							external={mainPageAction.download}
-							download={mainPageAction.download}
-							method={mainPageAction.method}
-							disabled={mainPageAction.disabled}
-						>
-							<Icon icon={mainPageAction.icon} mr />
-							{mainPageAction.label}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<Dialog

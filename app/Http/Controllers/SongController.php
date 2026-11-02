@@ -258,8 +258,19 @@ class SongController extends Controller
                 AllowedFilter::exact('status.id')
                     ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
                     ->default($defaultStatuses),
-                AllowedFilter::callback('show_for_prospects', fn(Builder $query, $value) => $query->whereIn('show_for_prospects', $includeNonAuditionSongs ? $value : [true])
-                )
+                AllowedFilter::callback('show_for_prospects', function (Builder $query, $value) use ($includeNonAuditionSongs): void {
+                    $selectedValues = collect((array) $value)
+                        ->reject(fn ($selectedValue) => is_null($selectedValue) || $selectedValue === '')
+                        ->values();
+
+                    if (! $includeNonAuditionSongs) {
+                        $query->where('show_for_prospects', true);
+
+                        return;
+                    }
+
+                    $query->whereIn('show_for_prospects', $selectedValues->isEmpty() ? [false, true] : $selectedValues->all());
+                })
                     ->default($showForProspectsDefault),
                 AllowedFilter::exact('categories.id'),
                 AllowedFilter::exact('ensembles.id'),

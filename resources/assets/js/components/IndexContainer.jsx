@@ -20,12 +20,12 @@ const IndexContainer = ({
 	}, [showFilters]);
 
 	return (
-		<div className="relative flex min-h-0 flex-1 flex-col">
+		<div className="relative flex min-h-0 flex-none flex-col lg:flex-1">
 			{tableControls && (
 				<div className="sticky top-11.75 z-30 shrink-0 bg-white lg:static lg:z-auto">{tableControls}</div>
 			)}
 			{tableSummary}
-			<div className="relative flex min-h-0 flex-1 flex-col divide-y divide-gray-300 lg:flex-row lg:divide-y-0">
+			<div className="relative flex min-h-0 flex-none flex-col divide-y divide-gray-300 lg:flex-1 lg:flex-row lg:divide-y-0">
 				{!isDesktop && filterPane && (
 					<FilterDialog isOpen={isMobileFilterOpen} setIsOpen={setIsMobileFilterOpen}>
 						{filterPane}

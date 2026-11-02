@@ -23,7 +23,7 @@ describe('IndexContainer', () => {
 			/>
 		);
 
-		expect(screen.getByRole('dialog')).toBeTruthy();
+		expect(screen.getByRole('dialog').className).toContain('z-40');
 		expect(screen.getByText('Filter controls')).toBeTruthy();
 		expect(screen.getByText('Mobile table')).toBeTruthy();
 		expect(screen.queryByText('Cancel')).toBeNull();
@@ -36,6 +36,17 @@ describe('IndexContainer', () => {
 
 		expect(mobileTableContainer.className).not.toContain('overflow-hidden');
 		expect(mobileTableContainer.className).toContain('flex-none');
+	});
+
+	it('lets the sticky mobile controls span the full table height', () => {
+		const { container } = render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
+		const indexContainer = container.firstElementChild;
+		const tableLayout = indexContainer.firstElementChild;
+
+		expect(indexContainer.className).toContain('flex-none');
+		expect(indexContainer.className).toContain('lg:flex-1');
+		expect(tableLayout.className).toContain('flex-none');
+		expect(tableLayout.className).toContain('lg:flex-1');
 	});
 
 	it('does not render the filter pane on desktop', () => {

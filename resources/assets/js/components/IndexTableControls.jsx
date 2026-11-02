@@ -82,7 +82,7 @@ const IndexTableControls = ({
 	const resetAllFilters = () => filters.forEach(resetFilter);
 
 	return (
-		<div className="bg-white px-4 py-2 sm:px-6 md:px-8">
+		<div className="bg-white px-4 py-2 sm:px-6 md:px-8 border-b border-gray-200 lg:border-b-0">
 			<div
 				aria-label="Filters"
 				className="hidden items-center gap-3 lg:flex"
@@ -135,7 +135,7 @@ const IndexTableControls = ({
 
 			<div
 				aria-label={`${filterLabel || 'Table'} table controls`}
-				className="flex items-center gap-2 border-b border-gray-200 lg:hidden"
+				className="flex items-center gap-2 lg:hidden"
 				data-testid="mobile-index-table-controls"
 			>
 				{bulkEdit?.isActiveMobile && (

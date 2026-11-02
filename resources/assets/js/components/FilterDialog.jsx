@@ -3,7 +3,7 @@ import { Dialog as BaseDialog, Transition } from '@headlessui/react';
  
 const FilterDialog = ({ isOpen, setIsOpen, children }) => (
 	<Transition.Root show={isOpen} as={Fragment}>
-		<BaseDialog as="div" className="fixed inset-x-0 top-[47px] bottom-0 z-20" onClose={setIsOpen}>
+		<BaseDialog as="div" className="fixed inset-x-0 top-[47px] bottom-0 z-40" onClose={setIsOpen}>
 			<Transition.Child
 				as={Fragment}
 				enter="ease-out duration-300"

@@ -6,7 +6,7 @@ import {
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderMeta,
-	PageHeaderTitle,
+	PageHeaderTitle, PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -110,14 +110,65 @@ const Show = ({
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<span className="flex items-center">
-							{event.title}
-							{event.is_repeating && (
-								<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
-							)}
-						</span>
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<span className="flex items-center">
+								{event.title}
+								{event.is_repeating && (
+									<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
+								)}
+							</span>
+						</PageHeaderTitle>
+
+						<PageHeaderActions>
+							<div className="flex gap-3 justify-between items-center grow ml-4 mt-6">
+								<div className="flex gap-3 items-center">
+									{actions.slice(3).map((action, key) => (
+										<React.Fragment key={key}>
+											{key !== 0 && <div className="h-6 w-px bg-gray-200" />}
+											{action.label ? (
+												<a
+													href={action.url}
+													onClick={action.onClick}
+													className="text-sm flex gap-x-1.5 items-center text-purple-700 hover:text-purple-600"
+												>
+													<Icon icon={action.icon} />
+													{action.label}
+												</a>
+											) : (
+												action
+											)}
+										</React.Fragment>
+									))}
+								</div>
+								<div className="flex gap-3">
+									{actions.slice(0, 3).map((action, key) => (
+										<React.Fragment key={key}>
+											{action.label ? (
+												<Button
+													href={action.url}
+													onClick={action.onClick}
+													size="md"
+													intent={action.intent}
+													weight={action.weight ?? 'clear'}
+													className={action.className}
+													external={action.download}
+													download={action.download}
+													method={action.method}
+													disabled={action.disabled}
+												>
+													<Icon icon={action.icon} />
+													{action.label}
+												</Button>
+											) : (
+												action
+											)}
+										</React.Fragment>
+									))}
+								</div>
+							</div>
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
 							<div className="text-lg font-bold">
@@ -161,54 +212,6 @@ const Show = ({
 						</div>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					<div className="flex gap-3 justify-between items-center grow ml-4 mt-6">
-						<div className="flex gap-3 items-center">
-							{actions.slice(3).map((action, key) => (
-								<React.Fragment key={key}>
-									{key !== 0 && <div className="h-6 w-px bg-gray-200" />}
-									{action.label ? (
-										<a
-											href={action.url}
-											onClick={action.onClick}
-											className="text-sm flex gap-x-1.5 items-center text-purple-700 hover:text-purple-600"
-										>
-											<Icon icon={action.icon} />
-											{action.label}
-										</a>
-									) : (
-										action
-									)}
-								</React.Fragment>
-							))}
-						</div>
-						<div className="flex gap-3">
-							{actions.slice(0, 3).map((action, key) => (
-								<React.Fragment key={key}>
-									{action.label ? (
-										<Button
-											href={action.url}
-											onClick={action.onClick}
-											size="md"
-											intent={action.intent}
-											weight={action.weight ?? 'clear'}
-											className={action.className}
-											external={action.download}
-											download={action.download}
-											method={action.method}
-											disabled={action.disabled}
-										>
-											<Icon icon={action.icon} />
-											{action.label}
-										</Button>
-									) : (
-										action
-									)}
-								</React.Fragment>
-							))}
-						</div>
-					</div>
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

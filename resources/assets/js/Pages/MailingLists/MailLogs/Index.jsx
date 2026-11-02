@@ -147,24 +147,24 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 								</PageHeaderLink>
 							)}
 						</PageHeaderLinks>
+						<PageHeaderActions>
+							{pageHeaderActions.map(action => (
+								<Button
+									key={action.label}
+									href={action.url}
+									onClick={action.onClick}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
 					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{pageHeaderActions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<IndexContainer
