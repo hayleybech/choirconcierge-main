@@ -3,28 +3,16 @@ import TableMobile, { TableMobileHeader, TableMobileListItem, TableMobileLink } 
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
-import Button from '../../../components/inputs/ButtonV2';
 import Badge from '../../../components/Badge';
 import EventType from '../../../EventType';
 import AttendanceTag from '../../../components/Event/AttendanceTag';
 import DateTag from '../../../components/DateTag';
  
-const AttendanceTableMobile = ({ attendances, pagination, hasNonDefaultFilters, setShowFilters }) => {
+const AttendanceTableMobile = ({ attendances, pagination }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={{ isAllowed: false, isActiveMobile: false, noun: 'Attendance Record' }}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{attendances
 					.filter(attendance => !!attendance.event)

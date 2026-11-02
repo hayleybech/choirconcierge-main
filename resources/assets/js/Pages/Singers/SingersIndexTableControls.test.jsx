@@ -2,9 +2,20 @@ import React, { useState } from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import SingersFilterControlsPrototype from './SingersFilterControlsPrototype';
+import IndexTableControls from '../../components/IndexTableControls';
+import Badge from '../../components/Badge';
+import FeeStatus from '../../components/FeeStatus';
+import SingerStatus from '../../SingerStatus';
+import SingerStatusTag from '../../components/SingerStatusTag';
+import VoicePartTag from '../../components/VoicePartTag';
 
-const { popperCalls } = vi.hoisted(() => ({ popperCalls: [] }));
+const { popperCalls, mockUseMediaQuery } = vi.hoisted(() => ({ popperCalls: [], mockUseMediaQuery: vi.fn() }));
+
+vi.mock('react-responsive', () => ({
+	useMediaQuery: mockUseMediaQuery,
+}));
+
+import { useMediaQuery } from 'react-responsive';
 
 vi.mock('popper.js', () => ({
 	default: vi.fn((reference, popper, options) => {
@@ -36,6 +47,10 @@ vi.mock('../../components/Icon', async () => {
 	};
 });
 
+beforeEach(() => {
+	useMediaQuery.mockReturnValue(true);
+});
+
 const filters = [
 	{
 		name: 'user.name',
@@ -52,6 +67,9 @@ const filters = [
 			{ id: 'members', name: 'Members' },
 			{ id: 'prospects', name: 'Prospects' },
 		],
+		renderOption: (option, compact) => (
+			<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
+		),
 	},
 	{
 		name: 'enrolments.voice_part_id',
@@ -62,18 +80,23 @@ const filters = [
 			{ id: 'soprano', name: 'Soprano', colour: 'rose' },
 			{ id: 'alto', name: 'Alto', colour: 'blue' },
 		],
+		renderOption: (option, compact) => (
+			<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+		),
 	},
 	{
 		name: 'fee_status',
 		label: 'Fee Status',
 		multiple: true,
 		defaultValue: [],
+		allValuesLabel: 'All',
 		options: [
 			{ id: 'paid', name: 'Paid' },
 			{ id: 'expires-soon', name: 'Expires Soon' },
 			{ id: 'expired', name: 'Expired' },
 			{ id: 'unknown', name: 'Unknown' },
 		],
+		renderOption: (option, compact) => <FeeStatus status={option.id} compact={compact} />,
 	},
 	{
 		name: 'enrolments.ensemble_id',
@@ -84,6 +107,11 @@ const filters = [
 			{ id: 'adult', name: 'Adult' },
 			{ id: 'youth', name: 'Youth' },
 		],
+		renderOption: (option, compact) => (
+			<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+				{option.name}
+			</Badge>
+		),
 	},
 ];
 
@@ -99,11 +127,12 @@ const renderControls = (initialData, sorts = [], tableActions = []) => {
 		};
 
 		return (
-			<SingersFilterControlsPrototype
+			<IndexTableControls
 				filters={filters}
 				sorts={sorts}
 				form={{ data, setData: updateFormData, submit }}
 				tableActions={tableActions}
+				filterLabel="singers"
 			/>
 		);
 	};
@@ -300,7 +329,7 @@ it('shows name search before filter pills and excludes it from Add Filter', () =
 
 	fireEvent.change(nameSearch, { target: { value: 'Alex' } });
 	expect(setData).toHaveBeenCalledWith('user.name', 'Alex');
-	fireEvent.click(screen.getByRole('button', { name: 'Clear singer name search' }));
+	fireEvent.click(screen.getByRole('button', { name: 'Clear singers search' }));
 	expect(setData).toHaveBeenCalledWith('user.name', '');
 });
 
@@ -353,29 +382,26 @@ it('renders singer filter values with the site styles in pills and option lists'
 	expect(expiredOption.closest('label').querySelector('[data-icon="times-circle"]').classList.contains('text-red-500')).toBe(true);
 });
 
-it('places search and Add Filter above a horizontally scrollable pill row in the final layout', () => {
+it('places search before active pills and Add Filter after them on desktop', () => {
 	const { Controls } = renderControls({ 'user.name': '', status: ['members'], fee_status: '' });
 	render(<Controls />);
 
-	const searchRow = screen.getByRole('searchbox', { name: 'Search singers by name' }).closest('.items-center');
+	const searchInput = screen.getByRole('searchbox', { name: 'Search singers by name' });
+	const statusPill = screen.getByRole('button', { name: 'Status: Members; open filter values' });
 	const addFilterButton = screen.getByRole('button', { name: 'Add filter' });
-	const pillRow = screen.getByRole('button', { name: 'Status: Members; open filter values' }).closest('.overflow-x-auto');
 
-	expect(searchRow.contains(addFilterButton)).toBe(true);
-	expect(pillRow).toBeTruthy();
-	expect(searchRow.compareDocumentPosition(pillRow) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+	expect(searchInput.compareDocumentPosition(statusPill) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+	expect(statusPill.compareDocumentPosition(addFilterButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 });
 
-it('locks the controls to layout C and places Add Filter after the pills on desktop', () => {
+it('places Add Filter after the active pills on desktop without a prototype switcher', () => {
 	const { Controls } = renderControls({ 'user.name': '', status: ['members'], fee_status: '' });
 	const { container } = render(<Controls />);
 
 	const addFilterButton = screen.getByRole('button', { name: 'Add filter' });
-	const addFilterContainer = addFilterButton.parentElement.parentElement;
-	const pillRow = screen.getByRole('button', { name: 'Status: Members; open filter values' }).closest('.overflow-x-auto');
+	const statusPill = screen.getByRole('button', { name: 'Status: Members; open filter values' });
 
-	expect(addFilterContainer.classList.contains('lg:order-3')).toBe(true);
-	expect(pillRow.classList.contains('lg:contents')).toBe(true);
+	expect(statusPill.compareDocumentPosition(addFilterButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 	expect(container.querySelector('[aria-label="Next prototype layout"]')).toBeNull();
 });
 

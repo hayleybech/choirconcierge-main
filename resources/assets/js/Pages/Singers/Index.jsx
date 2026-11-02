@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
+	PageHeaderTitle,
+	PageHeaderTitleRow,
+} from '../../components/PageHeader/PageHeader';
 import SingerTableDesktop from './SingerTableDesktop';
 import SingerTableMobile from './SingerTableMobile';
 import AppHead from '../../components/AppHead';
@@ -24,9 +32,13 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
 import RenewFeesDialog from './components/RenewFeesDialog';
-import SingersFilterControlsPrototype from './SingersFilterControlsPrototype';
-import SingerMobileTableControls from './SingerMobileTableControls';
+import IndexTableControls from '../../components/IndexTableControls';
 import { areFilterValuesEqual } from '../../lib/filterValues';
+import Badge from '../../components/Badge';
+import FeeStatus from '../../components/FeeStatus';
+import SingerStatus from '../../SingerStatus';
+import SingerStatusTag from '../../components/SingerStatusTag';
+import VoicePartTag from '../../components/VoicePartTag';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -52,12 +64,69 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 	];
 
 	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'status', multiple: true, defaultValue: [defaultStatus] },
-		{ name: 'enrolments.voice_part_id', multiple: true, defaultValue: [] },
-		{ name: 'roles.id', multiple: true, defaultValue: [] },
-		{ name: 'fee_status', multiple: true, defaultValue: [] },
-		{ name: 'enrolments.ensemble_id', multiple: true, defaultValue: [] },
+		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
+		{
+			name: 'status',
+			label: 'Status',
+			multiple: true,
+			defaultValue: [defaultStatus],
+			options: statuses.map(status => ({ id: status.id, name: status.name })),
+			renderOption: (option, compact) => (
+				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
+			),
+		},
+		{
+			name: 'enrolments.voice_part_id',
+			label: 'Voice Part',
+			multiple: true,
+			defaultValue: [],
+			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
+			renderOption: (option, compact) => (
+				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+			),
+		},
+		{
+			name: 'roles.id',
+			label: 'Role',
+			multiple: true,
+			defaultValue: [],
+			options: roles.map(role => ({ id: role.id, name: role.name })),
+			renderOption: (option, compact) => (
+				<Badge colour="bg-gray-100 text-gray-800" compact={compact}>
+					{option.name}
+				</Badge>
+			),
+		},
+		{
+			name: 'fee_status',
+			label: 'Fee Status',
+			multiple: true,
+			defaultValue: [],
+			allValuesLabel: 'All',
+			options: [
+				{ id: 'paid', name: 'Paid' },
+				{ id: 'expires-soon', name: 'Expires Soon' },
+				{ id: 'expired', name: 'Expired' },
+				{ id: 'unknown', name: 'Unknown' },
+			],
+			renderOption: (option, compact) => <FeeStatus status={option.id} compact={compact} />,
+		},
+		...(ensembles.length > 1
+			? [
+					{
+						name: 'enrolments.ensemble_id',
+						label: 'Ensemble',
+						multiple: true,
+						defaultValue: [],
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
+					},
+				]
+			: []),
 	];
 
 	const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
@@ -66,9 +135,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 	);
 	const appliedFilterDataRef = useRef(draftFilterData);
 	const [applyDraftFilters, setApplyDraftFilters] = useState(false);
-	const hasChangedFilters = filters.some(({ name, multiple, defaultValue }) =>
-		!areFilterValuesEqual(sortFilterForm.data[name], defaultValue ?? (multiple ? [] : ''))
-	);
 	const draftSingerFilterForm = {
 		data: draftFilterData,
 		setData: (name, value) => setDraftFilterData(previousData => ({ ...previousData, [name]: value })),
@@ -92,7 +158,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			return;
 		}
 
-		sortFilterForm.submit(undefined);
 		setApplyDraftFilters(false);
 		setShowFilters(false);
 	}, [applyDraftFilters, sortFilterForm.data]);
@@ -141,6 +206,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 		},
 		{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
 	].filter(action => (action?.can ? can[action.can] : !!action));
+	const mainPageAction = actions.find(action => action.label === 'Add New');
+	const relatedPageActions = actions.filter(action => action !== mainPageAction);
 
 	usePhoneBreadcrumb('Singers', []);
 
@@ -168,60 +235,39 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 				</PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader className="xl:items-baseline">
-				<PageHeaderTitle>
-					<Icon icon="users" type="solid" className="mr-2" /> Singers
-				</PageHeaderTitle>
+			<PageHeader hideOnMobile className="xl:items-center">
+				<PageHeaderContent>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="users" type="solid" className="mr-2" /> Singers
+						</PageHeaderTitle>
+						<PageHeaderLinks>
+							{relatedPageActions.map(action => (
+								<PageHeaderLink key={action.label} href={action.url} icon={action.icon}>
+									{action.label}
+								</PageHeaderLink>
+							))}
+						</PageHeaderLinks>
+					</PageHeaderTitleRow>
+				</PageHeaderContent>
 				<PageHeaderActions>
-					<div className="flex gap-3 justify-between items-baseline grow ml-4">
-						<div className="flex gap-3 items-baseline">
-							{actions.slice(1).map((action, key) => (
-								<React.Fragment key={key}>
-									{key !== 0 && (
-										<div className="h-6 w-px bg-gray-200" />
-									)}
-									{action.label ? (
-										<a
-											href={action.url}
-											onClick={action.onClick}
-											className="text-sm flex gap-x-1.5 items-center text-purple-700 hover:text-sky-500"
-										>
-											<Icon icon={action.icon} />
-											{action.label}
-										</a>
-									) : (
-										action
-									)}
-								</React.Fragment>
-							))}
-						</div>
-						<div className="flex gap-3 items-baseline">
-
-							{actions.slice(0, 1).map((action, key) => (
-								<React.Fragment key={key}>
-									{action.label ? (
-										<Button
-											href={action.url}
-											onClick={action.onClick}
-											size="md"
-											intent={action.intent}
-											weight={action.weight ?? 'clear'}
-											className={action.className}
-											external={action.download}
-											download={action.download}
-											method={action.method}
-											disabled={action.disabled}
-										>
-											<Icon icon={action.icon} />
-											{action.label}
-										</Button>
-									) : (
-										action
-									)}
-								</React.Fragment>
-							))}
-						</div>
-					</div>
+					{mainPageAction && (
+						<Button
+							href={mainPageAction.url}
+							onClick={mainPageAction.onClick}
+							size="md"
+							intent={mainPageAction.intent}
+							weight={mainPageAction.weight ?? 'clear'}
+							className={mainPageAction.className}
+							external={mainPageAction.download}
+							download={mainPageAction.download}
+							method={mainPageAction.method}
+							disabled={mainPageAction.disabled}
+						>
+							<Icon icon={mainPageAction.icon} mr />
+							{mainPageAction.label}
+						</Button>
+					)}
 				</PageHeaderActions>
 			</PageHeader>
 
@@ -256,7 +302,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 							weight="clear"
 							theme="dark"
 							onClick={() => setShowBulkRenewFeesDialog(true)}
-							className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+							className="gap-1 hover:bg-gray-600 hover:text-gray-100!"
 						>
 							<Icon icon="calendar-check" />
 							Renew Fees
@@ -268,76 +314,15 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			<IndexContainer
 				showFilters={!isDesktop && showFilters}
 				tableControls={
-					isDesktop ? (
-						<SingersFilterControlsPrototype
-							filters={[
-								{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
-								{
-									name: 'status',
-									label: 'Status',
-									multiple: true,
-									defaultValue: [defaultStatus],
-									options: statuses.map(status => ({ id: status.id, name: status.name })),
-								},
-								{
-									name: 'enrolments.voice_part_id',
-									label: 'Voice Part',
-									multiple: true,
-									defaultValue: [],
-									options: voiceParts.map(part => ({
-										id: part.id,
-										name: part.title,
-										colour: part.colour,
-									})),
-								},
-								{
-									name: 'roles.id',
-									label: 'Role',
-									multiple: true,
-									defaultValue: [],
-									options: roles.map(role => ({ id: role.id, name: role.name })),
-								},
-				{
-					name: 'fee_status',
-					label: 'Fee Status',
-					multiple: true,
-					defaultValue: [],
-									options: [
-										{ id: 'paid', name: 'Paid' },
-										{ id: 'expires-soon', name: 'Expires Soon' },
-										{ id: 'expired', name: 'Expired' },
-										{ id: 'unknown', name: 'Unknown' },
-									],
-								},
-								...(ensembles.length > 1
-									? [
-											{
-												name: 'enrolments.ensemble_id',
-												label: 'Ensemble',
-												multiple: true,
-												defaultValue: [],
-												options: ensembles.map(ensemble => ({
-													id: ensemble.id,
-													name: ensemble.name,
-												})),
-											},
-									  ]
-									: []),
-							]}
-							sorts={sorts}
-							form={sortFilterForm}
-							tableActions={tableActions}
-						/>
-					) : (
-						<SingerMobileTableControls
-							bulkEdit={bulkEdit}
-							onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
-							hasChangedFilters={hasChangedFilters}
-							sorts={sorts}
-							form={sortFilterForm}
-							tableActions={tableActions}
-						/>
-					)
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						tableActions={tableActions}
+						bulkEdit={bulkEdit}
+						filterLabel="singers"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
 				}
 				filterPane={
 					<FilterSortPane

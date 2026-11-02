@@ -4,6 +4,16 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import FilterSortPane from './FilterSortPane';
 
+vi.mock('react-responsive', () => ({
+	useMediaQuery: vi.fn(),
+}));
+
+import { useMediaQuery } from 'react-responsive';
+
+beforeEach(() => {
+	useMediaQuery.mockReturnValue(false);
+});
+
 it('keeps an Apply action visible at the bottom of a scrollable filter pane', () => {
 	const applyFilters = vi.fn();
 	const { container } = render(
@@ -43,4 +53,25 @@ it('calls the cancel action without applying the staged filters', () => {
 
 	expect(cancelFilters).toHaveBeenCalledOnce();
 	expect(applyFilters).not.toHaveBeenCalled();
+});
+
+it('keeps sort controls out of the mobile filter pane', () => {
+	render(<FilterSortPane sorts={<div>Sort controls</div>} filters={<div>Filter fields</div>} closeFn={vi.fn()} />);
+
+	expect(screen.queryByText('Sort controls')).not.toBeInTheDocument();
+	expect(screen.getByText('Filter fields')).toBeInTheDocument();
+});
+
+it('only shows sort controls on desktop when explicitly requested', () => {
+	useMediaQuery.mockReturnValue(true);
+	render(
+		<FilterSortPane
+			sorts={<div>Sort controls</div>}
+			filters={<div>Filter fields</div>}
+			closeFn={vi.fn()}
+			showSortsOnDesktop
+		/>
+	);
+
+	expect(screen.getByText('Sort controls')).toBeInTheDocument();
 });

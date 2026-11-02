@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
  
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 } from '../../../components/TableMobile';
@@ -15,7 +14,6 @@ import { Link } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
-import Button from '../../../components/inputs/ButtonV2';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 
 const RsvpTableMobile = ({
@@ -24,12 +22,9 @@ const RsvpTableMobile = ({
 	showEnsemble,
 	visibleColumns,
 	customFields,
-	columnsMenu,
 	event,
 	bulkEdit,
 	canEditRsvps,
-	hasNonDefaultFilters,
-	setShowFilters,
 }) => {
 	const { route } = useRoute();
 	const [expandedSingers, setExpandedSingers] = useState([]);
@@ -55,18 +50,6 @@ const RsvpTableMobile = ({
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				{columnsMenu}
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>

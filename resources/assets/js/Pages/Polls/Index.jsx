@@ -23,19 +23,18 @@ import Table, {
 import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import DateTag from '../../components/DateTag';
 import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
 	TableMobileListItem,
-	TableMobileHeader,
 } from '../../components/TableMobile';
 import Badge from '../../components/Badge';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
 import PollFilters from '../../components/PollFilters';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
@@ -46,7 +45,7 @@ import Button from '../../components/inputs/ButtonV2';
  
 const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
 
@@ -58,26 +57,47 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 	];
 
 	const filters = [
-		{ name: 'title', defaultValue: '' },
-		{ name: 'status', defaultValue: '' },
-		{ name: 'ensembles.id', multiple: true },
+		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
+		{
+			name: 'status',
+			label: 'Status',
+			defaultValue: '',
+			options: [
+				{ id: 'open', name: 'Open', icon: 'lock-open', textColour: 'text-emerald-700' },
+				{ id: 'closed', name: 'Closed', icon: 'lock', textColour: 'text-gray-600' },
+			],
+			renderOption: option => (
+				<span className={`inline-flex items-center gap-1.5 ${option.textColour}`}>
+					<Icon icon={option.icon} />
+					{option.name}
+				</span>
+			),
+		},
+		...(showEnsembleColumn
+			? [
+					{
+						name: 'ensembles.id',
+						label: 'Ensemble',
+						multiple: true,
+						options: (ensembles ?? tenant.ensembles).map(ensemble => ({
+							id: ensemble.id,
+							name: ensemble.name,
+						})),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
+					},
+				]
+			: []),
 	];
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
 	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll, 'Poll');
 
-	const actions = [
-		{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' },
-	];
-
-	if (bulkEdit.action) {
-		actions.push(bulkEdit.action);
-	}
-
-	if (filterAction) {
-		actions.push(filterAction);
-	}
+	const actions = [{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' }];
 
 	return (
 		<>
@@ -94,7 +114,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="poll" type="solid" className="mr-2" /> Polls
@@ -140,26 +160,24 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="polls"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<PollFilters form={sortFilterForm} ensembles={ensembles} />}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
 				tableMobile={
 					<div>
-						<TableMobileHeader bulkEdit={bulkEdit}>
-							<Button
-								size="sm"
-								intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-								weight="clear"
-								onClick={() => setShowFilters(prev => !prev)}
-							>
-								<Icon icon="filter" mr />
-								Filter/Sort
-							</Button>
-						</TableMobileHeader>
 						<TableMobile pagination={<Pagination details={pagination} />}>
 							{polls.map(p => (
 								<TableMobileListItem key={p.id}>

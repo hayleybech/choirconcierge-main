@@ -2,30 +2,24 @@ import React from 'react';
  
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import useRoute from '../../../hooks/useRoute';
+import IndexTableControls from '../../../components/IndexTableControls';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import UserTableDesktop from './UserTableDesktop';
 import UserTableMobile from './UserTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import UserFilters from './UserFilters';
 
 const Index = ({ users, pagination, setSidebarOpen }) => {
-	const { route } = useRoute();
-
-	const [showFilters, setShowFilters, filterAction] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	//
 	const sorts = [
 		{ id: 'full-name', name: 'Name', default: true },
@@ -33,7 +27,7 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 		//     { id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [{ name: 'search', defaultValue: '' }];
+	const filters = [{ name: 'search', label: 'Search', type: 'text', defaultValue: '' }];
 
 	const sortFilterForm = useSortFilterForm('central.users.index', filters, sorts);
 
@@ -41,44 +35,29 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 		<>
 			<AppHead title="Users" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Users">
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem {...filterAction}>
-								<Icon icon={filterAction.icon} mr />
-								{filterAction.label}
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
-				</PageTopNavigation>
+				<PageTopNavigation title="Users" />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="users" type="solid" className="mr-2" /> Users
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon={filterAction.icon} mr />
-							{filterAction.label}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="users"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<UserFilters form={sortFilterForm} />}
 						closeFn={() => setShowFilters(false)}
 					/>

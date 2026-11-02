@@ -15,6 +15,7 @@ import RiserStackTableDesktop from './RiserStackTableDesktop';
 import RiserStackTableMobile from './RiserStackTableMobile';
 import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
@@ -25,10 +26,9 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditRiserStacksModal from './BulkEditRiserStacksModal';
 import BulkEditBar from '../../components/BulkEditBar';
-import Sorts from '../../components/Sorts';
  
 const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	const { can } = usePage().props;
 	const { route } = useRoute();
 
@@ -39,8 +39,17 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 		{ id: 'created_at', name: 'Date Created' },
 	];
 	const filters = [
-		{ name: 'search', defaultValue: '' },
-		{ name: 'ensembles.id', multiple: true },
+		{ name: 'search', label: 'Search', type: 'text', defaultValue: '' },
+		...(userEnsemblesCount > 1
+			? [
+					{
+						name: 'ensembles.id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+					},
+				]
+			: []),
 	];
 
 	const sortFilterForm = useSortFilterForm('stacks.index', filters, sorts);
@@ -53,8 +62,6 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 			weight: 'solid',
 			can: 'create_stack',
 		},
-		bulkEdit.action,
-		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	return (
@@ -72,7 +79,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="people-arrows" type="solid" className="mr-2" /> Riser Stacks
@@ -118,9 +125,18 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="riser stacks"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<RiserStackFilters
 								ensembles={ensembles}
@@ -144,8 +160,6 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 						stacks={stacks}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				emptyState={

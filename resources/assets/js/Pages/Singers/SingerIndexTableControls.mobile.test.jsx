@@ -3,7 +3,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import SingerMobileTableControls from './SingerMobileTableControls';
+import IndexTableControls from '../../components/IndexTableControls';
+
+const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
+
+vi.mock('react-responsive', () => ({
+	useMediaQuery: mockUseMediaQuery,
+}));
+
+import { useMediaQuery } from 'react-responsive';
 
 const sorts = [
 	{ id: 'full-name', name: 'Name' },
@@ -27,6 +35,10 @@ const makeBulkEdit = () => ({
 	},
 });
 
+beforeEach(() => {
+	useMediaQuery.mockReturnValue(false);
+});
+
 it('places select-all before filter and sort controls and opens the actions menu from the gear button', async () => {
 	const bulkEdit = makeBulkEdit();
 	const importSingers = vi.fn();
@@ -36,7 +48,8 @@ it('places select-all before filter and sort controls and opens the actions menu
 		submit: vi.fn(),
 	};
 	render(
-		<SingerMobileTableControls
+		<IndexTableControls
+			filters={[]}
 			bulkEdit={bulkEdit}
 			onToggleFilters={vi.fn()}
 			hasChangedFilters
@@ -46,6 +59,7 @@ it('places select-all before filter and sort controls and opens the actions menu
 				{ label: 'Import', icon: 'file-import', onClick: importSingers },
 				{ label: 'Export', icon: 'file-export', url: '/singers/export', download: true },
 			]}
+			filterLabel="singers"
 		/>
 	);
 	const user = userEvent.setup();
@@ -53,8 +67,8 @@ it('places select-all before filter and sort controls and opens the actions menu
 	const selectAll = screen.getByRole('checkbox', { name: 'Select all singers' });
 	const selectSingersButton = screen.getByRole('button', { name: 'Select Singers' });
 	const filterButton = screen.getByRole('button', { name: 'Filter singers' });
-	const sortButton = screen.getByRole('button', { name: 'Sort: Name' });
-	const actionsButton = screen.getByRole('button', { name: 'Singer table actions' });
+	const sortButton = screen.getByRole('button', { name: 'Sort options' });
+	const actionsButton = screen.getByRole('button', { name: 'singers table actions' });
 
 	expect(selectAll).toHaveProperty('checked', false);
 	expect(selectAll.compareDocumentPosition(selectSingersButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
@@ -87,12 +101,14 @@ it('uses the selected intent for the mobile Cancel Selection button', () => {
 	};
 
 	render(
-		<SingerMobileTableControls
+		<IndexTableControls
+			filters={[]}
 			bulkEdit={bulkEdit}
 			onToggleFilters={vi.fn()}
 			sorts={sorts}
 			form={{ data: { sort: 'full-name', sortDir: 'asc' }, setData: vi.fn() }}
 			tableActions={[]}
+			filterLabel="singers"
 		/>
 	);
 
@@ -102,12 +118,14 @@ it('uses the selected intent for the mobile Cancel Selection button', () => {
 it('selects all singers from the toolbar checkbox', async () => {
 	const bulkEdit = makeBulkEdit();
 	render(
-		<SingerMobileTableControls
+		<IndexTableControls
+			filters={[]}
 			bulkEdit={bulkEdit}
 			onToggleFilters={vi.fn()}
 			sorts={sorts}
 			form={{ data: { sort: 'full-name', sortDir: 'asc' }, setData: vi.fn() }}
 			tableActions={[]}
+			filterLabel="singers"
 		/>
 	);
 
@@ -128,25 +146,27 @@ it('submits mobile sort changes while keeping the dropdown available for directi
 		};
 
 		return (
-			<SingerMobileTableControls
+			<IndexTableControls
+				filters={[]}
 				bulkEdit={{ ...makeBulkEdit(), isActiveMobile: false, action: false }}
 				onToggleFilters={vi.fn()}
 				sorts={sorts}
 				form={form}
 				tableActions={[]}
+				filterLabel="singers"
 			/>
 		);
 	};
 	render(<MobileControls />);
 	const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
 
-	await user.click(screen.getByRole('button', { name: 'Sort: Name' }));
+	await user.click(screen.getByRole('button', { name: 'Sort options' }));
 	await user.click(screen.getByRole('radio', { name: 'Status' }));
 	await user.click(screen.getByRole('button', { name: 'Descending' }));
 	await vi.advanceTimersByTimeAsync(300);
 
 	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
-	expect(screen.getByRole('button', { name: 'Sort: Status' })).toBeTruthy();
+	expect(screen.getByRole('button', { name: 'Sort options' })).toBeTruthy();
 	expect(screen.getByText('Sort by')).toBeTruthy();
 	vi.useRealTimers();
 });

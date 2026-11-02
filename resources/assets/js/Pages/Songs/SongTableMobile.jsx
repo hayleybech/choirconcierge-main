@@ -1,8 +1,6 @@
 import React from 'react';
-import PitchButton from '../../components/PitchButton';
 import SongStatusTag from '../../components/SongStatusTag';
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
@@ -10,29 +8,13 @@ import TableMobile, {
 import SongStatus from '../../SongStatus';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import { useInstrument } from '../../hooks/useInstrument';
 import EnsembleBadges from '../../components/EnsembleBadges';
-import Button from '../../components/inputs/ButtonV2';
-import Icon from '../../components/Icon';
  
-const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
+const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
-
-	const [instrument] = useInstrument();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={songs} />}>
 				{songs.data.map(song => (
 					<TableMobileListItem key={song.id}>

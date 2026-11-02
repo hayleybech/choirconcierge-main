@@ -16,7 +16,7 @@ const FilterSortPane = ({ sorts, filters, closeFn, showSortsOnDesktop = false, o
 			<div
 				className={`${onApply ? 'min-h-0 flex-1 overflow-y-auto' : 'flex-1'} border-b border-gray-300 bg-white p-4`}
 			>
-				{(!isDesktop || showSortsOnDesktop) && sorts}
+				{isDesktop && showSortsOnDesktop && sorts}
 				{filters}
 			</div>
 			{onApply && (

@@ -27,13 +27,13 @@ import Table, {
 	TItemRow,
 } from '../../../components/Table';
 import IndexContainer from '../../../components/IndexContainer';
+import IndexTableControls from '../../../components/IndexTableControls';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import AttendanceFilters from '../../../components/AttendanceFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
@@ -72,7 +72,7 @@ const Index = ({
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
 
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
 
@@ -84,11 +84,52 @@ const Index = ({
 	];
 
 	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-		{ name: 'enrolments.ensemble_id', multiple: true },
-		{ name: 'attendance.response', multiple: true },
-		{ name: 'status.id', multiple: true },
+		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
+		{
+			name: 'enrolments.voice_part_id',
+			label: 'Voice Part',
+			multiple: true,
+			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
+			renderOption: (option, compact) => (
+				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+			),
+		},
+		...(ensembles.length > 1
+			? [
+					{
+						name: 'enrolments.ensemble_id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
+					},
+				]
+			: []),
+		{
+			name: 'attendance.response',
+			label: 'Attendance Response',
+			multiple: true,
+			options: [
+				{ id: 'present', name: 'On Time' },
+				{ id: 'late', name: 'Late' },
+				{ id: 'unknown', name: 'Not recorded' },
+				{ id: 'late_deemed_absent', name: 'Late (Deemed Absent)' },
+				{ id: 'absent', name: 'Absent' },
+			],
+		},
+		{
+			name: 'status.id',
+			label: 'Singer Status',
+			multiple: true,
+			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
+			renderOption: (option, compact) => (
+				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
+			),
+		},
 	];
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
@@ -107,8 +148,6 @@ const Index = ({
 			onClick: () => setCheckInDialogIsOpen(true),
 			can: 'create_attendance',
 		},
-		filterAction,
-		bulkEdit.action,
 	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
 
 	const bulkUpdateAttendance = response => {
@@ -240,7 +279,7 @@ const Index = ({
 					))}
 				</PageActionsMenu>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -299,29 +338,39 @@ const Index = ({
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
-			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
-				{countsData.map(({ label, textColour, icon, count, extraText }) => (
-					<div
-						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
-						key={label}
-					>
-						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
-							{label}
-						</div>
-						<div className="flex gap-2 items-center">
-							<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
-							{extraText}
-						</div>
-					</div>
-				))}
-			</div>
-
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="attendees"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
+				tableSummary={
+					<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
+						{countsData.map(({ label, textColour, icon, count, extraText }) => (
+							<div
+								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
+								key={label}
+							>
+								<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
+									<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
+									{label}
+								</div>
+								<div className="flex gap-2 items-center">
+									<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+									{extraText}
+								</div>
+							</div>
+						))}
+					</div>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<AttendanceFilters
 								event={event}
@@ -334,16 +383,14 @@ const Index = ({
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
-				tableMobile={
-					<AttendanceTableMobile
-						singers={allSingers}
-						pagination={pagination}
-						showEnsemble={showEnsemble}
-						event={event}
-						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
+					tableMobile={
+						<AttendanceTableMobile
+							singers={allSingers}
+							pagination={pagination}
+							showEnsemble={showEnsemble}
+							event={event}
+							bulkEdit={bulkEdit}
+						/>
 				}
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>

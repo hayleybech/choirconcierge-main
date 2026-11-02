@@ -16,6 +16,7 @@ import MailingListTableDesktop from './MailingListTableDesktop';
 import MailingListTableMobile from './MailingListTableMobile';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import useRoute from '../../hooks/useRoute';
 import TrialAntiSpamNotice from './TrialAntiSpamNotice';
 import useBulkEdit from '../../hooks/useBulkEdit';
@@ -24,12 +25,11 @@ import BulkEditBar from '../../components/BulkEditBar';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
 import MailingListFilters from './MailingListFilters';
  
 const Index = ({ lists, can, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
@@ -38,8 +38,17 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{ id: 'created_at', name: 'Created' },
 	];
 	const filters = [
-		{ name: 'search', defaultValue: '' },
-		{ name: 'list_type', multiple: true },
+		{ name: 'search', label: 'Search', type: 'text', defaultValue: '' },
+		{
+			name: 'list_type',
+			label: 'Type',
+			multiple: true,
+			options: [
+				{ id: 'chat', name: 'Chat' },
+				{ id: 'public', name: 'Public' },
+				{ id: 'distribution', name: 'Mailout' },
+			],
+		},
 	];
 	const sortFilterForm = useSortFilterForm('groups.index', filters, sorts);
 
@@ -62,8 +71,9 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			can: 'create_broadcast',
 		},
 		bulkEdit.action,
-		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
+	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
+	const pageHeaderActions = actions.filter(action => action !== bulkEdit.action);
 
 	const breadcrumbs = [
 		{ name: 'Communications', url: route('communications.index') },
@@ -79,7 +89,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}>
 					<PageActionsMenu>
-						{actions.map(action => (
+						{pageMenuActions.map(action => (
 							<ActionMenuItem
 								key={action.label}
 								url={action.url}
@@ -93,7 +103,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -103,7 +113,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 				</PageHeaderContent>
 
 				<PageHeaderActions>
-					{actions.map(action => (
+					{pageHeaderActions.map(action => (
 						<Button
 							key={action.label}
 							href={action.url}
@@ -142,9 +152,18 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="mailing lists"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<MailingListFilters form={sortFilterForm} />}
 						closeFn={() => setShowFilters(false)}
 					/>
@@ -154,8 +173,6 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 					<MailingListTableMobile
 						lists={lists}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				emptyState={

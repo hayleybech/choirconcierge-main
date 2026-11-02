@@ -1,16 +1,14 @@
 import React from 'react';
 import TableMobile, {
-    TableMobileHeader,
-    TableMobileListItem,
+	TableMobileListItem,
     TableMobileSelect,
     TableMobileSelectableLink
 } from "../../components/TableMobile";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
-import Button from '../../components/inputs/ButtonV2';
  
-const MailingListTableMobile = ({ lists, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
+const MailingListTableMobile = ({ lists, bulkEdit }) => {
     const { route } = useRoute();
 
     const list_type_labels = {
@@ -19,20 +17,9 @@ const MailingListTableMobile = ({ lists, bulkEdit, hasNonDefaultFilters, setShow
         distribution: 'Mailout',
     }
 
-    return (
-        <div>
-            <TableMobileHeader bulkEdit={bulkEdit}>
-                <Button
-                    size="sm"
-                    intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-                    weight="clear"
-                    onClick={() => setShowFilters(prev => !prev)}
-                >
-                    <Icon icon="filter" mr />
-                    Filter/Sort
-                </Button>
-            </TableMobileHeader>
-            <TableMobile pagination={<Pagination details={lists} />}>
+	return (
+		<div>
+			<TableMobile pagination={<Pagination details={lists} />}>
                 {lists.data.map((list) => (
                     <TableMobileListItem key={list.id}>
                         <TableMobileSelect bulkEdit={bulkEdit} value={list.id} />

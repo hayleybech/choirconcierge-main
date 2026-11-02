@@ -1,34 +1,16 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import TableMobile, { TableMobileHeader, TableMobileLink } from '../../../components/TableMobile';
+import TableMobile, { TableMobileLink } from '../../../components/TableMobile';
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
-import Button from '../../../components/inputs/ButtonV2';
  
-const MailLogTableMobile = ({ logs, showAdminDetails, hasNonDefaultFilters, setShowFilters, inboxEnabled }) => {
+const MailLogTableMobile = ({ logs, showAdminDetails, inboxEnabled }) => {
 	const { route } = useRoute();
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Mail Log',
-		selectedIds: [],
-		totalItems: logs.data.length,
-	};
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight={hasNonDefaultFilters ? 'outline' : 'clear'}
-					size="sm"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={logs} />}>
 				{logs.data.map(log => {
 					const mailType = log.uid.split('-')[0];

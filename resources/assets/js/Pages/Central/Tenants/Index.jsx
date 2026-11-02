@@ -2,31 +2,25 @@ import React from 'react';
  
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import useRoute from '../../../hooks/useRoute';
+import IndexTableControls from '../../../components/IndexTableControls';
 import TenantTableDesktop from './TenantTableDesktop';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import TenantTableMobile from './TenantTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import TenantFilters from './TenantFilters';
 import TenantStatsWidget from '../Dash/TenantStatsWidget';
 
 const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
-	const { route } = useRoute();
-
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'id', name: 'Organisation Name', default: true },
@@ -34,8 +28,25 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 	];
 
 	const filters = [
-		{ name: 'id', defaultValue: '' },
-		{ name: 'billing_status', defaultValue: '' },
+		{ name: 'id', label: 'Tenant ID', type: 'text', defaultValue: '' },
+		{
+			name: 'billing_status',
+			label: 'Billing Status',
+			defaultValue: '',
+			options: [
+				{ id: 'active', name: 'Active', icon: 'check-circle', textColour: 'text-green-500' },
+				{ id: 'subscribed', name: 'Subscribed', icon: 'usd-circle', textColour: 'text-green-500' },
+				{ id: 'gratis', name: 'Gratis', icon: 'heart-circle', textColour: 'text-green-500' },
+				{ id: 'trial', name: 'Trial', icon: 'dot-circle', textColour: 'text-blue-500' },
+				{ id: 'inactive', name: 'Inactive', icon: 'times-circle', textColour: 'text-red-500' },
+			],
+			renderOption: (option, compact) => (
+				<span className="inline-flex items-center gap-1.5">
+					<Icon icon={option.icon} className={compact ? `text-xs ${option.textColour}` : option.textColour} />
+					{option.name}
+				</span>
+			),
+		},
 	];
 
 	const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
@@ -44,60 +55,44 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 		<>
 			<AppHead title="Tenants" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Tenants">
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem {...filterAction}>
-								<Icon icon={filterAction.icon} mr />
-								{filterAction.label}
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
-				</PageTopNavigation>
+				<PageTopNavigation title="Tenants" />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="building" type="solid" className="mr-2" /> Tenants
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon={filterAction.icon} mr />
-							{filterAction.label}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
-			{!!tenantStats && (
-				<div className="w-full bg-white border-b">
-					<TenantStatsWidget {...tenantStats} panel={false} />
-				</div>
-			)}
-
 			<IndexContainer
 				showFilters={showFilters}
+				tableSummary={
+					!!tenantStats && (
+						<div className="w-full bg-white border-b">
+							<TenantStatsWidget {...tenantStats} panel={false} />
+						</div>
+					)
+				}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="tenants"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<TenantFilters form={sortFilterForm} />}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
-				tableMobile={
-					<TenantTableMobile
-						tenants={tenants}
-						pagination={pagination}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
+					tableMobile={
+						<TenantTableMobile
+							tenants={tenants}
+							pagination={pagination}
+						/>
 				}
 				tableDesktop={
 					<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} pagination={pagination} />

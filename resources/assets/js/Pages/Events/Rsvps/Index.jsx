@@ -2,13 +2,11 @@ import React, { useState, Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import Icon from '../../../components/Icon';
@@ -27,12 +25,12 @@ import DateTag from '../../../components/DateTag';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import IndexContainer from '../../../components/IndexContainer';
+import IndexTableControls from '../../../components/IndexTableControls';
 import RsvpTableMobile from './RsvpTableMobile';
 import Pagination from '../../../components/Pagination';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link, router } from '@inertiajs/react';
@@ -63,7 +61,7 @@ const Index = ({
 }) => {
 	const { route } = useRoute();
 	const bulkEdit = useBulkEdit(allSingers, canEditRsvps, false, 'Singer', true);
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const defaultColumns = ['singer', 'voice_part', 'rsvp', 'updated', 'dietary'];
@@ -91,16 +89,53 @@ const Index = ({
 	];
 
 	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-		{ name: 'enrolments.ensemble_id', multiple: true },
-		{ name: 'rsvp.response', multiple: true },
+		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
+		{
+			name: 'enrolments.voice_part_id',
+			label: 'Voice Part',
+			multiple: true,
+			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
+			renderOption: (option, compact) => (
+				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+			),
+		},
+		...(ensembles.length > 1
+			? [
+					{
+						name: 'enrolments.ensemble_id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
+					},
+				]
+			: []),
+		{
+			name: 'rsvp.response',
+			label: 'RSVP Response',
+			multiple: true,
+			options: [
+				{ id: 'yes', name: 'Going' },
+				{ id: 'maybe', name: 'Maybe' },
+				{ id: 'no', name: 'Not going' },
+				{ id: 'unknown', name: 'No RSVP' },
+			],
+		},
 		{
 			name: 'status.id',
+			label: 'Singer Status',
 			multiple: true,
 			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
 				? [singerStatuses.find(c => c.name === 'Members').id]
 				: [],
+			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
+			renderOption: (option, compact) => (
+				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
+			),
 		},
 	];
 
@@ -206,8 +241,6 @@ const Index = ({
 		/>
 	);
 
-	const columnsAction = isDesktop ? columnsMenu : null;
-
 	const breadcrumbs = [
 		{ name: 'Events', url: route('events.index') },
 		{ name: event.title, url: route('events.show', { event }) },
@@ -218,25 +251,9 @@ const Index = ({
 		<>
 			<AppHead title={`RSVP Roster - ${event.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-				{(filterAction || bulkEdit.action) && (
-					<PageActionsMenu>
-						{filterAction && (
-							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
-								<Icon icon="filter" mr />
-								Filter
-							</ActionMenuItem>
-						)}
-						{bulkEdit.action && (
-							<ActionMenuItem onClick={bulkEdit.action.onClick}>
-								<Icon icon={bulkEdit.action.icon} mr />
-								{bulkEdit.action.label}
-							</ActionMenuItem>
-						)}
-					</PageActionsMenu>
-				)}
+				<PageTopNavigation breadcrumbs={breadcrumbs} />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -244,45 +261,41 @@ const Index = ({
 						RSVP Roster
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{bulkEdit.action && (
-						<Button onClick={bulkEdit.action.onClick} size="md" intent="secondary" weight="outline">
-							<Icon icon={bulkEdit.action.icon} mr />
-							{bulkEdit.action.label}
-						</Button>
-					)}
-					{filterAction && (
-						<Button onClick={filterAction.onClick} size="md" intent={filterAction.intent} weight="outline">
-							<Icon icon="filter" mr />
-							Filter
-						</Button>
-					)}
-					{columnsMenu}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
-			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
-				{countsData.map(({ label, textColour, icon, count }) => (
-					<div
-						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1"
-						key={label}
-					>
-						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
-							{label}
-						</div>
-						<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
-					</div>
-				))}
-			</div>
-
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						tableActionContent={columnsMenu}
+						filterLabel="rsvp roster"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
+				tableSummary={
+					<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
+						{countsData.map(({ label, textColour, icon, count }) => (
+							<div
+								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1"
+								key={label}
+							>
+								<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
+									<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
+									{label}
+								</div>
+								<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+							</div>
+						))}
+					</div>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<RsvpFilters
 								event={event}
@@ -302,12 +315,9 @@ const Index = ({
 						showEnsemble={showEnsemble}
 						visibleColumns={visibleColumns}
 						customFields={customFields}
-						columnsMenu={columnsMenu}
 						event={event}
 						bulkEdit={bulkEdit}
 						canEditRsvps={canEditRsvps}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

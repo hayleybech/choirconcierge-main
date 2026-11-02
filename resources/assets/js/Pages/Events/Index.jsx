@@ -4,7 +4,10 @@ import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -15,9 +18,9 @@ import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
 import EventFilters from '../../components/Event/EventFilters';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import FilterSortPane from '../../components/FilterSortPane';
 import useFilterPane from '../../hooks/useFilterPane';
-import Sorts from '../../components/Sorts';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
@@ -28,7 +31,7 @@ import BulkEditBar from '../../components/BulkEditBar';
 import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
  
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	const [showSyncModal, setShowSyncModal] = React.useState(false);
 	const { route } = useRoute();
 
@@ -42,10 +45,46 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 	];
 
 	const filters = [
-		{ name: 'title', defaultValue: '' },
-		{ name: 'type.id', multiple: true },
-		{ name: 'date', defaultValue: 'upcoming' },
-		{ name: 'ensembles.id', multiple: true },
+		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
+		{
+			name: 'type.id',
+			label: 'Type',
+			multiple: true,
+			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
+		},
+		{
+			name: 'date',
+			label: 'Date',
+			defaultValue: 'upcoming',
+			options: [
+				{ id: 'all', name: 'All' },
+				{ id: 'upcoming', name: 'Upcoming' },
+				{ id: 'past', name: 'Past' },
+			],
+			onChange: (value, form) => {
+				form.setData('date', value);
+
+				if (value === 'upcoming') {
+					form.setData('sort', 'start_date');
+					form.setData('sortDir', 'asc');
+				}
+
+				if (value === 'past') {
+					form.setData('sort', 'start_date');
+					form.setData('sortDir', 'desc');
+				}
+			},
+		},
+		...(userEnsemblesCount > 1
+			? [
+					{
+						name: 'ensembles.id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+					},
+				]
+			: []),
 	];
 
 	const transforms = data => ({
@@ -77,10 +116,14 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 			onClick: () => setShowSyncModal(true),
 		},
 		bulkEdit.action,
-		filterAction,
 	]
 		.filter(action => !!action)
 		.filter(action => (action.can ? can[action.can] : true));
+	const relatedPageActions = actions.filter(action =>
+		['Event Types', 'Attendance Report', 'Calendar View'].includes(action.label)
+	);
+	const pageActions = actions.filter(action => !relatedPageActions.includes(action));
+	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
 
 	return (
 		<>
@@ -88,7 +131,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Events">
 					<PageActionsMenu>
-						{actions.map((action, key) => (
+						{pageMenuActions.map((action, key) => (
 							<ActionMenuItem
 								key={key}
 								url={action.url}
@@ -106,14 +149,23 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 				</PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
-					<PageHeaderTitle>
-						<Icon icon="calendar" type="solid" className="mr-2" /> Events
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="calendar" type="solid" className="mr-2" /> Events
+						</PageHeaderTitle>
+						<PageHeaderLinks>
+							{relatedPageActions.map(action => (
+								<PageHeaderLink key={action.label} href={action.url} icon={action.icon}>
+									{action.label}
+								</PageHeaderLink>
+							))}
+						</PageHeaderLinks>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 				<PageHeaderActions>
-					{actions.map(action => (
+					{pageActions.map(action => (
 						<Button
 							key={action.label}
 							href={action.url}
@@ -158,9 +210,18 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="events"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<EventFilters
 								eventTypes={eventTypes}
@@ -177,8 +238,6 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 						events={events}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
-						setShowFilters={setShowFilters}
-						hasNonDefaultFilters={hasNonDefaultFilters}
 					/>
 				}
 				tableDesktop={

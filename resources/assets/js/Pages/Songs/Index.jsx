@@ -7,7 +7,10 @@ import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -16,9 +19,9 @@ import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import SongFilters from '../../components/Song/SongFilters';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
@@ -39,7 +42,7 @@ const Index = ({
 	can,
 	setSidebarOpen,
 }) => {
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	const { route } = useRoute();
 
 	const bulkEdit = useBulkEdit(songs.data, can.update_song, can.delete_song, 'Song');
@@ -51,11 +54,45 @@ const Index = ({
 	];
 
 	const filters = [
-		{ name: 'title', defaultValue: '' },
-		{ name: 'status.id', multiple: true, defaultValue: defaultStatuses },
-		{ name: 'categories.id', multiple: true },
-		{ name: 'ensembles.id', multiple: true },
-		{ name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
+		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
+		{
+			name: 'status.id',
+			label: 'Status',
+			multiple: true,
+			defaultValue: defaultStatuses,
+			options: statuses.map(status => ({ id: status.id, name: status.title })),
+		},
+		{
+			name: 'categories.id',
+			label: 'Category',
+			multiple: true,
+			options: categories.map(category => ({ id: category.id, name: category.title })),
+		},
+		...(userEnsemblesCount > 1
+			? [
+					{
+						name: 'ensembles.id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+					},
+				]
+			: []),
+		...(showForProspectsDefault.length > 1
+			? [
+					{
+						name: 'show_for_prospects',
+						label: 'Audition Songs',
+						multiple: true,
+						multipleBool: true,
+						defaultValue: showForProspectsDefault,
+						options: [
+							{ id: false, name: 'Non-Audition Songs' },
+							{ id: true, name: 'Audition Songs' },
+						],
+					},
+				]
+			: []),
 	];
 
 	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
@@ -71,10 +108,12 @@ const Index = ({
 		},
 		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
 		bulkEdit.action,
-		filterAction,
 	]
 		.filter(action => !!action)
 		.filter(action => (action.can ? can[action.can] : true));
+	const categoryAction = actions.find(action => action.label === 'Categories');
+	const pageActions = actions.filter(action => action !== categoryAction);
+	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
 
 	return (
 		<>
@@ -82,7 +121,7 @@ const Index = ({
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Songs">
 					<PageActionsMenu>
-						{actions.map((action, key) => (
+						{pageMenuActions.map((action, key) => (
 							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
@@ -91,15 +130,24 @@ const Index = ({
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
-					<PageHeaderTitle>
-						<Icon icon="list-music" type="solid" className="mr-2" />
-						Songs
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="list-music" type="solid" className="mr-2" />
+							Songs
+						</PageHeaderTitle>
+						<PageHeaderLinks>
+							{categoryAction && (
+								<PageHeaderLink href={categoryAction.url} icon={categoryAction.icon}>
+									{categoryAction.label}
+								</PageHeaderLink>
+							)}
+						</PageHeaderLinks>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 				<PageHeaderActions>
-					{actions.map(action => (
+					{pageActions.map(action => (
 						<Button
 							key={action.label}
 							href={action.url}
@@ -138,9 +186,18 @@ const Index = ({
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="songs"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<SongFilters
 								statuses={statuses}
@@ -159,8 +216,6 @@ const Index = ({
 						songs={songs}
 						userEnsemblesCount={userEnsemblesCount}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

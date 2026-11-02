@@ -2,29 +2,24 @@ import React from 'react';
  
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
-import Button from '../../../components/inputs/ButtonV2';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import useRoute from '../../../hooks/useRoute';
+import IndexTableControls from '../../../components/IndexTableControls';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import MailLogFilters from './MailLogFilters';
 
 const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) => {
-	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	const sorts = [
 		{ id: 'subject', name: 'Subject' },
 		{ id: 'to', name: 'To' },
@@ -35,11 +30,22 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 		{ id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
 	];
 	const filters = [
-		{ name: 'subject', defaultValue: '' },
-		{ name: 'to', defaultValue: '' },
-		{ name: 'from', defaultValue: '' },
-		{ name: 'tenant', defaultValue: '' },
-		{ name: 'type', multiple: true, defaultValue: defaultMailTypes },
+		{ name: 'subject', label: 'Subject', type: 'text', defaultValue: '' },
+		{ name: 'to', label: 'To', type: 'text', defaultValue: '' },
+		{ name: 'from', label: 'From', type: 'text', defaultValue: '' },
+		{
+			name: 'tenant',
+			label: 'Tenant',
+			defaultValue: '',
+			options: tenants.map(({ id, name }) => ({ id, name })),
+			renderOption: option => (
+				<span className="inline-flex items-center gap-1.5">
+					<Icon icon="building" />
+					{option.name}
+				</span>
+			),
+		},
+		{ name: 'type', label: 'Mail Type', multiple: true, defaultValue: defaultMailTypes, options: mailTypes },
 	];
 	const sortFilterForm = useSortFilterForm('central.mail-logs.index', filters, sorts);
 
@@ -47,53 +53,37 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 		<>
 			<AppHead title="Mail Logs" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Mail Logs">
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem {...filterAction}>
-								<Icon icon={filterAction.icon} mr />
-								{filterAction.label}
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
-				</PageTopNavigation>
+				<PageTopNavigation title="Mail Logs" />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="history" type="solid" className="mr-2" /> Mail Logs
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="sm"
-							intent={filterAction.intent}
-							weight={filterAction.weight}
-						>
-							<Icon icon={filterAction.icon} mr />
-							{filterAction.label}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="mail logs"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<MailLogFilters form={sortFilterForm} tenants={tenants} mailTypes={mailTypes} />}
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
-				tableMobile={
-					<MailLogTableMobile
-						logs={logs}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
+					tableMobile={
+						<MailLogTableMobile
+							logs={logs}
+						/>
 				}
 				tableDesktop={<MailLogTableDesktop logs={logs} sortFilterForm={sortFilterForm} />}
 			/>

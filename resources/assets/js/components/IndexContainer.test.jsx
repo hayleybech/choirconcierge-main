@@ -38,7 +38,7 @@ describe('IndexContainer', () => {
 		expect(mobileTableContainer.className).toContain('flex-none');
 	});
 
-	it('keeps filters in the sidebar on desktop', () => {
+	it('does not render the filter pane on desktop', () => {
 		mockUseMediaQuery.mockReturnValue(true);
 
 		render(
@@ -50,17 +50,17 @@ describe('IndexContainer', () => {
 			);
 
 		expect(screen.queryByRole('dialog')).toBeNull();
-		expect(screen.getByText('Filter controls').parentElement.parentElement).toBeTruthy();
+		expect(screen.queryByText('Filter controls')).toBeNull();
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 
-	it('keeps the desktop filter pane mounted while closed so its width can animate', () => {
-		mockUseMediaQuery.mockReturnValue(true);
+	it('keeps the mobile table controls sticky below the mobile top bar', () => {
+		mockUseMediaQuery.mockReturnValue(false);
 
-		render(<IndexContainer filterPane={<div>Filter controls</div>} tableDesktop={<div>Desktop table</div>} />);
+		render(<IndexContainer tableControls={<div data-testid="table-controls">Table controls</div>} />);
 
-		expect(screen.getByText('Filter controls').parentElement.parentElement.className).toBeTruthy();
-		expect(screen.getByText('Desktop table')).toBeTruthy();
+		expect(screen.getByTestId('table-controls').parentElement.className).toContain('sticky');
+		expect(screen.getByTestId('table-controls').parentElement.className).toContain('top-11.75');
 	});
 
 	it('keeps table controls outside the filter and table layout row', () => {
@@ -74,7 +74,26 @@ describe('IndexContainer', () => {
 			/>
 		);
 
-		expect(screen.getByTestId('table-controls').parentElement).toBe(container.firstElementChild);
+		const controlsWrapper = screen.getByTestId('table-controls').parentElement;
+
+		expect(controlsWrapper.parentElement).toBe(container.firstElementChild);
+		expect(controlsWrapper.nextElementSibling).toBeTruthy();
+	});
+
+	it('renders a table summary immediately after the controls row', () => {
+		const { container } = render(
+			<IndexContainer
+				tableControls={<div data-testid="table-controls">Controls</div>}
+				tableSummary={<div data-testid="table-summary">Summary</div>}
+				tableMobile={<div>Mobile table</div>}
+			/>
+		);
+		const controlsWrapper = screen.getByTestId('table-controls').parentElement;
+		const summary = screen.getByTestId('table-summary');
+
+		expect(controlsWrapper.parentElement).toBe(container.firstElementChild);
+		expect(controlsWrapper.nextElementSibling).toBe(summary);
+		expect(summary.nextElementSibling).toBeTruthy();
 	});
 
 	it('does not open a filter dialog when filters are not configured', () => {

@@ -22,9 +22,8 @@ import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
-import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
-import Sorts from '../../components/Sorts';
+import IndexTableControls from '../../components/IndexTableControls';
 import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
@@ -45,7 +44,7 @@ const AttendanceReport = ({
 }) => {
 	const { route } = useRoute();
 	const [isChartCollapsed, setIsChartCollapsed] = React.useState(false);
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters, , hasNonDefaultFilters] = useFilterPane();
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
 	const sorts = [
@@ -64,11 +63,26 @@ const AttendanceReport = ({
 		{ label: 'Last year', start: today.minus({ years: 1 }).startOf('year'), end: today.minus({ years: 1 }).endOf('year') },
 	];
 	const filters = [
-		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
-		{ name: 'starts_after', defaultValue: defaultStartsAfter },
-		{ name: 'starts_before', defaultValue: defaultStartsBefore },
-		{ name: 'enrolments.voice_part_id', multiple: true },
+		{
+			name: 'type.id',
+			label: 'Event Type',
+			multiple: true,
+			defaultValue: [defaultEventType],
+			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
+		},
+		{ name: 'starts_after', label: 'Events After', type: 'date', defaultValue: defaultStartsAfter },
+		{ name: 'starts_before', label: 'Events Before', type: 'date', defaultValue: defaultStartsBefore },
+		{
+			name: 'enrolments.voice_part_id',
+			label: 'Voice Part',
+			multiple: true,
+			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
+			renderOption: (option, compact) => (
+				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+			),
+		},
 	];
+	const railFilters = filters.filter(filter => !['starts_after', 'starts_before'].includes(filter.name));
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 	const previousDateRange = React.useRef({
@@ -78,27 +92,21 @@ const AttendanceReport = ({
 	React.useEffect(() => {
 		const startsAfter = sortFilterForm.data['starts_after'];
 		const startsBefore = sortFilterForm.data['starts_before'];
+		const dateRangeChanged =
+			previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore;
 
-		if (previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore) {
-			previousDateRange.current = { startsAfter, startsBefore };
-			sortFilterForm.submit();
+		previousDateRange.current = { startsAfter, startsBefore };
+
+		if (!isDesktop && dateRangeChanged) {
+			sortFilterForm.submit(undefined);
 		}
-	}, [sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
+	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterSortPane
-			sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-			showSortsOnDesktop
 			filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
 			closeFn={() => setShowFilters(false)}
 		/>
 	);
-
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Attendance',
-		selectedIds: [],
-		totalItems: events.length,
-	};
 
 	const breadcrumbs = [
 		{ name: 'Events', url: route('events.index') },
@@ -110,18 +118,12 @@ const AttendanceReport = ({
 			<AppHead title="Attendance Report" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-				{(filterAction || (events.length > 0 && numSingers > 0)) && (
+				{events.length > 0 && numSingers > 0 && (
 					<PageActionsMenu>
 						{events.length > 0 && numSingers > 0 && (
 							<ActionMenuItem onClick={() => setIsChartCollapsed(prev => !prev)}>
 								<Icon icon="analytics" mr />
 								{isChartCollapsed ? 'Show chart' : 'Hide chart'}
-							</ActionMenuItem>
-						)}
-						{filterAction && (
-							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
-								<Icon icon="filter" mr />
-								Filter
 							</ActionMenuItem>
 						)}
 					</PageActionsMenu>
@@ -172,18 +174,6 @@ const AttendanceReport = ({
 					</div>
 				</PageHeaderContent>
 				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon="filter" mr />
-							Filter
-						</Button>
-					)}
 					{events.length > 0 && numSingers > 0 && (
 						<Button
 							onClick={() => setIsChartCollapsed(prev => !prev)}
@@ -197,6 +187,16 @@ const AttendanceReport = ({
 					)}
 				</PageHeaderActions>
 			</PageHeader>
+			<div className="sticky top-[47px] z-30 shrink-0 bg-white lg:static lg:z-auto">
+				<IndexTableControls
+					filters={railFilters}
+					sorts={sorts}
+					form={sortFilterForm}
+					filterLabel="attendance report"
+					hasChangedFilters={hasNonDefaultFilters}
+					onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+				/>
+			</div>
 
 			{events.length > 0 && numSingers > 0 && (
 				<AttendanceChart events={events} isCollapsed={isChartCollapsed} onClose={() => setIsChartCollapsed(true)} />
@@ -207,23 +207,7 @@ const AttendanceReport = ({
 					{filterPane}
 				</FilterDialog>
 			)}
-			<TableMobileHeader bulkEdit={bulkEdit} className="lg:hidden">
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
-
 			<div className="flex min-w-0 flex-none flex-col divide-y divide-gray-300 lg:min-h-0 lg:flex-1 lg:overflow-auto lg:flex-row lg:divide-x lg:divide-y-0">
-				{isDesktop && showFilters && (
-					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">{filterPane}</div>
-				)}
-
 				<div className="flex min-w-0 flex-none flex-col lg:min-h-0 lg:flex-1 lg:overflow-x-auto">
 					<div className="min-w-0 flex-1">
 						{events.length === 0 && (

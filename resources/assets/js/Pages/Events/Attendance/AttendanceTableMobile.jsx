@@ -1,7 +1,6 @@
 import React from 'react';
  
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
@@ -13,8 +12,6 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
-import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
 
 const AttendanceTableMobile = ({
 	singers,
@@ -22,24 +19,11 @@ const AttendanceTableMobile = ({
 	showEnsemble,
 	event,
 	bulkEdit,
-	hasNonDefaultFilters,
-	setShowFilters,
 }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>

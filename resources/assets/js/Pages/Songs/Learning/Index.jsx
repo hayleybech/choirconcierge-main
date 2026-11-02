@@ -1,13 +1,11 @@
 import React from 'react';
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
@@ -21,10 +19,14 @@ import LearningStatusTable from './LearningStatusTable';
 import LearningStatusTableMobile from './LearningStatusTableMobile';
 import LearningStatusSummary from './LearningStatusSummary';
 import IndexContainer from '../../../components/IndexContainer';
+import IndexTableControls from '../../../components/IndexTableControls';
 import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
 import LearningStatusFilters from '../../../components/LearningStatusFilters';
 import LearningStatus from '../../../LearningStatus';
+import Badge from '../../../components/Badge';
+import VoicePartTag from '../../../components/VoicePartTag';
+import SingerStatus from '../../../SingerStatus';
+import SingerStatusTag from '../../../components/SingerStatusTag';
 import { router } from '@inertiajs/react';
  
 const Index = ({
@@ -40,7 +42,7 @@ const Index = ({
 }) => {
 	const { route } = useRoute();
 
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const showEnsemble = song.ensembles.length > 0 || totalEnsemblesCount > 1;
 
@@ -52,24 +54,68 @@ const Index = ({
 	];
 
 	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-		{ name: 'enrolments.ensemble_id', multiple: true },
-		{ name: 'learning.status', multiple: true },
+		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
+		{
+			name: 'enrolments.voice_part_id',
+			label: 'Voice Part',
+			multiple: true,
+			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
+			renderOption: (option, compact) => (
+				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
+			),
+		},
+		...(ensembles.length > 1
+			? [
+					{
+						name: 'enrolments.ensemble_id',
+						label: 'Ensemble',
+						multiple: true,
+						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
+					},
+				]
+			: []),
+		{
+			name: 'learning.status',
+			label: 'Learning Status',
+			multiple: true,
+			options: [
+				{ id: 'not-started', name: 'Learning' },
+				{ id: 'assessment-ready', name: 'Assessment Ready' },
+				{ id: 'performance-ready', name: 'Performance Ready' },
+			],
+			renderOption: option => {
+				const status = new LearningStatus(option.id);
+
+				return (
+					<span className="inline-flex items-center gap-1.5">
+						<Icon icon={status.icon} className={status.textColour} />
+						{status.title}
+					</span>
+				);
+			},
+		},
 		{
 			name: 'status.id',
+			label: 'Singer Status',
 			multiple: true,
-			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
-				? [singerStatuses.find(c => c.name === 'Members').id]
+			defaultValue: singerStatuses.find(status => status.name === 'Members')?.id
+				? [singerStatuses.find(status => status.name === 'Members').id]
 				: [],
+			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
+			renderOption: (option, compact) => (
+				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
+			),
 		},
 	];
 
 	const sortFilterForm = useSortFilterForm(['songs.singers.index', { song: song.id }], filters, sorts);
 
 	const bulkEdit = useBulkEdit(allSingers, true, false, 'Singer', true);
-	const actions = [filterAction, bulkEdit.action].filter(Boolean);
-
 	const markSelectedAs = status => {
 		router.post(
 			route('songs.singers.bulk-update', { song }),
@@ -88,19 +134,9 @@ const Index = ({
 		<>
 			<AppHead title={`Learning Roster - ${song.title}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-				{actions.length > 0 && (
-					<PageActionsMenu>
-						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
-								<Icon icon={action.icon} mr />
-								{action.label}
-							</ActionMenuItem>
-						))}
-					</PageActionsMenu>
-				)}
+				<PageTopNavigation breadcrumbs={breadcrumbs} />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -108,22 +144,6 @@ const Index = ({
 						Learning Roster
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<BulkEditBar
@@ -147,13 +167,21 @@ const Index = ({
 				})}
 			/>
 
-			<LearningStatusSummary counts={counts} />
-
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="learning roster"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
+				tableSummary={<LearningStatusSummary counts={counts} />}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={
 							<LearningStatusFilters
 								song={song}
@@ -183,8 +211,6 @@ const Index = ({
 						pagination={pagination}
 						bulkEdit={bulkEdit}
 						showEnsemble={showEnsemble}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 			/>

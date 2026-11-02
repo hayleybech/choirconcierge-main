@@ -1,8 +1,12 @@
 import React from 'react';
 import Breadcrumbs from './Breadcrumbs';
+import Icon from '../Icon';
+import { Link } from '@inertiajs/react';
  
-export const PageHeader = ({ children, className = '' }) => (
-	<div className="py-3 xl:py-4 bg-white border-b border-gray-100 px-4 sm:px-6 md:px-8">
+export const PageHeader = ({ children, className = '', hideOnMobile = false }) => (
+	<div
+		className={`${hideOnMobile ? 'hidden xl:block ' : ''}py-3 xl:py-4 bg-white border-b border-gray-100 px-4 sm:px-6 md:px-8`}
+	>
 		<div className={`lg:flex lg:items-center lg:justify-between ${className}`}>
 			{children}
 		</div>
@@ -10,7 +14,9 @@ export const PageHeader = ({ children, className = '' }) => (
 );
 
 /** Wrapper for page header desktop actions */
-export const PageHeaderActions = ({ children }) => <div className="hidden xl:flex mt-0 lg:ml-4 gap-3 grow">{children}</div>;
+export const PageHeaderActions = ({ children }) => (
+	<div className="hidden shrink-0 items-center gap-3 xl:ml-4 xl:flex">{children}</div>
+);
 
 /** Wrapper for page header meta items */
 export const PageHeaderMeta = ({ children }) => (
@@ -25,8 +31,23 @@ export const PageHeaderBreadcrumbs = ({ breadcrumbs }) => (
 	</div>
 );
 
-export const PageHeaderContent = ({children}) => <div className="flex-1 min-w-0 space-y-2">{children}</div>;
+export const PageHeaderContent = ({ children }) => <div className="min-w-0 flex-1 space-y-2">{children}</div>;
+
+export const PageHeaderTitleRow = ({ children }) => (
+	<div className="flex min-w-0 items-center gap-4">{children}</div>
+);
+
+export const PageHeaderLinks = ({ children }) => (
+	<nav className="hidden shrink-0 items-center gap-3 xl:flex">{children}</nav>
+);
+
+export const PageHeaderLink = ({ href, icon, children }) => (
+	<Link href={href} className="flex items-center gap-1.5 text-sm font-medium text-purple-700 hover:text-sky-500">
+		{icon && <Icon icon={icon} />}
+		{children}
+	</Link>
+);
 
 export const PageHeaderTitle = ({ children }) => (
-	<h2 className="text-xl font-bold leading-7 text-gray-900 sm:text-2xl sm:truncate mb-0 -mt-2">{children}</h2>
+	<h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">{children}</h2>
 );

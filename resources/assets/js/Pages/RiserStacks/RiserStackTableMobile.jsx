@@ -1,7 +1,6 @@
 import React from 'react';
  
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
@@ -9,25 +8,12 @@ import TableMobile, {
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import EnsembleBadges from '../../components/EnsembleBadges';
-import Icon from '../../components/Icon';
-import Button from '../../components/inputs/ButtonV2';
 
-const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
+const RiserStackTableMobile = ({ stacks, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={stacks} />} bulkEdit={bulkEdit}>
 				{stacks.data.map(stack => (
 					<TableMobileListItem key={stack.id}>

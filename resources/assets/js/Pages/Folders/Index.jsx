@@ -16,27 +16,27 @@ import FolderTableMobile from './FolderTableMobile';
 import DeleteDialog from '../../components/DeleteDialog';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
+import IndexTableControls from '../../components/IndexTableControls';
 import useRoute from '../../hooks/useRoute';
 import DocumentFilters from './DocumentFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
  
-const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSidebarOpen }) => {
+const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const [deletingFolder, setDeletingFolder] = useState(null);
 	const [deletingDocument, setDeletingDocument] = useState(null);
 
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters, , hasNonDefaultFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [{ name: 'title', defaultValue: '' }];
+	const filters = [{ name: 'title', label: 'Title', type: 'text', defaultValue: '' }];
 
 	const sortFilterForm = useSortFilterForm('folders.index', filters, sorts);
 	const actions = [
@@ -48,7 +48,6 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 			weight: 'solid',
 			can: 'create_folder',
 		},
-		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	return (
@@ -66,7 +65,7 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="folders" type="solid" className="mr-2" /> Documents
@@ -92,9 +91,17 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<IndexTableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="documents"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
 					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
 						filters={<DocumentFilters form={sortFilterForm} />}
 						closeFn={() => setShowFilters(false)}
 					/>
@@ -115,7 +122,6 @@ const Index = ({ folders, documents, userEnsemblesCount, ensembles, can, setSide
 					<FolderTableMobile
 						folders={folders}
 						documents={documents}
-						setShowFilters={setShowFilters}
 						isFiltered={!!hasNonDefaultFilters}
 						setDeletingFolder={setDeletingFolder}
 						setDeletingDocument={setDeletingDocument}

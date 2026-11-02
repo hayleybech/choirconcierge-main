@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import TableMobile, { TableMobileHeader } from '../../components/TableMobile';
-import Icon from '../../components/Icon';
+import TableMobile from '../../components/TableMobile';
 import DocumentForm from './DocumentForm';
-import Button from '../../components/inputs/ButtonV2';
 import EmptyState from '../../components/EmptyState';
 import { DocumentRowMobile, FolderRowMobile } from './FolderTableRows';
 import RenameDocumentDialog from './RenameDocumentDialog';
@@ -11,7 +9,6 @@ const FolderTableMobile = ({
 	folders,
 	documents,
 	isFiltered,
-	setShowFilters,
 	setDeletingFolder,
 	setDeletingDocument,
 	permissions,
@@ -26,26 +23,8 @@ const FolderTableMobile = ({
 
 	const showEnsemblesColumn = userEnsemblesCount > 1;
 
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Folder',
-		selectedIds: [],
-		totalItems: folders.length + (documents ? documents.length : 0),
-	};
-
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={isFiltered ? 'success' : 'secondary'}
-					weight={isFiltered ? 'outline' : 'clear'}
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile>
 				{isFiltered && documents.length > 0 && (
 					<>
