@@ -29,7 +29,7 @@ class MacroServiceProvider extends ServiceProvider
                 $this->select($this->getQuery()->from.'.*');
             }
 
-            return $this->selectSub($query->limit(1)->getQuery(), $column);
+            return $this->selectSub($query->limit(1), $column);
         });
     }
 }

@@ -4,7 +4,7 @@ import buttonStyles from './buttonStylesV2';
 import ButtonLink from './ButtonLinkV2';
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-	intent?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
+	intent?: 'primary' | 'secondary' | 'selected' | 'danger' | 'warning' | 'success';
 	weight?: 'solid' | 'outline' | 'clear';
 	size?: 'lg' | 'md' | 'sm';
 	theme?: 'light' | 'dark';

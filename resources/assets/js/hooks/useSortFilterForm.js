@@ -12,15 +12,15 @@ const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) =
 		...getFilters(filters),
 	});
 
-	function submit(e) {
+	function submit(e, options = {}) {
 		e?.preventDefault();
 
 		// if routeParams is array, pull out params
 		// @todo refactor this hook to accept the return value from route()
 		if (typeof routeParams == 'object') {
-			get(route(routeParams[0], routeParams[1]));
+			get(route(routeParams[0], routeParams[1]), options);
 		} else {
-			get(route(routeParams));
+			get(route(routeParams), options);
 		}
 	}
 
@@ -52,7 +52,7 @@ const getFilterSingle = (params, name, defaultValue = '') => params.filter?.[nam
 
 const getFilterMultiple = (params, name, defaultValue = [], bool) =>
 	!!params.filter && name in params.filter
-		? params.filter?.[name].map(value => {
+		? [].concat(params.filter?.[name]).map(value => {
 				if (bool) {
 					return value === 'true';
 				}

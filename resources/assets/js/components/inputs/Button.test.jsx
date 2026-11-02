@@ -28,6 +28,16 @@ describe('Button', () => {
 		expect(screen.getByRole('button')).not.toHaveClass('shadow-sm');
 	});
 
+	it('uses a subtle purple outline for selected buttons', () => {
+		render(
+			<Button intent="selected" weight="outline">
+				Selected
+			</Button>
+		);
+
+		expect(screen.getByRole('button')).toHaveClass('bg-purple-50', 'border-purple-200', 'text-purple-700');
+	});
+
 	it('maps v2 sizes to the corresponding v1 sizes', () => {
 		const { rerender } = render(<Button size="lg">Test</Button>);
 
@@ -88,7 +98,7 @@ describe('Button', () => {
 		expect(screen.getByRole('button')).toHaveClass('text-gray-100', 'hover:text-gray-200');
 	});
 
-	it('uses darker light secondary solid styling', () => {
+	it('uses the light secondary outline styling for solid weight', () => {
 		render(
 			<Button intent="secondary" weight="solid" theme="light">
 				Test
@@ -96,9 +106,9 @@ describe('Button', () => {
 		);
 
 		expect(screen.getByRole('button')).toHaveClass(
-			'bg-transparent',
-			'border-gray-300',
-			'text-gray-700',
+			'bg-white',
+			'border-gray-200',
+			'text-gray-600',
 			'hover:bg-gray-100'
 		);
 		expect(screen.getByRole('button')).not.toHaveClass('bg-gray-400', 'hover:bg-gray-500');

@@ -63,6 +63,20 @@ describe('IndexContainer', () => {
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 
+	it('keeps table controls outside the filter and table layout row', () => {
+		mockUseMediaQuery.mockReturnValue(true);
+
+		const { container } = render(
+			<IndexContainer
+				tableControls={<div data-testid="table-controls">Table controls</div>}
+				filterPane={<div>Filter controls</div>}
+				tableDesktop={<div>Desktop table</div>}
+			/>
+		);
+
+		expect(screen.getByTestId('table-controls').parentElement).toBe(container.firstElementChild);
+	});
+
 	it('does not open a filter dialog when filters are not configured', () => {
 		render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
 

@@ -12,7 +12,7 @@ const Breadcrumbs = ({ breadcrumbs, className, showLastChevron = true }) => (
 							{name}
 						</Link>
 						{(showLastChevron || index < breadcrumbs.length - 1) && (
-							<Icon icon="chevron-right" className="text-gray-400 text-xs" />
+							<span className="text-gray-400 text-lg font-bold">/</span>
 						)}
 					</div>
 				</li>

@@ -7,7 +7,7 @@ import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
 import Icon from '../../components/Icon';
  
-const v2Intents = ['primary', 'secondary', 'danger', 'warning', 'success'];
+const v2Intents = ['primary', 'secondary', 'selected', 'danger', 'warning', 'success'];
 const v2Weights = ['solid', 'outline', 'clear'];
 const v2Sizes = ['lg', 'md', 'sm'];
 const v2Themes = ['light', 'dark'];

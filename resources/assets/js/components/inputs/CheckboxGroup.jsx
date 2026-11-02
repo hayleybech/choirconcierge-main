@@ -1,26 +1,31 @@
 import React from 'react';
 import CheckboxWithLabel from './CheckboxWithLabel';
 import classNames from '../../classNames';
-import Label from './Label';
 import CheckboxInput from './CheckboxInput';
  
-const CheckboxGroup = ({ name, options, value, updateFn }) => (
-	<div className="mt-4 grid grid-cols-2 md:flex md:flex-wrap">
-		{options.map((option, key) => (
-			<React.Fragment key={key}>
-				<CheckboxWithLabel
-					label={option.name}
-					id={`${name}_${option.id}`}
-					name={`${name}[]`}
-					value={option.id}
-					checked={value.includes(option.id)}
-					onChange={e =>
-						updateFn(e.target.checked ? addToArray(option.id, value) : deleteFromArray(option.id, value))
-					}
-					className="mr-8 mb-4"
-				/>
-			</React.Fragment>
-		))}
+const CheckboxGroup = ({ name, options, value, updateFn, defaultValue, renderOption }) => (
+	<div className="mt-4 grid grid-cols-2 gap-x-4 md:gap-x-8 gap-y-2 md:gap-y-4 md:flex md:flex-wrap">
+		{options.map((option, key) => {
+			const isChanged =
+				defaultValue !== undefined &&
+				(value ?? []).includes(option.id) !== defaultValue.includes(option.id);
+
+			return (
+				<React.Fragment key={key}>
+					<CheckboxWithLabel
+						label={renderOption ? renderOption(option, isChanged) : option.name}
+						id={`${name}_${option.id}`}
+						name={`${name}[]`}
+						value={option.id}
+						checked={(value ?? []).includes(option.id)}
+						isChanged={renderOption ? false : isChanged}
+						onChange={e =>
+							updateFn(e.target.checked ? addToArray(option.id, value ?? []) : deleteFromArray(option.id, value ?? []))
+						}
+					/>
+				</React.Fragment>
+			);
+		})}
 	</div>
 );
 

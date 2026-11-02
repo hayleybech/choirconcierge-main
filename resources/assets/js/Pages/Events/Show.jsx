@@ -162,20 +162,52 @@ const Show = ({
 					</PageHeaderMeta>
 				</PageHeaderContent>
 				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
+					<div className="flex gap-3 justify-between items-center grow ml-4 mt-6">
+						<div className="flex gap-3 items-center">
+							{actions.slice(3).map((action, key) => (
+								<React.Fragment key={key}>
+									{key !== 0 && <div className="h-6 w-px bg-gray-200" />}
+									{action.label ? (
+										<a
+											href={action.url}
+											onClick={action.onClick}
+											className="text-sm flex gap-x-1.5 items-center text-purple-700 hover:text-purple-600"
+										>
+											<Icon icon={action.icon} />
+											{action.label}
+										</a>
+									) : (
+										action
+									)}
+								</React.Fragment>
+							))}
+						</div>
+						<div className="flex gap-3">
+							{actions.slice(0, 3).map((action, key) => (
+								<React.Fragment key={key}>
+									{action.label ? (
+										<Button
+											href={action.url}
+											onClick={action.onClick}
+											size="md"
+											intent={action.intent}
+											weight={action.weight ?? 'clear'}
+											className={action.className}
+											external={action.download}
+											download={action.download}
+											method={action.method}
+											disabled={action.disabled}
+										>
+											<Icon icon={action.icon} />
+											{action.label}
+										</Button>
+									) : (
+										action
+									)}
+								</React.Fragment>
+							))}
+						</div>
+					</div>
 				</PageHeaderActions>
 			</PageHeader>
 

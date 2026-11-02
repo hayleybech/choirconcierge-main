@@ -5,7 +5,7 @@ import buttonStyles from './buttonStylesV2';
 
 type ButtonLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
 	href: string;
-	intent?: 'primary' | 'secondary' | 'danger' | 'warning' | 'success';
+	intent?: 'primary' | 'secondary' | 'selected' | 'danger' | 'warning' | 'success';
 	weight?: 'solid' | 'outline' | 'clear';
 	size?: 'lg' | 'md' | 'sm';
 	theme?: 'light' | 'dark';

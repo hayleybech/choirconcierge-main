@@ -8,10 +8,12 @@ const RadioGroup = ({
 	options,
 	selected,
 	setSelected,
+	defaultSelected,
 	disabled,
 	vertical,
 	contentVertical = true,
 	size = 'md',
+	renderOption,
 }) => (
 	<BaseRadioGroup value={selected} onChange={setSelected}>
 		<BaseRadioGroup.Label>{label}</BaseRadioGroup.Label>
@@ -83,13 +85,17 @@ const RadioGroup = ({
 									as="span"
 									className={classNames(
 										'block font-medium',
-										checked ? 'text-purple-900' : 'text-gray-900',
+									checked
+										? (defaultSelected !== undefined && selected !== defaultSelected
+											? 'font-semibold text-purple-900'
+											: 'text-purple-900')
+										: 'text-gray-900',
 
 										(disabled || option.disabled) && 'opacity-50',
 										size === 'xs' ? 'text-xs' : 'text-sm'
 									)}
 								>
-									{option.name}
+									{renderOption ? renderOption(option, checked && selected !== defaultSelected) : option.name}
 								</BaseRadioGroup.Label>
 								{option.description && (
 									<BaseRadioGroup.Description

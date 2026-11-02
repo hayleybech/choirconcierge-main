@@ -44,13 +44,13 @@ export const voicePartTextColourClasses = {
     rose: 'text-rose-500',
 };
 
-const VoicePartTag = ({ title, colour }) => (
+const VoicePartTag = ({ title, colour, compact = false }) => (
     <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${
+        className={`inline-flex items-center ${compact ? 'px-1.5 py-0.5 leading-[1]' : 'px-2.5 py-0.5'} rounded-full text-xs font-medium text-white ${
             voicePartColourClasses[colour] ?? voicePartColourClasses.gray
         }`}
     >
-        <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-white" fill="currentColor" viewBox="0 0 8 8">
+        <svg className={`-ml-0.5 ${compact ? 'mr-1 h-1.5 w-1.5' : 'mr-1.5 h-2 w-2'} text-white`} fill="currentColor" viewBox="0 0 8 8">
           <circle cx={4} cy={4} r={3} />
         </svg>
         { title }
