@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Features\BillingFeature;
 use App\Features\InboxFeature;
 use App\Models\Attendance;
 use App\Models\CustomField;
@@ -24,8 +25,11 @@ use App\Navigation\Navigation;
 use App\Navigation\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Inertia\Inertia;
 use Inertia\Middleware;
 use Stancl\Tenancy\Contracts\Tenant as TenantContract;
+use Symfony\Component\HttpFoundation\Response;
+use Closure;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -36,6 +40,21 @@ class HandleInertiaRequests extends Middleware
      * @var string
      */
     protected $rootView = 'app';
+
+    public function handle(Request $request, Closure $next): Response
+    {
+        $sparkPath = trim((string) config('spark.path'), '/');
+        $refererPath = trim((string) parse_url((string) $request->header('referer'), PHP_URL_PATH), '/');
+
+        if ($request->isMethod('GET')
+            && $request->header('X-Inertia')
+            && $sparkPath !== ''
+            && ($refererPath === $sparkPath || str_starts_with($refererPath, $sparkPath.'/'))) {
+            return Inertia::location($request->fullUrl());
+        }
+
+        return parent::handle($request, $next);
+    }
 
     /**
      * Determines the current asset version.
@@ -59,6 +78,8 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         $tenant = tenancy()->initialized ? tenancy()->tenant : null;
+        $billingV2Enabled = $tenant instanceof TenantContract
+            && BillingFeature::tenantEnabled($tenant);
         $inboxEnabled = $tenant instanceof TenantContract
             && InboxFeature::isEnabledFor($tenant, $request->user());
 
@@ -132,6 +153,7 @@ class HandleInertiaRequests extends Middleware
             'googleApiKey' => config('services.google.key'),
             'tenant' => tenancy()?->tenant?->loadMissing('ensembles')->append('billing_status'), // billing status needed for global alerts
             'user' => auth()->user(),
+            'billingV2Enabled' => $billingV2Enabled,
             'inboxEnabled' => $inboxEnabled,
             'unreadCommunicationsCount' => fn () => $inboxEnabled
                 ? MailLogController::unreadCommunicationsCount()

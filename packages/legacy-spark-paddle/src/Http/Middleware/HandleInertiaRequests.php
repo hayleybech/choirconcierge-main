@@ -5,6 +5,7 @@ namespace ChoirConcierge\LegacySpark\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -47,6 +48,10 @@ class HandleInertiaRequests extends Middleware
     public function handle(Request $request, Closure $next)
     {
         Config::set('inertia.ssr.enabled', false);
+
+        if ($request->header('X-Inertia')) {
+            return Inertia::location($request->fullUrl());
+        }
 
         return parent::handle($request, $next);
     }

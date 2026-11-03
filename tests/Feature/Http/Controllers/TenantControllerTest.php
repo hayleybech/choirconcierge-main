@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Membership;
+use Inertia\Testing\AssertableInertia;
+use Laravel\Pennant\Feature;
 use function Pest\Laravel\post;
 
 test('organisation settings can be saved without overwriting billing settings', function () {
@@ -47,4 +49,20 @@ test('organisation settings reject an unsupported submitted tab', function () {
     post(the_tenant_route('organisation.update'), [
         'tab' => 'ensembles',
     ])->assertSessionHasErrors('tab');
+});
+
+test('tenant settings share the billing v2 feature state', function () {
+    $this->actingAsRole('Admin');
+    $tenant = tenant();
+
+    $this->get(the_tenant_route('organisation.edit'))
+        ->assertOk()
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('billingV2Enabled', false));
+
+    Feature::for($tenant)->activate('billing-v2');
+
+    $this->get(the_tenant_route('organisation.edit'))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('billingV2Enabled', true));
 });

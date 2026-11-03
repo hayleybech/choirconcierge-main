@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Central;
 
+use App\Features\BillingFeature;
 use App\Features\InboxFeature;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTenantRequest;
@@ -86,6 +87,7 @@ class TenantController extends Controller
 
         return Inertia::render('Central/Tenants/Show', [
             'tenant' => $tenant->append(['billing_status', 'plan', 'setup_done']),
+            'billing_enabled' => BillingFeature::tenantEnabled($tenant),
             'inbox_enabled' => InboxFeature::tenantEnabled($tenant),
         ]);
     }

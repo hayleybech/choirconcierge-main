@@ -43,6 +43,7 @@ Route::prefix('/app')->group(function () {
         Route::middleware([EnsureUserIsSuperAdmin::class])->group(function () {
             Route::get('announcements/create', [Central\ProductAnnouncementController::class, 'create'])->name('announcements.create');
             Route::post('announcements', [Central\ProductAnnouncementController::class, 'store'])->name('announcements.store');
+            Route::put('tenants/{tenant}/billing-feature', [Central\TenantBillingFeatureController::class, 'update'])->name('tenants.billing-feature.update');
             Route::put('tenants/{tenant}/inbox-feature', [Central\TenantInboxFeatureController::class, 'update'])->name('tenants.inbox-feature.update');
         });
 

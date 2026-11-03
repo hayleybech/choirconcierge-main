@@ -35,7 +35,7 @@ const DetailList = ({ items, gridCols = 'sm:grid-cols-2 md:grid-cols-4' }) => (
 	</dl>
 );
 
-const Show = ({ tenant, inbox_enabled, setSidebarOpen }) => {
+const Show = ({ tenant, billing_enabled, inbox_enabled, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const { can } = usePage().props;
 	const breadcrumbs = [
@@ -145,6 +145,31 @@ const Show = ({ tenant, inbox_enabled, setSidebarOpen }) => {
 							weight="solid"
 						>
 							{inbox_enabled ? 'Disable Inbox' : 'Enable Inbox'}
+						</Button>
+					</div>
+				</SimplePanel>
+			)}
+			{can.list_tenants && (
+				<SimplePanel>
+					<div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<h2 className="text-lg font-medium text-gray-900">Tenant Billing V2</h2>
+							<p className="mt-1 text-sm text-gray-600">
+								Billing V2 is currently {billing_enabled ? 'enabled' : 'disabled'} for this choir.
+							</p>
+						</div>
+						<Button
+							onClick={() =>
+								router.put(
+									route('central.tenants.billing-feature.update', { tenant }),
+									{ enabled: !billing_enabled },
+									{ preserveScroll: true },
+								)
+							}
+							intent="primary"
+							weight="solid"
+						>
+							{billing_enabled ? 'Disable Billing V2' : 'Enable Billing V2'}
 						</Button>
 					</div>
 				</SimplePanel>

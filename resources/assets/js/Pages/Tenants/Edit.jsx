@@ -23,7 +23,7 @@ import Dialog from '../../components/Dialog';
 import SingerSelect from '../../components/inputs/SingerSelect';
 import CurrentPlan from './CurrentPlan';
  
-const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
+const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen, billingV2Enabled }) => {
 	const [activeTab, setActiveTab] = useState('organisation');
 	const tabs = [
 		['organisation', 'Organisation'],
@@ -84,7 +84,7 @@ const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
 					aria-labelledby="organisation-settings-tab-billing"
 					hidden={activeTab !== 'billing'}
 				>
-					<BillingForm organisation={organisation} />
+					<BillingForm organisation={organisation} billingV2Enabled={billingV2Enabled} />
 				</div>
 				<div
 					role="tabpanel"
@@ -190,7 +190,7 @@ const EditForm = ({ organisation, centralDomain, timezones }) => {
 	);
 };
 
-const BillingForm = ({ organisation }) => {
+const BillingForm = ({ organisation, billingV2Enabled }) => {
 	const { route } = useRoute();
 	const { data, setData, post, processing, errors } = useForm({
 		tab: 'billing',
@@ -202,7 +202,7 @@ const BillingForm = ({ organisation }) => {
 		post(route('organisation.update'));
 	}
 
-	return import.meta.env.VITE_FEATURE_BILLING ? (
+	return !billingV2Enabled ? (
 		<Form onSubmit={submit}>
 			<FormSection title="Billing Details">
 				<div className="sm:col-span-6">
@@ -244,7 +244,7 @@ const BillingForm = ({ organisation }) => {
 		</Form>
 	) : (
 		<FormSection title="Billing Details">
-			<div className="sm:col-span-6">Billing is not enabled for this organisation.</div>
+			<div className="sm:col-span-6">Billing V2 coming soon.</div>
 		</FormSection>
 	);
 };

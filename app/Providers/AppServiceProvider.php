@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Features\BillingFeature;
 use App\Features\InboxFeature;
 use App\Http\View\Composers\SingerStatusComposer;
 use App\Models\Billing\Customer as BillingCustomer;
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         LegacyCashierCustomer::observe(LegacyCashierCustomerObserver::class);
         Tenant::observe(LegacyTenantSubscriptionObserver::class);
 
+        BillingFeature::define();
         InboxFeature::define();
 
         Model::preventLazyLoading($this->app->environment(['local', 'testing']));

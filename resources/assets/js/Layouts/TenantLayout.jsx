@@ -26,7 +26,7 @@ export default function TenantLayout({ children }) {
 	const handleRNNavigation = useCallback(payload => router.get(payload.url), []);
 	useRNHandler('navigation', handleRNNavigation);
 
-	const { can, userChoirs, errors, flash, tenant, navigation, isWebView } = usePage().props;
+	const { can, userChoirs, errors, flash, tenant, navigation, isWebView, billingV2Enabled } = usePage().props;
 
 	const [playerState, setPlayerState] = useState({
 		songTitle: null,
@@ -338,7 +338,7 @@ export default function TenantLayout({ children }) {
 							<TenantNotice variant="warning">This demo site is cleared once per week.</TenantNotice>
 						)}
 
-						{import.meta.env.VITE_FEATURE_BILLING &&
+						{!billingV2Enabled &&
 							tenant.id !== 'demo' &&
 							(can.manage_finances || can.update_tenant) && (
 								<BillingNotices billing={tenant.billing_status} tenantId={tenant.id} />

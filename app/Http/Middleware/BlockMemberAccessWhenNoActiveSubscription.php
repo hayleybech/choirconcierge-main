@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Features\BillingFeature;
 use App\Models\Tenant;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +18,7 @@ class BlockMemberAccessWhenNoActiveSubscription
      */
     public function handle(Request $request, Closure $next)
     {
-        if(! config('features.billing')) {
+        if (BillingFeature::tenantEnabled(tenant())) {
             return $next($request);
         }
 

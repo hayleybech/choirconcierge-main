@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests as AppInertiaMiddleware;
+use ChoirConcierge\LegacySpark\Http\Middleware\HandleInertiaRequests as SparkInertiaMiddleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Request as RequestFacade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,4 +44,27 @@ test('classic, billing, and plan subscriptions use separate tables', function ()
         'feature_usages' => 'feature_usages',
         'feature_subscribable' => 'feature_subscribable',
     ]);
+});
+
+test('inertia visits crossing the app and spark boundary trigger full document navigation', function () {
+    config(['spark.path' => 'app/billing']);
+
+    $sparkRequest = Request::create('/app/billing', 'GET', server: ['HTTP_X_INERTIA' => 'true']);
+    RequestFacade::swap($sparkRequest);
+
+    $sparkResponse = app(SparkInertiaMiddleware::class)->handle($sparkRequest, fn () => response('Should not run'));
+
+    expect($sparkResponse->getStatusCode())->toBe(409)
+        ->and($sparkResponse->headers->get('X-Inertia-Location'))->toBe($sparkRequest->fullUrl());
+
+    $appRequest = Request::create('/app/dashboard', 'GET', server: [
+        'HTTP_X_INERTIA' => 'true',
+        'HTTP_REFERER' => 'https://example.test/app/billing',
+    ]);
+    RequestFacade::swap($appRequest);
+
+    $appResponse = app(AppInertiaMiddleware::class)->handle($appRequest, fn () => response('Should not run'));
+
+    expect($appResponse->getStatusCode())->toBe(409)
+        ->and($appResponse->headers->get('X-Inertia-Location'))->toBe($appRequest->fullUrl());
 });
