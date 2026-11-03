@@ -8,6 +8,7 @@ use App\Models\ForumReaction;
 use App\Models\ForumTopic;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -35,15 +36,21 @@ class ForumCategoryController extends Controller
         $visibleCategoryIds = $canManageCategories
             ? ForumCategory::query()->visibleTo($user)->pluck('id')
             : $categories->pluck('id');
+        $membershipId = $user->membership->id;
         $topicsByCategory = ForumTopic::query()
             ->whereIn('forum_category_id', $visibleCategoryIds)
-            ->with(['authorMembership.user', 'category', 'reactions.membership.user'])
+            ->with([
+                'authorMembership.user',
+                'category',
+                'latestReply.authorMembership.user',
+                'reads' => fn (HasMany $query) => $query->where('membership_id', $membershipId),
+                'reactions.membership.user',
+            ])
             ->withCount('replies')
             ->orderByDesc('is_pinned')
             ->latest()
             ->get()
             ->groupBy('forum_category_id');
-        $membershipId = $user->membership->id;
         $categories = $categories->map(fn (ForumCategory $category): array => [
             'id' => $category->id,
             'title' => $category->title,
@@ -118,6 +125,8 @@ class ForumCategoryController extends Controller
     private function topicListItem(ForumTopic $topic, int $membershipId): array
     {
         $author = $topic->authorMembership?->user;
+        $latestReplyAuthor = $topic->latestReply?->authorMembership?->user;
+        $read = $topic->reads->first();
 
         return [
             'id' => $topic->id,
@@ -127,9 +136,17 @@ class ForumCategoryController extends Controller
             'category_id' => $topic->category?->id,
             'category_title' => $topic->category?->title,
             'author_name' => $author?->name ?? 'Former member',
+            'author_membership_id' => $author ? $topic->authorMembership?->id : null,
             'author_avatar_url' => $author?->avatar_url,
+            'latest_reply' => $topic->latestReply ? [
+                'author_name' => $latestReplyAuthor?->name ?? 'Former member',
+                'author_membership_id' => $latestReplyAuthor ? $topic->latestReply->authorMembership?->id : null,
+                'author_avatar_url' => $latestReplyAuthor?->avatar_url,
+                'created_at' => $topic->latestReply->created_at->toIso8601String(),
+            ] : null,
             'replies_count' => $topic->replies_count,
             'is_pinned' => $topic->is_pinned,
+            'is_unread' => $read === null || ($topic->latestReply !== null && $topic->latestReply->id > (int) $read->last_read_reply_id),
             'reactions' => $this->reactionsFor($topic, $membershipId),
         ];
     }

@@ -6,6 +6,8 @@ use Database\Seeders\Dummy\DummyAttendanceSeeder;
 use Database\Seeders\Dummy\DummyDocumentSeeder;
 use Database\Seeders\Dummy\DummyEventSeeder;
 use Database\Seeders\Dummy\DummyFolderSeeder;
+use Database\Seeders\Dummy\DummyForumCategorySeeder;
+use Database\Seeders\Dummy\DummyForumTopicSeeder;
 use Database\Seeders\Dummy\DummyMailLogSeeder;
 use Database\Seeders\Dummy\DummyNotificationTemplateSeeder;
 use Database\Seeders\Dummy\DummyPollSeeder;
@@ -28,6 +30,12 @@ class DummyDataSeeder extends Seeder
     {
         $this->call(DummyUserSeeder::class);
         $this->command?->info('Dummy User data seeded!');
+
+        $this->call(DummyForumCategorySeeder::class);
+        $this->command?->info('Dummy Forum Category data seeded!');
+
+        $this->call(DummyForumTopicSeeder::class);
+        $this->command?->info('Dummy Forum Topic data seeded!');
 
         $this->call(DummyTaskSeeder::class);
         $this->command?->info('Dummy Task data seeded!');

@@ -8,6 +8,7 @@ use App\Models\ForumReply;
 use App\Models\ForumTopic;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -18,53 +19,81 @@ use Inertia\Response;
 
 class ForumTopicController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
         $this->authorize('viewAny', ForumTopic::class);
 
         $user = request()->user();
+        $membershipId = $user->membership->id;
+        $filter = $this->validatedTopicFilter($request);
         $categories = $this->visibleCategories($user);
         $topicCategories = $categories
-            ->map(fn (ForumCategory $category): array => ['id' => $category->id, 'title' => $category->title])
+            ->map(fn (ForumCategory $category): array => [
+                'id' => $category->id,
+                'title' => $category->title,
+                'topics_count' => $category->topics_count,
+            ])
             ->values();
         $topics = ForumTopic::query()
             ->whereIn('forum_category_id', $categories->pluck('id'))
-            ->with(['authorMembership.user', 'category', 'reactions.membership.user'])
+            ->with([
+                'authorMembership.user',
+                'category',
+                'latestReply.authorMembership.user',
+                'reads' => fn (HasMany $query) => $query->where('membership_id', $membershipId),
+                'reactions.membership.user',
+            ])
             ->withCount('replies')
             ->orderByDesc('is_pinned')
             ->latest()
             ->get()
-            ->map(fn (ForumTopic $topic): array => $this->topicListItem($topic, $user->membership->id));
+            ->map(fn (ForumTopic $topic): array => $this->topicListItem($topic, $membershipId))
+            ->when($filter === 'unread', fn (Collection $topics): Collection => $topics->where('is_unread', true)->values());
 
         return Inertia::render('Forum/Topics/Index', [
             'category' => null,
             'topicCategories' => $topicCategories,
             'topics' => $topics,
             'canCreateTopic' => $topicCategories->isNotEmpty(),
+            'filter' => $filter,
         ]);
     }
 
-    public function categoryIndex(ForumCategory $forumCategory): Response
+    public function categoryIndex(Request $request, ForumCategory $forumCategory): Response
     {
         $this->authorize('view', $forumCategory);
 
         $user = request()->user();
+        $membershipId = $user->membership->id;
+        $filter = $this->validatedTopicFilter($request);
         $categories = $this->visibleCategories($user);
         $topics = $forumCategory->topics()
-            ->with(['authorMembership.user', 'category', 'reactions.membership.user'])
+            ->with([
+                'authorMembership.user',
+                'category',
+                'latestReply.authorMembership.user',
+                'reads' => fn (HasMany $query) => $query->where('membership_id', $membershipId),
+                'reactions.membership.user',
+            ])
             ->withCount('replies')
             ->orderByDesc('is_pinned')
             ->latest()
             ->get()
-            ->map(fn (ForumTopic $topic): array => $this->topicListItem($topic, $user->membership->id));
+            ->map(fn (ForumTopic $topic): array => $this->topicListItem($topic, $membershipId))
+            ->when($filter === 'unread', fn (Collection $topics): Collection => $topics->where('is_unread', true)->values());
 
         return Inertia::render('Forum/Topics/Index', [
             'category' => ['id' => $forumCategory->id, 'title' => $forumCategory->title],
             'topicCategories' => $categories
-                ->map(fn (ForumCategory $category): array => ['id' => $category->id, 'title' => $category->title])
+                ->map(fn (ForumCategory $category): array => [
+                    'id' => $category->id,
+                    'title' => $category->title,
+                    'topics_count' => $category->topics_count,
+                ])
                 ->values(),
             'topics' => $topics,
             'canCreateTopic' => $user->can('create', [ForumTopic::class, $forumCategory]),
+            'filter' => $filter,
         ]);
     }
 
@@ -88,11 +117,18 @@ class ForumTopicController extends Controller
     public function show(int $forumTopic): Response
     {
         $topic = ForumTopic::withTrashed()
-            ->with(['category', 'authorMembership.user', 'reactions.membership.user'])
+            ->with(['category', 'authorMembership.user', 'latestReply', 'reactions.membership.user'])
             ->findOrFail($forumTopic);
         $this->authorize('view', $topic);
 
         $user = request()->user();
+        $topic->reads()->updateOrCreate(
+            ['membership_id' => $user->membership->id],
+            [
+                'last_read_reply_id' => $topic->latestReply?->id,
+                'read_at' => now(),
+            ]
+        );
         $canEditTopic = $user->can('update', $topic);
         $canModerate = $user->can('moderate', $topic);
         $replies = $topic->replies()
@@ -115,6 +151,7 @@ class ForumTopicController extends Controller
                     'body_html' => $bodyHtml,
                     'body' => $canEditReply ? $reply->body : null,
                     'author_name' => $reply->authorMembership?->user?->name ?? 'Former member',
+                    'author_membership_id' => $reply->authorMembership?->user ? $reply->authorMembership->id : null,
                     'created_at' => $reply->created_at->toIso8601String(),
                     'is_deleted' => $reply->trashed(),
                     'can_edit' => $canEditReply,
@@ -131,6 +168,7 @@ class ForumTopicController extends Controller
                 'body_html' => $topic->body_html,
                 'body' => $canEditTopic ? $topic->body : null,
                 'author_name' => $topic->authorMembership?->user?->name ?? 'Former member',
+                'author_membership_id' => $topic->authorMembership?->user ? $topic->authorMembership->id : null,
                 'author_avatar_url' => $topic->authorMembership?->user?->avatar_url,
                 'created_at' => $topic->created_at->toIso8601String(),
                 'is_locked' => $topic->is_locked,
@@ -256,15 +294,25 @@ class ForumTopicController extends Controller
     {
         return ForumCategory::query()
             ->visibleTo($user)
+            ->withCount('topics')
             ->orderBy('title')
             ->get()
             ->values();
+    }
+
+    private function validatedTopicFilter(Request $request): string
+    {
+        return $request->validate([
+            'filter' => ['nullable', 'string', Rule::in(['all', 'unread'])],
+        ])['filter'] ?? 'all';
     }
 
     /** @return array<string, mixed> */
     private function topicListItem(ForumTopic $topic, int $membershipId): array
     {
         $author = $topic->authorMembership?->user;
+        $latestReplyAuthor = $topic->latestReply?->authorMembership?->user;
+        $read = $topic->reads->first();
 
         return [
             'id' => $topic->id,
@@ -274,9 +322,17 @@ class ForumTopicController extends Controller
             'category_id' => $topic->category?->id,
             'category_title' => $topic->category?->title,
             'author_name' => $author?->name ?? 'Former member',
+            'author_membership_id' => $author ? $topic->authorMembership?->id : null,
             'author_avatar_url' => $author?->avatar_url,
+            'latest_reply' => $topic->latestReply ? [
+                'author_name' => $latestReplyAuthor?->name ?? 'Former member',
+                'author_membership_id' => $latestReplyAuthor ? $topic->latestReply->authorMembership?->id : null,
+                'author_avatar_url' => $latestReplyAuthor?->avatar_url,
+                'created_at' => $topic->latestReply->created_at->toIso8601String(),
+            ] : null,
             'replies_count' => $topic->replies_count,
             'is_pinned' => $topic->is_pinned,
+            'is_unread' => $read === null || ($topic->latestReply !== null && $topic->latestReply->id > (int) $read->last_read_reply_id),
             'reactions' => $this->reactionsFor($topic, $membershipId),
         ];
     }

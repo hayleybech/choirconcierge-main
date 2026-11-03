@@ -72,7 +72,7 @@ const buttonStylesV2 = cva(
 				intent: 'danger',
 				weight: 'clear',
 				theme: 'light',
-				class: 'text-red-500 hover:text-red-700 hover:bg-red-100',
+				class: 'text-red-500 hover:text-red-700 bg-transparent hover:bg-red-500/30',
 			},
 			{ intent: 'warning', weight: 'solid', theme: 'light', class: 'bg-amber-600 hover:bg-amber-700' },
 			{

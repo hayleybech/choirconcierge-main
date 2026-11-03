@@ -2,6 +2,10 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import ReactionSummary from './ReactionSummary';
 
+vi.mock('../../../hooks/useRoute', () => ({
+	default: () => ({ route: (name, params) => `/${name}/${params.singer}` }),
+}));
+
 describe('ReactionSummary', () => {
 	it('shows reactor names and profile pictures on hover', () => {
 		const reactors = [
@@ -13,13 +17,15 @@ describe('ReactionSummary', () => {
 
 		fireEvent.mouseEnter(reaction);
 
-		const tooltip = container.querySelector('[role="tooltip"]');
-		expect(tooltip.textContent).toContain('Alex Singer');
-		expect(tooltip.textContent).toContain('Bailey Singer');
+		const tooltip = screen.getByRole('tooltip');
+		expect(tooltip.querySelector('a[href="/singers.show/1"]')?.textContent).toBe('Alex Singer');
+		expect(tooltip.querySelector('a[href="/singers.show/2"]')?.textContent).toBe('Bailey Singer');
 		expect([...tooltip.querySelectorAll('img')].map(image => image.getAttribute('src'))).toEqual([
 			'/alex.jpg',
 			'/bailey.jpg',
 		]);
-		expect(tooltip.parentElement.className).toContain('group-hover:visible');
+		expect(document.body.contains(tooltip)).toBe(true);
+		expect(container.contains(tooltip)).toBe(false);
+		expect(tooltip.className).toContain('fixed');
 	});
 });

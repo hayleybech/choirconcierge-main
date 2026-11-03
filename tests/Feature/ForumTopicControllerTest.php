@@ -35,6 +35,115 @@ function createForumTopic(ForumCategory $category, Membership $author, array $at
     ], $attributes));
 }
 
+test('topic listings include the body and latest reply activity', function () {
+    $author = createForumTopicMember();
+    $replyAuthor = createForumTopicMember();
+    $category = ForumCategory::factory()->create();
+    $topic = createForumTopic($category, $author);
+    $olderReplyCreatedAt = now()->subDay();
+    $latestReplyCreatedAt = now();
+
+    ForumReply::factory()->create([
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $author->id,
+        'created_at' => $olderReplyCreatedAt,
+        'updated_at' => $olderReplyCreatedAt,
+    ]);
+    $latestReply = ForumReply::factory()->create([
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $replyAuthor->id,
+        'created_at' => $latestReplyCreatedAt,
+        'updated_at' => $latestReplyCreatedAt,
+    ]);
+
+    $this->actingAs($author->user)
+        ->get(the_tenant_route('forum.topics.index'))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Forum/Topics/Index')
+            ->where('topics.0.body_html', $topic->body_html)
+            ->where('topics.0.author_membership_id', $author->id)
+            ->where('topicCategories.0.topics_count', 1)
+            ->where('topics.0.latest_reply.author_name', $replyAuthor->user->name)
+            ->where('topics.0.latest_reply.author_membership_id', $replyAuthor->id)
+            ->where('topics.0.latest_reply.author_avatar_url', $replyAuthor->user->avatar_url)
+            ->where('topics.0.latest_reply.created_at', $latestReply->created_at->toIso8601String())
+        );
+
+    $this->actingAs($author->user)
+        ->get(the_tenant_route('forum.categories.topics.index', ['forum_category' => $category]))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('Forum/Topics/Index')
+            ->where('topics.0.body_html', $topic->body_html)
+            ->where('topics.0.author_membership_id', $author->id)
+            ->where('topicCategories.0.topics_count', 1)
+            ->where('topics.0.latest_reply.author_name', $replyAuthor->user->name)
+            ->where('topics.0.latest_reply.author_membership_id', $replyAuthor->id)
+            ->where('topics.0.latest_reply.author_avatar_url', $replyAuthor->user->avatar_url)
+            ->where('topics.0.latest_reply.created_at', $latestReply->created_at->toIso8601String())
+        );
+});
+
+test('opening threads marks them read and later replies make them unread', function () {
+    $membership = createForumTopicMember();
+    $replyAuthor = createForumTopicMember();
+    $category = ForumCategory::factory()->create();
+    $topic = createForumTopic($category, $membership, ['title' => 'New activity']);
+    $otherTopic = createForumTopic($category, $membership, ['title' => 'Already read']);
+    $topic->created_at = now();
+    $topic->save();
+    $otherTopic->created_at = now()->subMinute();
+    $otherTopic->save();
+    $lastReadReply = ForumReply::factory()->create([
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $replyAuthor->id,
+    ]);
+    ForumReply::factory()->create([
+        'forum_topic_id' => $otherTopic->id,
+        'membership_id' => $replyAuthor->id,
+    ]);
+
+    $this->actingAs($membership->user)
+        ->get(the_tenant_route('forum.topics.index'))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('topics.0.is_unread', true)
+            ->where('topics.1.is_unread', true)
+        );
+
+    $this->actingAs($membership->user)
+        ->get(the_tenant_route('forum.topics.show', ['forum_topic' => $topic]))
+        ->assertOk();
+    $this->actingAs($membership->user)
+        ->get(the_tenant_route('forum.topics.show', ['forum_topic' => $otherTopic]))
+        ->assertOk();
+
+    $this->assertDatabaseHas('forum_topic_reads', [
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $membership->id,
+        'last_read_reply_id' => $lastReadReply->id,
+    ]);
+
+    $this->actingAs($membership->user)
+        ->get(the_tenant_route('forum.topics.index'))
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('topics.0.is_unread', false)
+            ->where('topics.1.is_unread', false)
+        );
+
+    ForumReply::factory()->create([
+        'forum_topic_id' => $topic->id,
+        'membership_id' => $replyAuthor->id,
+    ]);
+
+    $this->actingAs($membership->user)
+        ->get(the_tenant_route('forum.topics.index').'?filter=unread')
+        ->assertInertia(fn (AssertableInertia $page) => $page
+            ->has('topics', 1)
+            ->where('topics.0.id', $topic->id)
+            ->where('topics.0.is_unread', true)
+            ->where('filter', 'unread')
+        );
+});
+
 test('active members create accessible topics and safely rendered replies', function () {
     $membership = createForumTopicMember();
     $category = ForumCategory::factory()->create();
@@ -69,8 +178,10 @@ test('active members create accessible topics and safely rendered replies', func
         ->assertOk()
         ->assertInertia(fn (AssertableInertia $page) => $page
             ->where('topic.body_html', $topic->body_html)
+            ->where('topic.author_membership_id', $membership->id)
             ->has('replies', 1)
             ->where('replies.0.body_html', $reply->body_html)
+            ->where('replies.0.author_membership_id', $membership->id)
         );
 
     expect($topic->body_html)
@@ -420,6 +531,7 @@ test('members can follow accessible topics and followed topics exclude inaccessi
             ->component('Forum/Topics/Following')
             ->has('topics', 1)
             ->where('topics.0.id', $accessibleTopic->id)
+            ->where('topics.0.author_membership_id', $member->id)
             ->where('topics.0.author_avatar_url', $member->user->avatar_url)
             ->where('topics.0.reactions.0.count', 1)
             ->where('topics.0.reactions.0.reactors.0.name', $reactor->user->name)
@@ -482,6 +594,7 @@ test('categories tab groups visible topics by category', function () {
             ->where('categories.0.title', 'Choir news')
             ->has('categories.0.topics', 1)
             ->where('categories.0.topics.0.id', $topic->id)
+            ->where('categories.0.topics.0.author_membership_id', $member->id)
             ->where('categories.0.topics.0.author_avatar_url', $member->user->avatar_url)
             ->where('categories.0.topics.0.reactions.0.count', 1)
             ->where('categories.0.topics.0.reactions.0.reactors.0.name', $reactor->user->name)

@@ -8,18 +8,20 @@ import Icon from '../../../components/Icon';
 import Button from '../../../components/inputs/ButtonV2';
 import useRoute from '../../../hooks/useRoute';
 import ForumPageLayout from '../ForumPageLayout';
+import { ChannelName } from '../ChannelBadge';
 import TopicList from '../Topics/TopicList';
 
 const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [activeForm, setActiveForm] = useState(null);
 	const formCategory = activeForm === 'new' ? null : activeForm;
-	const actions = canManageCategories && !activeForm
-		? [{ label: 'New category', icon: 'plus', onClick: () => setActiveForm('new') }]
-		: [];
+	const actions =
+		canManageCategories && !activeForm
+			? [{ label: 'New channel', icon: 'plus', onClick: () => setActiveForm('new') }]
+			: [];
 
 	const deleteCategory = category => {
-		if (window.confirm(`Delete the "${category.title}" category?`)) {
+		if (window.confirm(`Delete the "# ${category.title}" channel?`)) {
 			router.delete(route('forum.categories.destroy', { forum_category: category.id }), {
 				preserveScroll: true,
 			});
@@ -28,10 +30,10 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 
 	return (
 		<>
-			<AppHead title="Categories" />
+			<AppHead title="Channels" />
 			<ForumPageLayout
-				title="Categories"
-				description="Browse topics grouped by category."
+				title="Channels"
+				description="Browse threads grouped by channel."
 				activeTab="categories"
 				actions={actions}
 				setSidebarOpen={setSidebarOpen}
@@ -49,13 +51,13 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 					<section className="space-y-4">
 						<div className="flex items-end justify-between gap-3">
 							<div>
-								<h2 className="text-lg font-semibold text-gray-900">Topics by category</h2>
+								<h2 className="text-lg font-semibold text-gray-900">Threads by channel</h2>
 								<p className="mt-1 text-sm text-gray-500">
-									Topics are grouped by the category they belong to.
+									Threads are grouped by the channel they belong to.
 								</p>
 							</div>
 							<span className="text-sm text-gray-500">
-								{categories.length} {categories.length === 1 ? 'category' : 'categories'}
+								{categories.length} {categories.length === 1 ? 'channel' : 'channels'}
 							</span>
 						</div>
 
@@ -73,8 +75,16 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 												</div>
 												<div className="min-w-0">
 													<div className="flex flex-wrap items-center gap-2">
-														<h3 className="font-semibold text-gray-900">{category.title}</h3>
-														<Badge colour={category.is_choir_wide ? 'bg-purple-100 text-purple-800' : 'bg-gray-100'}>
+														<h3 className="font-semibold text-gray-900">
+															<ChannelName name={category.title} />
+														</h3>
+														<Badge
+															colour={
+																category.is_choir_wide
+																	? 'bg-purple-100 text-purple-800'
+																	: 'bg-gray-100'
+															}
+														>
 															{category.is_choir_wide ? 'Choir-wide' : 'Ensemble'}
 														</Badge>
 													</div>
@@ -82,21 +92,23 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 														{category.is_choir_wide
 															? 'Visible to all active choir members'
 															: category.ensembles.length > 0
-																? `Visible to ${category.ensembles
+															? `Visible to ${category.ensembles
 																	.map(ensemble => ensemble.name)
 																	.join(', ')}`
-																: 'Restricted to ensembles that are no longer available'}
+															: 'Restricted to ensembles that are no longer available'}
 													</p>
 												</div>
 											</div>
 											<div className="flex shrink-0 flex-wrap items-center gap-2 sm:justify-end">
 												{category.can_view_topics && (
 													<Button
-														href={route('forum.categories.topics.index', { forum_category: category.id })}
+														href={route('forum.categories.topics.index', {
+															forum_category: category.id,
+														})}
 														intent="primary"
 														weight="outline"
 													>
-														View topics
+														View threads
 														<Icon icon="arrow-right" />
 													</Button>
 												)}
@@ -121,23 +133,23 @@ const Index = ({ categories, ensembles, canManageCategories, setSidebarOpen }) =
 													</>
 												)}
 											</div>
-									</div>
-									<div className="mt-5">
-										<TopicList
-											topics={category.topics}
-											showCategories={false}
-											emptyTitle="No topics in this category yet"
-											emptyDescription="There are no topics in this category yet."
-										/>
-									</div>
-								</article>
+										</div>
+										<div className="mt-5">
+											<TopicList
+												topics={category.topics}
+												showCategories={false}
+												emptyTitle="No threads in this channel yet"
+												emptyDescription="There are no threads in this channel yet."
+											/>
+										</div>
+									</article>
 								))}
 							</div>
 						) : (
 							<div className="rounded-lg border border-gray-200 bg-white shadow-sm">
 								<EmptyState
-									title="No categories available"
-									description="There are no categories available to you yet."
+									title="No channels available"
+									description="There are no channels available to you yet."
 									icon="comments"
 								/>
 							</div>
@@ -171,15 +183,13 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 
 	return (
 		<form onSubmit={submit} className="space-y-5 rounded-lg border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-			<h2 className="text-lg font-semibold text-gray-900">
-				{category ? 'Edit category' : 'Create category'}
-			</h2>
+			<h2 className="text-lg font-semibold text-gray-900">{category ? 'Edit channel' : 'Create channel'}</h2>
 			<div>
-				<label htmlFor="forum-category-title" className="mb-1 block text-sm font-medium text-gray-700">
-					Category name
+				<label htmlFor="forum-channel-title" className="mb-1 block text-sm font-medium text-gray-700">
+					Channel name
 				</label>
 				<input
-					id="forum-category-title"
+					id="forum-channel-title"
 					name="title"
 					value={data.title}
 					onChange={event => setData('title', event.target.value)}
@@ -200,7 +210,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 					Available to all active choir members
 				</label>
 				<select
-					id="forum-category-ensembles"
+					id="forum-channel-ensembles"
 					name="ensemble_ids"
 					multiple
 					value={data.ensemble_ids.map(String)}
@@ -220,7 +230,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 					))}
 				</select>
 				<p className="mt-1 text-xs text-gray-500">
-					Uncheck the box to restrict this category to selected ensembles.
+					Uncheck the box to restrict this channel to selected ensembles.
 				</p>
 				{(errors.ensemble_ids || errors['ensemble_ids.0']) && (
 					<p className="mt-1 text-sm text-red-700">{errors.ensemble_ids || errors['ensemble_ids.0']}</p>
@@ -231,7 +241,7 @@ const CategoryForm = ({ category, ensembles, onCancel }) => {
 					Cancel
 				</Button>
 				<Button type="submit" intent="primary" disabled={processing}>
-					{processing ? 'Saving…' : 'Save category'}
+					{processing ? 'Saving…' : 'Save channel'}
 				</Button>
 			</div>
 		</form>

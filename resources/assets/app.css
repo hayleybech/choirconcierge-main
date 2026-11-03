@@ -1,6 +1,6 @@
 @import 'tailwindcss' source(none);
 
-@source './js/components/**/*.{jsx,tsx}';
+@source './js/components/**/*.{jsx,tsx,ts}';
 @source './js/contexts/**/*.{jsx,tsx}';
 @source './js/Layouts/**/*.{jsx,tsx}';
 @source './js/Pages/**/*.{jsx,tsx}';

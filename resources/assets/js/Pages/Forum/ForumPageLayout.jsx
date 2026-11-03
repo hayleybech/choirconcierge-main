@@ -83,21 +83,21 @@ const ForumPageLayout = ({
 						active={activeTab === 'latest'}
 						icon="clock"
 					>
-						Latest
+						Latest threads
 					</ForumSectionLink>
 					<ForumSectionLink
 						href={route('forum.following.index')}
 						active={activeTab === 'following'}
 						icon="bookmark"
 					>
-						Followed
+						Followed threads
 					</ForumSectionLink>
 					<ForumSectionLink
 						href={route('forum.categories.index')}
 						active={activeTab === 'categories'}
 						icon="layer-group"
 					>
-						Categories
+						Channels
 					</ForumSectionLink>
 				</nav>
 			</div>
