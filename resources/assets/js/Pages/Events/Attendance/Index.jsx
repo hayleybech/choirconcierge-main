@@ -34,7 +34,7 @@ import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import AttendanceFilters from '../../../components/AttendanceFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
@@ -346,7 +346,7 @@ const Index = ({
 					/>
 				}
 				tableSummary={
-					<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
+					<div className="bg-white border-y border-gray-200 grid grid-cols-2 md:grid-cols-5">
 						{countsData.map(({ label, textColour, icon, count, extraText }) => (
 							<div
 								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
@@ -367,18 +367,15 @@ const Index = ({
 					</div>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<AttendanceFilters
-								event={event}
-								voiceParts={voiceParts}
-								ensembles={ensembles}
-								form={sortFilterForm}
-								singerStatuses={singerStatuses}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<AttendanceFilters
+							event={event}
+							voiceParts={voiceParts}
+							ensembles={ensembles}
+							form={sortFilterForm}
+							singerStatuses={singerStatuses}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<AttendanceTableMobile

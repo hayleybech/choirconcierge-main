@@ -1,10 +1,6 @@
 import React from 'react';
- 
-import {
-	PageHeader,
-	PageHeaderContent,
-	PageHeaderTitle,
-} from '../../../components/PageHeader/PageHeader';
+
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
@@ -15,7 +11,7 @@ import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import MailLogFilters from './MailLogFilters';
 
 const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) => {
@@ -75,16 +71,11 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<MailLogFilters form={sortFilterForm} tenants={tenants} mailTypes={mailTypes} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<MailLogFilters form={sortFilterForm} tenants={tenants} mailTypes={mailTypes} />
+					</FilterDrawer>
 				}
-					tableMobile={
-						<MailLogTableMobile
-							logs={logs}
-						/>
-				}
+				tableMobile={<MailLogTableMobile logs={logs} />}
 				tableDesktop={<MailLogTableDesktop logs={logs} sortFilterForm={sortFilterForm} />}
 			/>
 		</>

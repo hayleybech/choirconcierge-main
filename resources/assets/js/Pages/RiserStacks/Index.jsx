@@ -20,13 +20,13 @@ import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import RiserStackFilters from '../../components/RiserStack/RiserStackFilters';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditRiserStacksModal from './BulkEditRiserStacksModal';
 import BulkEditBar from '../../components/BulkEditBar';
- 
+
 const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
 	const { can } = usePage().props;
@@ -48,7 +48,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 						multiple: true,
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
 					},
-				]
+			  ]
 			: []),
 	];
 
@@ -136,16 +136,13 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<RiserStackFilters
-								ensembles={ensembles}
-								userEnsemblesCount={userEnsemblesCount}
-								form={sortFilterForm}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<RiserStackFilters
+							ensembles={ensembles}
+							userEnsemblesCount={userEnsemblesCount}
+							form={sortFilterForm}
+						/>
+					</FilterDrawer>
 				}
 				tableDesktop={
 					<RiserStackTableDesktop

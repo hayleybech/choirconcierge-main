@@ -1,10 +1,6 @@
 import React from 'react';
- 
-import {
-	PageHeader,
-	PageHeaderContent,
-	PageHeaderTitle,
-} from '../../../components/PageHeader/PageHeader';
+
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
@@ -15,7 +11,7 @@ import UserTableDesktop from './UserTableDesktop';
 import UserTableMobile from './UserTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import UserFilters from './UserFilters';
 
 const Index = ({ users, pagination, setSidebarOpen }) => {
@@ -57,10 +53,9 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<UserFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<UserFilters form={sortFilterForm} />
+					</FilterDrawer>
 				}
 				tableMobile={<UserTableMobile users={users} pagination={pagination} />}
 				tableDesktop={

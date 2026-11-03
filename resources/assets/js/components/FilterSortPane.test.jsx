@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import FilterSortPane from './FilterSortPane';
+import FilterDrawer from './FilterDrawer';
 
 vi.mock('react-responsive', () => ({
 	useMediaQuery: vi.fn(),
@@ -17,12 +17,9 @@ beforeEach(() => {
 it('keeps an Apply action visible at the bottom of a scrollable filter pane', () => {
 	const applyFilters = vi.fn();
 	const { container } = render(
-		<FilterSortPane
-			sorts={null}
-			filters={<div>Filter fields</div>}
-			closeFn={vi.fn()}
-			onApply={applyFilters}
-		/>
+		<FilterDrawer closeFn={vi.fn()} onApply={applyFilters}>
+			<div>Filter fields</div>
+		</FilterDrawer>
 	);
 
 	const applyButton = screen.getByRole('button', { name: 'Apply' });
@@ -40,38 +37,13 @@ it('calls the cancel action without applying the staged filters', () => {
 	const applyFilters = vi.fn();
 	const cancelFilters = vi.fn();
 	render(
-		<FilterSortPane
-			sorts={null}
-			filters={<div>Filter fields</div>}
-			closeFn={vi.fn()}
-			onCancel={cancelFilters}
-			onApply={applyFilters}
-		/>
+		<FilterDrawer closeFn={vi.fn()} onCancel={cancelFilters} onApply={applyFilters}>
+			<div>Filter fields</div>
+		</FilterDrawer>
 	);
 
 	fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
 
 	expect(cancelFilters).toHaveBeenCalledOnce();
 	expect(applyFilters).not.toHaveBeenCalled();
-});
-
-it('keeps sort controls out of the mobile filter pane', () => {
-	render(<FilterSortPane sorts={<div>Sort controls</div>} filters={<div>Filter fields</div>} closeFn={vi.fn()} />);
-
-	expect(screen.queryByText('Sort controls')).not.toBeInTheDocument();
-	expect(screen.getByText('Filter fields')).toBeInTheDocument();
-});
-
-it('only shows sort controls on desktop when explicitly requested', () => {
-	useMediaQuery.mockReturnValue(true);
-	render(
-		<FilterSortPane
-			sorts={<div>Sort controls</div>}
-			filters={<div>Filter fields</div>}
-			closeFn={vi.fn()}
-			showSortsOnDesktop
-		/>
-	);
-
-	expect(screen.getByText('Sort controls')).toBeInTheDocument();
 });

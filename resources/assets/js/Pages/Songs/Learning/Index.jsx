@@ -20,7 +20,7 @@ import LearningStatusTableMobile from './LearningStatusTableMobile';
 import LearningStatusSummary from './LearningStatusSummary';
 import IndexContainer from '../../../components/IndexContainer';
 import IndexTableControls from '../../../components/IndexTableControls';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import LearningStatusFilters from '../../../components/LearningStatusFilters';
 import LearningStatus from '../../../LearningStatus';
 import Badge from '../../../components/Badge';
@@ -28,7 +28,7 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 import { router } from '@inertiajs/react';
- 
+
 const Index = ({
 	song,
 	allSingers,
@@ -77,7 +77,7 @@ const Index = ({
 							</Badge>
 						),
 					},
-				]
+			  ]
 			: []),
 		{
 			name: 'learning.status',
@@ -181,18 +181,15 @@ const Index = ({
 				}
 				tableSummary={<LearningStatusSummary counts={counts} />}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<LearningStatusFilters
-								song={song}
-								voiceParts={voiceParts}
-								ensembles={ensembles}
-								form={sortFilterForm}
-								singerStatuses={singerStatuses}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<LearningStatusFilters
+							song={song}
+							voiceParts={voiceParts}
+							ensembles={ensembles}
+							form={sortFilterForm}
+							singerStatuses={singerStatuses}
+						/>
+					</FilterDrawer>
 				}
 				tableDesktop={
 					<LearningStatusTable

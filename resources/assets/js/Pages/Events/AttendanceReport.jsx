@@ -16,7 +16,7 @@ import { DateTime } from 'luxon';
 import AttendanceTag from '../../components/Event/AttendanceTag';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import AttendanceReportFilters from './AttendanceReportFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
@@ -29,7 +29,7 @@ import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
 import DateRangeCalendarInput from '../../components/inputs/DateRangeCalendarInput';
- 
+
 const AttendanceReport = ({
 	events,
 	eventTypes,
@@ -59,9 +59,21 @@ const AttendanceReport = ({
 		{ label: 'Last 30 days', start: today.minus({ days: 29 }) },
 		{ label: 'Last 90 days', start: today.minus({ days: 89 }) },
 		{ label: 'Last 365 days', start: today.minus({ days: 364 }) },
-		{ label: 'Last month', start: today.minus({ months: 1 }).startOf('month'), end: today.minus({ months: 1 }).endOf('month') },
-		{ label: 'Last quarter', start: today.startOf('quarter').minus({ quarters: 1 }), end: today.startOf('quarter').minus({ days: 1 }) },
-		{ label: 'Last year', start: today.minus({ years: 1 }).startOf('year'), end: today.minus({ years: 1 }).endOf('year') },
+		{
+			label: 'Last month',
+			start: today.minus({ months: 1 }).startOf('month'),
+			end: today.minus({ months: 1 }).endOf('month'),
+		},
+		{
+			label: 'Last quarter',
+			start: today.startOf('quarter').minus({ quarters: 1 }),
+			end: today.startOf('quarter').minus({ days: 1 }),
+		},
+		{
+			label: 'Last year',
+			start: today.minus({ years: 1 }).startOf('year'),
+			end: today.minus({ years: 1 }).endOf('year'),
+		},
 	];
 	const filters = [
 		{
@@ -94,7 +106,8 @@ const AttendanceReport = ({
 		const startsAfter = sortFilterForm.data['starts_after'];
 		const startsBefore = sortFilterForm.data['starts_before'];
 		const dateRangeChanged =
-			previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore;
+			previousDateRange.current.startsAfter !== startsAfter ||
+			previousDateRange.current.startsBefore !== startsBefore;
 
 		previousDateRange.current = { startsAfter, startsBefore };
 
@@ -103,10 +116,9 @@ const AttendanceReport = ({
 		}
 	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
-		<FilterSortPane
-			filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
-			closeFn={() => setShowFilters(false)}
-		/>
+		<FilterDrawer closeFn={() => setShowFilters(false)}>
+			<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />
+		</FilterDrawer>
 	);
 
 	const breadcrumbs = [
@@ -163,27 +175,45 @@ const AttendanceReport = ({
 							startMonth={new Date(2017, 0)}
 							endMonth={new Date(new Date().getFullYear() + 5, 11)}
 							updateFn={range => {
-								sortFilterForm.setData('starts_after', range?.from ? DateTime.fromJSDate(range.from).toISODate() : '');
-								sortFilterForm.setData('starts_before', range?.to ? DateTime.fromJSDate(range.to).toISODate() : '');
+								sortFilterForm.setData(
+									'starts_after',
+									range?.from ? DateTime.fromJSDate(range.from).toISODate() : ''
+								);
+								sortFilterForm.setData(
+									'starts_before',
+									range?.to ? DateTime.fromJSDate(range.to).toISODate() : ''
+								);
 							}}
 						>
 							{setDraftRange => (
 								<div className="mb-2 grid grid-cols-2">
-									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
-										<div key={columnIndex} className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}>
-											{column.map(({ label, start, end }) => (
-												<Button
-													key={label}
-													intent="secondary"
-													weight="clear"
-													size="sm"
-													onClick={() => setDraftRange({ from: start.toJSDate(), to: (end ?? today).toJSDate() })}
-												>
-													{label}
-												</Button>
-											))}
-										</div>
-									))}
+									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map(
+										(column, columnIndex) => (
+											<div
+												key={columnIndex}
+												className={`flex flex-col gap-1 ${
+													columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'
+												}`}
+											>
+												{column.map(({ label, start, end }) => (
+													<Button
+														key={label}
+														intent="secondary"
+														weight="clear"
+														size="sm"
+														onClick={() =>
+															setDraftRange({
+																from: start.toJSDate(),
+																to: (end ?? today).toJSDate(),
+															})
+														}
+													>
+														{label}
+													</Button>
+												))}
+											</div>
+										)
+									)}
 								</div>
 							)}
 						</DateRangeCalendarInput>
@@ -202,7 +232,11 @@ const AttendanceReport = ({
 			</div>
 
 			{events.length > 0 && numSingers > 0 && (
-				<AttendanceChart events={events} isCollapsed={isChartCollapsed} onClose={() => setIsChartCollapsed(true)} />
+				<AttendanceChart
+					events={events}
+					isCollapsed={isChartCollapsed}
+					onClose={() => setIsChartCollapsed(true)}
+				/>
 			)}
 
 			{!isDesktop && (

@@ -17,7 +17,7 @@ import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
 import SingerFilters from '../../components/SingerFilters';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import ImportSingersDialog from '../../components/ImportSingersDialog';
@@ -310,22 +310,20 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						sorts={null}
-						filters={
-							<SingerFilters
-								statuses={statuses}
-								defaultStatus={defaultStatus}
-								voiceParts={voiceParts}
-								roles={roles}
-								form={draftSingerFilterForm}
-								ensembles={ensembles}
-							/>
-						}
+					<FilterDrawer
 						closeFn={() => setShowFilters(false)}
 						onApply={applyFilterChanges}
 						onCancel={cancelFilterChanges}
-					/>
+					>
+						<SingerFilters
+							statuses={statuses}
+							defaultStatus={defaultStatus}
+							voiceParts={voiceParts}
+							roles={roles}
+							form={draftSingerFilterForm}
+							ensembles={ensembles}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<SingerTableMobile

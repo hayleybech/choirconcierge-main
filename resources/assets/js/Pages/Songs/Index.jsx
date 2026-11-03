@@ -21,7 +21,7 @@ import SongFilters from '../../components/Song/SongFilters';
 import IndexContainer from '../../components/IndexContainer';
 import IndexTableControls from '../../components/IndexTableControls';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
@@ -191,19 +191,16 @@ const Index = ({
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<SongFilters
-								statuses={statuses}
-								categories={categories}
-								ensembles={ensembles}
-								userEnsemblesCount={userEnsemblesCount}
-								showForProspectsDefault={showForProspectsDefault}
-								form={sortFilterForm}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<SongFilters
+							statuses={statuses}
+							categories={categories}
+							ensembles={ensembles}
+							userEnsemblesCount={userEnsemblesCount}
+							showForProspectsDefault={showForProspectsDefault}
+							form={sortFilterForm}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />

@@ -24,9 +24,9 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import MailingListFilters from './MailingListFilters';
- 
+
 const Index = ({ lists, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -113,12 +113,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 
 				<PageHeaderActions>
 					{pageHeaderActions.map(action => (
-						<Button
-							key={action.label}
-							{...action}
-							size="md"
-							weight={action.weight ?? 'clear'}
-						>
+						<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
@@ -159,18 +154,14 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<MailingListFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<MailingListFilters form={sortFilterForm} />
+					</FilterDrawer>
 				}
-				tableDesktop={<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} sortFilterForm={sortFilterForm} />}
-				tableMobile={
-					<MailingListTableMobile
-						lists={lists}
-						bulkEdit={bulkEdit}
-					/>
+				tableDesktop={
+					<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} sortFilterForm={sortFilterForm} />
 				}
+				tableMobile={<MailingListTableMobile lists={lists} bulkEdit={bulkEdit} />}
 				emptyState={
 					lists.data.length === 0 ? (
 						<EmptyState

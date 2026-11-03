@@ -1,10 +1,6 @@
 import React from 'react';
- 
-import {
-	PageHeader,
-	PageHeaderContent,
-	PageHeaderTitle,
-} from '../../../components/PageHeader/PageHeader';
+
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
@@ -15,7 +11,7 @@ import CentralLayout from '../../../Layouts/CentralLayout';
 import TenantTableMobile from './TenantTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import TenantFilters from './TenantFilters';
 import TenantStatsWidget from '../Dash/TenantStatsWidget';
 
@@ -68,7 +64,7 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 				showFilters={showFilters}
 				tableSummary={
 					!!tenantStats && (
-						<div className="w-full bg-white border-b">
+						<div className="w-full bg-white border-y">
 							<TenantStatsWidget {...tenantStats} panel={false} />
 						</div>
 					)
@@ -83,17 +79,11 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<TenantFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<TenantFilters form={sortFilterForm} />
+					</FilterDrawer>
 				}
-					tableMobile={
-						<TenantTableMobile
-							tenants={tenants}
-							pagination={pagination}
-						/>
-				}
+				tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}
 				tableDesktop={
 					<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} pagination={pagination} />
 				}

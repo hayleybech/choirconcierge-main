@@ -23,9 +23,9 @@ import EmptyState from '../../../components/EmptyState';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import MailLogFilters from './MailLogFilters';
- 
+
 const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const showAdminDetails = can.create_broadcast || can.update_group;
@@ -84,7 +84,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 							</span>
 						),
 					},
-				]
+			  ]
 			: []),
 	];
 	const sortFilterForm = useSortFilterForm('communications.index', filters, sorts);
@@ -120,12 +120,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 				<PageTopNavigation title={inboxEnabled ? 'Inbox' : 'Communications'}>
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								intent={action.intent}
-							>
+							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -179,24 +174,17 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<MailLogFilters
-								form={sortFilterForm}
-								mailingLists={mailingLists}
-								mailTypes={mailTypes}
-								inboxEnabled={inboxEnabled}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<MailLogFilters
+							form={sortFilterForm}
+							mailingLists={mailingLists}
+							mailTypes={mailTypes}
+							inboxEnabled={inboxEnabled}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
-					<MailLogTableMobile
-						logs={logs}
-						showAdminDetails={showAdminDetails}
-						inboxEnabled={inboxEnabled}
-					/>
+					<MailLogTableMobile logs={logs} showAdminDetails={showAdminDetails} inboxEnabled={inboxEnabled} />
 				}
 				tableDesktop={
 					<MailLogTableDesktop

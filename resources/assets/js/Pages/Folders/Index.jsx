@@ -21,8 +21,8 @@ import useRoute from '../../hooks/useRoute';
 import DocumentFilters from './DocumentFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
- 
+import FilterDrawer from '../../components/FilterDrawer';
+
 const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 
@@ -73,12 +73,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 				</PageHeaderContent>
 				<PageHeaderActions>
 					{actions.map(action => (
-						<Button
-							key={action.label}
-							{...action}
-							size="md"
-							weight={action.weight ?? 'clear'}
-						>
+						<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
@@ -98,10 +93,9 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<DocumentFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<DocumentFilters form={sortFilterForm} />
+					</FilterDrawer>
 				}
 				tableDesktop={
 					<FolderTableDesktop

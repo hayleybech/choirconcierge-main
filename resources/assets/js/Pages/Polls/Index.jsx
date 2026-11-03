@@ -34,7 +34,7 @@ import Badge from '../../components/Badge';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import PollFilters from '../../components/PollFilters';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
@@ -42,7 +42,7 @@ import BulkEditBar from '../../components/BulkEditBar';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
 import Button from '../../components/inputs/ButtonV2';
- 
+
 const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -89,7 +89,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 							</Badge>
 						),
 					},
-				]
+			  ]
 			: []),
 	];
 
@@ -97,7 +97,9 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 
 	const bulkEdit = useBulkEdit(polls, can.update_poll, can.delete_poll, 'Poll');
 
-	const actions = [{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' }];
+	const actions = [
+		{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' },
+	];
 
 	return (
 		<>
@@ -171,10 +173,9 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={<PollFilters form={sortFilterForm} ensembles={ensembles} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<PollFilters form={sortFilterForm} ensembles={ensembles} />
+					</FilterDrawer>
 				}
 				tableMobile={
 					<div>

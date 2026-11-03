@@ -18,7 +18,7 @@ import EventTableMobile from './EventTableMobile';
 import EventFilters from '../../components/Event/EventFilters';
 import IndexContainer from '../../components/IndexContainer';
 import IndexTableControls from '../../components/IndexTableControls';
-import FilterSortPane from '../../components/FilterSortPane';
+import FilterDrawer from '../../components/FilterDrawer';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
@@ -29,7 +29,7 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
- 
+
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
 	const [showSyncModal, setShowSyncModal] = React.useState(false);
@@ -83,7 +83,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 						multiple: true,
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
 					},
-				]
+			  ]
 			: []),
 	];
 
@@ -165,12 +165,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 						</PageHeaderLinks>
 						<PageHeaderActions>
 							{pageActions.map(action => (
-								<ButtonLink
-									key={action.label}
-									{...action}
-									size="md"
-									weight={action.weight ?? 'clear'}
-								>
+								<ButtonLink key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 									<Icon icon={action.icon} mr />
 									{action.label}
 								</ButtonLink>
@@ -215,24 +210,17 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<EventFilters
-								eventTypes={eventTypes}
-								ensembles={ensembles}
-								userEnsemblesCount={userEnsemblesCount}
-								form={sortFilterForm}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<EventFilters
+							eventTypes={eventTypes}
+							ensembles={ensembles}
+							userEnsemblesCount={userEnsemblesCount}
+							form={sortFilterForm}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
-					<EventTableMobile
-						events={events}
-						userEnsemblesCount={userEnsemblesCount}
-						bulkEdit={bulkEdit}
-					/>
+					<EventTableMobile events={events} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />
 				}
 				tableDesktop={
 					<EventTableDesktop

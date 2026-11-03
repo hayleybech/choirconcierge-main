@@ -11,7 +11,7 @@ import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import SingerAttendanceFilters from './SingerAttendanceFilters';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import EmptyState from '../../../components/EmptyState';
@@ -19,7 +19,7 @@ import IndexContainer from '../../../components/IndexContainer';
 import IndexTableControls from '../../../components/IndexTableControls';
 import AttendanceTableDesktop from './AttendanceTableDesktop';
 import AttendanceTableMobile from './AttendanceTableMobile';
- 
+
 const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -74,19 +74,11 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 					/>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<SingerAttendanceFilters eventTypes={eventTypes} form={sortFilterForm} singer={singer} />
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<SingerAttendanceFilters eventTypes={eventTypes} form={sortFilterForm} singer={singer} />
+					</FilterDrawer>
 				}
-					tableMobile={
-						<AttendanceTableMobile
-							attendances={attendances}
-							pagination={pagination}
-						/>
-				}
+				tableMobile={<AttendanceTableMobile attendances={attendances} pagination={pagination} />}
 				tableDesktop={<AttendanceTableDesktop attendances={attendances} pagination={pagination} />}
 				emptyState={
 					attendances.length === 0 ? (

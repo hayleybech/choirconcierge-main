@@ -30,7 +30,7 @@ import RsvpTableMobile from './RsvpTableMobile';
 import Pagination from '../../../components/Pagination';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
-import FilterSortPane from '../../../components/FilterSortPane';
+import FilterDrawer from '../../../components/FilterDrawer';
 import RsvpFilters from '../../../components/RsvpFilters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link, router } from '@inertiajs/react';
@@ -45,7 +45,7 @@ import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
 import RsvpRecord from '../../../components/Event/RsvpRecord';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
- 
+
 const Index = ({
 	event,
 	allSingers,
@@ -112,7 +112,7 @@ const Index = ({
 							</Badge>
 						),
 					},
-				]
+			  ]
 			: []),
 		{
 			name: 'rsvp.response',
@@ -156,13 +156,7 @@ const Index = ({
 
 	const bulkActions = (
 		<>
-			<Button
-				intent="secondary"
-				weight="clear"
-				theme="dark"
-				size="sm"
-				onClick={() => bulkUpdateRsvp('yes')}
-			>
+			<Button intent="secondary" weight="clear" theme="dark" size="sm" onClick={() => bulkUpdateRsvp('yes')}>
 				<Icon icon="check" className="text-emerald-500" />
 				Going
 			</Button>
@@ -279,13 +273,15 @@ const Index = ({
 					/>
 				}
 				tableSummary={
-					<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-4">
+					<div className="bg-white border-y border-gray-200 grid grid-cols-2 md:grid-cols-4">
 						{countsData.map(({ label, textColour, icon, count }) => (
 							<div
 								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1"
 								key={label}
 							>
-								<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
+								<div
+									className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}
+								>
 									<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 									{label}
 								</div>
@@ -295,18 +291,15 @@ const Index = ({
 					</div>
 				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<RsvpFilters
-								event={event}
-								voiceParts={voiceParts}
-								ensembles={ensembles}
-								form={sortFilterForm}
-								singerStatuses={singerStatuses}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<RsvpFilters
+							event={event}
+							voiceParts={voiceParts}
+							ensembles={ensembles}
+							form={sortFilterForm}
+							singerStatuses={singerStatuses}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<RsvpTableMobile
