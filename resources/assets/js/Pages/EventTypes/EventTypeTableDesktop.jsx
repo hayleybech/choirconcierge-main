@@ -45,7 +45,7 @@ const EventTypeTableDesktop = ({ categories, showEditCategory, showDeleteCategor
 									</Button>
 								)}
 								{can.create_event && (
-									<Button intent="danger" weight="outline" size="sm" onClick={() => showDeleteCategory(category)}>
+									<Button intent="danger" weight="clear" size="sm" onClick={() => showDeleteCategory(category)}>
 										<Icon icon="trash" />
 										Delete
 									</Button>

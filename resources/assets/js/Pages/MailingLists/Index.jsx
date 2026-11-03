@@ -57,7 +57,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{
 			label: 'Add New',
 			icon: 'plus',
-			url: route('groups.create'),
+			href: route('groups.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_group',
@@ -65,9 +65,8 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{
 			label: 'Compose',
 			icon: 'inbox-out',
-			url: route('communications.create'),
+			href: route('communications.create'),
 			intent: 'secondary',
-			weight: 'solid',
 			can: 'create_broadcast',
 		},
 		bulkEdit.action,
@@ -92,7 +91,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 						{pageMenuActions.map(action => (
 							<ActionMenuItem
 								key={action.label}
-								url={action.url}
+								url={action.href}
 								onClick={action.onClick}
 								intent={action.intent}
 							>
@@ -116,12 +115,9 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 					{pageHeaderActions.map(action => (
 						<Button
 							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
+							{...action}
 							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
+							weight={action.weight ?? 'clear'}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

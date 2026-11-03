@@ -2,6 +2,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
@@ -33,10 +34,12 @@ const Edit = ({ singer, placement, voice_parts, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="users" type="solid" className="mr-2" />
-						Edit Placement
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="users" type="solid" className="mr-2" />
+							Edit Placement
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

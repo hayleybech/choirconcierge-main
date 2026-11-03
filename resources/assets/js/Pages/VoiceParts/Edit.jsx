@@ -6,6 +6,7 @@ import {
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -45,21 +46,23 @@ const Edit = ({ voice_part: voicePart, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<span className="flex items-center">
-							<Icon icon="users-class" type="solid" className="mr-2" />
-							Edit Voice Part
-						</span>
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<span className="flex items-center">
+								<Icon icon="users-class" type="solid" className="mr-2" />
+								Edit Voice Part
+							</span>
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{voicePart.can.delete_voice_part && (
+								<Button onClick={() => setDeleteDialogIsOpen(true)} size="md" intent="danger" weight="outline">
+									<Icon icon="trash" mr />
+									Delete
+								</Button>
+							)}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{voicePart.can.delete_voice_part && (
-						<Button onClick={() => setDeleteDialogIsOpen(true)} size="md" intent="danger" weight="outline">
-							<Icon icon="trash" mr />
-							Delete
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<VoicePartForm voicePart={voicePart} />

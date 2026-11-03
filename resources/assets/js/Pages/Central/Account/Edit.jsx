@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
@@ -29,9 +30,11 @@ const Edit = ({ setSidebarOpen, two_factor_enabled, recovery_codes }) => {
             <PageHeader>
                 <PageHeaderContent>
                     <PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-                    <PageHeaderTitle>
-                        <Icon icon="user-edit" type="solid" className="mr-2" /> Account Settings
-                    </PageHeaderTitle>
+                    <PageHeaderTitleRow>
+                        <PageHeaderTitle>
+                            <Icon icon="user-edit" type="solid" className="mr-2" /> Account Settings
+                        </PageHeaderTitle>
+                    </PageHeaderTitleRow>
                 </PageHeaderContent>
             </PageHeader>
 

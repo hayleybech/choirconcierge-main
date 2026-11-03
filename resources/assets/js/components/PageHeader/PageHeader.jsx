@@ -2,30 +2,21 @@ import React from 'react';
 import Breadcrumbs from './Breadcrumbs';
 import Icon from '../Icon';
 import { Link } from '@inertiajs/react';
- 
+
 export const PageHeader = ({ children, className = '', hideOnMobile = false }) => (
 	<div
-		className={`${hideOnMobile ? 'hidden xl:block ' : ''}py-3 xl:py-4 bg-white border-b border-gray-100 px-4 sm:px-6 md:px-8`}
+		className={`${
+			hideOnMobile ? 'hidden xl:block ' : ''
+		}py-3 xl:py-4 bg-white border-b border-gray-100 px-4 sm:px-6 md:px-8`}
 	>
-		<div className={`lg:flex lg:items-center lg:justify-between ${className}`}>
-			{children}
-		</div>
+		<div className={`lg:flex lg:items-center lg:justify-between ${className}`}>{children}</div>
 	</div>
 );
 
 /** Wrapper for page header desktop actions */
-export const PageHeaderActions = ({ children }) => {
-	const actions = React.Children.toArray(children);
-	const primaryActions = actions.filter(action => action.props?.intent === 'primary');
-	const secondaryActions = actions.filter(action => action.props?.intent !== 'primary');
-
-	return (
-		<div className="hidden shrink-0 items-center gap-3 xl:ml-auto xl:flex">
-			{secondaryActions}
-			{primaryActions}
-		</div>
-	);
-};
+export const PageHeaderActions = ({ children }) => (
+	<div className="hidden shrink-0 items-center gap-3 xl:ml-auto xl:flex flex-row-reverse">{children}</div>
+);
 
 /** Wrapper for page header meta items */
 export const PageHeaderMeta = ({ children }) => (
@@ -47,15 +38,23 @@ export const PageHeaderTitleRow = ({ children }) => (
 );
 
 export const PageHeaderLinks = ({ children }) => (
-	<nav className="hidden shrink-0 items-center gap-3 xl:flex">{children}</nav>
+	<nav className="hidden shrink-0 items-center gap-3 xl:flex divide-x *:pr-2">{children}</nav>
 );
 
-export const PageHeaderLink = ({ href, icon, children }) => (
-	<Link href={href} className="flex items-center gap-1.5 text-sm font-medium text-purple-700 hover:text-sky-500">
-		{icon && <Icon icon={icon} />}
-		{children}
-	</Link>
-);
+export const PageHeaderLink = ({ href, icon, children, ...props }) => {
+	const linkStyle = 'flex items-center gap-1.5 text-sm font-medium text-purple-700 hover:text-sky-500 cursor-pointer';
+	return href ? (
+		<Link href={href} className={linkStyle}>
+			{icon && <Icon icon={icon} />}
+			{children}
+		</Link>
+	) : (
+		<button type="button" className={linkStyle} {...props}>
+			{icon && <Icon icon={icon} />}
+			{children}
+		</button>
+	);
+};
 
 export const PageHeaderTitle = ({ children }) => (
 	<h2 className="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">{children}</h2>

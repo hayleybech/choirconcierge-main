@@ -39,6 +39,7 @@ import FeeStatus from '../../components/FeeStatus';
 import SingerStatus from '../../SingerStatus';
 import SingerStatusTag from '../../components/SingerStatusTag';
 import VoicePartTag from '../../components/VoicePartTag';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -125,7 +126,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 							</Badge>
 						),
 					},
-				]
+			  ]
 			: []),
 	];
 
@@ -143,8 +144,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 
 	useEffect(() => {
 		const appliedFilterData = Object.fromEntries(filters.map(({ name }) => [name, sortFilterForm.data[name]]));
-		const filtersChanged = filters.some(({ name }) =>
-			!areFilterValuesEqual(appliedFilterData[name], appliedFilterDataRef.current[name])
+		const filtersChanged = filters.some(
+			({ name }) => !areFilterValuesEqual(appliedFilterData[name], appliedFilterDataRef.current[name])
 		);
 
 		if (filtersChanged) {
@@ -183,31 +184,32 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 		{
 			label: 'Export',
 			icon: 'file-export',
-			url: route('singers.export'),
+			href: route('singers.export'),
 			download: true,
 			can: 'export_singers',
 		},
 	].filter(action => can[action.can]);
 
+	const links = [
+		{
+			label: 'Voice Parts',
+			icon: 'users-class',
+			href: route('voice-parts.index'),
+			can: 'list_voice_parts',
+		},
+		{ label: 'User Roles', icon: 'user-tag', href: route('roles.index'), can: 'list_roles' },
+	].filter(action => (action?.can ? can[action.can] : !!action));
+
 	const actions = [
 		{
 			label: 'Add New',
 			icon: 'user-plus',
-			url: route('singers.create'),
+			href: route('singers.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_singer',
 		},
-		{
-			label: 'Voice Parts',
-			icon: 'users-class',
-			url: route('voice-parts.index'),
-			can: 'list_voice_parts',
-		},
-		{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
 	].filter(action => (action?.can ? can[action.can] : !!action));
-	const mainPageAction = actions.find(action => action.label === 'Add New');
-	const relatedPageActions = actions.filter(action => action !== mainPageAction);
 
 	usePhoneBreadcrumb('Singers', []);
 
@@ -217,16 +219,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Singers">
 					<PageActionsMenu>
-						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								download={action.download}
-								intent={action.intent}
-								method={action.method}
-								disabled={action.disabled}
-							>
+						{[...actions, ...links].map((action, key) => (
+							<ActionMenuItem key={key} url={action.href} {...action}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -241,31 +235,22 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						<PageHeaderTitle>
 							<Icon icon="users" type="solid" className="mr-2" /> Singers
 						</PageHeaderTitle>
-						<PageHeaderLinks>
-							{relatedPageActions.map(action => (
-								<PageHeaderLink key={action.label} href={action.url} icon={action.icon}>
-									{action.label}
-								</PageHeaderLink>
-							))}
-						</PageHeaderLinks>
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(action => (
+									<PageHeaderLink key={action.label} {...action}>
+										{action.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
 						<PageHeaderActions>
-							{mainPageAction && (
-								<Button
-									href={mainPageAction.url}
-									onClick={mainPageAction.onClick}
-									size="md"
-									intent={mainPageAction.intent}
-									weight={mainPageAction.weight ?? 'clear'}
-									className={mainPageAction.className}
-									external={mainPageAction.download}
-									download={mainPageAction.download}
-									method={mainPageAction.method}
-									disabled={mainPageAction.disabled}
-								>
-									<Icon icon={mainPageAction.icon} mr />
-									{mainPageAction.label}
-								</Button>
-							)}
+							{actions.map(action => (
+								<ButtonLink key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</ButtonLink>
+							))}
 						</PageHeaderActions>
 					</PageHeaderTitleRow>
 				</PageHeaderContent>

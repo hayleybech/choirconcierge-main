@@ -12,7 +12,6 @@ import {
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
-import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
@@ -29,6 +28,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
  
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -97,19 +97,19 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 		{
 			label: 'Add New',
 			icon: 'calendar-plus',
-			url: route('events.create'),
+			href: route('events.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_event',
 		},
-		{ label: 'Event Types', icon: 'tags', url: route('event-types.index'), can: 'list_events' },
+		{ label: 'Event Types', icon: 'tags', href: route('event-types.index'), can: 'list_events' },
 		{
 			label: 'Attendance Report',
 			icon: 'analytics',
-			url: route('events.reports.attendance'),
+			href: route('events.reports.attendance'),
 			can: 'list_attendances',
 		},
-		{ label: 'Calendar View', icon: 'calendar-alt', url: route('events.calendar.month') },
+		{ label: 'Calendar View', icon: 'calendar-alt', href: route('events.calendar.month') },
 		{
 			label: 'Sync to Calendar App',
 			icon: 'calendar-plus',
@@ -119,10 +119,11 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 	]
 		.filter(action => !!action)
 		.filter(action => (action.can ? can[action.can] : true));
-	const relatedPageActions = actions.filter(action =>
+
+	const links = actions.filter(action =>
 		['Event Types', 'Attendance Report', 'Calendar View'].includes(action.label)
 	);
-	const pageActions = actions.filter(action => !relatedPageActions.includes(action));
+	const pageActions = actions.filter(action => !links.includes(action));
 	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
 
 	return (
@@ -134,7 +135,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 						{pageMenuActions.map((action, key) => (
 							<ActionMenuItem
 								key={key}
-								url={action.url}
+								url={action.href}
 								onClick={action.onClick}
 								download={action.download}
 								intent={action.intent}
@@ -156,30 +157,23 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 							<Icon icon="calendar" type="solid" className="mr-2" /> Events
 						</PageHeaderTitle>
 						<PageHeaderLinks>
-							{relatedPageActions.map(action => (
-								<PageHeaderLink key={action.label} href={action.url} icon={action.icon}>
+							{links.map(action => (
+								<PageHeaderLink key={action.label} {...action}>
 									{action.label}
 								</PageHeaderLink>
 							))}
 						</PageHeaderLinks>
 						<PageHeaderActions>
 							{pageActions.map(action => (
-								<Button
+								<ButtonLink
 									key={action.label}
-									href={action.url}
-									onClick={action.onClick}
+									{...action}
 									size="md"
-									intent={action.intent}
-									weight={action.weight}
-									className={action.className}
-									external={action.download}
-									download={action.download}
-									method={action.method}
-									disabled={action.disabled}
+									weight={action.weight ?? 'clear'}
 								>
 									<Icon icon={action.icon} mr />
 									{action.label}
-								</Button>
+								</ButtonLink>
 							))}
 						</PageHeaderActions>
 					</PageHeaderTitleRow>

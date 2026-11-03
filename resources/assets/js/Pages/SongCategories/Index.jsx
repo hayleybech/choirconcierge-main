@@ -74,11 +74,9 @@ const Index = ({ categories, setSidebarOpen }) => {
 					{actions.map(action => (
 						<Button
 							key={action.label}
-							onClick={action.onClick}
+							{...action}
 							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
+							weight={action.weight ?? 'clear'}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}

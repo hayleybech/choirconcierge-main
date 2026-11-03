@@ -12,6 +12,7 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
+import Icon from '../../../components/Icon';
 
 const AttendanceTableMobile = ({
 	singers,

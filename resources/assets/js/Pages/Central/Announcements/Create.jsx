@@ -5,6 +5,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
@@ -53,10 +54,12 @@ const Create = ({ audiences, categories, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="bullhorn" type="solid" className="mr-2" />
-						Product Announcement
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="bullhorn" type="solid" className="mr-2" />
+							Product Announcement
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

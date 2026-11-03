@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
@@ -59,9 +60,11 @@ const Create = ({ centralDomain, timezones, setSidebarOpen }) => {
                         { name: 'Organisations', url: route('central.tenants.index')},
                         { name: 'Create', url: route('central.tenants.create') },
                     ]} />
-                    <PageHeaderTitle>
-                        <Icon icon="building" type="solid" className="mr-2" /> Create Organisation
-                    </PageHeaderTitle>
+                    <PageHeaderTitleRow>
+                        <PageHeaderTitle>
+                            <Icon icon="building" type="solid" className="mr-2" /> Create Organisation
+                        </PageHeaderTitle>
+                    </PageHeaderTitleRow>
                 </PageHeaderContent>
             </PageHeader>
 

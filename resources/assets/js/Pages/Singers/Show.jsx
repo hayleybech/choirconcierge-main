@@ -5,8 +5,11 @@ import {
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import VoicePartTag from '../../components/VoicePartTag';
 import SingerStatusTag from '../../components/SingerStatusTag';
@@ -31,10 +34,10 @@ import CustomFieldsSection from './sections/CustomFieldsSection';
 import SingerAttendanceSummary from '../../components/Attendance/SingerAttendanceSummary';
 import SingerRsvpSummary from '../../components/Attendance/SingerRsvpSummary';
 import { usePhoneBreadcrumb } from '../../lib/reactNative';
-import Button from '../../components/inputs/ButtonV2';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
- 
+import Button from '../../components/inputs/ButtonV2';
+
 const Show = ({
 	singer,
 	attendanceSummary,
@@ -53,22 +56,24 @@ const Show = ({
 
 	usePhoneBreadcrumb(singer.user.name, [{ name: 'Singers', url: route('singers.index') }]);
 
-	const filteredActions = [
+	const links = [
 		{
 			label: 'Account Settings',
 			icon: 'user-edit',
-			url: route('account.edit'),
+			href: route('account.edit'),
 			can: singer.user.id === authUser.id,
-			intent: 'primary',
-			weight: 'solid',
+			intent: 'secondary',
 		},
+	].filter(action => action.can === true || singer.can[action.can]);
+
+	const actions = [
 		{
 			label: 'Edit Membership',
 			icon: 'edit',
-			url: route('singers.edit', { singer }),
+			href: route('singers.edit', { singer }),
 			can: 'update_singer',
-			intent: 'primary',
-			weight: 'solid',
+			intent: 'secondary',
+			weight: 'outline',
 		},
 		{
 			label: 'Move',
@@ -81,7 +86,6 @@ const Show = ({
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 			intent: 'danger',
-			weight: 'outline',
 			can: 'delete_singer',
 		},
 	]
@@ -101,16 +105,8 @@ const Show = ({
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 
 				<PageActionsMenu>
-					{filteredActions.map((action, key) => (
-						<ActionMenuItem
-							key={key}
-							url={action.url}
-							onClick={action.onClick}
-							download={action.download}
-							intent={action.intent}
-							method={action.method}
-							disabled={action.disabled}
-						>
+					{[...actions, ...links].map((action, key) => (
+						<ActionMenuItem key={key} url={action.href} {...action}>
 							<Icon icon={action.icon} mr />
 
 							{action.label}
@@ -120,7 +116,7 @@ const Show = ({
 			</PageTopBar>
 
 			<PageHeader>
-				<div className="flex sm:items-center">
+				<div className="flex sm:items-center grow">
 					{singer.user.profile_avatar_url && (
 						<img
 							src={singer.user.profile_avatar_url}
@@ -130,12 +126,31 @@ const Show = ({
 					)}
 					<PageHeaderContent>
 						<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-						<PageHeaderTitle>
-							<span className="flex flex-col lg:flex-row lg:items-center gap-x-1.5">
-								{singer.user.name}{' '}
-								{singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}
-							</span>
-						</PageHeaderTitle>
+						<PageHeaderTitleRow>
+							<PageHeaderTitle>
+								<span className="flex flex-col lg:flex-row lg:items-center gap-x-1.5">
+									{singer.user.name}{' '}
+									{singer.user.pronouns && <Pronouns pronouns={singer.user.pronouns} />}
+								</span>
+							</PageHeaderTitle>
+							{links.length > 0 && (
+								<PageHeaderLinks>
+									{links.map(action => (
+										<PageHeaderLink key={action.label} {...action}>
+											{action.label}
+										</PageHeaderLink>
+									))}
+								</PageHeaderLinks>
+							)}
+							<PageHeaderActions>
+								{actions.map(action => (
+									<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+										<Icon icon={action.icon} mr />
+										{action.label}
+									</Button>
+								))}
+							</PageHeaderActions>
+						</PageHeaderTitleRow>
 
 						<PageHeaderMeta>
 							{singer.enrolments.length === 1 && singer.enrolments?.[0]?.voice_part && (
@@ -152,27 +167,6 @@ const Show = ({
 						</PageHeaderMeta>
 					</PageHeaderContent>
 				</div>
-				<PageHeaderActions>
-					{/* Desktop */}
-					{filteredActions.map((action, key) => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-							external={action.download}
-							download={action.download}
-							method={action.method}
-							disabled={action.disabled}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

@@ -1,5 +1,5 @@
 import React from 'react';
- 
+
 import TenantLayout from '../../Layouts/TenantLayout';
 import SongTableDesktop from './SongTableDesktop';
 import SongTableMobile from './SongTableMobile';
@@ -29,6 +29,7 @@ import BulkEditSongsModal from './BulkEditSongsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
 
 const Index = ({
 	songs,
@@ -76,7 +77,7 @@ const Index = ({
 						multiple: true,
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
 					},
-				]
+			  ]
 			: []),
 		...(showForProspectsDefault.length > 1
 			? [
@@ -91,29 +92,28 @@ const Index = ({
 							{ id: true, name: 'Audition Songs' },
 						],
 					},
-				]
+			  ]
 			: []),
 	];
 
 	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
+	const links = [
+		{ label: 'Categories', icon: 'tags', href: route('song-categories.index'), can: 'list_songs' },
+	].filter(action => (action.can ? can[action.can] : true));
+
 	const actions = [
 		{
 			label: 'Add New',
 			icon: 'plus',
-			url: route('songs.create'),
+			href: route('songs.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_song',
 		},
-		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
-		bulkEdit.action,
 	]
 		.filter(action => !!action)
 		.filter(action => (action.can ? can[action.can] : true));
-	const categoryAction = actions.find(action => action.label === 'Categories');
-	const pageActions = actions.filter(action => action !== categoryAction);
-	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
 
 	return (
 		<>
@@ -121,8 +121,8 @@ const Index = ({
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Songs">
 					<PageActionsMenu>
-						{pageMenuActions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+						{[...actions, ...links].map((action, key) => (
+							<ActionMenuItem key={key} url={action.href} {...action}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -137,27 +137,21 @@ const Index = ({
 							<Icon icon="list-music" type="solid" className="mr-2" />
 							Songs
 						</PageHeaderTitle>
-						<PageHeaderLinks>
-							{categoryAction && (
-								<PageHeaderLink href={categoryAction.url} icon={categoryAction.icon}>
-									{categoryAction.label}
-								</PageHeaderLink>
-							)}
-						</PageHeaderLinks>
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(link => (
+									<PageHeaderLink key={link.label} {...link}>
+										{link.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
 						<PageHeaderActions>
-							{pageActions.map(action => (
-								<Button
-									key={action.label}
-									href={action.url}
-									onClick={action.onClick}
-									size="md"
-									intent={action.intent}
-									weight={action.weight}
-									className={action.className}
-								>
+							{actions.map(action => (
+								<ButtonLink key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 									<Icon icon={action.icon} mr />
 									{action.label}
-								</Button>
+								</ButtonLink>
 							))}
 						</PageHeaderActions>
 					</PageHeaderTitleRow>
@@ -212,11 +206,7 @@ const Index = ({
 					/>
 				}
 				tableMobile={
-					<SongTableMobile
-						songs={songs}
-						userEnsemblesCount={userEnsemblesCount}
-						bulkEdit={bulkEdit}
-					/>
+					<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />
 				}
 				tableDesktop={
 					<SongTableDesktop

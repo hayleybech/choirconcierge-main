@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
- 
+
 import {
 	PageHeader,
 	PageHeaderActions,
@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
@@ -107,7 +108,7 @@ const Index = ({
 							</Badge>
 						),
 					},
-				]
+			  ]
 			: []),
 		{
 			name: 'attendance.response',
@@ -139,7 +140,7 @@ const Index = ({
 		{
 			label: 'Launch Kiosk',
 			icon: 'calendar-check',
-			url: route('events.kiosk-check-ins.index', { event }),
+			href: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
 		{
@@ -272,7 +273,7 @@ const Index = ({
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{pageActions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+						<ActionMenuItem key={key} url={action.href} {...action}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
@@ -282,10 +283,20 @@ const Index = ({
 			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="clipboard-list" className="mr-2" />
-						Attendance Roster
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="clipboard-list" className="mr-2" />
+							Attendance Roster
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{pageActions.map(action => (
+								<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>
 							<p className="mb-2">We offer three ways to track attendance: </p>
@@ -312,22 +323,6 @@ const Index = ({
 						</div>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{pageActions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<SelfCheckInDialog
@@ -357,7 +352,9 @@ const Index = ({
 								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
 								key={label}
 							>
-								<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
+								<div
+									className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}
+								>
 									<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
 									{label}
 								</div>
@@ -383,14 +380,14 @@ const Index = ({
 						closeFn={() => setShowFilters(false)}
 					/>
 				}
-					tableMobile={
-						<AttendanceTableMobile
-							singers={allSingers}
-							pagination={pagination}
-							showEnsemble={showEnsemble}
-							event={event}
-							bulkEdit={bulkEdit}
-						/>
+				tableMobile={
+					<AttendanceTableMobile
+						singers={allSingers}
+						pagination={pagination}
+						showEnsemble={showEnsemble}
+						event={event}
+						bulkEdit={bulkEdit}
+					/>
 				}
 				tableDesktop={
 					<Table pagination={<Pagination details={pagination} />}>

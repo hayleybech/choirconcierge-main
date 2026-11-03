@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -132,10 +133,25 @@ const AttendanceReport = ({
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="analytics" type="solid" className="mr-2" />
-						Attendance Report
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="analytics" type="solid" className="mr-2" />
+							Attendance Report
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{events.length > 0 && numSingers > 0 && (
+								<Button
+									onClick={() => setIsChartCollapsed(prev => !prev)}
+									size="md"
+									intent="secondary"
+									weight="solid"
+								>
+									<Icon icon="analytics" mr />
+									{isChartCollapsed ? 'Show chart' : 'Hide chart'}
+								</Button>
+							)}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
@@ -173,19 +189,6 @@ const AttendanceReport = ({
 						</DateRangeCalendarInput>
 					</div>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{events.length > 0 && numSingers > 0 && (
-						<Button
-							onClick={() => setIsChartCollapsed(prev => !prev)}
-							size="md"
-							intent="secondary"
-							weight="solid"
-						>
-							<Icon icon="analytics" mr />
-							{isChartCollapsed ? 'Show chart' : 'Hide chart'}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 			<div className="sticky top-[47px] z-30 shrink-0 bg-white lg:static lg:z-auto">
 				<IndexTableControls

@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -20,6 +21,7 @@ import SectionHeader from '../../components/SectionHeader';
 import DeleteDialog from '../../components/DeleteDialog';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
+import Button from '../../components/inputs/ButtonV2';
  
 const Show = ({ task, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -48,10 +50,25 @@ const Show = ({ task, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="tasks" type="solid" className="mr-2" />
-						{task.name}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="tasks" type="solid" className="mr-2" />
+							{task.name}
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{task.can.delete_task && (
+								<Button
+									onClick={() => setDeleteDialogIsOpen(true)}
+									intent="danger"
+									weight="clear"
+									size="md"
+								>
+									<Icon icon="trash" mr />
+									Delete
+								</Button>
+							)}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>{task.role.name}</div>
 						<div>
@@ -62,19 +79,6 @@ const Show = ({ task, setSidebarOpen }) => {
 						<DateTag icon="pencil" date={task.updated_at} label="Updated" />
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{task.can.delete_task && (
-						<ButtonLink
-							onClick={() => setDeleteDialogIsOpen(true)}
-							intent="danger"
-							weight="outline"
-							size="md"
-						>
-							<Icon icon="trash" mr />
-							Delete
-						</ButtonLink>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

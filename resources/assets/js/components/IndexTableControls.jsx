@@ -89,7 +89,6 @@ const IndexTableControls = ({
 				data-testid="desktop-index-table-controls"
 			>
 				<div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
-					<span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-gray-500">Filters</span>
 					{searchableFilters.map(filter => (
 						<NameSearchInput
 							key={filter.name}
@@ -483,7 +482,7 @@ const AddFilterMenuContent = ({
 							aria-expanded={selectedFilterName === filter.name}
 							aria-controls={`add-filter-values-${filter.name}`}
 							onClick={() => chooseFilter(filter.name)}
-							className="flex w-full cursor-pointer items-center justify-between rounded px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+							className="flex w-full cursor-pointer items-center justify-between rounded px-3 py-2 text-left text-sm text-gray-700 hover:bg-purple-100 focus:bg-purple-100 focus:outline-none"
 						>
 							{filter.label}
 							<Icon icon="chevron-right" type="regular" />
@@ -538,7 +537,7 @@ const AddFilterMenuContent = ({
 									{options.map(option => (
 										<label
 											key={String(option.id)}
-											className="flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+											className="flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-sm text-gray-700 hover:bg-purple-100"
 										>
 											<input
 												type={selectedFilter.multiple ? 'checkbox' : 'radio'}

@@ -5,7 +5,13 @@ import ChoirsListWidget from "./ChoirsListWidget";
 import CentralUpcomingEventsWidget from "./CentralUpcomingEventsWidget";
 import CentralSongsToLearnWidget from "./CentralSongsToLearnWidget";
 import TenantStatsWidget from './TenantStatsWidget';
-import { PageHeader, PageHeaderContent, PageHeaderMeta, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderContent,
+	PageHeaderMeta,
+	PageHeaderTitle,
+	PageHeaderTitleRow,
+} from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
  
@@ -17,9 +23,11 @@ const Show = ({ events, songs, tenantStats, setSidebarOpen }) => (
 		</PageTopBar>
 		<PageHeader>
 			<PageHeaderContent>
-				<PageHeaderTitle>
-					<Icon icon="tachometer-alt" type="solid" className="mr-2" /> Central Dashboard
-				</PageHeaderTitle>
+				<PageHeaderTitleRow>
+					<PageHeaderTitle>
+						<Icon icon="tachometer-alt" type="solid" className="mr-2" /> Central Dashboard
+					</PageHeaderTitle>
+				</PageHeaderTitleRow>
 				<PageHeaderMeta>
 					<p>
 						This combined dashboard shows upcoming events and songs for all of your choirs. Click one of

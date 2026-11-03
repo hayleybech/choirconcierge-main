@@ -35,7 +35,6 @@ export const DocumentRowDesktop = ({
 					{permissions['update_document'] && (
 						<Button
 							intent="secondary"
-							weight="solid"
 							size="sm"
 							className="ml-2"
 							onClick={e => {
@@ -55,7 +54,7 @@ export const DocumentRowDesktop = ({
 								setDeletingDocument(document);
 							}}
 							intent="danger"
-							weight="outline"
+							weight="clear"
 							size="sm"
 						>
 							<Icon icon="fa-trash" /> Delete
@@ -105,7 +104,6 @@ export const FolderRowDesktop = ({
 						<Button
 							href={route('folders.edit', { folder })}
 							intent="secondary"
-							weight="solid"
 							size="sm"
 							className="ml-2"
 						>
@@ -120,7 +118,7 @@ export const FolderRowDesktop = ({
 								setDeletingFolder(folder);
 							}}
 							intent="danger"
-							weight="outline"
+							weight="clear"
 							size="sm"
 						>
 							<Icon icon="fa-trash" /> Delete
@@ -170,8 +168,8 @@ export const DocumentRowMobile = ({
 											setRenameDocumentIsOpen(true);
 										}}
 										intent="secondary"
-										weight="solid"
-										size="md"
+										weight="clear"
+										size="sm"
 									>
 										<Icon icon="edit" />
 									</Button>
@@ -184,8 +182,8 @@ export const DocumentRowMobile = ({
 											setDeletingDocument(document);
 										}}
 										intent="danger"
-										weight="outline"
-										size="md"
+										weight="clear"
+										size="sm"
 									>
 										<Icon icon="fa-trash" />
 									</Button>
@@ -231,8 +229,8 @@ export const FolderRowMobile = ({
 									<Button
 										href={route('folders.edit', { folder })}
 										intent="secondary"
-										weight="solid"
-										size="md"
+										weight="clear"
+										size="sm"
 									>
 										<Icon icon="edit" />
 									</Button>
@@ -245,8 +243,8 @@ export const FolderRowMobile = ({
 											setDeletingFolder(folder);
 										}}
 										intent="danger"
-										weight="outline"
-										size="md"
+										weight="clear"
+										size="sm"
 									>
 										<Icon icon="fa-trash" />
 									</Button>

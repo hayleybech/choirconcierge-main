@@ -5,8 +5,11 @@ import {
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderMeta,
-	PageHeaderTitle, PageHeaderTitleRow,
+	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -23,7 +26,6 @@ import Icon from '../../components/Icon';
 import EditRepeatingEventDialog from '../../components/Event/EditRepeatingEventDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
-import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
 import EventType from '../../EventType';
@@ -33,7 +35,7 @@ import { DateTime } from 'luxon';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 import AddToCalendarDropdown from '../../components/Event/AddToCalendarDropdown';
 import SelfCheckInDialog from '../../components/Event/SelfCheckInDialog';
- 
+
 const Show = ({
 	event,
 	rsvpCount,
@@ -50,28 +52,11 @@ const Show = ({
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
-	const actions = [
-		{
-			label: 'Edit',
-			icon: 'edit',
-			url: event.is_repeating ? undefined : route('events.edit', { event }),
-			onClick: event.is_repeating ? () => setEditDialogIsOpen(true) : undefined,
-			can: 'update_event',
-		},
-		{ label: 'Duplicate', icon: 'copy', url: route('events.clone', { event }), can: 'create_event' },
-		{
-			label: 'Delete',
-			icon: 'trash',
-			onClick: () => setDeleteDialogIsOpen(true),
-
-			intent: 'danger',
-			weight: 'outline',
-			can: 'delete_event',
-		},
+	const links = [
 		{
 			label: 'Launch Kiosk',
 			icon: 'calendar-check',
-			url: route('events.kiosk-check-ins.index', { event }),
+			href: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
 		{
@@ -79,6 +64,25 @@ const Show = ({
 			icon: 'qrcode',
 			onClick: () => setCheckInDialogIsOpen(true),
 			can: 'create_attendance',
+		},
+	].filter(action => event.can[action.can] || pageProps.can[action.can]);
+	const actions = [
+		{
+			label: 'Edit',
+			icon: 'edit',
+			href: event.is_repeating ? undefined : route('events.edit', { event }),
+			onClick: event.is_repeating ? () => setEditDialogIsOpen(true) : undefined,
+			weight: 'outline',
+			can: 'update_event',
+		},
+		{ label: 'Duplicate', icon: 'copy', href: route('events.clone', { event }), can: 'create_event' },
+		{
+			label: 'Delete',
+			icon: 'trash',
+			onClick: () => setDeleteDialogIsOpen(true),
+
+			intent: 'danger',
+			can: 'delete_event',
 		},
 	].filter(action => event.can[action.can] || pageProps.can[action.can]);
 
@@ -93,10 +97,10 @@ const Show = ({
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}>
 					<PageActionsMenu>
-						{actions.map(action => (
+						{[...actions, ...links].map(action => (
 							<ActionMenuItem
 								key={action.label}
-								url={action.url}
+								url={action.href}
 								onClick={action.onClick}
 								intent={action.intent}
 							>
@@ -119,54 +123,22 @@ const Show = ({
 								)}
 							</span>
 						</PageHeaderTitle>
-
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(action => (
+									<PageHeaderLink key={action.label} {...action}>
+										{action.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
 						<PageHeaderActions>
-							<div className="flex gap-3 justify-between items-center grow ml-4 mt-6">
-								<div className="flex gap-3 items-center">
-									{actions.slice(3).map((action, key) => (
-										<React.Fragment key={key}>
-											{key !== 0 && <div className="h-6 w-px bg-gray-200" />}
-											{action.label ? (
-												<a
-													href={action.url}
-													onClick={action.onClick}
-													className="text-sm flex gap-x-1.5 items-center text-purple-700 hover:text-purple-600"
-												>
-													<Icon icon={action.icon} />
-													{action.label}
-												</a>
-											) : (
-												action
-											)}
-										</React.Fragment>
-									))}
-								</div>
-								<div className="flex gap-3">
-									{actions.slice(0, 3).map((action, key) => (
-										<React.Fragment key={key}>
-											{action.label ? (
-												<Button
-													href={action.url}
-													onClick={action.onClick}
-													size="md"
-													intent={action.intent}
-													weight={action.weight ?? 'clear'}
-													className={action.className}
-													external={action.download}
-													download={action.download}
-													method={action.method}
-													disabled={action.disabled}
-												>
-													<Icon icon={action.icon} />
-													{action.label}
-												</Button>
-											) : (
-												action
-											)}
-										</React.Fragment>
-									))}
-								</div>
-							</div>
+							{actions.map(action => (
+								<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} />
+									{action.label}
+								</Button>
+							))}
 						</PageHeaderActions>
 					</PageHeaderTitleRow>
 					<PageHeaderMeta>
@@ -378,10 +350,10 @@ const ViewRsvpsButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
+		<Button intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View Roster
-		</ButtonLink>
+		</Button>
 	);
 };
 
@@ -389,9 +361,9 @@ const EditAttendanceButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
+		<Button intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View Roster
-		</ButtonLink>
+		</Button>
 	);
 };

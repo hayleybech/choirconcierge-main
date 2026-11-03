@@ -8,6 +8,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -36,26 +37,24 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 	const actions = [
 		{
 			label: 'Edit',
-			url: route('polls.edit', { poll: poll.id }),
+			href: route('polls.edit', { poll: poll.id }),
 			icon: 'pencil',
 			intent: 'secondary',
-			weight: 'solid',
+			weight: 'outline',
 		},
 		!isClosed && {
 			label: 'Close Poll',
-			url: route('polls.close', { poll: poll.id }),
+			href: route('polls.close', { poll: poll.id }),
 			method: 'put',
 			icon: 'lock',
 			intent: 'secondary',
-			weight: 'solid',
 		},
 		isClosed && {
 			label: 'Re-open Poll',
-			url: route('polls.open', { poll: poll.id }),
+			href: route('polls.open', { poll: poll.id }),
 			method: 'put',
 			icon: 'lock-open',
 			intent: 'secondary',
-			weight: 'solid',
 		},
 	].filter(Boolean);
 
@@ -87,7 +86,7 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{actions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} method={action.method} intent={action.intent}>
+						<ActionMenuItem key={key} url={action.href} method={action.method} intent={action.intent}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
@@ -97,10 +96,25 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="poll" type="solid" className="mr-2" />
-						{poll.title}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="poll" type="solid" className="mr-2" />
+							{poll.title}
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button
+									key={action.label}
+									{...action}
+									size="md"
+									weight={action.weight ?? 'clear'}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div className="text-sm text-gray-600 flex gap-1">
 							<span className="font-semibold">Status:</span>
@@ -144,22 +158,6 @@ const Show = ({ poll, my_vote_option_ids = [], setSidebarOpen }) => {
 						/>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							method={action.method}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<FormWrapper>

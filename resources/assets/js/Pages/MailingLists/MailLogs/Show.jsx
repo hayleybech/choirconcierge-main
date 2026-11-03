@@ -6,6 +6,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import classNames from '../../../classNames';
@@ -41,10 +42,12 @@ const Show = ({ log, can, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
-						{log.subject}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon={mailTypeIcons[mailType] ?? 'question'} type="solid" className="mr-2" />
+							{log.subject}
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						{showAdminDetails && (
 							<div>

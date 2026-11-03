@@ -43,7 +43,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 		{
 			label: 'Add Folder',
 			icon: 'folder-plus',
-			url: route('folders.create'),
+			href: route('folders.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_folder',
@@ -57,7 +57,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 				<PageTopNavigation title="Documents">
 					<PageActionsMenu>
 						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+							<ActionMenuItem key={key} url={action.href} onClick={action.onClick} intent={action.intent}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -75,12 +75,9 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 					{actions.map(action => (
 						<Button
 							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
+							{...action}
 							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
+							weight={action.weight ?? 'clear'}
 						>
 							<Icon icon={action.icon} mr />
 							{action.label}
