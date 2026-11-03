@@ -1,8 +1,9 @@
 import React from 'react';
 import CheckboxGroup from "../../../components/inputs/CheckboxGroup";
 import Filters from "../../../components/Filters";
-import DateCalendarInput from "../../../components/inputs/DateCalendarInput";
+import DateRangeCalendarInput from "../../../components/inputs/DateRangeCalendarInput";
 import FilterActions from "../../../components/inputs/FilterActions";
+import { DateTime } from "luxon";
  
 const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
     <Filters
@@ -27,26 +28,17 @@ const SingerAttendanceFilters = ({ eventTypes, form, singer }) => (
             </fieldset>
 
             <fieldset className="relative z-[2]">
-                <legend className="text-sm font-medium text-gray-700">Events After</legend>
-                <DateCalendarInput
-                  name="starts_after"
-                  value={data['starts_after']}
-                  startMonth={new Date(new Date().getFullYear(), 0)}
-                  endMonth={new Date(new Date().getFullYear() + 5, 11)}
-                  updateFn={value => setData('starts_after', value)}
+                <legend className="text-sm font-medium text-gray-700">Date Range</legend>
+                <DateRangeCalendarInput
+                  ariaLabel="Attendance date range"
+                  startDate={data['starts_after']}
+                  endDate={data['starts_before']}
+                  updateFn={range => {
+                      setData('starts_after', range?.from ? DateTime.fromJSDate(range.from).toISODate() : '');
+                      setData('starts_before', range?.to ? DateTime.fromJSDate(range.to).toISODate() : '');
+                  }}
                 />
             </fieldset>
-
-          <fieldset className="relative z-[1]">
-            <legend className="text-sm font-medium text-gray-700">Events Before</legend>
-            <DateCalendarInput
-              name="starts_before"
-              value={data['starts_before']}
-              startMonth={new Date(new Date().getFullYear(), 0)}
-              endMonth={new Date(new Date().getFullYear() + 5, 11)}
-              updateFn={value => setData('starts_before', value)}
-            />
-          </fieldset>
         </>)}
     />
 );

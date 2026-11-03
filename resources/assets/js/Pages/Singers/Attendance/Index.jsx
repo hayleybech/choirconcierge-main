@@ -33,8 +33,14 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 			defaultValue: [],
 			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
 		},
-		{ name: 'starts_after', label: 'Events After', type: 'date', defaultValue: '' },
-		{ name: 'starts_before', label: 'Events Before', type: 'date', defaultValue: '' },
+		{
+			name: 'date_range',
+			start_name: 'starts_after',
+			end_name: 'starts_before',
+			label: 'Date Range',
+			type: 'daterange',
+			defaultValue: '',
+		},
 	];
 
 	const sortFilterForm = useSortFilterForm(['singers.attendance', { singer }], filters, sorts);

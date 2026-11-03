@@ -4,8 +4,10 @@ import Popper from 'popper.js';
 import ActionMenuItem from './ActionMenu/ActionMenuItem';
 import Badge from './Badge';
 import Button from './inputs/ButtonV2';
+import DateRangeCalendarInput from './inputs/DateRangeCalendarInput';
 import Icon from './Icon';
 import { useMediaQuery } from 'react-responsive';
+import { DateTime } from 'luxon';
 
 const IndexTableControls = ({
 	filters = [],
@@ -40,14 +42,18 @@ const IndexTableControls = ({
 		return () => window.clearTimeout(timeout);
 	}, [form.data, isDesktop]);
 
-	const visibleFilters = filtersForPills.filter(
-		filter =>
-			hasSelectedValue(filter, form.data[filter.name]) ||
-			hasSelectedValue(filter, filter.defaultValue) ||
-			addedFilters.includes(filter.name)
-	);
+	const visibleFilters = filtersForPills.filter(filter => {
+		const value = getFilterValue(filter, form.data);
+
+		return (
+			hasSelectedValue(filter, value) ||
+			hasSelectedValue(filter, getDefaultFilterValue(filter)) ||
+			addedFilters.includes(getFilterName(filter))
+		);
+	});
 	const hasChangedFilters =
-		hasChangedFiltersOverride ?? filters.some(filter => isNonDefault(filter, form.data[filter.name]));
+		hasChangedFiltersOverride ??
+		filters.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
 	const availableFilters = filtersForPills.filter(filter => !visibleFilters.includes(filter));
 	const changeFilter = (filter, value) => {
 		if (filter.onChange) {
@@ -55,28 +61,41 @@ const IndexTableControls = ({
 			return;
 		}
 
+		if (filter.type === 'daterange') {
+			form.setData(filter.start_name, formatDateInputValue(value?.from));
+			form.setData(filter.end_name, formatDateInputValue(value?.to));
+			return;
+		}
+
 		form.setData(filter.name, value);
 	};
 	const addFilter = (filter, value) => {
 		setAddedFilters(previousFilters =>
-			previousFilters.includes(filter.name) ? previousFilters : [...previousFilters, filter.name]
+			previousFilters.includes(getFilterName(filter)) ? previousFilters : [...previousFilters, getFilterName(filter)]
 		);
 		changeFilter(filter, value);
 	};
 	const removeAddedFilter = filterName =>
 		setAddedFilters(previousFilters => previousFilters.filter(addedFilter => addedFilter !== filterName));
 	const clearFilter = filter => {
-		const emptyValue = filter.multiple ? (hasSelectedValue(filter, filter.defaultValue) ? [''] : []) : '';
+		let emptyValue = '';
+
+		if (filter.type === 'daterange') {
+			emptyValue = { from: '', to: '' };
+		} else if (filter.multiple) {
+			emptyValue = hasSelectedValue(filter, getDefaultFilterValue(filter)) ? [''] : [];
+		}
+
 		changeFilter(filter, emptyValue);
 
-		if (!hasSelectedValue(filter, filter.defaultValue)) {
-			removeAddedFilter(filter.name);
+		if (!hasSelectedValue(filter, getDefaultFilterValue(filter))) {
+			removeAddedFilter(getFilterName(filter));
 		}
 	};
 	const resetFilter = filter => {
-		const defaultValue = filter.defaultValue ?? (filter.multiple ? [] : '');
+		const defaultValue = getDefaultFilterValue(filter);
 		changeFilter(filter, Array.isArray(defaultValue) ? [...defaultValue] : defaultValue);
-		removeAddedFilter(filter.name);
+		removeAddedFilter(getFilterName(filter));
 	};
 	const clearAllFilters = () => filters.forEach(clearFilter);
 	const resetAllFilters = () => filters.forEach(resetFilter);
@@ -99,17 +118,21 @@ const IndexTableControls = ({
 						/>
 					))}
 					<div className="flex min-w-0 flex-wrap items-center gap-2">
-						{visibleFilters.map(filter => (
-							<FilterPill
-								key={filter.name}
-								filter={filter}
-								value={form.data[filter.name]}
-								nonDefault={isNonDefault(filter, form.data[filter.name])}
-								onChange={value => changeFilter(filter, value)}
-								onClear={() => clearFilter(filter)}
-								onReset={() => resetFilter(filter)}
-							/>
-						))}
+						{visibleFilters.map(filter => {
+							const value = getFilterValue(filter, form.data);
+
+							return (
+								<FilterPill
+									key={getFilterName(filter)}
+									filter={filter}
+									value={value}
+									nonDefault={isNonDefault(filter, value)}
+									onChange={value => changeFilter(filter, value)}
+									onClear={() => clearFilter(filter)}
+									onReset={() => resetFilter(filter)}
+								/>
+							);
+						})}
 					</div>
 					<AddFilterButton filters={availableFilters} onAdd={addFilter} />
 					<div className="flex shrink-0 items-center gap-1">
@@ -141,10 +164,7 @@ const IndexTableControls = ({
 					<input
 						ref={bulkEdit.refSelectAll}
 						type="checkbox"
-						checked={
-							bulkEdit.totalItems > 0 &&
-							(bulkEdit.selectedIds ?? []).length === bulkEdit.totalItems
-						}
+						checked={bulkEdit.totalItems > 0 && (bulkEdit.selectedIds ?? []).length === bulkEdit.totalItems}
 						onChange={bulkEdit.toggleAll}
 						aria-label={`Select all ${filterLabel || 'items'}`}
 						className="shrink-0 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
@@ -153,7 +173,10 @@ const IndexTableControls = ({
 				{bulkEdit?.action && (
 					<Button
 						size="sm"
-						intent={bulkEdit.action.intent ?? (bulkEdit.action.label === 'Cancel Selection' ? 'selected' : 'secondary')}
+						intent={
+							bulkEdit.action.intent ??
+							(bulkEdit.action.label === 'Cancel Selection' ? 'selected' : 'secondary')
+						}
 						weight="outline"
 						className="h-8"
 						onClick={bulkEdit.action.onClick}
@@ -261,7 +284,9 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 				referenceRef={buttonRef}
 				panelRef={panelRef}
 				placement="bottom-start"
-				className="max-h-[calc(100vh-1rem)] w-72 max-w-[calc(100vw-1rem)] overflow-y-auto rounded-md border border-gray-200 bg-white p-3 shadow-lg"
+				className={`max-h-[calc(100vh-1rem)] w-72 max-w-[calc(100vw-1rem)] ${
+					filter.type === 'daterange' ? 'overflow-visible' : 'overflow-y-auto'
+				} rounded-md border border-gray-200 bg-white p-3 shadow-lg`}
 			>
 				<div className="mb-3 flex items-center justify-between gap-2">
 					<div className="flex min-w-0 items-center gap-2">
@@ -302,6 +327,19 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 };
 
 const FilterValueOptions = ({ filter, value, onChange }) => {
+	if (filter.type === 'daterange') {
+		return (
+			<DateRangeCalendarInput
+				ariaLabel={filter.ariaLabel ?? `${filter.label} date range`}
+				startDate={value?.from}
+				endDate={value?.to}
+				startMonth={filter.startMonth}
+				endMonth={filter.endMonth}
+				updateFn={onChange}
+			/>
+		);
+	}
+
 	if (filter.type === 'text') {
 		return (
 			<label className="block text-sm font-medium text-gray-700">
@@ -402,10 +440,11 @@ const AddFilterButton = ({ filters, onAdd }) => {
 
 	return (
 		<Menu as="div" className="relative shrink-0">
-			{({ open }) => (
+			{({ open, close }) => (
 				<AddFilterMenuContent
 					filters={filters}
 					open={open}
+					closeMenu={close}
 					selectedFilter={selectedFilter}
 					selectedFilterName={selectedFilterName}
 					draftValues={draftValues}
@@ -427,6 +466,7 @@ const AddFilterButton = ({ filters, onAdd }) => {
 const AddFilterMenuContent = ({
 	filters,
 	open,
+	closeMenu,
 	selectedFilter,
 	selectedFilterName,
 	draftValues,
@@ -497,7 +537,9 @@ const AddFilterMenuContent = ({
 						id={`add-filter-values-${selectedFilter.name}`}
 						role="group"
 						aria-label={`${selectedFilter.label} values`}
-						className="fixed z-50 flex max-h-[calc(100vh-1rem)] w-56 max-w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-md border border-gray-200 bg-white p-1 shadow-lg"
+						className={`fixed z-50 flex max-h-[calc(100vh-1rem)] w-56 max-w-[calc(100vw-1rem)] flex-col ${
+							selectedFilter.type === 'daterange' ? 'overflow-visible' : 'overflow-hidden'
+						} rounded-md border border-gray-200 bg-white p-1 shadow-lg`}
 					>
 						<div className="flex shrink-0 items-center justify-between gap-2 px-3 py-2">
 							<p className="text-sm font-semibold text-gray-900">{selectedFilter.label}</p>
@@ -512,7 +554,21 @@ const AddFilterMenuContent = ({
 								</button>
 							)}
 						</div>
-						{selectedFilter.type === 'text' ? (
+						{selectedFilter.type === 'daterange' ? (
+							<div className="shrink-0 px-3 pb-2">
+								<DateRangeCalendarInput
+									ariaLabel={selectedFilter.ariaLabel ?? `${selectedFilter.label} date range`}
+									startDate={getDefaultFilterValue(selectedFilter).from}
+									endDate={getDefaultFilterValue(selectedFilter).to}
+									startMonth={selectedFilter.startMonth}
+									endMonth={selectedFilter.endMonth}
+									updateFn={value => {
+										chooseFilterValue(selectedFilter, value);
+										closeMenu();
+									}}
+								/>
+							</div>
+						) : selectedFilter.type === 'text' ? (
 							<div className="space-y-2 px-3 pb-2">
 								<input
 									aria-label={`Value for ${selectedFilter.label}`}
@@ -763,6 +819,10 @@ const useViewportAwarePopper = (referenceRef, panelRef, open, placement, positio
 };
 
 function hasSelectedValue(filter, value) {
+	if (filter.type === 'daterange') {
+		return Boolean(value?.from || value?.to);
+	}
+
 	if (filter.multiple) {
 		return (
 			Array.isArray(value) &&
@@ -778,6 +838,10 @@ function isNonDefault(filter, value) {
 }
 
 function normalizeValue(filter, value) {
+	if (filter.type === 'daterange') {
+		return `${value?.from ?? ''}|${value?.to ?? ''}`;
+	}
+
 	if (filter.multiple) {
 		return (Array.isArray(value) ? value : [])
 			.map(selectedValue => String(selectedValue))
@@ -820,6 +884,9 @@ function getFilterSummary(filter, value) {
 	if (filter.type === 'text') {
 		return String(value);
 	}
+	if (filter.type === 'daterange') {
+		return [value?.from, value?.to].filter(Boolean).map(formatDateRangeValue).join(' – ');
+	}
 
 	const selectedValues = (filter.multiple ? value : [value]).filter(
 		selectedValue => selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
@@ -833,7 +900,7 @@ function getFilterSummary(filter, value) {
 }
 
 function getSelectedFilterOptions(filter, value) {
-	if (filter.type === 'text') {
+	if (['text', 'daterange'].includes(filter.type)) {
 		return [];
 	}
 
@@ -848,6 +915,38 @@ function getSelectedFilterOptions(filter, value) {
 					name: String(selectedValue),
 				}
 		);
+}
+
+function getFilterName(filter) {
+	return filter.name ?? filter.start_name;
+}
+
+function getFilterValue(filter, data) {
+	if (filter.type === 'daterange') {
+		return {
+			from: data[filter.start_name] ?? '',
+			to: data[filter.end_name] ?? '',
+		};
+	}
+
+	return data[filter.name];
+}
+
+function getDefaultFilterValue(filter) {
+	if (filter.type === 'daterange') {
+		return {
+			from: filter.defaultValue?.from ?? '',
+			to: filter.defaultValue?.to ?? '',
+		};
+	}
+
+	return filter.defaultValue ?? (filter.multiple ? [] : '');
+}
+
+function formatDateRangeValue(value) {
+	const date = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(String(value));
+
+	return date.isValid ? date.toLocaleString(DateTime.DATE_MED) : String(value);
 }
 
 export default IndexTableControls;

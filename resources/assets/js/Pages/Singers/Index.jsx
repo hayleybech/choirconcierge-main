@@ -121,7 +121,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						defaultValue: [],
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
 						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+							<Badge colour="bg-gray-100 text-gray-800" compact={compact}>
 								{option.name}
 							</Badge>
 						),

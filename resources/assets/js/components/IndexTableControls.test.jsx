@@ -17,6 +17,44 @@ vi.mock('popper.js', () => ({
 	default: vi.fn(() => ({ destroy: vi.fn() })),
 }));
 
+vi.mock('./inputs/DateRangeCalendarInput', async () => {
+	const React = await vi.importActual('react');
+
+	return {
+		default: ({ ariaLabel, startDate, endDate, updateFn }) => {
+			const [isOpen, setIsOpen] = React.useState(false);
+
+			return React.createElement(
+				React.Fragment,
+				null,
+				React.createElement(
+					'button',
+					{
+						type: 'button',
+						'aria-label': ariaLabel,
+						'data-start-date': startDate,
+						'data-end-date': endDate,
+						onClick: () => setIsOpen(true),
+					},
+					'Choose date range'
+				),
+				isOpen &&
+					React.createElement(
+						'button',
+						{
+							type: 'button',
+							'onClick': () => {
+								updateFn({ from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) });
+								setIsOpen(false);
+							},
+						},
+						'Apply date range'
+					)
+			);
+		},
+	};
+});
+
 beforeEach(() => {
 	useMediaQuery.mockReturnValue(true);
 });
@@ -244,6 +282,44 @@ it('renders date filters as compact date inputs and clears their values', () => 
 	expect(dateInput).toHaveValue('2026-06-07');
 	screen.getByRole('button', { name: 'Clear Events After for members' }).click();
 	expect(setData).toHaveBeenLastCalledWith('starts_after', '');
+});
+
+it('adds a date-range filter and updates both configured date bounds', async () => {
+	const user = userEvent.setup();
+	const dateRangeFilter = {
+		name: 'date_range',
+		start_name: 'starts_after',
+		end_name: 'starts_before',
+		label: 'Date Range',
+		type: 'daterange',
+		defaultValue: '',
+	};
+	const { setData } = renderControls({
+		controlFilters: [...filters, dateRangeFilter],
+		data: { ...initialData, starts_after: '', starts_before: '' },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Date Range' }));
+	expect(setData).not.toHaveBeenCalled();
+	const addFilterValues = screen.getByRole('group', { name: 'Date Range values' });
+	await user.click(within(addFilterValues).getByLabelText('Date Range date range'));
+	await user.click(within(addFilterValues).getByText('Apply date range'));
+
+	expect(screen.queryByRole('menuitem', { name: 'Date Range' })).not.toBeInTheDocument();
+	expect(setData).toHaveBeenNthCalledWith(1, 'starts_after', '2026-03-01');
+	expect(setData).toHaveBeenNthCalledWith(2, 'starts_before', '2026-03-31');
+	await user.click(screen.getByRole('button', { name: /Date Range:.*open filter values/ }));
+	const dateRangeInput = screen.getByRole('button', { name: 'Date Range date range' });
+	const filterPanel = screen.getByRole('button', { name: 'Date Range date range' }).closest('.fixed');
+	expect(filterPanel).toHaveClass('overflow-visible');
+
+	expect(dateRangeInput).toBeInTheDocument();
+	await user.click(screen.getByRole('button', { name: 'Clear selected' }));
+
+	expect(setData).toHaveBeenNthCalledWith(3, 'starts_after', '');
+	expect(setData).toHaveBeenNthCalledWith(4, 'starts_before', '');
+	expect(screen.queryByRole('button', { name: /Date Range:.*open filter values/ })).not.toBeInTheDocument();
 });
 
 it('places a configured All action at the right of a multi-filter popover header', async () => {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\EventType;
 use App\Models\Membership;
+use Illuminate\Support\Carbon;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -22,8 +23,15 @@ class SingerAttendanceController extends Controller
             ->join('events', 'attendances.event_id', '=', 'events.id')
             ->allowedFilters([
                 AllowedFilter::callback('type.id', fn($query, $value) => $query->whereIn('events.type_id', (array) $value)),
-                AllowedFilter::callback('starts_after', fn($query, $value) => $query->where('events.start_date', '>=', $value)),
-                AllowedFilter::callback('starts_before', fn($query, $value) => $query->where('events.start_date', '<=', $value)),
+                AllowedFilter::callback('starts_after', fn ($query, $value) => $query->where('events.start_date', '>=', tz_from_tenant_to_utc($value)))
+                    ->ignore(''),
+                AllowedFilter::callback('starts_before', function ($query, $value) {
+                    $dayAfterEndDate = Carbon::parse($value, tenant('timezone') ?? config('app.timezone'))
+                        ->addDay()
+                        ->toDateString();
+
+                    return $query->where('events.start_date', '<', tz_from_tenant_to_utc($dayAfterEndDate));
+                })->ignore(''),
             ])
             ->orderBy('events.start_date', 'desc')
             ->select('attendances.*')

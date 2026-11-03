@@ -40,12 +40,21 @@ export default useSortFilterForm;
 function getFilters(filters) {
 	const params = qs.parse(location.search, { ignoreQueryPrefix: true });
 
-	return collect(filters).mapWithKeys(({ name, multiple, multipleBool, defaultValue }) => [
-		name,
-		multiple
+	return filters.reduce((filterValues, filter) => {
+		if (filter.type === 'daterange') {
+			filterValues[filter.start_name] = getFilterSingle(params, filter.start_name, filter.defaultValue?.from ?? '');
+			filterValues[filter.end_name] = getFilterSingle(params, filter.end_name, filter.defaultValue?.to ?? '');
+
+			return filterValues;
+		}
+
+		const { name, multiple, multipleBool, defaultValue } = filter;
+		filterValues[name] = multiple
 			? getFilterMultiple(params, name, defaultValue, multipleBool)
-			: getFilterSingle(params, name, defaultValue),
-	]).items;
+			: getFilterSingle(params, name, defaultValue);
+
+		return filterValues;
+	}, {});
 }
 
 const getFilterSingle = (params, name, defaultValue = '') => params.filter?.[name] ?? defaultValue;

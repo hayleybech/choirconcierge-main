@@ -46,6 +46,23 @@ const FilterControl = () => {
 	return null;
 };
 
+const DateRangeFilterControl = () => {
+	useSortFilterForm(
+		'singers.attendance',
+		[
+			{
+				name: 'date_range',
+				start_name: 'starts_after',
+				end_name: 'starts_before',
+				type: 'daterange',
+			},
+		],
+		[{ id: 'start-date', default: true }]
+	);
+
+	return null;
+};
+
 it('passes preserveState through to the Inertia visit', () => {
 	render(<SubmitControl />);
 
@@ -63,5 +80,24 @@ it('normalizes a legacy scalar value for a multi-value filter', () => {
 		sortDir: 'asc',
 		fee_status: ['expired'],
 	});
+	window.history.replaceState({}, '', '/');
+});
+
+it('hydrates both fields from a date-range filter in the query string', () => {
+	window.history.replaceState(
+		{},
+		'',
+		'/?filter%5Bstarts_after%5D=2026-04-10&filter%5Bstarts_before%5D=2026-04-12'
+	);
+	const expectedData = {
+		sort: 'start-date',
+		sortDir: 'asc',
+		starts_after: '2026-04-10',
+		starts_before: '2026-04-12',
+	};
+
+	render(<DateRangeFilterControl />);
+
+	expect(mocks.initialData).toHaveBeenLastCalledWith(expectedData);
 	window.history.replaceState({}, '', '/');
 });

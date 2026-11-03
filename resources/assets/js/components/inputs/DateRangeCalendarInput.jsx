@@ -7,12 +7,20 @@ import Icon from '../Icon';
 import 'react-day-picker/style.css';
 import Button from './ButtonV2';
  
-const DateRangeCalendarInput = ({ startDate, endDate, updateFn, startMonth, endMonth, children }) => {
+const DateRangeCalendarInput = ({
+	startDate,
+	endDate,
+	updateFn,
+	startMonth,
+	endMonth,
+	children,
+	ariaLabel = 'Attendance report date range',
+}) => {
 	const { user } = usePage().props;
 	const firstDayOfWeek = user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
 	const selected = {
-		from: startDate ? DateTime.fromISO(startDate).toJSDate() : undefined,
-		to: endDate ? DateTime.fromISO(endDate).toJSDate() : undefined,
+		from: parseDate(startDate),
+		to: parseDate(endDate),
 	};
 	const [draftRange, setDraftRange] = React.useState(selected);
 	React.useEffect(() => setDraftRange(selected), [startDate, endDate]);
@@ -34,7 +42,7 @@ const DateRangeCalendarInput = ({ startDate, endDate, updateFn, startMonth, endM
 							<Icon icon="calendar-day" type="regular" className="text-gray-400" />
 						</div>
 						<input
-							aria-label="Attendance report date range"
+							aria-label={ariaLabel}
 							readOnly
 							value={rangeLabel}
 							placeholder="Select date range"
@@ -51,7 +59,7 @@ const DateRangeCalendarInput = ({ startDate, endDate, updateFn, startMonth, endM
 						leaveFrom="scale-100 opacity-100"
 						leaveTo="scale-95 opacity-0"
 					>
-						<Popover.Panel className="absolute right-0 z-20 mt-2 overflow-hidden rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-lg">
+						<Popover.Panel className="absolute right-0 z-40 mt-2 overflow-hidden rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-lg">
 							<div
 								aria-label="Selected date range"
 								className="mb-2 border-b border-gray-200 pb-2 text-sm font-medium text-gray-700"
@@ -118,6 +126,16 @@ const DateRangeCalendarInput = ({ startDate, endDate, updateFn, startMonth, endM
 			)}
 		</Popover>
 	);
+};
+
+const parseDate = value => {
+	if (!value) {
+		return undefined;
+	}
+
+	const date = DateTime.fromISO(value);
+
+	return date.isValid ? date.toJSDate() : undefined;
 };
 
 export default DateRangeCalendarInput;
