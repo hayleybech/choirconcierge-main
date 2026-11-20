@@ -5,6 +5,8 @@ import CheckboxGroup from "../inputs/CheckboxGroup";
 import RadioGroup from "../inputs/RadioGroup";
 import Filters from "../Filters";
 import FilterActions from "../inputs/FilterActions";
+import Badge from "../Badge";
+import EventType from "../../EventType";
  
 const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 	<Filters
@@ -48,6 +50,9 @@ const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 						options={eventTypes.map(type => ({ id: type.id, name: type.title }))}
 						value={data['type.id']}
 						updateFn={value => setData('type.id', value)}
+						renderOption={option => (
+							<Badge colour={new EventType(option.name).badgeColour}>{option.name}</Badge>
+						)}
 					/>
 				</fieldset>
 

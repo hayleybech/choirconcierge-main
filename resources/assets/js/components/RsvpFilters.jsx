@@ -4,6 +4,10 @@ import Label from "./inputs/Label";
 import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import FilterActions from "./inputs/FilterActions";
+import Badge from "./Badge";
+import SingerStatus from "../SingerStatus";
+import SingerStatusTag from "./SingerStatusTag";
+import VoicePartTag from "./VoicePartTag";
  
 const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
@@ -29,6 +33,9 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                     options={singerStatuses.map((status) => ({ id: status.id, name: status.name }))}
                     value={data['status.id']}
                     updateFn={value => setData('status.id', value)}
+                    renderOption={option => (
+                        <SingerStatusTag status={new SingerStatus(option.id)} withLabel />
+                    )}
                 />
             </fieldset>
 
@@ -42,9 +49,10 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                 </div>
                 <CheckboxGroup
                     name="enrolments.voice_part_id"
-                    options={voiceParts.map((part) => ({ id: part.id, name: part.title }))}
+                    options={voiceParts.map((part) => ({ id: part.id, name: part.title, colour: part.colour }))}
                     value={data['enrolments.voice_part_id']}
                     updateFn={value => setData('enrolments.voice_part_id', value)}
+                    renderOption={option => <VoicePartTag title={option.name} colour={option.colour} />}
                 />
             </fieldset>
 
@@ -83,6 +91,7 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                 options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
                 value={data['enrolments.ensemble_id']}
                 updateFn={value => setData('enrolments.ensemble_id', value)}
+                renderOption={option => <Badge colour="bg-purple-100 text-purple-800">{option.name}</Badge>}
               />
             </fieldset>
           )}

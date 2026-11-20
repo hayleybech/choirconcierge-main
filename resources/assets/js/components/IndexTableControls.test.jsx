@@ -398,12 +398,17 @@ it('keeps sort controls open and marks the selected direction with selected inte
 	expect(screen.getByText('Sort by')).toBeInTheDocument();
 
 	const descendingButton = screen.getByRole('button', { name: 'Descending' });
+	const ascendingButton = screen.getByRole('button', { name: 'Ascending' });
 	await user.click(descendingButton);
 
 	expect(screen.getByText('Sort by')).toBeInTheDocument();
 	expect(descendingButton).toHaveAttribute('aria-pressed', 'true');
 	expect(descendingButton).toHaveClass('bg-purple-50', 'border-purple-200');
-	expect(screen.getByRole('button', { name: 'Ascending' })).toHaveAttribute('aria-pressed', 'false');
+	expect(ascendingButton).toHaveAttribute('aria-pressed', 'false');
+	expect(descendingButton.parentElement).toHaveAttribute('role', 'group');
+	expect(descendingButton.parentElement).toHaveAttribute('aria-label', 'Sort direction');
+	expect(ascendingButton).toHaveClass('rounded-r-none');
+	expect(descendingButton).toHaveClass('-ml-px', 'rounded-l-none');
 	expect(setData).toHaveBeenCalledWith('sort', 'status');
 	expect(setData).toHaveBeenCalledWith('sortDir', 'desc');
 	await waitFor(() => expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true }));

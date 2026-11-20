@@ -717,25 +717,25 @@ const SortDropdown = ({ sorts, form, compact = false, autoSubmit = false }) => {
 								</label>
 							))}
 						</div>
-						<div className="mt-3 flex gap-2 border-t border-gray-200 pt-3">
-							{[
-								{ value: 'asc', label: 'Ascending', icon: 'sort-amount-up' },
-								{ value: 'desc', label: 'Descending', icon: 'sort-amount-down' },
-							].map(direction => (
-								<Button
-									key={direction.value}
-									size="sm"
-									weight="outline"
-									intent={form.data.sortDir === direction.value ? 'selected' : 'secondary'}
-									aria-pressed={form.data.sortDir === direction.value}
-									onClick={() => form.setData('sortDir', direction.value)}
-									className="grow"
-								>
-									<Icon icon={direction.icon} type="regular" />
-									{direction.label}
-								</Button>
-							))}
-						</div>
+                        <div role="group" aria-label="Sort direction" className="mt-3 flex border-t border-gray-200 pt-3">
+                            {[
+                                { value: 'asc', label: 'Ascending', icon: 'sort-amount-up' },
+                                { value: 'desc', label: 'Descending', icon: 'sort-amount-down' },
+                            ].map(direction => (
+                                <Button
+                                    key={direction.value}
+                                    size="sm"
+                                    weight="outline"
+                                    intent={form.data.sortDir === direction.value ? 'selected' : 'secondary'}
+                                    aria-pressed={form.data.sortDir === direction.value}
+                                    onClick={() => form.setData('sortDir', direction.value)}
+                                    className={`grow ${direction.value === 'asc' ? 'rounded-r-none' : '-ml-px rounded-l-none'}`}
+                                >
+                                    <Icon icon={direction.icon} type="regular" />
+                                    {direction.label}
+                                </Button>
+                            ))}
+                        </div>
 					</PositionedPanel>
 				</>
 			)}

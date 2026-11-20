@@ -29,6 +29,8 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import Badge from '../../components/Badge';
+import EventType from '../../EventType';
 
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -51,6 +53,9 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 			label: 'Type',
 			multiple: true,
 			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
+			renderOption: option => (
+				<Badge colour={new EventType(option.name).badgeColour}>{option.name}</Badge>
+			),
 		},
 		{
 			name: 'date',
