@@ -30,6 +30,8 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import SongStatus from '../../SongStatus';
+import SongStatusTag from '../../components/SongStatusTag';
 
 const Index = ({
 	songs,
@@ -61,7 +63,10 @@ const Index = ({
 			label: 'Status',
 			multiple: true,
 			defaultValue: defaultStatuses,
-			options: statuses.map(status => ({ id: status.id, name: status.title })),
+			options: statuses.map(status => ({ id: status.id, name: status.title, slug: status.slug })),
+			renderOption: (option, compact) => (
+				<SongStatusTag status={new SongStatus(option.slug)} withLabel compact={compact} />
+			),
 		},
 		{
 			name: 'categories.id',
