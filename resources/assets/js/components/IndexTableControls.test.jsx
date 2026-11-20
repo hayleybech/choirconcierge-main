@@ -21,8 +21,52 @@ vi.mock('./inputs/DateRangeCalendarInput', async () => {
 	const React = await vi.importActual('react');
 
 	return {
-		default: ({ ariaLabel, startDate, endDate, updateFn }) => {
+		default: ({
+			ariaLabel,
+			startDate,
+			endDate,
+			updateFn,
+			inline,
+			onClose,
+			onDraftChange,
+			hideActions,
+			renderActions,
+		}) => {
 			const [isOpen, setIsOpen] = React.useState(false);
+			const selectedRange = { from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) };
+			const selected = {
+				from: startDate ? new Date(`${startDate}T00:00:00`) : undefined,
+				to: endDate ? new Date(`${endDate}T00:00:00`) : undefined,
+			};
+			const [draftRange, setDraftRange] = React.useState(selected);
+			const updateDraftRange = range => {
+				setDraftRange(range);
+				onDraftChange?.(range);
+			};
+			const applyDateRange = () => {
+				updateFn(draftRange);
+				onClose?.();
+			};
+
+			if (inline) {
+				return React.createElement(
+					'div',
+					{
+						'data-testid': 'inline-date-range',
+						'data-draft-range': `${draftRange.from?.toISOString() ?? ''}|${draftRange.to?.toISOString() ?? ''}`,
+					},
+					React.createElement('button', { type: 'button', onClick: () => updateDraftRange(selectedRange) }, 'Choose calendar range'),
+					!hideActions && React.createElement('button', { type: 'button' }, 'Clear selected'),
+					!hideActions && React.createElement('button', { type: 'button', onClick: onClose }, 'Cancel date range'),
+					!hideActions && React.createElement('button', { type: 'button', onClick: applyDateRange }, 'Apply date range'),
+					renderActions?.({
+						draftRange,
+						updateDraftRange,
+						selected,
+						close: onClose,
+					})
+				);
+			}
 
 			return React.createElement(
 				React.Fragment,
@@ -44,7 +88,7 @@ vi.mock('./inputs/DateRangeCalendarInput', async () => {
 						{
 							type: 'button',
 							'onClick': () => {
-								updateFn({ from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) });
+								applyDateRange();
 								setIsOpen(false);
 							},
 						},
@@ -185,10 +229,10 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	expect(within(desktop).getByRole('button', { name: 'Team: Choir; open filter values' })).toBeInTheDocument();
 
 	await user.click(within(desktop).getByRole('button', { name: 'Status: Inactive; open filter values' }));
-	await user.click(screen.getByRole('button', { name: 'Clear selected' }));
+	await user.click(screen.getByRole('button', { name: 'Clear' }));
 	expect(within(desktop).getByRole('button', { name: 'Status: Any; open filter values' })).toBeInTheDocument();
 	const statusPanel = screen.getByRole('heading', { name: 'Status' }).closest('.fixed');
-	await user.click(within(statusPanel).getByRole('button', { name: 'Reset to default' }));
+	await user.click(within(statusPanel).getByRole('button', { name: 'Default' }));
 	expect(within(desktop).getByRole('button', { name: 'Status: Active; open filter values' })).toBeInTheDocument();
 
 	fireEvent.change(within(desktop).getByRole('searchbox', { name: 'Search members by name' }), {
@@ -333,23 +377,99 @@ it('adds a date-range filter and updates both configured date bounds', async () 
 	await user.click(screen.getByRole('menuitem', { name: 'Date Range' }));
 	expect(setData).not.toHaveBeenCalled();
 	const addFilterValues = screen.getByRole('group', { name: 'Date Range values' });
-	await user.click(within(addFilterValues).getByLabelText('Date Range date range'));
-	await user.click(within(addFilterValues).getByText('Apply date range'));
+	expect(within(addFilterValues).queryByLabelText('Date Range date range')).not.toBeInTheDocument();
+	const applyButton = within(addFilterValues).getByRole('menuitem', { name: 'Apply' });
+	const clearButton = within(addFilterValues).getByRole('menuitem', { name: 'Clear' });
+	const cancelButton = within(addFilterValues).getByRole('menuitem', { name: 'Cancel' });
+	const footer = applyButton.parentElement.parentElement;
+	expect(footer).toHaveClass('justify-between');
+	expect(applyButton.parentElement).toBe(footer.firstElementChild);
+	expect(clearButton.parentElement).toBe(footer.lastElementChild);
+	expect(cancelButton.parentElement).toBe(footer.lastElementChild);
+	expect(applyButton.querySelector('.fa-check')).toBeInTheDocument();
+	expect(clearButton.querySelector('.fa-trash')).toBeInTheDocument();
+	expect(cancelButton.querySelector('.fa-times')).toBeInTheDocument();
+	await user.click(within(addFilterValues).getByText('Choose calendar range'));
+	await user.click(clearButton);
+	expect(setData).not.toHaveBeenCalled();
+	expect(within(addFilterValues).getByTestId('inline-date-range')).toHaveAttribute('data-draft-range', '|');
+	await user.click(within(addFilterValues).getByText('Choose calendar range'));
+	await user.click(cancelButton);
+	expect(setData).not.toHaveBeenCalled();
+	expect(screen.queryByRole('group', { name: 'Date Range values' })).not.toBeInTheDocument();
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Date Range' }));
+	const reopenedAddFilterValues = screen.getByRole('group', { name: 'Date Range values' });
+	await user.click(within(reopenedAddFilterValues).getByText('Choose calendar range'));
+	await user.click(within(reopenedAddFilterValues).getByRole('menuitem', { name: 'Apply' }));
 
 	expect(screen.queryByRole('menuitem', { name: 'Date Range' })).not.toBeInTheDocument();
 	expect(setData).toHaveBeenNthCalledWith(1, 'starts_after', '2026-03-01');
 	expect(setData).toHaveBeenNthCalledWith(2, 'starts_before', '2026-03-31');
 	await user.click(screen.getByRole('button', { name: /Date Range:.*open filter values/ }));
-	const dateRangeInput = screen.getByRole('button', { name: 'Date Range date range' });
-	const filterPanel = screen.getByRole('button', { name: 'Date Range date range' }).closest('.fixed');
+	const filterPanel = screen.getByRole('heading', { name: 'Date Range' }).closest('.fixed');
 	expect(filterPanel).toHaveClass('overflow-visible');
+	expect(filterPanel).toHaveClass('w-80');
 
-	expect(dateRangeInput).toBeInTheDocument();
-	await user.click(screen.getByRole('button', { name: 'Clear selected' }));
+	expect(within(filterPanel).getByTestId('inline-date-range')).toBeInTheDocument();
+	expect(within(filterPanel).queryByLabelText('Date Range date range')).not.toBeInTheDocument();
+	expect(within(filterPanel).queryByRole('button', { name: 'Clear selected' })).not.toBeInTheDocument();
+	expect(within(filterPanel).queryByRole('button', { name: 'Cancel date range' })).not.toBeInTheDocument();
+	expect(within(filterPanel).getAllByRole('button', { name: 'Default' })).toHaveLength(1);
+	expect(within(filterPanel).getByRole('button', { name: 'Apply' }).parentElement).toBe(
+		filterPanel.querySelector('.mt-3 > .flex')
+	);
+	await user.click(within(filterPanel).getByText('Choose calendar range'));
+	expect(setData).toHaveBeenCalledTimes(2);
+	await user.click(within(filterPanel).getByRole('button', { name: 'Apply' }));
 
-	expect(setData).toHaveBeenNthCalledWith(3, 'starts_after', '');
-	expect(setData).toHaveBeenNthCalledWith(4, 'starts_before', '');
-	expect(screen.queryByRole('button', { name: /Date Range:.*open filter values/ })).not.toBeInTheDocument();
+	expect(screen.queryByRole('heading', { name: 'Date Range' })).not.toBeInTheDocument();
+	expect(setData).toHaveBeenCalledTimes(4);
+	expect(setData).toHaveBeenNthCalledWith(3, 'starts_after', '2026-03-01');
+	expect(setData).toHaveBeenNthCalledWith(4, 'starts_before', '2026-03-31');
+});
+
+it('shows date-range pills before other filters and does not highlight the default range', () => {
+	const dateRangeFilter = {
+		name: 'date_range',
+		start_name: 'starts_after',
+		end_name: 'starts_before',
+		label: 'Date Range',
+		type: 'daterange',
+		defaultValue: { from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) },
+	};
+	renderControls({
+		controlFilters: [filters[1], dateRangeFilter],
+		data: { status: ['active'], starts_after: '2026-03-01', starts_before: '2026-03-31' },
+	});
+
+	const filterButtons = within(screen.getByTestId('desktop-index-table-controls')).getAllByRole('button', {
+		name: /open filter values/,
+	});
+
+	expect(filterButtons[0]).toHaveAccessibleName(/Date Range:/);
+	expect(filterButtons[0]).not.toHaveClass('bg-purple-50', 'border-purple-200');
+	expect(filterButtons[1]).toHaveAccessibleName(/Status:/);
+});
+
+it('highlights a date-range pill when its range differs from the default', () => {
+	const dateRangeFilter = {
+		name: 'date_range',
+		start_name: 'starts_after',
+		end_name: 'starts_before',
+		label: 'Date Range',
+		type: 'daterange',
+		defaultValue: { from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) },
+	};
+	renderControls({
+		controlFilters: [dateRangeFilter],
+		data: { starts_after: '2026-03-02', starts_before: '2026-03-31' },
+	});
+
+	expect(screen.getByRole('button', { name: /Date Range:.*open filter values/ })).toHaveClass(
+		'bg-purple-50',
+		'border-purple-200'
+	);
 });
 
 it('places a configured All action at the right of a multi-filter popover header', async () => {

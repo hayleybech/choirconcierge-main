@@ -24,7 +24,12 @@ const IndexTableControls = ({
 	const previousData = useRef(form.data);
 	const [addedFilters, setAddedFilters] = useState([]);
 	const searchableFilters = filters.filter(filter => ['date', 'text'].includes(filter.type));
-	const filtersForPills = filters.filter(filter => !['date', 'text'].includes(filter.type));
+	const filtersForPills = filters
+		.filter(filter => !['date', 'text'].includes(filter.type))
+		.sort(
+			(firstFilter, secondFilter) =>
+				Number(secondFilter.type === 'daterange') - Number(firstFilter.type === 'daterange')
+		);
 
 	useEffect(() => {
 		if (previousData.current === form.data) {
@@ -55,8 +60,7 @@ const IndexTableControls = ({
 		);
 	});
 	const hasChangedFilters =
-		hasChangedFiltersOverride ??
-		filters.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
+		hasChangedFiltersOverride ?? filters.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
 	const availableFilters = filtersForPills.filter(filter => !visibleFilters.includes(filter));
 	const changeFilter = (filter, value) => {
 		if (filter.onChange) {
@@ -74,7 +78,9 @@ const IndexTableControls = ({
 	};
 	const addFilter = (filter, value) => {
 		setAddedFilters(previousFilters =>
-			previousFilters.includes(getFilterName(filter)) ? previousFilters : [...previousFilters, getFilterName(filter)]
+			previousFilters.includes(getFilterName(filter))
+				? previousFilters
+				: [...previousFilters, getFilterName(filter)]
 		);
 		changeFilter(filter, value);
 	};
@@ -266,13 +272,20 @@ const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-
 
 const FilterPill = props => (
 	<Popover as="div" className="shrink-0">
-		{({ open }) => <FilterPillContent {...props} open={open} />}
+		{({ open, close }) => <FilterPillContent {...props} open={open} close={close} />}
 	</Popover>
 );
 
-const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onReset, open }) => {
+const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onReset, open, close }) => {
 	const buttonRef = useRef(null);
 	const panelRef = useRef(null);
+	const draftRangeRef = useRef(value);
+
+	useEffect(() => {
+		if (filter.type === 'daterange' && open) {
+			draftRangeRef.current = value;
+		}
+	}, [filter.type, open, value?.from, value?.to]);
 
 	return (
 		<>
@@ -285,8 +298,8 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 				aria-label={`${filter.label}: ${getFilterSummary(filter, value)}; open filter values`}
 				className="h-[26px] rounded"
 			>
-				<span>{filter.label}:</span>
-				<div className="max-w-32 truncate text-xs">
+				{filter.type !== 'daterange' && <span>{filter.label}:</span>}
+				<div className={`${filter.type === 'daterange' ? 'max-w-auto' : 'max-w-32'} truncate text-xs`}>
 					<FilterValueSummary filter={filter} value={value} />
 				</div>
 				<Icon icon="chevron-down" type="regular" />
@@ -297,8 +310,10 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 				referenceRef={buttonRef}
 				panelRef={panelRef}
 				placement="bottom-start"
-				className={`max-h-[calc(100vh-1rem)] w-72 max-w-[calc(100vw-1rem)] ${
-					filter.type === 'daterange' ? 'overflow-visible' : 'overflow-y-auto'
+				className={`max-h-[calc(100vh-1rem)] ${
+					filter.type === 'daterange'
+						? 'w-80 max-w-[calc(100vw-1rem)] overflow-visible'
+						: 'w-72 max-w-[calc(100vw-1rem)] overflow-y-auto'
 				} rounded-md border border-gray-200 bg-white p-3 shadow-lg`}
 			>
 				<div className="mb-3 flex items-center justify-between gap-2">
@@ -315,7 +330,7 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 							<FilterValueSummary filter={filter} value={value} />
 						</div>
 					)}
-  			{filter.allValuesLabel && filter.multiple && filter.options?.length > 0 && (
+					{filter.allValuesLabel && filter.multiple && filter.options?.length > 0 && (
 						<button
 							type="button"
 							onClick={() => onChange((filter.options ?? []).map(option => option.id))}
@@ -325,21 +340,56 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 						</button>
 					)}
 				</div>
-				<FilterValueOptions filter={filter} value={value} onChange={onChange} />
+				<FilterValueOptions
+					filter={filter}
+					value={value}
+					onChange={onChange}
+					inline={filter.type === 'daterange'}
+					onClose={close}
+					onDraftChange={range => {
+						draftRangeRef.current = range;
+					}}
+					hideActions={filter.type === 'daterange'}
+				/>
 				<div className="mt-3 flex justify-between gap-2 border-t border-gray-200 pt-3">
-					<Button size="sm" weight="clear" onClick={onClear}>
-						Clear selected
-					</Button>
-					<Button size="sm" weight="clear" onClick={onReset}>
-						Reset to default
-					</Button>
+					<div className="flex">
+						{filter.type === 'daterange' && (
+							<Button
+								size="sm"
+								intent="primary"
+								onClick={() => {
+									onChange(draftRangeRef.current);
+									close();
+								}}
+							>
+								<Icon icon="check" type="regular" /> Apply
+							</Button>
+						)}
+					</div>
+					<div className="flex gap-1">
+						<Button size="sm" weight="clear" onClick={onClear}>
+							<Icon icon="trash" type="regular" /> Clear
+						</Button>
+						<Button size="sm" weight="clear" onClick={onReset}>
+							<Icon icon="undo" type="regular" />
+							Default
+						</Button>
+					</div>
 				</div>
 			</PositionedPanel>
 		</>
 	);
 };
 
-const FilterValueOptions = ({ filter, value, onChange }) => {
+const FilterValueOptions = ({
+	filter,
+	value,
+	onChange,
+	inline = false,
+	onClose,
+	onDraftChange,
+	hideActions = false,
+}) => {
 	if (filter.type === 'daterange') {
 		return (
 			<DateRangeCalendarInput
@@ -349,7 +399,13 @@ const FilterValueOptions = ({ filter, value, onChange }) => {
 				startMonth={filter.startMonth}
 				endMonth={filter.endMonth}
 				updateFn={onChange}
-			/>
+				inline={inline}
+				onClose={onClose}
+				onDraftChange={onDraftChange}
+				hideActions={hideActions}
+			>
+				{filter.children}
+			</DateRangeCalendarInput>
 		);
 	}
 
@@ -388,7 +444,9 @@ const FilterValueOptions = ({ filter, value, onChange }) => {
 								if (filter.multiple) {
 									const selectedValues = values.filter(selectedValue => selectedValue !== '');
 									const nextValues = checked
-										? selectedValues.filter(selectedValue => String(selectedValue) !== String(option.id))
+										? selectedValues.filter(
+												selectedValue => String(selectedValue) !== String(option.id)
+										  )
 										: [...selectedValues, option.id];
 									onChange(nextValues);
 								} else {
@@ -440,6 +498,11 @@ const AddFilterButton = ({ filters, onAdd }) => {
 		setDraftValues([]);
 		setTextValue('');
 	};
+	const cancelFilterValue = () => {
+		setSelectedFilterName(null);
+		setDraftValues([]);
+		setTextValue('');
+	};
 	const applyDraftValues = filter => {
 		const value = filter.multiple ? draftValues : draftValues.find(selectedValue => selectedValue !== '') ?? '';
 
@@ -469,6 +532,7 @@ const AddFilterButton = ({ filters, onAdd }) => {
 					toggleDraftValue={toggleDraftValue}
 					selectAllDraftValues={selectAllDraftValues}
 					applyDraftValues={applyDraftValues}
+					cancelFilterValue={cancelFilterValue}
 					setTextValue={setTextValue}
 				/>
 			)}
@@ -491,6 +555,7 @@ const AddFilterMenuContent = ({
 	toggleDraftValue,
 	selectAllDraftValues,
 	applyDraftValues,
+	cancelFilterValue,
 	setTextValue,
 }) => {
 	const buttonRef = useRef(null);
@@ -550,8 +615,10 @@ const AddFilterMenuContent = ({
 						id={`add-filter-values-${selectedFilter.name}`}
 						role="group"
 						aria-label={`${selectedFilter.label} values`}
-						className={`fixed z-50 flex max-h-[calc(100vh-1rem)] w-56 max-w-[calc(100vw-1rem)] flex-col ${
-							selectedFilter.type === 'daterange' ? 'overflow-visible' : 'overflow-hidden'
+						className={`fixed z-50 flex max-h-[calc(100vh-1rem)] flex-col ${
+							selectedFilter.type === 'daterange'
+								? 'w-80 max-w-[calc(100vw-1rem)] overflow-visible'
+								: 'w-56 max-w-[calc(100vw-1rem)] overflow-hidden'
 						} rounded-md border border-gray-200 bg-white p-1 shadow-lg`}
 					>
 						<div className="flex shrink-0 items-center justify-between gap-2 px-3 py-2">
@@ -568,18 +635,58 @@ const AddFilterMenuContent = ({
 							)}
 						</div>
 						{selectedFilter.type === 'daterange' ? (
-							<div className="shrink-0 px-3 pb-2">
+							<div className="shrink-0">
 								<DateRangeCalendarInput
 									ariaLabel={selectedFilter.ariaLabel ?? `${selectedFilter.label} date range`}
 									startDate={getDefaultFilterValue(selectedFilter).from}
 									endDate={getDefaultFilterValue(selectedFilter).to}
 									startMonth={selectedFilter.startMonth}
 									endMonth={selectedFilter.endMonth}
-									updateFn={value => {
-										chooseFilterValue(selectedFilter, value);
-										closeMenu();
-									}}
-								/>
+									updateFn={value => chooseFilterValue(selectedFilter, value)}
+									inline
+									onClose={closeMenu}
+									renderActions={({ draftRange, updateDraftRange, selected, close }) => (
+										<div className="mt-3 flex justify-between gap-2 border-t border-gray-200 pt-3">
+											<div className="flex">
+												<Button
+													size="sm"
+													intent="primary"
+													role="menuitem"
+													onClick={() => {
+														chooseFilterValue(selectedFilter, draftRange);
+														close();
+													}}
+												>
+													<Icon icon="check" type="regular" /> Apply
+												</Button>
+											</div>
+											<div className="flex gap-1">
+												<Button
+													size="sm"
+													weight="clear"
+													role="menuitem"
+													onClick={() => updateDraftRange({})}
+												>
+													<Icon icon="trash" type="regular" /> Clear
+												</Button>
+												<Button
+													size="sm"
+													weight="clear"
+													role="menuitem"
+													onClick={() => {
+														updateDraftRange(selected);
+														cancelFilterValue();
+														close();
+													}}
+												>
+													<Icon icon="times" type="regular" /> Cancel
+												</Button>
+											</div>
+										</div>
+									)}
+								>
+									{selectedFilter.children}
+								</DateRangeCalendarInput>
 							</div>
 						) : selectedFilter.type === 'text' ? (
 							<div className="space-y-2 px-3 pb-2">
@@ -730,25 +837,31 @@ const SortDropdown = ({ sorts, form, compact = false, autoSubmit = false }) => {
 								</label>
 							))}
 						</div>
-                        <div role="group" aria-label="Sort direction" className="mt-3 flex border-t border-gray-200 pt-3">
-                            {[
-                                { value: 'asc', label: 'Ascending', icon: 'sort-amount-up' },
-                                { value: 'desc', label: 'Descending', icon: 'sort-amount-down' },
-                            ].map(direction => (
-                                <Button
-                                    key={direction.value}
-                                    size="sm"
-                                    weight="outline"
-                                    intent={form.data.sortDir === direction.value ? 'selected' : 'secondary'}
-                                    aria-pressed={form.data.sortDir === direction.value}
-                                    onClick={() => form.setData('sortDir', direction.value)}
-                                    className={`grow ${direction.value === 'asc' ? 'rounded-r-none' : '-ml-px rounded-l-none'}`}
-                                >
-                                    <Icon icon={direction.icon} type="regular" />
-                                    {direction.label}
-                                </Button>
-                            ))}
-                        </div>
+						<div
+							role="group"
+							aria-label="Sort direction"
+							className="mt-3 flex border-t border-gray-200 pt-3"
+						>
+							{[
+								{ value: 'asc', label: 'Ascending', icon: 'sort-amount-up' },
+								{ value: 'desc', label: 'Descending', icon: 'sort-amount-down' },
+							].map(direction => (
+								<Button
+									key={direction.value}
+									size="sm"
+									weight="outline"
+									intent={form.data.sortDir === direction.value ? 'selected' : 'secondary'}
+									aria-pressed={form.data.sortDir === direction.value}
+									onClick={() => form.setData('sortDir', direction.value)}
+									className={`grow ${
+										direction.value === 'asc' ? 'rounded-r-none' : '-ml-px rounded-l-none'
+									}`}
+								>
+									<Icon icon={direction.icon} type="regular" />
+									{direction.label}
+								</Button>
+							))}
+						</div>
 					</PositionedPanel>
 				</>
 			)}
@@ -772,7 +885,13 @@ const TableActionButton = ({ action }) => (
 
 const MobileTableActions = ({ tableActions, tableActionContent, filterLabel }) => (
 	<Menu as="div" className="relative">
-		<Menu.Button as={Button} size="sm" weight="outline" className="h-8" aria-label={`${filterLabel || 'Table'} table actions`}>
+		<Menu.Button
+			as={Button}
+			size="sm"
+			weight="outline"
+			className="h-8"
+			aria-label={`${filterLabel || 'Table'} table actions`}
+		>
 			<Icon icon="cog" />
 		</Menu.Button>
 		<Menu.Items className="absolute right-0 z-50 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
@@ -792,7 +911,15 @@ const MobileTableActions = ({ tableActions, tableActionContent, filterLabel }) =
 	</Menu>
 );
 
-const PositionedPanel = ({ component: PanelComponent, open, referenceRef, panelRef, placement, className, children }) => {
+const PositionedPanel = ({
+	component: PanelComponent,
+	open,
+	referenceRef,
+	panelRef,
+	placement,
+	className,
+	children,
+}) => {
 	useViewportAwarePopper(referenceRef, panelRef, open, placement);
 
 	if (!open) {
@@ -847,12 +974,12 @@ function hasSelectedValue(filter, value) {
 }
 
 function isNonDefault(filter, value) {
-	return normalizeValue(filter, value) !== normalizeValue(filter, filter.defaultValue ?? (filter.multiple ? [] : ''));
+	return normalizeValue(filter, value) !== normalizeValue(filter, getDefaultFilterValue(filter));
 }
 
 function normalizeValue(filter, value) {
 	if (filter.type === 'daterange') {
-		return `${value?.from ?? ''}|${value?.to ?? ''}`;
+		return `${formatDateInputValue(value?.from)}|${formatDateInputValue(value?.to)}`;
 	}
 
 	if (filter.multiple) {
@@ -898,7 +1025,10 @@ function getFilterSummary(filter, value) {
 		return String(value);
 	}
 	if (filter.type === 'daterange') {
-		return [value?.from, value?.to].filter(Boolean).map(formatDateRangeValue).join(' – ');
+		return [value?.from, value?.to]
+			.filter(Boolean)
+			.map(formatDateRangeValue)
+			.join(' – ');
 	}
 
 	const selectedValues = (filter.multiple ? value : [value]).filter(

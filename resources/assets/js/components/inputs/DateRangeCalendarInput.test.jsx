@@ -65,8 +65,10 @@ describe('DateRangeCalendarInput', () => {
 		expect(screen.getByRole('button', { name: 'Last 7 days' })).toBeTruthy();
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('15 Jan 2025');
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('20 Feb 2025');
-		expect(screen.getByLabelText('Selected date range').textContent).toBe('15 Jan 2025 – 20 Feb 2025');
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).className).toContain('bg-gray-100');
+		const calendarPanel = screen.getByTestId('day-picker').closest('.absolute.right-0');
+		expect(calendarPanel).not.toBeNull();
+		expect(calendarPanel.className).not.toContain('overflow-hidden');
 	});
 
 	it('does not update the applied range until Apply is pressed', () => {
@@ -85,5 +87,21 @@ describe('DateRangeCalendarInput', () => {
 
 		screen.getByRole('button', { name: 'Apply' }).click();
 		expect(updateFn).toHaveBeenCalledWith({ from: new Date(2025, 2, 1), to: new Date(2025, 2, 31) });
+	});
+
+	it('renders the calendar inline without an input trigger and closes after applying', () => {
+		const updateFn = vi.fn();
+		const onClose = vi.fn();
+
+		render(<DateRangeCalendarInput inline onClose={onClose} updateFn={updateFn} />);
+
+		expect(screen.queryByRole('textbox', { name: 'Attendance report date range' })).toBeNull();
+		expect(screen.getByRole('button', { name: 'Clear selected' })).toBeTruthy();
+		expect(screen.getByRole('button', { name: 'Cancel' })).toBeTruthy();
+		screen.getByRole('button', { name: 'Choose range' }).click();
+		screen.getByRole('button', { name: 'Apply' }).click();
+
+		expect(updateFn).toHaveBeenCalledWith({ from: new Date(2025, 2, 1), to: new Date(2025, 2, 31) });
+		expect(onClose).toHaveBeenCalledOnce();
 	});
 });

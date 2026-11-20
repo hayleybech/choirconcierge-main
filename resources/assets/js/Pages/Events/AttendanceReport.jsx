@@ -28,7 +28,6 @@ import IndexTableControls from '../../components/IndexTableControls';
 import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
-import DateRangeCalendarInput from '../../components/inputs/DateRangeCalendarInput';
 
 const AttendanceReport = ({
 	events,
@@ -75,6 +74,33 @@ const AttendanceReport = ({
 			end: today.minus({ years: 1 }).endOf('year'),
 		},
 	];
+	const renderDateRangePresets = setDraftRange => (
+		<div className="mb-2 grid grid-cols-2">
+			{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
+				<div
+					key={columnIndex}
+					className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}
+				>
+					{column.map(({ label, start, end }) => (
+						<Button
+							key={label}
+							intent="secondary"
+							weight="clear"
+							size="sm"
+							onClick={() =>
+								setDraftRange({
+									from: start.toJSDate(),
+									to: (end ?? today).toJSDate(),
+								})
+							}
+						>
+							{label}
+						</Button>
+					))}
+				</div>
+			))}
+		</div>
+	);
 	const filters = [
 		{
 			name: 'type.id',
@@ -83,8 +109,18 @@ const AttendanceReport = ({
 			defaultValue: [defaultEventType],
 			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
 		},
-		{ name: 'starts_after', label: 'Events After', type: 'date', defaultValue: defaultStartsAfter },
-		{ name: 'starts_before', label: 'Events Before', type: 'date', defaultValue: defaultStartsBefore },
+		{
+			name: 'date_range',
+			start_name: 'starts_after',
+			end_name: 'starts_before',
+			label: 'Date Range',
+			type: 'daterange',
+			defaultValue: { from: defaultStartsAfter, to: defaultStartsBefore },
+			startMonth: new Date(2017, 0),
+			endMonth: new Date(new Date().getFullYear() + 5, 11),
+			ariaLabel: 'Attendance report date range',
+			children: renderDateRangePresets,
+		},
 		{
 			name: 'enrolments.voice_part_id',
 			label: 'Voice Part',
@@ -95,7 +131,6 @@ const AttendanceReport = ({
 			),
 		},
 	];
-	const railFilters = filters.filter(filter => !['starts_after', 'starts_before'].includes(filter.name));
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 	const previousDateRange = React.useRef({
@@ -117,7 +152,12 @@ const AttendanceReport = ({
 	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterDrawer closeFn={() => setShowFilters(false)}>
-			<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />
+			<AttendanceReportFilters
+				eventTypes={eventTypes}
+				voiceParts={voiceParts}
+				form={sortFilterForm}
+				dateRangePresets={renderDateRangePresets}
+			/>
 		</FilterDrawer>
 	);
 
@@ -168,61 +208,11 @@ const AttendanceReport = ({
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
 					</PageHeaderMeta>
-					<div className="mt-3 w-full max-w-xs">
-						<DateRangeCalendarInput
-							startDate={sortFilterForm.data['starts_after']}
-							endDate={sortFilterForm.data['starts_before']}
-							startMonth={new Date(2017, 0)}
-							endMonth={new Date(new Date().getFullYear() + 5, 11)}
-							updateFn={range => {
-								sortFilterForm.setData(
-									'starts_after',
-									range?.from ? DateTime.fromJSDate(range.from).toISODate() : ''
-								);
-								sortFilterForm.setData(
-									'starts_before',
-									range?.to ? DateTime.fromJSDate(range.to).toISODate() : ''
-								);
-							}}
-						>
-							{setDraftRange => (
-								<div className="mb-2 grid grid-cols-2">
-									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map(
-										(column, columnIndex) => (
-											<div
-												key={columnIndex}
-												className={`flex flex-col gap-1 ${
-													columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'
-												}`}
-											>
-												{column.map(({ label, start, end }) => (
-													<Button
-														key={label}
-														intent="secondary"
-														weight="clear"
-														size="sm"
-														onClick={() =>
-															setDraftRange({
-																from: start.toJSDate(),
-																to: (end ?? today).toJSDate(),
-															})
-														}
-													>
-														{label}
-													</Button>
-												))}
-											</div>
-										)
-									)}
-								</div>
-							)}
-						</DateRangeCalendarInput>
-					</div>
 				</PageHeaderContent>
 			</PageHeader>
 			<div className="sticky top-[47px] z-30 shrink-0 bg-white lg:static lg:z-auto">
 				<IndexTableControls
-					filters={railFilters}
+					filters={filters}
 					sorts={sorts}
 					form={sortFilterForm}
 					filterLabel="attendance report"
