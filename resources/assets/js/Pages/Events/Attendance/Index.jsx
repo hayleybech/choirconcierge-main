@@ -313,12 +313,18 @@ const Index = ({
 			/>
 
 			<Dialog
-				title="Attendance Tracking Instructions"
+				title={
+					<span className="flex items-center gap-1.5">
+						<Icon icon="info-circle" type="regular" className="text-gray-800" />
+						Attendance Tracking Instructions
+					</span>
+				}
 				isOpen={instructionsDialogIsOpen}
 				setIsOpen={setInstructionsDialogIsOpen}
 				icon={null}
+				showCancelButton={false}
 			>
-				<div>
+				<div className="text-left">
 					<p className="mb-2">We offer three ways to track attendance:</p>
 					<ul className="mb-4 ml-4 list-inside list-disc [&>li]:mb-1">
 						<li>
