@@ -37,6 +37,61 @@ it('allows rsvp managers to update a singer response', function () {
         ->and($rsvp->fresh()->details)->toBeNull();
 });
 
+it('allows rsvp managers to update a singer response with fifty-character details', function () {
+    $event = Event::factory()->create();
+    $singer = Membership::factory()->create();
+    $details = str_repeat('a', 50);
+    $rsvp = Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $singer->id,
+        'response' => 'yes',
+    ]);
+
+    $this->put(the_tenant_route('events.rsvps.updateSinger', [$event, $singer]), [
+        'response' => 'maybe',
+        'details' => $details,
+    ])->assertRedirect(the_tenant_route('events.rsvps.index', [$event]));
+
+    expect($rsvp->fresh()->response)->toBe('maybe')
+        ->and($rsvp->fresh()->details)->toBe($details);
+});
+
+it('rejects manager rsvp details longer than fifty characters', function () {
+    $event = Event::factory()->create();
+    $singer = Membership::factory()->create();
+    $rsvp = Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $singer->id,
+        'response' => 'yes',
+    ]);
+
+    $this->put(the_tenant_route('events.rsvps.updateSinger', [$event, $singer]), [
+        'response' => 'no',
+        'details' => str_repeat('a', 51),
+    ])->assertSessionHasErrors('details');
+
+    expect($rsvp->fresh()->response)->toBe('yes')
+        ->and($rsvp->fresh()->details)->toBeNull();
+});
+
+it('rejects non-string manager rsvp details', function () {
+    $event = Event::factory()->create();
+    $singer = Membership::factory()->create();
+    $rsvp = Rsvp::factory()->create([
+        'event_id' => $event->id,
+        'membership_id' => $singer->id,
+        'response' => 'yes',
+    ]);
+
+    $this->put(the_tenant_route('events.rsvps.updateSinger', [$event, $singer]), [
+        'response' => 'no',
+        'details' => ['not', 'a', 'string'],
+    ])->assertSessionHasErrors('details');
+
+    expect($rsvp->fresh()->response)->toBe('yes')
+        ->and($rsvp->fresh()->details)->toBeNull();
+});
+
 it('does not allow rsvp managers to update individual responses for past events', function () {
     $event = Event::factory()->create(['call_time' => now()->subDay()]);
     $singer = Membership::factory()->create();

@@ -7,9 +7,11 @@ import menuItemStyles from '../ActionMenu/menuItemStyles';
 import useRoute from '../../hooks/useRoute';
 import { router, useForm, usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
+import Dialog from '../Dialog';
  
-const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
+const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobile = false }) => {
 	const [isEditing, setIsEditing] = useState(false);
+	const [isMobileDialogOpen, setIsMobileDialogOpen] = useState(false);
 
 	const toggleIsEditing = (value) => {
 		setIsEditing(value);
@@ -69,18 +71,56 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 				preserveScroll: true,
 				onSuccess: () => {
 					toggleIsEditing(false);
+					if (isMobile) {
+						setIsMobileDialogOpen(false);
+					}
 				},
 			}
 		);
 	};
 
+	const openMobileDialog = () => {
+		setData('response', attendance.response);
+		setData('absent_reason', attendance.absent_reason || '');
+		setIsMobileDialogOpen(true);
+	};
+
+	const handleMobileDialogClose = open => {
+		if (open || !processing) {
+			setIsMobileDialogOpen(open);
+			if (!open) {
+				setData('response', attendance.response);
+				setData('absent_reason', attendance.absent_reason || '');
+			}
+		}
+	};
+
 	const currentOption = options.find(o => o.id === data.response);
 
 	return (
-		<div className="sm:min-w-[200px] 'shrink-0">
+		<div className="sm:min-w-[200px] shrink-0">
 			<div className="flex flex-col gap-y-1.5">
 				<div className="flex items-center gap-2">
-					<Menu as="div" className="relative inline-block text-left">
+					{isMobile && (
+						<ButtonV2
+							intent="secondary"
+							weight="outline"
+							size="sm"
+							className="max-w-[150px]"
+							onClick={openMobileDialog}
+						>
+							{currentOption ? (
+								<>
+									<Icon icon={currentOption.icon} className={currentOption.colour} mr />
+									<span className="truncate">{currentOption.name}</span>
+								</>
+							) : (
+								'Select status'
+							)}
+							<Icon icon="chevron-down" ml className="text-gray-400" />
+						</ButtonV2>
+					)}
+					{!isMobile && <Menu as="div" className="relative inline-block text-left">
 						<Menu.Button as={ButtonV2} intent="secondary" weight="outline" size="sm">
 							{currentOption ? (
 								<>
@@ -143,9 +183,9 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 								</div>
 							</Menu.Items>
 						</Transition>
-					</Menu>
+					</Menu>}
 
-					{!isEditing && !attendance.absent_reason && attendance.response === 'absent' && (
+					{!isMobile && !isEditing && !attendance.absent_reason && attendance.response === 'absent' && (
 						<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={e => toggleIsEditing(true)}>
 							<Icon icon="plus" mr /> Add Reason
 						</ButtonV2>
@@ -163,13 +203,13 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 							</div>
 						)}
 
-						{!isEditing && !!attendance.absent_reason && (
+						{!isMobile && !isEditing && !!attendance.absent_reason && (
 							<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={e => toggleIsEditing(true)}>
 								<Icon icon="pencil" mr /> Edit
 							</ButtonV2>
 						)}
 
-						{isEditing && (
+						{isEditing && !isMobile && (
 							<>
 								<TextInput
 									name="absent_reason"
@@ -208,6 +248,58 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing }) => {
 					</div>
 				)}
 			</div>
+			{isMobile && (
+				<Dialog
+					title="Update Attendance"
+					okLabel="Save"
+					onOk={handleSubmit}
+					isOpen={isMobileDialogOpen}
+					setIsOpen={handleMobileDialogClose}
+					processing={processing}
+					okDisabled={!data.response}
+					icon={null}
+				>
+					<div className="space-y-4">
+						<div role="group" aria-label="Attendance status" className="grid gap-2 sm:grid-cols-2">
+							{options.map(option => (
+								<ButtonV2
+									key={option.id}
+									intent={data.response === option.id ? 'selected' : 'secondary'}
+									weight="outline"
+									disabled={processing}
+									onClick={() => setData('response', option.id)}
+									aria-pressed={data.response === option.id}
+									className="w-full"
+								>
+									<Icon icon={option.icon} className={option.colour} mr />
+									{option.name}
+								</ButtonV2>
+							))}
+						</div>
+						{data.response === 'absent' && (
+							<div>
+								<label
+									htmlFor={`absent_reason_${singerId}`}
+									className="mb-1 block text-sm font-medium text-gray-700"
+								>
+									Reason for absence
+								</label>
+								<TextInput
+									name="absent_reason"
+									id={`absent_reason_${singerId}`}
+									value={data.absent_reason}
+									updateFn={value => setData('absent_reason', value)}
+									placeholder="Reason for absence"
+									aria-label="Reason for absence"
+									maxLength={50}
+									disabled={processing}
+									autoFocus
+								/>
+							</div>
+						)}
+					</div>
+				</Dialog>
+			)}
 		</div>
 	);
 };
