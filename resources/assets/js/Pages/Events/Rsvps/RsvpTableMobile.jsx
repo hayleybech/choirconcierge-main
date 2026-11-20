@@ -112,7 +112,7 @@ const RsvpTableMobile = ({
 													</div>
 												)}
 												{canEditRsvps ? (
-													<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
+													<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} isMobile />
 												) : (
 													<RsvpTag
 														icon={singer.rsvp.icon}

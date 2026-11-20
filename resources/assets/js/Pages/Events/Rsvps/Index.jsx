@@ -434,7 +434,7 @@ const Index = ({
 													colour={singer.rsvp.colour}
 												/>
 											)}
-											{singer.rsvp.details && (
+											{!canEditRsvps && singer.rsvp.details && (
 												<div
 													className="mt-1 text-xs italic text-gray-500"
 													title={singer.rsvp.details}

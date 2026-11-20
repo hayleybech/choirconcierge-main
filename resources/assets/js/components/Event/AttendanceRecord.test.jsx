@@ -67,4 +67,19 @@ describe('AttendanceRecord', () => {
 			expect.objectContaining({ preserveScroll: true })
 		);
 	});
+
+	it('shows an existing mobile absence reason in a tooltip', () => {
+		render(
+			<AttendanceRecord
+				attendance={{ response: 'absent', absent_reason: 'Family emergency' }}
+				singerId={7}
+				event={42}
+				isMobile
+			/>
+		);
+
+		fireEvent.click(screen.getByRole('button', { name: 'Show attendance reason' }));
+
+		expect(screen.getByRole('tooltip')).toHaveTextContent('Family emergency');
+	});
 });

@@ -30,6 +30,7 @@ describe('RsvpRecord', () => {
 				rsvp={{ response: 'unknown', label: 'No RSVP' }}
 				singerId={1}
 				event={1}
+				isMobile
 			/>
 		);
 
@@ -49,6 +50,7 @@ describe('RsvpRecord', () => {
 				rsvp={{ response: 'unknown', label: 'No RSVP' }}
 				singerId={1}
 				event={1}
+				isMobile
 			/>
 		);
 
@@ -64,6 +66,51 @@ describe('RsvpRecord', () => {
 			expect(router.put).toHaveBeenCalledWith(
 				'events.rsvps.updateSinger',
 				{ response: 'maybe', details: 'I may arrive late' },
+				expect.objectContaining({ preserveScroll: true })
+			)
+		);
+	});
+
+	it('allows a manager to add RSVP details inline on desktop', async () => {
+		render(
+			<RsvpRecord
+				rsvp={{ response: 'no', label: 'Not Going', details: null }}
+				singerId={1}
+				event={1}
+			/>
+		);
+
+		fireEvent.click(screen.getByRole('button', { name: 'Add Reason' }));
+		fireEvent.change(screen.getByRole('textbox', { name: 'Reason' }), {
+			target: { value: 'I will be away' },
+		});
+		fireEvent.click(screen.getByRole('button', { name: 'Apply reason' }));
+
+		await waitFor(() =>
+			expect(router.put).toHaveBeenCalledWith(
+				'events.rsvps.updateSinger',
+				{ response: 'no', details: 'I will be away' },
+				expect.objectContaining({ preserveScroll: true })
+			)
+		);
+	});
+
+	it('updates the RSVP status from the desktop dropdown', async () => {
+		render(
+			<RsvpRecord
+				rsvp={{ response: 'yes', label: 'Going', details: null }}
+				singerId={1}
+				event={1}
+			/>
+		);
+
+		fireEvent.click(screen.getByRole('button', { name: /Going/ }));
+		fireEvent.click(await screen.findByRole('button', { name: 'Maybe' }));
+
+		await waitFor(() =>
+			expect(router.put).toHaveBeenCalledWith(
+				'events.rsvps.updateSinger',
+				{ response: 'maybe', details: null },
 				expect.objectContaining({ preserveScroll: true })
 			)
 		);
