@@ -305,10 +305,13 @@ it('provides mobile bulk selection, filter, sort, and action menu controls', asy
 
 	await user.click(within(mobile).getByRole('checkbox', { name: 'Select all members' }));
 	expect(toggleAll).toHaveBeenCalledOnce();
-	await user.click(within(mobile).getByRole('button', { name: 'Select Members' }));
-	expect(bulkAction).toHaveBeenCalledOnce();
+	expect(within(mobile).queryByRole('button', { name: 'Select Members' })).not.toBeInTheDocument();
 	await user.click(filterButton);
 	expect(onToggleFilters).toHaveBeenCalledOnce();
+
+	await user.click(within(mobile).getByRole('button', { name: 'members table actions' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Select Members' }));
+	expect(bulkAction).toHaveBeenCalledOnce();
 
 	await user.click(within(mobile).getByRole('button', { name: 'members table actions' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Invite' }));
@@ -320,6 +323,25 @@ it('provides mobile bulk selection, filter, sort, and action menu controls', asy
 	expect(screen.getByRole('radio', { name: 'Name' })).toBeInTheDocument();
 	await user.click(screen.getByRole('radio', { name: 'Status' }));
 	await waitFor(() => expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true }));
+});
+
+it('shows mobile bulk selection actions in the overflow menu without other table actions', async () => {
+	useMediaQuery.mockReturnValue(false);
+	const user = userEvent.setup();
+	const bulkAction = vi.fn();
+	const { container } = renderControls({
+		bulkEdit: {
+			action: { label: 'Select Members', icon: 'users', onClick: bulkAction },
+		},
+		tableActions: [],
+	});
+	const mobile = container.querySelector('[data-testid="mobile-index-table-controls"]');
+
+	expect(within(mobile).queryByRole('button', { name: 'Select Members' })).not.toBeInTheDocument();
+	await user.click(within(mobile).getByRole('button', { name: 'members table actions' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Select Members' }));
+
+	expect(bulkAction).toHaveBeenCalledOnce();
 });
 
 it('does not show the overflow menu when there are no extra table actions', () => {

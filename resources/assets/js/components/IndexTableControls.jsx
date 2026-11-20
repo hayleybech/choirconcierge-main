@@ -179,23 +179,7 @@ const IndexTableControls = ({
 						className="shrink-0 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
 					/>
 				)}
-				{bulkEdit?.action && (
-					<Button
-						size="sm"
-						intent={
-							bulkEdit.action.intent ??
-							(bulkEdit.action.label === 'Cancel Selection' ? 'selected' : 'secondary')
-						}
-						weight="outline"
-						className="h-8"
-						onClick={bulkEdit.action.onClick}
-						aria-label={bulkEdit.action.label}
-					>
-						{bulkEdit.action.icon && <Icon icon={bulkEdit.action.icon} />}
-						{bulkEdit.action.label}
-					</Button>
-				)}
-				<div className="ml-auto flex items-center gap-2">
+				<div className="flex items-center gap-2 w-full justify-end">
 					{searchableFilters.map(filter => (
 						<NameSearchInput
 							key={filter.name}
@@ -203,7 +187,7 @@ const IndexTableControls = ({
 							filterLabel={filterLabel}
 							value={form.data[filter.name]}
 							onChange={value => changeFilter(filter, value)}
-							className="w-32 shrink-0"
+							className="w-32 shrink-0 grow md:grow-0"
 						/>
 					))}
 					<Button
@@ -218,10 +202,11 @@ const IndexTableControls = ({
 						Filter
 					</Button>
 					{sorts.length > 0 && <SortDropdown sorts={sorts} form={form} compact autoSubmit={!isDesktop} />}
-					{(tableActions.length > 0 || tableActionContent) && (
+					{(tableActions.length > 0 || tableActionContent || bulkEdit?.action) && (
 						<MobileTableActions
 							tableActions={tableActions}
 							tableActionContent={tableActionContent}
+							bulkEdit={bulkEdit}
 							filterLabel={filterLabel}
 						/>
 					)}
@@ -231,7 +216,7 @@ const IndexTableControls = ({
 	);
 };
 
-const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-40 shrink-0' }) => {
+const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-40 shrink-0 grow md:grow-0' }) => {
 	const isDateInput = filter.type === 'date';
 	const inputLabel = isDateInput
 		? `${filter.label}${filterLabel ? ` for ${filterLabel}` : ''}`
@@ -883,7 +868,7 @@ const TableActionButton = ({ action }) => (
 	</Button>
 );
 
-const MobileTableActions = ({ tableActions, tableActionContent, filterLabel }) => (
+const MobileTableActions = ({ tableActions, tableActionContent, bulkEdit, filterLabel }) => (
 	<Menu as="div" className="relative">
 		<Menu.Button
 			as={Button}
@@ -895,6 +880,16 @@ const MobileTableActions = ({ tableActions, tableActionContent, filterLabel }) =
 			<Icon icon="cog" />
 		</Menu.Button>
 		<Menu.Items className="absolute right-0 z-50 mt-2 w-52 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none">
+			{bulkEdit?.action && (
+				<ActionMenuItem
+					key="bulk-edit-action"
+					onClick={bulkEdit.action.onClick}
+					intent={bulkEdit.action.intent}
+				>
+					{bulkEdit.action.icon && <Icon icon={bulkEdit.action.icon} mr />}
+					{bulkEdit.action.label}
+				</ActionMenuItem>
+			)}
 			{tableActions.map(action => (
 				<ActionMenuItem
 					key={action.id ?? action.label}

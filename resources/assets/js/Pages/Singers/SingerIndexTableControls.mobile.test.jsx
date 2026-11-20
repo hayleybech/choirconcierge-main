@@ -39,7 +39,7 @@ beforeEach(() => {
 	useMediaQuery.mockReturnValue(false);
 });
 
-it('places select-all before filter and sort controls and opens the actions menu from the gear button', async () => {
+it('places selection actions in the overflow menu and opens it from the gear button', async () => {
 	const bulkEdit = makeBulkEdit();
 	const importSingers = vi.fn();
 	const form = {
@@ -65,33 +65,31 @@ it('places select-all before filter and sort controls and opens the actions menu
 	const user = userEvent.setup();
 
 	const selectAll = screen.getByRole('checkbox', { name: 'Select all singers' });
-	const selectSingersButton = screen.getByRole('button', { name: 'Select Singers' });
 	const filterButton = screen.getByRole('button', { name: 'Filter singers' });
 	const sortButton = screen.getByRole('button', { name: 'Sort options' });
 	const actionsButton = screen.getByRole('button', { name: 'singers table actions' });
 
 	expect(selectAll).toHaveProperty('checked', false);
-	expect(selectAll.compareDocumentPosition(selectSingersButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
-	expect(selectSingersButton.compareDocumentPosition(filterButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
+	expect(screen.queryByRole('button', { name: 'Select Singers' })).not.toBeInTheDocument();
 	expect(filterButton.compareDocumentPosition(sortButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 	expect(sortButton.compareDocumentPosition(actionsButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 	expect(filterButton).toHaveClass('h-8', 'py-1', 'px-1.5');
 	expect(sortButton).toHaveClass('h-8', 'py-1', 'px-1.5');
 	expect(filterButton).toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(actionsButton).toHaveClass('h-8');
-	expect(selectSingersButton).not.toHaveClass('bg-purple-50', 'border-purple-200');
 
 	await user.click(actionsButton);
 	expect(screen.getByRole('menuitem', { name: 'Import' })).toBeTruthy();
 	expect(screen.getByRole('menuitem', { name: 'Export' }).getAttribute('download')).toBe('');
-	expect(screen.queryByRole('menuitem', { name: 'Select Singers' })).not.toBeInTheDocument();
+	await user.click(screen.getByRole('menuitem', { name: 'Select Singers' }));
+	expect(bulkEdit.action.onClick).toHaveBeenCalledOnce();
+
+	await user.click(actionsButton);
 	await user.click(screen.getByRole('menuitem', { name: 'Import' }));
 	expect(importSingers).toHaveBeenCalledOnce();
-	await user.click(selectSingersButton);
-	expect(bulkEdit.action.onClick).toHaveBeenCalledOnce();
 });
 
-it('uses the selected intent for the mobile Cancel Selection button', () => {
+it('shows the mobile Cancel Selection action in the overflow menu', async () => {
 	const bulkEdit = {
 		...makeBulkEdit(),
 		action: {
@@ -100,6 +98,7 @@ it('uses the selected intent for the mobile Cancel Selection button', () => {
 		},
 	};
 
+	const user = userEvent.setup();
 	render(
 		<IndexTableControls
 			filters={[]}
@@ -112,7 +111,8 @@ it('uses the selected intent for the mobile Cancel Selection button', () => {
 		/>
 	);
 
-	expect(screen.getByRole('button', { name: 'Cancel Selection' })).toHaveClass('bg-purple-50', 'border-purple-200');
+	await user.click(screen.getByRole('button', { name: 'singers table actions' }));
+	expect(screen.getByRole('menuitem', { name: 'Cancel Selection' })).toBeInTheDocument();
 });
 
 it('selects all singers from the toolbar checkbox', async () => {
