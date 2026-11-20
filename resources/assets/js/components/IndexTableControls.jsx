@@ -27,20 +27,23 @@ const IndexTableControls = ({
 	const filtersForPills = filters.filter(filter => !['date', 'text'].includes(filter.type));
 
 	useEffect(() => {
-		if (!isDesktop) {
-			previousData.current = form.data;
-			return undefined;
-		}
-
 		if (previousData.current === form.data) {
 			return undefined;
 		}
 
+		const hasChangedSearch = searchableFilters.some(
+			filter => getFilterValue(filter, previousData.current) !== getFilterValue(filter, form.data)
+		);
 		previousData.current = form.data;
+
+		if (!isDesktop && !hasChangedSearch) {
+			return undefined;
+		}
+
 		const timeout = window.setTimeout(() => form.submit(undefined, { preserveState: true }), 300);
 
 		return () => window.clearTimeout(timeout);
-	}, [form.data, isDesktop]);
+	}, [form.data, isDesktop, searchableFilters]);
 
 	const visibleFilters = filtersForPills.filter(filter => {
 		const value = getFilterValue(filter, form.data);
@@ -134,7 +137,7 @@ const IndexTableControls = ({
 							);
 						})}
 					</div>
-					<AddFilterButton filters={availableFilters} onAdd={addFilter} />
+					{availableFilters.length > 0 && <AddFilterButton filters={availableFilters} onAdd={addFilter} />}
 					<div className="flex shrink-0 items-center gap-1">
 						<Button size="sm" weight="clear" onClick={clearAllFilters}>
 							<Icon icon="trash" type="regular" />
@@ -187,6 +190,16 @@ const IndexTableControls = ({
 					</Button>
 				)}
 				<div className="ml-auto flex items-center gap-2">
+					{searchableFilters.map(filter => (
+						<NameSearchInput
+							key={filter.name}
+							filter={filter}
+							filterLabel={filterLabel}
+							value={form.data[filter.name]}
+							onChange={value => changeFilter(filter, value)}
+							className="w-32 shrink-0"
+						/>
+					))}
 					<Button
 						size="sm"
 						weight="outline"
@@ -212,7 +225,7 @@ const IndexTableControls = ({
 	);
 };
 
-const NameSearchInput = ({ filter, filterLabel, value, onChange }) => {
+const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-40 shrink-0' }) => {
 	const isDateInput = filter.type === 'date';
 	const inputLabel = isDateInput
 		? `${filter.label}${filterLabel ? ` for ${filterLabel}` : ''}`
@@ -220,7 +233,7 @@ const NameSearchInput = ({ filter, filterLabel, value, onChange }) => {
 	const clearLabel = isDateInput ? `Clear ${inputLabel}` : `Clear ${filterLabel || filter.label} search`;
 
 	return (
-		<label className="relative block w-40 shrink-0">
+		<label className={`relative block ${className}`}>
 			<span className="sr-only">{inputLabel}</span>
 			<span
 				aria-hidden="true"

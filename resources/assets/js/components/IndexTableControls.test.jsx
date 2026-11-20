@@ -197,6 +197,35 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	expect(setData).toHaveBeenCalledWith('name', 'Grace');
 });
 
+it('hides the add-filter button when no filters are available to add', () => {
+	const { container } = renderControls({
+		controlFilters: [filters[0]],
+		data: { ...initialData, name: '' },
+	});
+	const desktop = container.querySelector('[data-testid="desktop-index-table-controls"]');
+
+	expect(within(desktop).getByRole('searchbox', { name: 'Search members by name' })).toBeInTheDocument();
+	expect(within(desktop).queryByRole('button', { name: 'Add filter' })).not.toBeInTheDocument();
+});
+
+it('shows and submits the search input inline with mobile controls', async () => {
+	useMediaQuery.mockReturnValue(false);
+	const user = userEvent.setup();
+	const { container, setData, submit } = renderControls({
+		controlFilters: [filters[0]],
+		controlSorts: [],
+		data: { ...initialData, name: '' },
+	});
+	const mobile = container.querySelector('[data-testid="mobile-index-table-controls"]');
+	const searchInput = within(mobile).getByRole('searchbox', { name: 'Search members by name' });
+
+	expect(within(mobile).getByRole('button', { name: 'Filter members' })).toBeInTheDocument();
+	await user.type(searchInput, 'Folder');
+
+	expect(setData).toHaveBeenLastCalledWith('name', 'Folder');
+	await waitFor(() => expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true }));
+});
+
 it('provides mobile bulk selection, filter, sort, and action menu controls', async () => {
 	useMediaQuery.mockReturnValue(false);
 	const user = userEvent.setup();
@@ -273,14 +302,15 @@ it('renders date filters as compact date inputs and clears their values', () => 
 		type: 'date',
 		defaultValue: '',
 	};
-	const { setData } = renderControls({
+	const { container, setData } = renderControls({
 		controlFilters: [...filters, dateFilter],
 		data: { ...initialData, starts_after: '2026-06-07' },
 	});
-	const dateInput = screen.getByRole('textbox', { name: 'Events After for members' });
+	const desktop = container.querySelector('[data-testid="desktop-index-table-controls"]');
+	const dateInput = within(desktop).getByRole('textbox', { name: 'Events After for members' });
 
 	expect(dateInput).toHaveValue('2026-06-07');
-	screen.getByRole('button', { name: 'Clear Events After for members' }).click();
+	within(desktop).getByRole('button', { name: 'Clear Events After for members' }).click();
 	expect(setData).toHaveBeenLastCalledWith('starts_after', '');
 });
 
