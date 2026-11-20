@@ -5,6 +5,11 @@ import TextInput from "./inputs/TextInput";
 import CheckboxGroup from "./inputs/CheckboxGroup";
 import FilterActions from "./inputs/FilterActions";
 import LearningStatus from "../LearningStatus";
+import Badge from "./Badge";
+import Icon from "./Icon";
+import SingerStatus from "../SingerStatus";
+import SingerStatusTag from "./SingerStatusTag";
+import VoicePartTag from "./VoicePartTag";
  
 const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
@@ -30,6 +35,7 @@ const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatus
                     options={singerStatuses.map((status) => ({ id: status.id, name: status.name }))}
                     value={data['status.id']}
                     updateFn={value => setData('status.id', value)}
+                    renderOption={option => <SingerStatusTag status={new SingerStatus(option.id)} withLabel />}
                 />
             </fieldset>
 
@@ -43,9 +49,10 @@ const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatus
                 </div>
                 <CheckboxGroup
                     name="enrolments.voice_part_id"
-                    options={voiceParts.map((part) => ({ id: part.id, name: part.title }))}
+                    options={voiceParts.map((part) => ({ id: part.id, name: part.title, colour: part.colour }))}
                     value={data['enrolments.voice_part_id']}
                     updateFn={value => setData('enrolments.voice_part_id', value)}
+                    renderOption={option => <VoicePartTag title={option.name} colour={option.colour} />}
                 />
             </fieldset>
 
@@ -62,6 +69,16 @@ const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatus
                     options={Object.keys(LearningStatus.statuses).map((slug) => ({ id: slug, name: new LearningStatus(slug).title }))}
                     value={data['learning.status']}
                     updateFn={value => setData('learning.status', value)}
+                    renderOption={option => {
+                        const status = new LearningStatus(option.id);
+
+                        return (
+                            <span className="inline-flex items-center gap-1.5">
+                                <Icon icon={status.icon} className={status.textColour} />
+                                {status.title}
+                            </span>
+                        );
+                    }}
                 />
             </fieldset>
 
@@ -79,6 +96,7 @@ const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatus
                         options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
                         value={data['enrolments.ensemble_id']}
                         updateFn={value => setData('enrolments.ensemble_id', value)}
+                        renderOption={option => <Badge colour="bg-purple-100 text-purple-800">{option.name}</Badge>}
                     />
                 </fieldset>
             )}

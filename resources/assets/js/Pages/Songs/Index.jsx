@@ -32,6 +32,7 @@ import BulkEditBar from '../../components/BulkEditBar';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import SongStatus from '../../SongStatus';
 import SongStatusTag from '../../components/SongStatusTag';
+import Badge from '../../components/Badge';
 
 const Index = ({
 	songs,
@@ -81,6 +82,11 @@ const Index = ({
 						label: 'Ensemble',
 						multiple: true,
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
 					},
 			  ]
 			: []),

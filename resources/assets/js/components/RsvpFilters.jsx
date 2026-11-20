@@ -8,6 +8,7 @@ import Badge from "./Badge";
 import SingerStatus from "../SingerStatus";
 import SingerStatusTag from "./SingerStatusTag";
 import VoicePartTag from "./VoicePartTag";
+import RsvpTag from "./Event/RsvpTag";
  
 const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => (
     <Filters
@@ -67,13 +68,16 @@ const RsvpFilters = ({ event, voiceParts, form, ensembles, singerStatuses }) => 
                 <CheckboxGroup
                     name="rsvp.response"
                     options={[
-                        { id: 'yes', name: 'Going' },
-                        { id: 'maybe', name: 'Maybe' },
-                        { id: 'no', name: 'Not going' },
-                        { id: 'unknown', name: 'No RSVP' },
+                        { id: 'yes', name: 'Going', icon: 'check', colour: 'emerald' },
+                        { id: 'maybe', name: 'Maybe', icon: 'question', colour: 'amber' },
+                        { id: 'no', name: 'Not going', icon: 'times', colour: 'red' },
+                        { id: 'unknown', name: 'No RSVP', icon: 'circle', colour: 'gray' },
                     ]}
                     value={data['rsvp.response']}
                     updateFn={value => setData('rsvp.response', value)}
+                    renderOption={option => (
+                        <RsvpTag label={option.name} icon={option.icon} colour={option.colour} />
+                    )}
                 />
             </fieldset>
 

@@ -33,6 +33,7 @@ const EventFilters = ({ eventTypes, ensembles, userEnsemblesCount, form }) => (
 							options={ensembles.map((ensemble) => ({ id: ensemble.id, name: ensemble.name }))}
 							value={data['ensembles.id']}
 							updateFn={value => setData('ensembles.id', value)}
+							renderOption={option => <Badge colour="bg-purple-100 text-purple-800">{option.name}</Badge>}
 						/>
 					</fieldset>
 				)}

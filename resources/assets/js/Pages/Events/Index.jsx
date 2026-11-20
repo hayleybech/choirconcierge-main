@@ -87,6 +87,11 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 						label: 'Ensemble',
 						multiple: true,
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
+						renderOption: (option, compact) => (
+							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
+								{option.name}
+							</Badge>
+						),
 					},
 			  ]
 			: []),
