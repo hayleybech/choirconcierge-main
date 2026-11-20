@@ -30,9 +30,7 @@ import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
-import SongStatus from '../../SongStatus';
-import SongStatusTag from '../../components/SongStatusTag';
-import Badge from '../../components/Badge';
+import { createSongFilterDescriptors } from '../../components/Song/SongFilterDescriptors';
 
 const Index = ({
 	songs,
@@ -57,55 +55,14 @@ const Index = ({
 		{ id: 'status-title', name: 'Status' },
 	];
 
-	const filters = [
-		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
-		{
-			name: 'status.id',
-			label: 'Status',
-			multiple: true,
-			defaultValue: defaultStatuses,
-			options: statuses.map(status => ({ id: status.id, name: status.title, slug: status.slug })),
-			renderOption: (option, compact) => (
-				<SongStatusTag status={new SongStatus(option.slug)} withLabel compact={compact} />
-			),
-		},
-		{
-			name: 'categories.id',
-			label: 'Category',
-			multiple: true,
-			options: categories.map(category => ({ id: category.id, name: category.title })),
-		},
-		...(userEnsemblesCount > 1
-			? [
-					{
-						name: 'ensembles.id',
-						label: 'Ensemble',
-						multiple: true,
-						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-		...(showForProspectsDefault.length > 1
-			? [
-					{
-						name: 'show_for_prospects',
-						label: 'Audition Songs',
-						multiple: true,
-						multipleBool: true,
-						defaultValue: [],
-						options: [
-							{ id: false, name: 'Non-Audition Songs' },
-							{ id: true, name: 'Audition Songs' },
-						],
-					},
-			  ]
-			: []),
-	];
+	const filters = createSongFilterDescriptors({
+		statuses,
+		defaultStatuses,
+		categories,
+		userEnsemblesCount,
+		ensembles,
+		showForProspectsDefault,
+	});
 
 	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
 
@@ -203,14 +160,7 @@ const Index = ({
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<SongFilters
-							statuses={statuses}
-							categories={categories}
-							ensembles={ensembles}
-							userEnsemblesCount={userEnsemblesCount}
-							showForProspectsDefault={showForProspectsDefault}
-							form={sortFilterForm}
-						/>
+						<SongFilters filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={

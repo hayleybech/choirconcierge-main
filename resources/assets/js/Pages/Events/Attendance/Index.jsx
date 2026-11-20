@@ -43,6 +43,7 @@ import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
+import { createAttendanceFilterDescriptors } from './AttendanceFilterDescriptors';
 import Button from '../../../components/inputs/ButtonV2';
 import Dialog from '../../../components/Dialog';
 import { Menu, Transition } from '@headlessui/react';
@@ -85,65 +86,7 @@ const Index = ({
 		{ id: 'attendance-updated', name: 'Updated' },
 	];
 
-	const filters = [
-		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
-		{
-			name: 'enrolments.voice_part_id',
-			label: 'Voice Part',
-			multiple: true,
-			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
-			renderOption: (option, compact) => (
-				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
-			),
-		},
-		...(ensembles.length > 1
-			? [
-					{
-						name: 'enrolments.ensemble_id',
-						label: 'Ensemble',
-						multiple: true,
-						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-		{
-			name: 'attendance.response',
-			label: 'Attendance Response',
-			multiple: true,
-			options: [
-				{ id: 'present', name: 'On Time', icon: 'check', colour: 'text-emerald-500' },
-				{ id: 'late', name: 'Late', icon: 'alarm-snooze', colour: 'text-yellow-500' },
-				{ id: 'unknown', name: 'Not recorded', icon: 'circle', colour: 'text-gray-500' },
-				{
-					id: 'late_deemed_absent',
-					name: 'Late (Deemed Absent)',
-					icon: 'alarm-exclamation',
-					colour: 'text-orange-500',
-				},
-				{ id: 'absent', name: 'Absent', icon: 'times', colour: 'text-red-500' },
-			],
-			renderOption: option => (
-				<span className="inline-flex items-center gap-1.5">
-					<Icon icon={option.icon} className={option.colour} />
-					{option.name}
-				</span>
-			),
-		},
-		{
-			name: 'status.id',
-			label: 'Singer Status',
-			multiple: true,
-			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
-			renderOption: (option, compact) => (
-				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
-			),
-		},
-	];
+	const filters = createAttendanceFilterDescriptors({ voiceParts, ensembles, singerStatuses });
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
 
@@ -397,13 +340,11 @@ const Index = ({
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<AttendanceFilters
-							event={event}
-							voiceParts={voiceParts}
-							ensembles={ensembles}
-							form={sortFilterForm}
-							singerStatuses={singerStatuses}
-						/>
+					<AttendanceFilters
+						event={event}
+						form={sortFilterForm}
+						filters={filters}
+					/>
 					</FilterDrawer>
 				}
 				tableMobile={

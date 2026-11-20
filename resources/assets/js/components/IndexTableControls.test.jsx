@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import IndexTableControls from './IndexTableControls';
+import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
+import { createSingerAttendanceFilterDescriptors } from '../Pages/Singers/Attendance/SingerAttendanceFilterDescriptors';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
 
@@ -53,12 +55,19 @@ vi.mock('./inputs/DateRangeCalendarInput', async () => {
 					'div',
 					{
 						'data-testid': 'inline-date-range',
-						'data-draft-range': `${draftRange.from?.toISOString() ?? ''}|${draftRange.to?.toISOString() ?? ''}`,
+						'data-draft-range': `${draftRange.from?.toISOString() ?? ''}|${draftRange.to?.toISOString() ??
+							''}`,
 					},
-					React.createElement('button', { type: 'button', onClick: () => updateDraftRange(selectedRange) }, 'Choose calendar range'),
+					React.createElement(
+						'button',
+						{ type: 'button', onClick: () => updateDraftRange(selectedRange) },
+						'Choose calendar range'
+					),
 					!hideActions && React.createElement('button', { type: 'button' }, 'Clear selected'),
-					!hideActions && React.createElement('button', { type: 'button', onClick: onClose }, 'Cancel date range'),
-					!hideActions && React.createElement('button', { type: 'button', onClick: applyDateRange }, 'Apply date range'),
+					!hideActions &&
+						React.createElement('button', { type: 'button', onClick: onClose }, 'Cancel date range'),
+					!hideActions &&
+						React.createElement('button', { type: 'button', onClick: applyDateRange }, 'Apply date range'),
 					renderActions?.({
 						draftRange,
 						updateDraftRange,
@@ -74,11 +83,11 @@ vi.mock('./inputs/DateRangeCalendarInput', async () => {
 				React.createElement(
 					'button',
 					{
-						type: 'button',
+						'type': 'button',
 						'aria-label': ariaLabel,
 						'data-start-date': startDate,
 						'data-end-date': endDate,
-						onClick: () => setIsOpen(true),
+						'onClick': () => setIsOpen(true),
 					},
 					'Choose date range'
 				),
@@ -87,7 +96,7 @@ vi.mock('./inputs/DateRangeCalendarInput', async () => {
 						'button',
 						{
 							type: 'button',
-							'onClick': () => {
+							onClick: () => {
 								applyDateRange();
 								setIsOpen(false);
 							},
@@ -125,7 +134,10 @@ const filters = [
 		label: 'Team',
 		multiple: true,
 		defaultValue: [],
-		options: [{ id: 'choir', name: 'Choir' }, { id: 'youth', name: 'Youth' }],
+		options: [
+			{ id: 'choir', name: 'Choir' },
+			{ id: 'youth', name: 'Youth' },
+		],
 		renderOption: (option, compact) => (
 			<span data-testid={`team-${option.id}`} data-compact={compact}>
 				{option.name}
@@ -137,7 +149,10 @@ const filters = [
 		label: 'Role',
 		multiple: true,
 		defaultValue: ['admin'],
-		options: [{ id: 'admin', name: 'Admin' }, { id: 'member', name: 'Member' }],
+		options: [
+			{ id: 'admin', name: 'Admin' },
+			{ id: 'member', name: 'Member' },
+		],
 	},
 ];
 
@@ -165,6 +180,7 @@ const renderControls = ({
 	bulkEdit,
 	onToggleFilters = vi.fn(),
 	filterLabel = 'members',
+	showMobileDateRangeFilter = false,
 } = {}) => {
 	const setData = vi.fn();
 	const submit = vi.fn();
@@ -186,6 +202,7 @@ const renderControls = ({
 				bulkEdit={bulkEdit}
 				onToggleFilters={onToggleFilters}
 				filterLabel={filterLabel}
+				showMobileDateRangeFilter={showMobileDateRangeFilter}
 			/>
 		);
 	};
@@ -209,7 +226,11 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	});
 	expect(statusPill).toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(within(statusPill).getByTestId('status-inactive')).toHaveAttribute('data-compact', 'true');
-	expect(within(desktop).getByRole('button', { name: 'Role: Admin; open filter values' }).querySelector('.bg-gray-100')).toHaveTextContent('Admin');
+	expect(
+		within(desktop)
+			.getByRole('button', { name: 'Role: Admin; open filter values' })
+			.querySelector('.bg-gray-100')
+	).toHaveTextContent('Admin');
 
 	await user.click(within(desktop).getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Team' }));
@@ -376,7 +397,9 @@ it('renders date filters as compact date inputs and clears their values', () => 
 	const dateInput = within(desktop).getByRole('textbox', { name: 'Events After for members' });
 
 	expect(dateInput).toHaveValue('2026-06-07');
-	within(desktop).getByRole('button', { name: 'Clear Events After for members' }).click();
+	within(desktop)
+		.getByRole('button', { name: 'Clear Events After for members' })
+		.click();
 	expect(setData).toHaveBeenLastCalledWith('starts_after', '');
 });
 
@@ -449,6 +472,29 @@ it('adds a date-range filter and updates both configured date bounds', async () 
 	expect(setData).toHaveBeenCalledTimes(4);
 	expect(setData).toHaveBeenNthCalledWith(3, 'starts_after', '2026-03-01');
 	expect(setData).toHaveBeenNthCalledWith(4, 'starts_before', '2026-03-31');
+});
+
+it('serializes singer attendance date selections from the mobile toolbar', async () => {
+	useMediaQuery.mockReturnValue(false);
+	const user = userEvent.setup();
+	const attendanceFilters = createSingerAttendanceFilterDescriptors([]);
+	const { setData } = renderControls({
+		controlFilters: attendanceFilters,
+		data: {
+			'type.id': [],
+			'starts_after': '2026-03-01',
+			'starts_before': '2026-03-31',
+			'sort': 'start-time',
+			'sortDir': 'asc',
+		},
+		showMobileDateRangeFilter: true,
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Attendance date range' }));
+	await user.click(screen.getByRole('button', { name: 'Apply date range' }));
+
+	expect(setData).toHaveBeenNthCalledWith(1, 'starts_after', '2026-03-01');
+	expect(setData).toHaveBeenNthCalledWith(2, 'starts_before', '2026-03-31');
 });
 
 it('shows date-range pills before other filters and does not highlight the default range', () => {
@@ -568,7 +614,7 @@ it('stages all configured values from Add Filter before applying them', async ()
 	expect(setData).toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
 });
 
-it('closes the Add Filter popover without applying staged values', async () => {
+it('keeps the Add Filter menu open when closing staged values without applying them', async () => {
 	const user = userEvent.setup();
 	const feeFilter = {
 		name: 'fee_status',
@@ -593,10 +639,39 @@ it('closes the Add Filter popover without applying staged values', async () => {
 
 	expect(setData).not.toHaveBeenCalledWith('fee_status', ['paid']);
 	expect(screen.queryByRole('group', { name: 'Fee Status values' })).not.toBeInTheDocument();
+	expect(screen.getByRole('menuitem', { name: 'Fee Status' })).toBeInTheDocument();
 
-	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
 	expect(within(screen.getByRole('group', { name: 'Fee Status values' })).getByLabelText('Paid')).not.toBeChecked();
+});
+
+it('omits the Any choice from Add Filter values while still selecting a single value', async () => {
+	const user = userEvent.setup();
+	const visibilityFilter = {
+		name: 'visibility',
+		label: 'Visibility',
+		defaultValue: '',
+		options: [
+			{ id: 'public', name: 'Public' },
+			{ id: 'private', name: 'Private' },
+		],
+	};
+	const { setData } = renderControls({
+		controlFilters: [...filters, visibilityFilter],
+		data: { ...initialData, visibility: '' },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Visibility' }));
+	const valuePanel = screen.getByRole('group', { name: 'Visibility values' });
+
+	expect(within(valuePanel).queryByLabelText('Any')).not.toBeInTheDocument();
+	expect(within(valuePanel).queryByText('Any')).not.toBeInTheDocument();
+
+	await user.click(within(valuePanel).getByLabelText('Private'));
+	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
+
+	expect(setData).toHaveBeenCalledWith('visibility', 'private');
 });
 
 it('keeps sort controls open and marks the selected direction with selected intent', async () => {
@@ -662,4 +737,47 @@ it('uses a filter change handler to update related form state', async () => {
 		['sort', 'date'],
 		['sortDir', 'asc'],
 	]);
+});
+
+it('renders Riser Stacks ensemble choices with shared option styling and reset behavior', async () => {
+	const user = userEvent.setup();
+	const riserStackFilters = createRiserStackFilterDescriptors(
+		[
+			{ id: 1, name: 'Choir' },
+			{ id: 2, name: 'Youth' },
+		],
+		2
+	);
+	const { setData } = renderControls({
+		controlFilters: riserStackFilters,
+		data: { 'search': '', 'ensembles.id': [], 'sort': 'full-name', 'sortDir': 'asc' },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Ensemble' }));
+	const valuesPanel = screen.getByRole('group', { name: 'Ensemble values' });
+	expect(
+		within(valuesPanel)
+			.getByText('Choir')
+			.closest('span')
+	).toHaveClass('bg-gray-100');
+	await user.click(within(valuesPanel).getByLabelText('Choir'));
+	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
+
+	expect(setData).toHaveBeenCalledWith('ensembles.id', [1]);
+	const ensemblePill = screen.getByRole('button', { name: 'Ensemble: Choir; open filter values' });
+	expect(
+		within(ensemblePill)
+			.getByText('Choir')
+			.closest('span')
+	).toHaveClass('px-1');
+
+	await user.click(ensemblePill);
+	await user.click(
+		within(screen.getByRole('heading', { name: 'Ensemble' }).closest('.fixed')).getByRole('button', {
+			name: 'Default',
+		})
+	);
+
+	expect(setData).toHaveBeenLastCalledWith('ensembles.id', []);
 });

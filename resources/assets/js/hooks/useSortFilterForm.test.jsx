@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import useSortFilterForm from './useSortFilterForm';
 
@@ -39,9 +40,11 @@ const SubmitControl = () => {
 };
 
 const FilterControl = () => {
-	useSortFilterForm('singers.index', [{ name: 'fee_status', multiple: true, defaultValue: [] }], [
-		{ id: 'full-name', default: true },
-	]);
+	useSortFilterForm(
+		'singers.index',
+		[{ name: 'fee_status', multiple: true, defaultValue: [] }],
+		[{ id: 'full-name', default: true }]
+	);
 
 	return null;
 };
@@ -68,6 +71,7 @@ const FilterDefaults = () => {
 		'singers.index',
 		[
 			{ name: 'status', multiple: true, defaultValue: ['members'] },
+			{ name: 'tags', type: 'multiple', defaultValue: ['active'] },
 			{
 				name: 'date_range',
 				start_name: 'starts_after',
@@ -103,11 +107,7 @@ it('normalizes a legacy scalar value for a multi-value filter', () => {
 });
 
 it('hydrates both fields from a date-range filter in the query string', () => {
-	window.history.replaceState(
-		{},
-		'',
-		'/?filter%5Bstarts_after%5D=2026-04-10&filter%5Bstarts_before%5D=2026-04-12'
-	);
+	window.history.replaceState({}, '', '/?filter%5Bstarts_after%5D=2026-04-10&filter%5Bstarts_before%5D=2026-04-12');
 	const expectedData = {
 		sort: 'start-date',
 		sortDir: 'asc',
@@ -125,6 +125,11 @@ it('returns default values for standard and date-range filters', () => {
 	render(<FilterDefaults />);
 
 	expect(screen.getByTestId('filter-defaults')).toHaveTextContent(
-		JSON.stringify({ status: ['members'], starts_after: '2026-04-10', starts_before: '2026-04-12' })
+		JSON.stringify({
+			status: ['members'],
+			tags: ['active'],
+			starts_after: '2026-04-10',
+			starts_before: '2026-04-12',
+		})
 	);
 });

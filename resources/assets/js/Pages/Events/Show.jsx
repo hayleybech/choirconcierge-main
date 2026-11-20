@@ -16,7 +16,7 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
-import Badge from '../../components/Badge';
+import EventTypeBadge from '../../components/EventTypeBadge';
 import GoogleMap from '../../components/GoogleMap';
 import MyAttendance from '../../components/Event/MyAttendance';
 import RsvpSummary from '../../components/Event/RsvpSummary';
@@ -28,7 +28,6 @@ import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
-import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
 import useRoute from '../../hooks/useRoute';
 import { DateTime } from 'luxon';
@@ -165,7 +164,7 @@ const Show = ({
 						)}
 						<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
 						<div>
-							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+							<EventTypeBadge eventTypeName={event.type.title} />
 						</div>
 						{event.ensembles.length > 0 && (
 							<div className="space-x-1.5 flex items-center">

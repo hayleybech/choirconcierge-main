@@ -30,7 +30,6 @@ import TableMobile, {
 	TableMobileSelectableLink,
 	TableMobileListItem,
 } from '../../components/TableMobile';
-import Badge from '../../components/Badge';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
@@ -42,6 +41,7 @@ import BulkEditBar from '../../components/BulkEditBar';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
 import Button from '../../components/inputs/ButtonV2';
+import { createPollFilterDescriptors } from '../../components/PollFilterDescriptors';
 
 const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -56,42 +56,10 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 		{ id: 'close_at', name: 'Deadline' },
 	];
 
-	const filters = [
-		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
-		{
-			name: 'status',
-			label: 'Status',
-			defaultValue: '',
-			options: [
-				{ id: 'open', name: 'Open', icon: 'lock-open', textColour: 'text-emerald-700' },
-				{ id: 'closed', name: 'Closed', icon: 'lock', textColour: 'text-gray-600' },
-			],
-			renderOption: option => (
-				<span className={`inline-flex items-center gap-1.5 ${option.textColour}`}>
-					<Icon icon={option.icon} />
-					{option.name}
-				</span>
-			),
-		},
-		...(showEnsembleColumn
-			? [
-					{
-						name: 'ensembles.id',
-						label: 'Ensemble',
-						multiple: true,
-						options: (ensembles ?? tenant.ensembles).map(ensemble => ({
-							id: ensemble.id,
-							name: ensemble.name,
-						})),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-	];
+	const filters = createPollFilterDescriptors({
+		ensembles: ensembles ?? tenant.ensembles,
+		showEnsembleColumn,
+	});
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
@@ -174,7 +142,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<PollFilters form={sortFilterForm} ensembles={ensembles} />
+						<PollFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={

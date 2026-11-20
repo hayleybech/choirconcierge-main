@@ -1,7 +1,6 @@
 import React from 'react';
 import Table, { TableCell, THead, TBody, TableHeading, TItemRow } from '../../../components/Table';
-import Badge from "../../../components/Badge";
-import EventType from "../../../EventType";
+import EventTypeBadge from '../../../components/EventTypeBadge';
 import AttendanceTag from "../../../components/Event/AttendanceTag";
 import Pagination from "../../../components/Pagination";
 import useRoute from "../../../hooks/useRoute";
@@ -33,9 +32,7 @@ const AttendanceTableDesktop = ({ attendances, pagination }) => {
 							</Link>
 						</TableCell>
 						<TableCell>
-							<Badge colour={new EventType(attendance.event.type.title).badgeColour}>
-								{attendance.event.type.title}
-							</Badge>
+							<EventTypeBadge eventTypeName={attendance.event.type.title} />
 						</TableCell>
 						<TableCell>
 							<DateTag date={attendance.event.start_date} />

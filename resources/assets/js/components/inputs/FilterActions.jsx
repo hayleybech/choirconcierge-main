@@ -1,6 +1,14 @@
 import React from 'react';
  
-const FilterActions = ({ onSelectAll, onClear, onReset, clearLabel = 'Clear', resetDisabled = false, resetAriaLabel = 'Reset' }) => {
+const FilterActions = ({
+	onSelectAll,
+	onClear,
+	onReset,
+	selectAllLabel = 'All',
+	clearLabel = 'Clear',
+	resetDisabled = false,
+	resetAriaLabel = 'Reset',
+}) => {
 	return (
 		<div className="flex items-center space-x-2">
 			{onSelectAll && (
@@ -10,7 +18,7 @@ const FilterActions = ({ onSelectAll, onClear, onReset, clearLabel = 'Clear', re
 						onClick={onSelectAll}
 						className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
 					>
-						All
+						{selectAllLabel}
 					</button>
 					<span className="text-gray-300 text-xs">|</span>
 				</>

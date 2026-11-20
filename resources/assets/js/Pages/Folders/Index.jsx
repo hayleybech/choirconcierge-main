@@ -22,6 +22,7 @@ import DocumentFilters from './DocumentFilters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
+import { createDocumentFilterDescriptors } from './DocumentFilterDescriptors';
 
 const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -36,7 +37,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [{ name: 'title', label: 'Title', type: 'text', defaultValue: '' }];
+	const filters = createDocumentFilterDescriptors();
 
 	const sortFilterForm = useSortFilterForm('folders.index', filters, sorts);
 	const actions = [
@@ -94,7 +95,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<DocumentFilters form={sortFilterForm} />
+						<DocumentFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableDesktop={

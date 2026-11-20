@@ -29,8 +29,7 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import CalendarSyncDialog from '../../components/Event/CalendarSyncDialog';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
-import Badge from '../../components/Badge';
-import EventType from '../../EventType';
+import { createEventFilterDescriptors } from '../../components/Event/EventFilterDescriptors';
 
 const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSyncUrl, can, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -46,56 +45,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [
-		{ name: 'title', label: 'Title', type: 'text', defaultValue: '' },
-		{
-			name: 'type.id',
-			label: 'Type',
-			multiple: true,
-			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
-			renderOption: option => (
-				<Badge colour={new EventType(option.name).badgeColour}>{option.name}</Badge>
-			),
-		},
-		{
-			name: 'date',
-			label: 'Date',
-			defaultValue: 'upcoming',
-			options: [
-				{ id: 'all', name: 'All' },
-				{ id: 'upcoming', name: 'Upcoming' },
-				{ id: 'past', name: 'Past' },
-			],
-			onChange: (value, form) => {
-				form.setData('date', value);
-
-				if (value === 'upcoming') {
-					form.setData('sort', 'start_date');
-					form.setData('sortDir', 'asc');
-				}
-
-				if (value === 'past') {
-					form.setData('sort', 'start_date');
-					form.setData('sortDir', 'desc');
-				}
-			},
-		},
-		...(userEnsemblesCount > 1
-			? [
-					{
-						name: 'ensembles.id',
-						label: 'Ensemble',
-						multiple: true,
-						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-	];
+	const filters = createEventFilterDescriptors({ eventTypes, ensembles, userEnsemblesCount });
 
 	const transforms = data => ({
 		date: data.date === 'all' ? null : data.date,
@@ -221,12 +171,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<EventFilters
-							eventTypes={eventTypes}
-							ensembles={ensembles}
-							userEnsemblesCount={userEnsemblesCount}
-							form={sortFilterForm}
-						/>
+						<EventFilters filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={

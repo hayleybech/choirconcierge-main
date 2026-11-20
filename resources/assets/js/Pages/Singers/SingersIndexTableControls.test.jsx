@@ -3,11 +3,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import IndexTableControls from '../../components/IndexTableControls';
-import Badge from '../../components/Badge';
-import FeeStatus from '../../components/FeeStatus';
-import SingerStatus from '../../SingerStatus';
-import SingerStatusTag from '../../components/SingerStatusTag';
-import VoicePartTag from '../../components/VoicePartTag';
+import { createSingerIndexFilterDescriptors } from '../../components/SingerFilterDescriptors';
 
 const { popperCalls, mockUseMediaQuery } = vi.hoisted(() => ({ popperCalls: [], mockUseMediaQuery: vi.fn() }));
 
@@ -51,69 +47,22 @@ beforeEach(() => {
 	useMediaQuery.mockReturnValue(true);
 });
 
-const filters = [
-	{
-		name: 'user.name',
-		label: 'Name',
-		type: 'text',
-		defaultValue: '',
-	},
-	{
-		name: 'status',
-		label: 'Status',
-		multiple: true,
-		defaultValue: ['members'],
-		options: [
-			{ id: 'members', name: 'Members' },
-			{ id: 'prospects', name: 'Prospects' },
-		],
-		renderOption: (option, compact) => (
-			<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
-		),
-	},
-	{
-		name: 'enrolments.voice_part_id',
-		label: 'Voice Part',
-		multiple: true,
-		defaultValue: [],
-		options: [
-			{ id: 'soprano', name: 'Soprano', colour: 'rose' },
-			{ id: 'alto', name: 'Alto', colour: 'blue' },
-		],
-		renderOption: (option, compact) => (
-			<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
-		),
-	},
-	{
-		name: 'fee_status',
-		label: 'Fee Status',
-		multiple: true,
-		defaultValue: [],
-		allValuesLabel: 'All',
-		options: [
-			{ id: 'paid', name: 'Paid' },
-			{ id: 'expires-soon', name: 'Expires Soon' },
-			{ id: 'expired', name: 'Expired' },
-			{ id: 'unknown', name: 'Unknown' },
-		],
-		renderOption: (option, compact) => <FeeStatus status={option.id} compact={compact} />,
-	},
-	{
-		name: 'enrolments.ensemble_id',
-		label: 'Ensemble',
-		multiple: true,
-		defaultValue: [],
-		options: [
-			{ id: 'adult', name: 'Adult' },
-			{ id: 'youth', name: 'Youth' },
-		],
-		renderOption: (option, compact) => (
-			<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-				{option.name}
-			</Badge>
-		),
-	},
-];
+const filters = createSingerIndexFilterDescriptors({
+	statuses: [
+		{ id: 'members', name: 'Members' },
+		{ id: 'prospects', name: 'Prospects' },
+	],
+	defaultStatus: 'members',
+	voiceParts: [
+		{ id: 'soprano', title: 'Soprano', colour: 'rose' },
+		{ id: 'alto', title: 'Alto', colour: 'blue' },
+	],
+	roles: [{ id: 'admin', name: 'Admin' }],
+	ensembles: [
+		{ id: 'adult', name: 'Adult' },
+		{ id: 'youth', name: 'Youth' },
+	],
+});
 
 const renderControls = (initialData, sorts = [], tableActions = []) => {
 	const submit = vi.fn();
@@ -170,7 +119,7 @@ it('keeps a cleared status filter at Any after the delayed submit', async () => 
 	render(<Controls />);
 
 	fireEvent.click(screen.getByRole('button', { name: 'Status: Members; open filter values' }));
-	fireEvent.click(screen.getByRole('button', { name: 'Clear selected' }));
+	fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
 
 	expect(screen.getByRole('button', { name: 'Status: Any; open filter values' })).toBeTruthy();
 	expect(screen.getByText('Status:')).toBeTruthy();
@@ -199,7 +148,7 @@ it('keeps Add Filter open while staging a value, then applies it from the second
 		screen.getByRole('group', { name: 'Fee Status values' }).classList.contains('fixed')
 	).toBe(true);
 	expect(screen.getByRole('menuitem', { name: 'Fee Status' })).toBeTruthy();
-	expect(screen.getByRole('menuitem', { name: 'Apply' }).getAttribute('data-intent')).toBe('secondary');
+	expect(screen.getByRole('menuitem', { name: 'Apply' }).getAttribute('data-intent')).toBe('primary');
 	expect(screen.getByRole('menuitem', { name: 'Apply' }).querySelector('[data-icon="fa-check"]')).toBeTruthy();
 
 	const paidCheckbox = screen.getByLabelText('Paid');
@@ -213,7 +162,8 @@ it('keeps Add Filter open while staging a value, then applies it from the second
 
 	expect(setData).toHaveBeenCalledWith('fee_status', ['paid']);
 	expect(screen.getByRole('button', { name: 'Fee Status: Paid; open filter values' })).toBeTruthy();
-	expect(screen.queryByRole('menu')).toBeNull();
+	expect(screen.getByRole('menu')).toBeTruthy();
+	expect(screen.queryByRole('group', { name: 'Fee Status values' })).toBeNull();
 });
 
 it('applies multiple checkbox selections together from Add Filter', async () => {
@@ -298,7 +248,7 @@ it('keeps the sort popover open while changing sort and direction', async () => 
 	const sortPanel = screen.getByText('Sort by').parentElement;
 	const sortPosition = popperCalls.find(call => call.reference === sortButton);
 	expect(document.body.contains(sortPanel)).toBe(true);
-	expect(sortPanel.classList.contains('z-50')).toBe(true);
+	expect(sortPanel.classList.contains('z-[60]')).toBe(true);
 	expect(sortPosition.options).toMatchObject({ placement: 'bottom-end', positionFixed: true });
 	await user.click(screen.getByRole('radio', { name: 'Status' }));
 	expect(screen.getByText('Sort by')).toBeTruthy();
@@ -314,10 +264,10 @@ it('shows name search before filter pills and excludes it from Add Filter', () =
 	const { Controls, setData } = renderControls({ 'user.name': 'Ada', status: ['members'], fee_status: '' });
 	const { container } = render(<Controls />);
 
-	const nameSearch = screen.getByRole('searchbox', { name: 'Search singers by name' });
+	const nameSearch = screen.getAllByRole('searchbox', { name: 'Search singers by name' })[0];
 	const statusPill = screen.getByRole('button', { name: 'Status: Members; open filter values' });
 
-	expect(screen.getByDisplayValue('Ada')).toBe(nameSearch);
+	expect(screen.getAllByDisplayValue('Ada')[0]).toBe(nameSearch);
 	expect(nameSearch.compareDocumentPosition(statusPill) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 	expect(nameSearch.classList.contains('h-[26px]')).toBe(true);
 	expect(nameSearch.closest('label').classList.contains('w-40')).toBe(true);
@@ -329,7 +279,7 @@ it('shows name search before filter pills and excludes it from Add Filter', () =
 
 	fireEvent.change(nameSearch, { target: { value: 'Alex' } });
 	expect(setData).toHaveBeenCalledWith('user.name', 'Alex');
-	fireEvent.click(screen.getByRole('button', { name: 'Clear singers search' }));
+	fireEvent.click(screen.getAllByRole('button', { name: 'Clear singers search' })[0]);
 	expect(setData).toHaveBeenCalledWith('user.name', '');
 });
 
@@ -386,7 +336,7 @@ it('places search before active pills and Add Filter after them on desktop', () 
 	const { Controls } = renderControls({ 'user.name': '', status: ['members'], fee_status: '' });
 	render(<Controls />);
 
-	const searchInput = screen.getByRole('searchbox', { name: 'Search singers by name' });
+	const searchInput = screen.getAllByRole('searchbox', { name: 'Search singers by name' })[0];
 	const statusPill = screen.getByRole('button', { name: 'Status: Members; open filter values' });
 	const addFilterButton = screen.getByRole('button', { name: 'Add filter' });
 

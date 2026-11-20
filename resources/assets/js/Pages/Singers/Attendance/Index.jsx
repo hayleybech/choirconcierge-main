@@ -19,29 +19,14 @@ import IndexContainer from '../../../components/IndexContainer';
 import IndexTableControls from '../../../components/IndexTableControls';
 import AttendanceTableDesktop from './AttendanceTableDesktop';
 import AttendanceTableMobile from './AttendanceTableMobile';
+import { createSingerAttendanceFilterDescriptors } from './SingerAttendanceFilterDescriptors';
 
 const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [];
-	const filters = [
-		{
-			name: 'type.id',
-			label: 'Event Type',
-			multiple: true,
-			defaultValue: [],
-			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
-		},
-		{
-			name: 'date_range',
-			start_name: 'starts_after',
-			end_name: 'starts_before',
-			label: 'Date Range',
-			type: 'daterange',
-			defaultValue: '',
-		},
-	];
+	const filters = createSingerAttendanceFilterDescriptors(eventTypes);
 
 	const sortFilterForm = useSortFilterForm(['singers.attendance', { singer }], filters, sorts);
 
@@ -81,7 +66,7 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<SingerAttendanceFilters eventTypes={eventTypes} form={sortFilterForm} singer={singer} />
+						<SingerAttendanceFilters filters={filters} form={sortFilterForm} singer={singer} />
 					</FilterDrawer>
 				}
 				tableMobile={<AttendanceTableMobile attendances={attendances} pagination={pagination} />}

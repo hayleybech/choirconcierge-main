@@ -13,6 +13,7 @@ import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
 import MailLogFilters from './MailLogFilters';
+import { createCentralMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 
 const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -25,24 +26,7 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 		{ id: 'opens', name: 'Opens' },
 		{ id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
 	];
-	const filters = [
-		{ name: 'subject', label: 'Subject', type: 'text', defaultValue: '' },
-		{ name: 'to', label: 'To', type: 'text', defaultValue: '' },
-		{ name: 'from', label: 'From', type: 'text', defaultValue: '' },
-		{
-			name: 'tenant',
-			label: 'Tenant',
-			defaultValue: '',
-			options: tenants.map(({ id, name }) => ({ id, name })),
-			renderOption: option => (
-				<span className="inline-flex items-center gap-1.5">
-					<Icon icon="building" />
-					{option.name}
-				</span>
-			),
-		},
-		{ name: 'type', label: 'Mail Type', multiple: true, defaultValue: defaultMailTypes, options: mailTypes },
-	];
+	const filters = createCentralMailLogFilterDescriptors({ tenants, mailTypes, defaultMailTypes });
 	const sortFilterForm = useSortFilterForm('central.mail-logs.index', filters, sorts);
 
 	return (
@@ -72,7 +56,7 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailLogFilters form={sortFilterForm} tenants={tenants} mailTypes={mailTypes} />
+						<MailLogFilters filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={<MailLogTableMobile logs={logs} />}

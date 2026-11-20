@@ -14,6 +14,7 @@ import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
 import TenantFilters from './TenantFilters';
 import TenantStatsWidget from '../Dash/TenantStatsWidget';
+import { createTenantFilterDescriptors } from './TenantFilterDescriptors';
 
 const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -23,27 +24,7 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [
-		{ name: 'id', label: 'Tenant ID', type: 'text', defaultValue: '' },
-		{
-			name: 'billing_status',
-			label: 'Billing Status',
-			defaultValue: '',
-			options: [
-				{ id: 'active', name: 'Active', icon: 'check-circle', textColour: 'text-green-500' },
-				{ id: 'subscribed', name: 'Subscribed', icon: 'usd-circle', textColour: 'text-green-500' },
-				{ id: 'gratis', name: 'Gratis', icon: 'heart-circle', textColour: 'text-green-500' },
-				{ id: 'trial', name: 'Trial', icon: 'dot-circle', textColour: 'text-blue-500' },
-				{ id: 'inactive', name: 'Inactive', icon: 'times-circle', textColour: 'text-red-500' },
-			],
-			renderOption: (option, compact) => (
-				<span className="inline-flex items-center gap-1.5">
-					<Icon icon={option.icon} className={compact ? `text-xs ${option.textColour}` : option.textColour} />
-					{option.name}
-				</span>
-			),
-		},
-	];
+	const filters = createTenantFilterDescriptors();
 
 	const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
 
@@ -80,7 +61,7 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<TenantFilters form={sortFilterForm} />
+						<TenantFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}

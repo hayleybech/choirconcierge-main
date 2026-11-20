@@ -13,6 +13,7 @@ import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
 import UserFilters from './UserFilters';
+import { createUserFilterDescriptors } from './UserFilterDescriptors';
 
 const Index = ({ users, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -23,7 +24,7 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 		//     { id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [{ name: 'search', label: 'Search', type: 'text', defaultValue: '' }];
+	const filters = createUserFilterDescriptors();
 
 	const sortFilterForm = useSortFilterForm('central.users.index', filters, sorts);
 
@@ -54,7 +55,7 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<UserFilters form={sortFilterForm} />
+						<UserFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={<UserTableMobile users={users} pagination={pagination} />}

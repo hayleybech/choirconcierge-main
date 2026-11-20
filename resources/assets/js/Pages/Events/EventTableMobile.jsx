@@ -5,12 +5,11 @@ import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
 } from '../../components/TableMobile';
-import Badge from '../../components/Badge';
 import EnsembleBadges from '../../components/EnsembleBadges';
+import EventTypeBadge from '../../components/EventTypeBadge';
 import { DateTime } from 'luxon';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';
-import EventType from '../../EventType';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 
@@ -57,9 +56,7 @@ const EventTableMobile = ({ events, userEnsemblesCount, bulkEdit }) => {
 											</p>
 
 											<p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
-												<Badge colour={new EventType(event.type.title).badgeColour}>
-													{event.type.title}
-												</Badge>
+												<EventTypeBadge eventTypeName={event.type.title} />
 											</p>
 										</div>
 									</div>

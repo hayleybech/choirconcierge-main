@@ -337,3 +337,4 @@ Choir Concierge is a multi-tenant SaaS platform for choir management, including 
 - Strong preference for fluent method chaining rather than individual statements.
 - Treat every loop as an opportunity to refactor to collections.
 - Look for opportunities to refactor existing collection code to a collection pipeline. e.g. Try replacing an early return inside an `each` callback with a prior `reject` call.
+- Limit of one react component per file. Exception granted for components 10 lines or less. 

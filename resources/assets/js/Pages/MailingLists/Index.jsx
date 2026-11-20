@@ -26,6 +26,7 @@ import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterDrawer from '../../components/FilterDrawer';
 import MailingListFilters from './MailingListFilters';
+import { createMailingListFilterDescriptors } from './MailingListFilterDescriptors';
 
 const Index = ({ lists, can, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -37,19 +38,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{ id: 'address', name: 'Address' },
 		{ id: 'created_at', name: 'Created' },
 	];
-	const filters = [
-		{ name: 'search', label: 'Search', type: 'text', defaultValue: '' },
-		{
-			name: 'list_type',
-			label: 'Type',
-			multiple: true,
-			options: [
-				{ id: 'chat', name: 'Chat' },
-				{ id: 'public', name: 'Public' },
-				{ id: 'distribution', name: 'Mailout' },
-			],
-		},
-	];
+	const filters = createMailingListFilterDescriptors();
 	const sortFilterForm = useSortFilterForm('groups.index', filters, sorts);
 
 	const bulkEdit = useBulkEdit(lists.data, false, can.delete_group, 'List');
@@ -155,7 +144,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailingListFilters form={sortFilterForm} />
+						<MailingListFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableDesktop={

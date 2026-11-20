@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import SingerFilters from './SingerFilters';
+import { createSingerIndexFilterDescriptors } from './SingerFilterDescriptors';
 
 vi.mock('../hooks/useRoute', () => ({
 	default: () => ({ route: () => '/singers' }),
@@ -19,6 +20,13 @@ const ensembles = [
 	{ id: 'adult', name: 'Adult' },
 	{ id: 'youth', name: 'Youth' },
 ];
+const filters = createSingerIndexFilterDescriptors({
+	statuses,
+	defaultStatus: 'members',
+	voiceParts,
+	roles,
+	ensembles,
+});
 
 const renderSingerFilters = () => {
 	const submit = vi.fn();
@@ -27,20 +35,16 @@ const renderSingerFilters = () => {
 	const FilterForm = () => {
 		const [data, updateData] = useState({
 			'user.name': '',
-			status: ['members'],
+			'status': ['members'],
 			'enrolments.voice_part_id': [],
 			'roles.id': [],
-			fee_status: [],
+			'fee_status': [],
 			'enrolments.ensemble_id': [],
 		});
 
 		return (
 			<SingerFilters
-				statuses={statuses}
-				defaultStatus="members"
-			voiceParts={voiceParts}
-			roles={roles}
-			ensembles={ensembles}
+				filters={filters}
 				form={{
 					data,
 					setData: (name, value) => {
@@ -66,7 +70,8 @@ it('stages filter edits until Apply and marks changed fields and values', async 
 
 	expect(submit).not.toHaveBeenCalled();
 	expect(statusField.querySelector('legend')).toHaveClass('text-purple-700');
-	expect(statusField.querySelector('legend')).toHaveTextContent('*');
+	expect(statusField.querySelector('legend')).toHaveTextContent('Status');
+	expect(within(statusField).getByText('Modified')).toBeInTheDocument();
 	expect(screen.getByLabelText(/Prospects/).labels[0]).not.toHaveClass('text-purple-700');
 	expect(screen.getByLabelText(/Prospects/).labels[0]).toHaveTextContent('*');
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toBeEnabled();
@@ -85,12 +90,20 @@ it('does not mark default filter names with an asterisk', () => {
 	expect(screen.queryByText('*')).not.toBeInTheDocument();
 });
 
+it('keeps the Singer drawer ensemble field directly after voice part', () => {
+	const { container } = renderSingerFilters();
+	const filterLabels = [...container.querySelectorAll('fieldset legend')].map(legend => legend.textContent);
+
+	expect(filterLabels).toEqual(['Status', 'Voice Part', 'Ensemble', 'Role', 'Fee Status']);
+});
+
 it('uses the site styles for filter values and marks non-default values with an asterisk', async () => {
 	renderSingerFilters();
 	const user = userEvent.setup();
 
 	const memberLabel = screen.getByLabelText('Members').labels[0];
 	expect(memberLabel.querySelector('.fa-circle')).toHaveClass('text-emerald-500');
+	expect([...memberLabel.querySelectorAll('span')].find(span => span.classList.contains('space-x-0.5'))).toBeTruthy();
 
 	const voicePartLabel = screen.getByLabelText('Soprano').labels[0];
 	const voicePartTag = Array.from(voicePartLabel.querySelectorAll('span')).find(span =>
@@ -151,7 +164,7 @@ it('shows the fee status selection count next to its filter name', async () => {
 	renderSingerFilters();
 	const user = userEvent.setup();
 	const feeStatusField = screen.getByText('Fee Status').closest('fieldset');
-	const selectedCount = feeStatusField.querySelector('legend .text-xs');
+	const selectedCount = feeStatusField.querySelector('.text-xs');
 
 	expect(selectedCount).toHaveTextContent('0 selected');
 	await user.click(within(feeStatusField).getByRole('checkbox', { name: /Paid/ }));

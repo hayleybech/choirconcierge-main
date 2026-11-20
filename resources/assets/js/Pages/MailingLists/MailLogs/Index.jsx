@@ -25,6 +25,7 @@ import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
 import MailLogFilters from './MailLogFilters';
+import { createMailingListMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 
 const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
 	const { route } = useRoute();
@@ -38,55 +39,12 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 		...(showAdminDetails ? [{ id: 'opens', name: 'Opens' }] : []),
 		{ id: 'created_at', name: 'Date Created', default: true, defaultDirection: 'desc' },
 	];
-	const filters = [
-		{ name: 'subject', label: 'Subject', type: 'text', defaultValue: '' },
-		{
-			name: 'to',
-			label: 'To',
-			multiple: true,
-			defaultValue: '',
-			options: mailingLists.map(({ title, email, type_icon }) => ({
-				id: email,
-				name: title,
-				email,
-				type_icon,
-			})),
-			renderOption: (option, compact) => (
-				<span className="inline-flex min-w-0 items-center gap-1.5">
-					<Icon icon={option.type_icon} size={compact ? 'text-xs' : 'text-sm'} />
-					<span className="truncate">{option.name}</span>
-					{!compact && <span className="text-xs text-gray-500">{option.email}</span>}
-				</span>
-			),
-		},
-		{ name: 'from', label: 'From', type: 'text', defaultValue: '' },
-		{
-			name: 'type',
-			label: 'Mail Type',
-			multiple: true,
-			defaultValue: defaultMailTypes,
-			options: mailTypes,
-		},
-		...(inboxEnabled
-			? [
-					{
-						name: 'read',
-						label: 'Read Status',
-						defaultValue: '',
-						options: [
-							{ id: 'read', name: 'Read', icon: 'envelope-open-text' },
-							{ id: 'unread', name: 'Unread', icon: 'envelope' },
-						],
-						renderOption: option => (
-							<span className="inline-flex items-center gap-1.5">
-								<Icon icon={option.icon} />
-								{option.name}
-							</span>
-						),
-					},
-			  ]
-			: []),
-	];
+	const filters = createMailingListMailLogFilterDescriptors({
+		mailingLists,
+		mailTypes,
+		defaultMailTypes,
+		inboxEnabled,
+	});
 	const sortFilterForm = useSortFilterForm('communications.index', filters, sorts);
 
 	const actions = [
@@ -175,12 +133,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailLogFilters
-							form={sortFilterForm}
-							mailingLists={mailingLists}
-							mailTypes={mailTypes}
-							inboxEnabled={inboxEnabled}
-						/>
+						<MailLogFilters form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={

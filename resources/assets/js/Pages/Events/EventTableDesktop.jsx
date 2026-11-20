@@ -10,10 +10,9 @@ import Table, {
 	TableCellSelect,
 	TItemRow,
 } from '../../components/Table';
-import Badge from '../../components/Badge';
 import EnsembleBadges from '../../components/EnsembleBadges';
+import EventTypeBadge from '../../components/EventTypeBadge';
 import DateTag from '../../components/DateTag';
-import EventType from '../../EventType';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import Icon from '../../components/Icon';
 import useRoute from '../../hooks/useRoute';
@@ -71,7 +70,7 @@ const EventTableDesktop = ({ events, sortFilterForm, userEnsemblesCount, bulkEdi
 							</Link>
 						</TableCell>
 						<TableCell>
-							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+							<EventTypeBadge eventTypeName={event.type.title} />
 						</TableCell>
 						{showEnsemblesColumn && (
 							<TableCell>

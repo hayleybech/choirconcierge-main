@@ -28,6 +28,7 @@ import IndexTableControls from '../../components/IndexTableControls';
 import VoicePartTag from '../../components/VoicePartTag';
 import FilterDialog from '../../components/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
+import { createAttendanceReportFilterDescriptors } from './AttendanceReportFilterDescriptors';
 
 const AttendanceReport = ({
 	events,
@@ -101,36 +102,14 @@ const AttendanceReport = ({
 			))}
 		</div>
 	);
-	const filters = [
-		{
-			name: 'type.id',
-			label: 'Event Type',
-			multiple: true,
-			defaultValue: [defaultEventType],
-			options: eventTypes.map(type => ({ id: type.id, name: type.title })),
-		},
-		{
-			name: 'date_range',
-			start_name: 'starts_after',
-			end_name: 'starts_before',
-			label: 'Date Range',
-			type: 'daterange',
-			defaultValue: { from: defaultStartsAfter, to: defaultStartsBefore },
-			startMonth: new Date(2017, 0),
-			endMonth: new Date(new Date().getFullYear() + 5, 11),
-			ariaLabel: 'Attendance report date range',
-			children: renderDateRangePresets,
-		},
-		{
-			name: 'enrolments.voice_part_id',
-			label: 'Voice Part',
-			multiple: true,
-			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
-			renderOption: (option, compact) => (
-				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
-			),
-		},
-	];
+	const filters = createAttendanceReportFilterDescriptors({
+		eventTypes,
+		voiceParts,
+		defaultEventType,
+		defaultStartsAfter,
+		defaultStartsBefore,
+		dateRangePresets: renderDateRangePresets,
+	});
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 	const previousDateRange = React.useRef({
@@ -152,12 +131,7 @@ const AttendanceReport = ({
 	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterDrawer closeFn={() => setShowFilters(false)}>
-			<AttendanceReportFilters
-				eventTypes={eventTypes}
-				voiceParts={voiceParts}
-				form={sortFilterForm}
-				dateRangePresets={renderDateRangePresets}
-			/>
+			<AttendanceReportFilters form={sortFilterForm} filters={filters} />
 		</FilterDrawer>
 	);
 

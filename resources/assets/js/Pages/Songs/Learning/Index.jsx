@@ -24,10 +24,7 @@ import IndexTableControls from '../../../components/IndexTableControls';
 import FilterDrawer from '../../../components/FilterDrawer';
 import LearningStatusFilters from '../../../components/LearningStatusFilters';
 import LearningStatus from '../../../LearningStatus';
-import Badge from '../../../components/Badge';
-import VoicePartTag from '../../../components/VoicePartTag';
-import SingerStatus from '../../../SingerStatus';
-import SingerStatusTag from '../../../components/SingerStatusTag';
+import { createLearningStatusFilterDescriptors } from '../../../components/LearningStatusFilterDescriptors';
 import { router } from '@inertiajs/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 
@@ -55,65 +52,7 @@ const Index = ({
 		{ id: 'learning-updated', name: 'Updated' },
 	];
 
-	const filters = [
-		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
-		{
-			name: 'enrolments.voice_part_id',
-			label: 'Voice Part',
-			multiple: true,
-			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
-			renderOption: (option, compact) => (
-				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
-			),
-		},
-		...(ensembles.length > 1
-			? [
-					{
-						name: 'enrolments.ensemble_id',
-						label: 'Ensemble',
-						multiple: true,
-						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-		{
-			name: 'learning.status',
-			label: 'Learning Status',
-			multiple: true,
-			options: [
-				{ id: 'not-started', name: 'Learning' },
-				{ id: 'assessment-ready', name: 'Assessment Ready' },
-				{ id: 'performance-ready', name: 'Performance Ready' },
-			],
-			renderOption: option => {
-				const status = new LearningStatus(option.id);
-
-				return (
-					<span className="inline-flex items-center gap-1.5 text-gray-500">
-						<Icon icon={status.icon} className={status.textColour} />
-						{status.title}
-					</span>
-				);
-			},
-		},
-		{
-			name: 'status.id',
-			label: 'Singer Status',
-			multiple: true,
-			defaultValue: singerStatuses.find(status => status.name === 'Members')?.id
-				? [singerStatuses.find(status => status.name === 'Members').id]
-				: [],
-			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
-			renderOption: (option, compact) => (
-				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
-			),
-		},
-	];
+	const filters = createLearningStatusFilterDescriptors({ voiceParts, ensembles, singerStatuses });
 
 	const sortFilterForm = useSortFilterForm(['songs.singers.index', { song: song.id }], filters, sorts);
 
@@ -238,10 +177,8 @@ const Index = ({
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
 						<LearningStatusFilters
 							song={song}
-							voiceParts={voiceParts}
-							ensembles={ensembles}
 							form={sortFilterForm}
-							singerStatuses={singerStatuses}
+							filters={filters}
 						/>
 					</FilterDrawer>
 				}

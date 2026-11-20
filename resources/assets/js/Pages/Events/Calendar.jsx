@@ -5,7 +5,7 @@ import classNames from "../../classNames";
 import {Link} from "@inertiajs/react";
 import {DateTime} from "luxon";
 import DateTag from "../../components/DateTag";
-import Badge from "../../components/Badge";
+import EventTypeBadge from "../../components/EventTypeBadge";
 import EventType from "../../EventType";
 import useRoute from "../../hooks/useRoute";
  
@@ -396,7 +396,7 @@ const MobileEventList = ({ selectedDay }) => {
                                     </p>
 
                                     <p className="mt-2 flex items-center text-sm text-gray-500 min-w-0">
-                                        <Badge colour={(new EventType(event.type.title)).badgeColour}>{event.type.title}</Badge>
+                                        <EventTypeBadge eventTypeName={event.type.title} />
                                     </p>
                                 </div>
 

@@ -2,12 +2,24 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Menu, Popover, Portal } from '@headlessui/react';
 import Popper from 'popper.js';
 import ActionMenuItem from './ActionMenu/ActionMenuItem';
-import Badge from './Badge';
 import Button from './inputs/ButtonV2';
 import DateRangeCalendarInput from './inputs/DateRangeCalendarInput';
 import Icon from './Icon';
 import { useMediaQuery } from 'react-responsive';
 import { DateTime } from 'luxon';
+import FilterFieldRenderer, { renderFilterOption } from './FilterFieldRenderer';
+import {
+	getClearedFilterValue,
+	getDefaultFilterValue,
+	getFilterData,
+	getFilterName,
+	getFilterOptions,
+	getFilterValue,
+	getSelectedFilterOptions,
+	hasSelectedFilterValue as hasSelectedValue,
+	isMultipleFilter,
+	isFilterValueNonDefault as isNonDefault,
+} from './filterDescriptorUtils';
 
 const IndexTableControls = ({
 	filters = [],
@@ -24,15 +36,16 @@ const IndexTableControls = ({
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const previousData = useRef(form.data);
 	const [addedFilters, setAddedFilters] = useState([]);
-	const searchableFilters = filters.filter(filter => ['date', 'text'].includes(filter.type));
-	const filtersForPills = filters
+	const visibleFilterDescriptors = filters.filter(filter => filter.visible !== false);
+	const searchableFilters = visibleFilterDescriptors.filter(filter => ['date', 'text'].includes(filter.type));
+	const filtersForPills = visibleFilterDescriptors
 		.filter(filter => !['date', 'text'].includes(filter.type))
 		.sort(
 			(firstFilter, secondFilter) =>
 				Number(secondFilter.type === 'daterange') - Number(firstFilter.type === 'daterange')
 		);
 	const mobileDateRangeFilter = showMobileDateRangeFilter
-		? filters.find(filter => filter.type === 'daterange')
+		? visibleFilterDescriptors.find(filter => filter.type === 'daterange')
 		: null;
 
 	useEffect(() => {
@@ -64,7 +77,8 @@ const IndexTableControls = ({
 		);
 	});
 	const hasChangedFilters =
-		hasChangedFiltersOverride ?? filters.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
+		hasChangedFiltersOverride ??
+		visibleFilterDescriptors.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
 	const availableFilters = filtersForPills.filter(filter => !visibleFilters.includes(filter));
 	const changeFilter = (filter, value) => {
 		if (filter.onChange) {
@@ -72,13 +86,7 @@ const IndexTableControls = ({
 			return;
 		}
 
-		if (filter.type === 'daterange') {
-			form.setData(filter.start_name, formatDateInputValue(value?.from));
-			form.setData(filter.end_name, formatDateInputValue(value?.to));
-			return;
-		}
-
-		form.setData(filter.name, value);
+		Object.entries(getFilterData(filter, value)).forEach(([name, filterValue]) => form.setData(name, filterValue));
 	};
 	const addFilter = (filter, value) => {
 		setAddedFilters(previousFilters =>
@@ -91,15 +99,7 @@ const IndexTableControls = ({
 	const removeAddedFilter = filterName =>
 		setAddedFilters(previousFilters => previousFilters.filter(addedFilter => addedFilter !== filterName));
 	const clearFilter = filter => {
-		let emptyValue = '';
-
-		if (filter.type === 'daterange') {
-			emptyValue = { from: '', to: '' };
-		} else if (filter.multiple) {
-			emptyValue = hasSelectedValue(filter, getDefaultFilterValue(filter)) ? [''] : [];
-		}
-
-		changeFilter(filter, emptyValue);
+		changeFilter(filter, getClearedFilterValue(filter));
 
 		if (!hasSelectedValue(filter, getDefaultFilterValue(filter))) {
 			removeAddedFilter(getFilterName(filter));
@@ -107,11 +107,11 @@ const IndexTableControls = ({
 	};
 	const resetFilter = filter => {
 		const defaultValue = getDefaultFilterValue(filter);
-		changeFilter(filter, Array.isArray(defaultValue) ? [...defaultValue] : defaultValue);
+		changeFilter(filter, defaultValue);
 		removeAddedFilter(getFilterName(filter));
 	};
-	const clearAllFilters = () => filters.forEach(clearFilter);
-	const resetAllFilters = () => filters.forEach(resetFilter);
+	const clearAllFilters = () => visibleFilterDescriptors.forEach(clearFilter);
+	const resetAllFilters = () => visibleFilterDescriptors.forEach(resetFilter);
 
 	return (
 		<div className="bg-white px-4 py-2 sm:px-6 md:px-8 border-b border-gray-200 lg:border-b-0">
@@ -187,7 +187,9 @@ const IndexTableControls = ({
 					{mobileDateRangeFilter && (
 						<div className="min-w-0 flex-1">
 							<DateRangeCalendarInput
-								ariaLabel={mobileDateRangeFilter.ariaLabel ?? `${mobileDateRangeFilter.label} date range`}
+								ariaLabel={
+									mobileDateRangeFilter.ariaLabel ?? `${mobileDateRangeFilter.label} date range`
+								}
 								startDate={form.data[mobileDateRangeFilter.start_name]}
 								endDate={form.data[mobileDateRangeFilter.end_name]}
 								startMonth={mobileDateRangeFilter.startMonth}
@@ -236,41 +238,16 @@ const IndexTableControls = ({
 };
 
 const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-40 shrink-0 grow md:grow-0' }) => {
-	const isDateInput = filter.type === 'date';
-	const inputLabel = isDateInput
-		? `${filter.label}${filterLabel ? ` for ${filterLabel}` : ''}`
-		: `Search ${filterLabel ? `${filterLabel} by ${filter.label.toLowerCase()}` : filter.label}`;
-	const clearLabel = isDateInput ? `Clear ${inputLabel}` : `Clear ${filterLabel || filter.label} search`;
-
 	return (
-		<label className={`relative block ${className}`}>
-			<span className="sr-only">{inputLabel}</span>
-			<span
-				aria-hidden="true"
-				className="pointer-events-none absolute inset-y-0 left-2.5 flex items-center text-gray-400"
-			>
-				<Icon icon={isDateInput ? 'calendar-day' : 'search'} size="text-xs" type="regular" />
-			</span>
-			<input
-				type={isDateInput ? 'date' : 'text'}
-				role={isDateInput ? 'textbox' : 'searchbox'}
-				aria-label={inputLabel}
-				placeholder={isDateInput ? '' : `Search ${filterLabel || filter.label}`}
-				value={isDateInput ? formatDateInputValue(value) : value ?? ''}
-				onChange={event => onChange(event.target.value)}
-				className="block h-[26px] w-full rounded-full border-gray-300 py-0 pl-8 pr-8 text-xs shadow-none focus:border-purple-500 focus:ring-purple-500"
-			/>
-			{value && (
-				<button
-					type="button"
-					aria-label={clearLabel}
-					onClick={() => onChange('')}
-					className="absolute inset-y-0 right-1 flex w-6 items-center justify-center rounded-full text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-				>
-					<Icon icon="times" size="text-xs" type="regular" />
-				</button>
-			)}
-		</label>
+		<FilterFieldRenderer
+			filter={filter}
+			value={value}
+			onChange={onChange}
+			variant="toolbar"
+			layout="search"
+			filterLabel={filterLabel}
+			className={className}
+		/>
 	);
 };
 
@@ -323,21 +300,21 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 				<div className="mb-3 flex items-center justify-between gap-2">
 					<div className="flex min-w-0 items-center gap-2">
 						<h3 className="text-sm font-semibold text-gray-900">{filter.label}</h3>
-						{filter.multiple && (
+						{isMultipleFilter(filter) && (
 							<span className="shrink-0 text-xs text-gray-500">
 								{getSelectedFilterOptions(filter, value).length} selected
 							</span>
 						)}
 					</div>
-					{!filter.multiple && (
+					{!isMultipleFilter(filter) && (
 						<div className="text-xs text-gray-500">
 							<FilterValueSummary filter={filter} value={value} />
 						</div>
 					)}
-					{filter.allValuesLabel && filter.multiple && filter.options?.length > 0 && (
+					{filter.allValuesLabel && isMultipleFilter(filter) && getFilterOptions(filter).length > 0 && (
 						<button
 							type="button"
-							onClick={() => onChange((filter.options ?? []).map(option => option.id))}
+							onClick={() => onChange(getFilterOptions(filter).map(option => option.id))}
 							className="shrink-0 text-xs font-medium text-purple-600 underline hover:text-purple-800 hover:no-underline"
 						>
 							{filter.allValuesLabel}
@@ -393,79 +370,19 @@ const FilterValueOptions = ({
 	onClose,
 	onDraftChange,
 	hideActions = false,
-}) => {
-	if (filter.type === 'daterange') {
-		return (
-			<DateRangeCalendarInput
-				ariaLabel={filter.ariaLabel ?? `${filter.label} date range`}
-				startDate={value?.from}
-				endDate={value?.to}
-				startMonth={filter.startMonth}
-				endMonth={filter.endMonth}
-				updateFn={onChange}
-				inline={inline}
-				onClose={onClose}
-				onDraftChange={onDraftChange}
-				hideActions={hideActions}
-			>
-				{filter.children}
-			</DateRangeCalendarInput>
-		);
-	}
-
-	if (filter.type === 'text') {
-		return (
-			<label className="block text-sm font-medium text-gray-700">
-				{filter.label}
-				<input
-					type="search"
-					value={value ?? ''}
-					onChange={event => onChange(event.target.value)}
-					className="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
-				/>
-			</label>
-		);
-	}
-
-	const values = filter.multiple ? (Array.isArray(value) ? value : []) : [value ?? ''];
-	const options = filter.multiple ? filter.options ?? [] : [{ id: '', name: 'Any' }, ...(filter.options ?? [])];
-
-	return (
-		<div className="max-h-60 space-y-1 overflow-y-auto">
-			{options.map(option => {
-				const checked = values.some(selectedValue => String(selectedValue) === String(option.id));
-
-				return (
-					<label
-						key={String(option.id)}
-						className="flex cursor-pointer items-center gap-2 rounded px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
-					>
-						<input
-							type={filter.multiple ? 'checkbox' : 'radio'}
-							name={`filter-${filter.name}`}
-							checked={checked}
-							onChange={() => {
-								if (filter.multiple) {
-									const selectedValues = values.filter(selectedValue => selectedValue !== '');
-									const nextValues = checked
-										? selectedValues.filter(
-												selectedValue => String(selectedValue) !== String(option.id)
-										  )
-										: [...selectedValues, option.id];
-									onChange(nextValues);
-								} else {
-									onChange(option.id);
-								}
-							}}
-							className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-						/>
-						<FilterOptionDisplay filter={filter} option={option} />
-					</label>
-				);
-			})}
-		</div>
-	);
-};
+}) => (
+	<FilterFieldRenderer
+		filter={filter}
+		value={value}
+		onChange={onChange}
+		variant="toolbar"
+		layout="options"
+		inline={inline}
+		onClose={onClose}
+		onDraftChange={onDraftChange}
+		hideActions={hideActions}
+	/>
+);
 
 const AddFilterButton = ({ filters, onAdd }) => {
 	const [selectedFilterName, setSelectedFilterName] = useState(null);
@@ -481,20 +398,7 @@ const AddFilterButton = ({ filters, onAdd }) => {
 		setDraftValues(nextFilterName && !nextFilter.multiple ? [''] : []);
 		setTextValue('');
 	};
-	const toggleDraftValue = (filter, optionId) => {
-		setDraftValues(previousValues => {
-			const isSelected = previousValues.some(value => String(value) === String(optionId));
-
-			if (!filter.multiple) {
-				return isSelected ? [] : [optionId];
-			}
-
-			return isSelected
-				? previousValues.filter(value => String(value) !== String(optionId))
-				: [...previousValues, optionId];
-		});
-	};
-	const selectAllDraftValues = filter => setDraftValues((filter.options ?? []).map(option => option.id));
+	const selectAllDraftValues = filter => setDraftValues(getFilterOptions(filter).map(option => option.id));
 	const chooseFilterValue = (filter, value) => {
 		onAdd(filter, value);
 		setSelectedFilterName(null);
@@ -507,15 +411,13 @@ const AddFilterButton = ({ filters, onAdd }) => {
 		setTextValue('');
 	};
 	const applyDraftValues = filter => {
-		const value = filter.multiple ? draftValues : draftValues.find(selectedValue => selectedValue !== '') ?? '';
+		const value = isMultipleFilter(filter)
+			? draftValues
+			: draftValues.find(selectedValue => selectedValue !== '') ?? '';
 
 		chooseFilterValue(filter, value);
 	};
-	const options = selectedFilter
-		? selectedFilter.multiple
-			? selectedFilter.options ?? []
-			: [{ id: '', name: 'Any' }, ...(selectedFilter.options ?? [])]
-		: [];
+	const options = selectedFilter ? getFilterOptions(selectedFilter) : [];
 
 	return (
 		<Menu as="div" className="relative shrink-0">
@@ -531,7 +433,7 @@ const AddFilterButton = ({ filters, onAdd }) => {
 					options={options}
 					chooseFilter={chooseFilter}
 					chooseFilterValue={chooseFilterValue}
-					toggleDraftValue={toggleDraftValue}
+					setDraftValues={setDraftValues}
 					selectAllDraftValues={selectAllDraftValues}
 					applyDraftValues={applyDraftValues}
 					cancelFilterValue={cancelFilterValue}
@@ -553,11 +455,11 @@ const AddFilterMenuContent = ({
 	options,
 	chooseFilter,
 	chooseFilterValue,
-	toggleDraftValue,
 	selectAllDraftValues,
 	applyDraftValues,
 	cancelFilterValue,
 	setTextValue,
+	setDraftValues,
 }) => {
 	const buttonRef = useRef(null);
 	const panelRef = useRef(null);
@@ -624,7 +526,7 @@ const AddFilterMenuContent = ({
 					>
 						<div className="flex shrink-0 items-center justify-between gap-2 px-3 py-2">
 							<p className="text-sm font-semibold text-gray-900">{selectedFilter.label}</p>
-							{selectedFilter.allValuesLabel && selectedFilter.multiple && (
+							{selectedFilter.allValuesLabel && isMultipleFilter(selectedFilter) && (
 								<button
 									type="button"
 									aria-label={selectedFilter.allValuesLabel}
@@ -710,42 +612,46 @@ const AddFilterMenuContent = ({
 							</div>
 						) : (
 							<div className="flex min-h-0 flex-1 flex-col">
-								<div className="min-h-0 flex-1 space-y-1 overflow-y-auto">
-									{options.map(option => (
-										<label
-											key={String(option.id)}
-											className="flex cursor-pointer items-center gap-2 rounded px-3 py-2 text-sm text-gray-700 hover:bg-purple-100"
-										>
-											<input
-												type={selectedFilter.multiple ? 'checkbox' : 'radio'}
-												name={`new-filter-${selectedFilter.name}`}
-												checked={draftValues.some(value => String(value) === String(option.id))}
-												onChange={() => toggleDraftValue(selectedFilter, option.id)}
-												className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-											/>
-											<FilterOptionDisplay filter={selectedFilter} option={option} />
-										</label>
-									))}
-								</div>
+								<FilterFieldRenderer
+									filter={selectedFilter}
+									value={
+										isMultipleFilter(selectedFilter)
+											? draftValues
+											: draftValues.find(value => value !== '') ?? ''
+									}
+									onChange={value => setDraftValues(Array.isArray(value) ? value : [value])}
+									options={options}
+									variant="toolbar"
+									layout="options"
+									showEmptyOption={false}
+									className="min-h-0 flex-1 px-2"
+									optionClassName="px-3 py-2 hover:bg-purple-100"
+								/>
 								<div className="flex justify-between shrink-0 gap-1 border-t border-gray-200 px-2 pt-2 pb-1">
-									<Button
-										type="button"
-										intent="primary"
-										size="sm"
-										onClick={() => applyDraftValues(selectedFilter)}
-									>
-										<Icon icon="fa-check" />
-										Apply
-									</Button>
-									<Button
-										type="button"
-										size="sm"
-										weight="clear"
-										onClick={cancelFilterValue}
-									>
-										<Icon icon="times" type="regular" />
-										Close
-									</Button>
+									<div className="flex gap-1">
+										<Button
+											role="menuitem"
+											type="button"
+											intent="primary"
+											size="sm"
+											className="py-0.5 px-1"
+											onClick={() => applyDraftValues(selectedFilter)}
+										>
+											<Icon icon="fa-check" />
+											Apply
+										</Button>
+										<Button
+											role="menuitem"
+											type="button"
+											size="sm"
+											weight="clear"
+											className="py-0.5 px-1"
+											onClick={cancelFilterValue}
+										>
+											<Icon icon="times" type="regular" />
+											Close
+										</Button>
+									</div>
 								</div>
 							</div>
 						)}
@@ -767,19 +673,7 @@ const FilterValueSummary = ({ filter, value }) => {
 };
 
 const FilterOptionDisplay = ({ filter, option, compact = false }) => {
-	if (option.id === '') {
-		return option.name;
-	}
-
-	if (filter.renderOption) {
-		return filter.renderOption(option, compact);
-	}
-
-	return (
-		<Badge colour="bg-gray-100 text-gray-800" compact={compact}>
-			{option.name}
-		</Badge>
-	);
+	return renderFilterOption(filter, option, compact);
 };
 
 const SortDropdown = ({ sorts, form, compact = false, autoSubmit = false }) => {
@@ -976,64 +870,6 @@ const useViewportAwarePopper = (referenceRef, panelRef, open, placement, positio
 	}, [open, panelRef, placement, positionKey, referenceRef]);
 };
 
-function hasSelectedValue(filter, value) {
-	if (filter.type === 'daterange') {
-		return Boolean(value?.from || value?.to);
-	}
-
-	if (filter.multiple) {
-		return (
-			Array.isArray(value) &&
-			value.some(selectedValue => selectedValue !== null && selectedValue !== undefined && selectedValue !== '')
-		);
-	}
-
-	return value !== null && value !== undefined && String(value).trim() !== '';
-}
-
-function isNonDefault(filter, value) {
-	return normalizeValue(filter, value) !== normalizeValue(filter, getDefaultFilterValue(filter));
-}
-
-function normalizeValue(filter, value) {
-	if (filter.type === 'daterange') {
-		return `${formatDateInputValue(value?.from)}|${formatDateInputValue(value?.to)}`;
-	}
-
-	if (filter.multiple) {
-		return (Array.isArray(value) ? value : [])
-			.map(selectedValue => String(selectedValue))
-			.sort()
-			.join(',');
-	}
-
-	return String(value ?? '');
-}
-
-function formatDateInputValue(value) {
-	if (!value) {
-		return '';
-	}
-
-	const stringValue = String(value);
-	const isoDate = stringValue.match(/^\d{4}-\d{2}-\d{2}/)?.[0];
-
-	if (isoDate) {
-		return isoDate;
-	}
-
-	const date = value instanceof Date ? value : new Date(value);
-
-	if (Number.isNaN(date.getTime())) {
-		return '';
-	}
-
-	const month = String(date.getMonth() + 1).padStart(2, '0');
-	const day = String(date.getDate()).padStart(2, '0');
-
-	return `${date.getFullYear()}-${month}-${day}`;
-}
-
 function getFilterSummary(filter, value) {
 	if (!hasSelectedValue(filter, value)) {
 		return 'Any';
@@ -1049,59 +885,16 @@ function getFilterSummary(filter, value) {
 			.join(' – ');
 	}
 
-	const selectedValues = (filter.multiple ? value : [value]).filter(
+	const selectedValues = (isMultipleFilter(filter) ? value : [value]).filter(
 		selectedValue => selectedValue !== null && selectedValue !== undefined && selectedValue !== ''
 	);
+	const options = getFilterOptions(filter);
 	const labels = selectedValues.map(
 		selectedValue =>
-			filter.options?.find(option => String(option.id) === String(selectedValue))?.name ?? String(selectedValue)
+			options.find(option => String(option.id) === String(selectedValue))?.name ?? String(selectedValue)
 	);
 
 	return labels.length === 1 ? labels[0] : `${labels.length} selected`;
-}
-
-function getSelectedFilterOptions(filter, value) {
-	if (['text', 'daterange'].includes(filter.type)) {
-		return [];
-	}
-
-	const selectedValues = filter.multiple ? (Array.isArray(value) ? value : []) : [value];
-
-	return selectedValues
-		.filter(selectedValue => selectedValue !== null && selectedValue !== undefined && selectedValue !== '')
-		.map(
-			selectedValue =>
-				filter.options?.find(option => String(option.id) === String(selectedValue)) ?? {
-					id: selectedValue,
-					name: String(selectedValue),
-				}
-		);
-}
-
-function getFilterName(filter) {
-	return filter.name ?? filter.start_name;
-}
-
-function getFilterValue(filter, data) {
-	if (filter.type === 'daterange') {
-		return {
-			from: data[filter.start_name] ?? '',
-			to: data[filter.end_name] ?? '',
-		};
-	}
-
-	return data[filter.name];
-}
-
-function getDefaultFilterValue(filter) {
-	if (filter.type === 'daterange') {
-		return {
-			from: filter.defaultValue?.from ?? '',
-			to: filter.defaultValue?.to ?? '',
-		};
-	}
-
-	return filter.defaultValue ?? (filter.multiple ? [] : '');
 }
 
 function formatDateRangeValue(value) {

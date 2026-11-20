@@ -2,18 +2,20 @@ import { useForm } from '@inertiajs/react';
 import collect from 'collect.js';
 import useRoute from './useRoute';
 import * as qs from 'qs';
+import { getDefaultFilterData, getDefaultFilterValue, isMultipleFilter } from '../components/filterDescriptorUtils';
 
 const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) => {
 	const { route } = useRoute();
-	const defaultFilterData = getDefaultFilters(filters);
-	const searchableFilterNames = filters
+	const visibleFilters = filters.filter(filter => filter.visible !== false);
+	const defaultFilterData = getDefaultFilterData(visibleFilters);
+	const searchableFilterNames = visibleFilters
 		.filter(filter => ['date', 'text'].includes(filter.type))
 		.map(filter => filter.name);
 
 	const { data, setData, get, transform } = useForm({
 		sort: getSort(sorts.find(option => option.default)?.id),
 		sortDir: getSortDir(sorts.find(option => option.default)?.defaultDirection),
-		...getFilters(filters),
+		...getFilters(visibleFilters),
 	});
 
 	function submit(e, options = {}) {
@@ -45,33 +47,19 @@ function getFilters(filters) {
 	const params = qs.parse(location.search, { ignoreQueryPrefix: true });
 
 	return filters.reduce((filterValues, filter) => {
+		const defaultValue = getDefaultFilterValue(filter);
+
 		if (filter.type === 'daterange') {
-			filterValues[filter.start_name] = getFilterSingle(params, filter.start_name, filter.defaultValue?.from ?? '');
-			filterValues[filter.end_name] = getFilterSingle(params, filter.end_name, filter.defaultValue?.to ?? '');
+			filterValues[filter.start_name] = getFilterSingle(params, filter.start_name, defaultValue.from);
+			filterValues[filter.end_name] = getFilterSingle(params, filter.end_name, defaultValue.to);
 
 			return filterValues;
 		}
 
-		const { name, multiple, multipleBool, defaultValue } = filter;
-		filterValues[name] = multiple
+		const { name, multipleBool } = filter;
+		filterValues[name] = isMultipleFilter(filter)
 			? getFilterMultiple(params, name, defaultValue, multipleBool)
 			: getFilterSingle(params, name, defaultValue);
-
-		return filterValues;
-	}, {});
-}
-
-function getDefaultFilters(filters) {
-	return filters.reduce((filterValues, filter) => {
-		if (filter.type === 'daterange') {
-			filterValues[filter.start_name] = filter.defaultValue?.from ?? '';
-			filterValues[filter.end_name] = filter.defaultValue?.to ?? '';
-
-			return filterValues;
-		}
-
-		const defaultValue = filter.defaultValue ?? (filter.multiple ? [] : '');
-		filterValues[filter.name] = Array.isArray(defaultValue) ? [...defaultValue] : defaultValue;
 
 		return filterValues;
 	}, {});

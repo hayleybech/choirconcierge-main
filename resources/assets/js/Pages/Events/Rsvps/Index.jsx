@@ -32,6 +32,7 @@ import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import FilterDrawer from '../../../components/FilterDrawer';
 import RsvpFilters from '../../../components/RsvpFilters';
+import { createRsvpFilterDescriptors } from '../../../components/RsvpFilterDescriptors';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link, router } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
@@ -88,59 +89,7 @@ const Index = ({
 		{ id: 'dietary-medical', name: 'Dietary / Medical' },
 	];
 
-	const filters = [
-		{ name: 'user.name', label: 'Name', type: 'text', defaultValue: '' },
-		{
-			name: 'enrolments.voice_part_id',
-			label: 'Voice Part',
-			multiple: true,
-			options: voiceParts.map(part => ({ id: part.id, name: part.title, colour: part.colour })),
-			renderOption: (option, compact) => (
-				<VoicePartTag title={option.name} colour={option.colour} compact={compact} />
-			),
-		},
-		...(ensembles.length > 1
-			? [
-					{
-						name: 'enrolments.ensemble_id',
-						label: 'Ensemble',
-						multiple: true,
-						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
-						renderOption: (option, compact) => (
-							<Badge colour="bg-purple-100 text-purple-800" compact={compact}>
-								{option.name}
-							</Badge>
-						),
-					},
-			  ]
-			: []),
-		{
-			name: 'rsvp.response',
-			label: 'RSVP Response',
-			multiple: true,
-			options: [
-				{ id: 'yes', name: 'Going', icon: 'check', colour: 'emerald' },
-				{ id: 'maybe', name: 'Maybe', icon: 'question', colour: 'amber' },
-				{ id: 'no', name: 'Not going', icon: 'times', colour: 'red' },
-				{ id: 'unknown', name: 'No RSVP', icon: 'circle', colour: 'gray' },
-			],
-			renderOption: option => (
-				<RsvpTag label={option.name} icon={option.icon} colour={option.colour} />
-			),
-		},
-		{
-			name: 'status.id',
-			label: 'Singer Status',
-			multiple: true,
-			defaultValue: singerStatuses.find(c => c.name === 'Members')?.id
-				? [singerStatuses.find(c => c.name === 'Members').id]
-				: [],
-			options: singerStatuses.map(status => ({ id: status.id, name: status.name })),
-			renderOption: (option, compact) => (
-				<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
-			),
-		},
-	];
+	const filters = createRsvpFilterDescriptors({ voiceParts, ensembles, singerStatuses });
 
 	const sortFilterForm = useSortFilterForm(['events.rsvps.index', { event: event.id }], filters, sorts);
 
@@ -297,10 +246,8 @@ const Index = ({
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
 						<RsvpFilters
 							event={event}
-							voiceParts={voiceParts}
-							ensembles={ensembles}
 							form={sortFilterForm}
-							singerStatuses={singerStatuses}
+							filters={filters}
 						/>
 					</FilterDrawer>
 				}
