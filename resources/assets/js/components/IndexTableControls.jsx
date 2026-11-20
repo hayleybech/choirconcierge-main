@@ -146,7 +146,7 @@ const IndexTableControls = ({
 						</Button>
 					</div>
 				</div>
-				<div className="sticky right-0 z-10 ml-auto flex shrink-0 items-center gap-2 bg-white">
+				<div className="sticky right-0 z-20 ml-auto flex shrink-0 items-center gap-2 bg-white">
 					{sorts.length > 0 && <SortDropdown sorts={sorts} form={form} />}
 					{tableActions.map(action => (
 						<TableActionButton key={action.id ?? action.label} action={action} />
