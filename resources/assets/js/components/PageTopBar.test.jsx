@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
+import { PageActionsMenu, PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
 
 vi.mock('react-responsive', () => ({
 	useMediaQuery: vi.fn(),
@@ -17,6 +17,18 @@ describe('PageTopBar', () => {
 		fireEvent.click(screen.getByRole('button', { name: 'Open sidebar' }));
 
 		expect(setSidebarOpen).toHaveBeenCalledWith(true);
+	});
+});
+
+describe('PageActionsMenu', () => {
+	it('renders when it has a single action', () => {
+		render(
+			<PageActionsMenu>
+				<button type="button">Action</button>
+			</PageActionsMenu>
+		);
+
+		expect(screen.getByRole('button', { name: 'Open actions' })).toBeTruthy();
 	});
 });
 

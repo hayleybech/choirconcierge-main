@@ -5,7 +5,6 @@ import {
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
-	PageHeaderMeta,
 	PageHeaderTitle,
 	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
@@ -45,6 +44,7 @@ import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
 import Button from '../../../components/inputs/ButtonV2';
+import Dialog from '../../../components/Dialog';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
@@ -69,6 +69,7 @@ const Index = ({
 	setSidebarOpen,
 }) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
+	const [instructionsDialogIsOpen, setInstructionsDialogIsOpen] = useState(false);
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
@@ -148,6 +149,11 @@ const Index = ({
 			icon: 'qrcode',
 			onClick: () => setCheckInDialogIsOpen(true),
 			can: 'create_attendance',
+		},
+		{
+			label: 'Instructions',
+			icon: 'info-circle',
+			onClick: () => setInstructionsDialogIsOpen(true),
 		},
 	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
 
@@ -297,31 +303,6 @@ const Index = ({
 							))}
 						</PageHeaderActions>
 					</PageHeaderTitleRow>
-					<PageHeaderMeta>
-						<div>
-							<p className="mb-2">We offer three ways to track attendance: </p>
-							<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
-								<li>
-									<strong>Manual</strong> attendance tracking on this page
-								</li>
-								<li>
-									<strong>Kiosk</strong> check-in for shared device use
-								</li>
-								<li>
-									<strong>QR Code</strong> check-in for individual use
-								</li>
-							</ul>
-							<p className="mb-2">
-								Both device check-in pages automatically mark singers as late after the call time, or
-								absent 20 minutes later.
-							</p>
-							<p className="mb-2">
-								If attendance was partially recorded during the event (either manually here or using the
-								kiosk), remaining singers will automatically be marked absent once the event ends.
-							</p>
-							<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
-						</div>
-					</PageHeaderMeta>
 				</PageHeaderContent>
 			</PageHeader>
 
@@ -330,6 +311,37 @@ const Index = ({
 				isOpen={checkInDialogIsOpen}
 				setIsOpen={setCheckInDialogIsOpen}
 			/>
+
+			<Dialog
+				title="Attendance Tracking Instructions"
+				isOpen={instructionsDialogIsOpen}
+				setIsOpen={setInstructionsDialogIsOpen}
+				icon={null}
+			>
+				<div>
+					<p className="mb-2">We offer three ways to track attendance:</p>
+					<ul className="mb-4 ml-4 list-inside list-disc [&>li]:mb-1">
+						<li>
+							<strong>Manual</strong> attendance tracking on this page
+						</li>
+						<li>
+							<strong>Kiosk</strong> check-in for shared device use
+						</li>
+						<li>
+							<strong>QR Code</strong> check-in for individual use
+						</li>
+					</ul>
+					<p className="mb-2">
+						Both device check-in pages automatically mark singers as late after the call time, or absent 20 minutes
+						later.
+					</p>
+					<p className="mb-2">
+						If attendance was partially recorded during the event (either manually here or using the kiosk),
+						remaining singers will automatically be marked absent once the event ends.
+					</p>
+					<p>The check-in pages also send an attendance report after each event.</p>
+				</div>
+			</Dialog>
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 

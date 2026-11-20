@@ -42,7 +42,7 @@ export const BackButton = ({ url, className }) => (
 );
 
 export const PageActionsMenu = ({ children }) => {
-	if(!children?.length > 0) {
+	if (React.Children.toArray(children).length === 0) {
 		return null;
 	}
 	return (
