@@ -5,9 +5,27 @@ import Icon from '../Icon';
 import TextInput from '../inputs/TextInput';
 
 export const rsvpOptions = [
-	{ id: 'yes', name: 'Going', icon: 'check', colour: 'text-emerald-500' },
-	{ id: 'maybe', name: 'Maybe', icon: 'question', colour: 'text-amber-500' },
-	{ id: 'no', name: 'Not Going', icon: 'times', colour: 'text-red-500' },
+	{
+		id: 'yes',
+		name: 'Going',
+		icon: 'check',
+		colour: 'text-emerald-500',
+		selectedColour: 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 [&>i]:text-emerald-600',
+	},
+	{
+		id: 'maybe',
+		name: 'Maybe',
+		icon: 'question',
+		colour: 'text-amber-500',
+		selectedColour: 'border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 [&>i]:text-amber-600',
+	},
+	{
+		id: 'no',
+		name: 'Not Going',
+		icon: 'times',
+		colour: 'text-red-500',
+		selectedColour: 'border-red-300 bg-red-50 text-red-700 hover:bg-red-100 [&>i]:text-red-600',
+	},
 ];
 
 const RsvpResponseDialog = ({ response, details, title, onSave, children }) => {
@@ -60,8 +78,8 @@ const RsvpResponseDialog = ({ response, details, title, onSave, children }) => {
 				icon={null}
 			>
 				<div className="space-y-4">
-					<div role="group" aria-label="RSVP response" className="grid gap-2 sm:grid-cols-3">
-						{rsvpOptions.map(option => (
+					<div role="group" aria-label="RSVP response" className="relative z-0 grid grid-cols-3">
+						{rsvpOptions.map((option, index) => (
 							<ButtonV2
 								key={option.id}
 								intent={selectedResponse === option.id ? 'selected' : 'secondary'}
@@ -74,7 +92,11 @@ const RsvpResponseDialog = ({ response, details, title, onSave, children }) => {
 									}
 								}}
 								aria-pressed={selectedResponse === option.id}
-								className="w-full"
+								className={`relative w-full min-w-0 rounded-none px-1.5 text-xs ${
+									index === 0 ? 'rounded-l-md' : '-ml-px'
+								} ${index === rsvpOptions.length - 1 ? 'rounded-r-md' : ''} ${
+									selectedResponse === option.id ? `z-10 ${option.selectedColour}` : ''
+								}`}
 							>
 								<Icon icon={option.icon} className={option.colour} />
 								{option.name}

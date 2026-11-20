@@ -39,24 +39,28 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 			name: 'Present',
 			icon: 'check',
 			colour: 'text-emerald-500',
+			selectedColour: 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 [&>i]:text-emerald-600',
 		},
 		{
 			id: 'late',
 			name: 'Late',
 			icon: 'alarm-snooze',
 			colour: 'text-yellow-500',
+			selectedColour: 'border-yellow-300 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 [&>i]:text-yellow-600',
 		},
 		{
 			id: 'late_deemed_absent',
 			name: 'Late (Deemed Absent)',
 			icon: 'alarm-exclamation',
 			colour: 'text-orange-500',
+			selectedColour: 'border-orange-300 bg-orange-50 text-orange-700 hover:bg-orange-100 [&>i]:text-orange-600',
 		},
 		{
 			id: 'absent',
 			name: 'Absent',
 			icon: 'times',
 			colour: 'text-red-500',
+			selectedColour: 'border-red-300 bg-red-50 text-red-700 hover:bg-red-100 [&>i]:text-red-600',
 		},
 	];
 
@@ -260,8 +264,8 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 					icon={null}
 				>
 					<div className="space-y-4">
-						<div role="group" aria-label="Attendance status" className="grid gap-2 sm:grid-cols-2">
-							{options.map(option => (
+						<div role="group" aria-label="Attendance status" className="relative z-0 grid grid-cols-2">
+							{options.map((option, index) => (
 								<ButtonV2
 									key={option.id}
 									intent={data.response === option.id ? 'selected' : 'secondary'}
@@ -269,7 +273,13 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 									disabled={processing}
 									onClick={() => setData('response', option.id)}
 									aria-pressed={data.response === option.id}
-									className="w-full"
+									className={classNames(
+										'relative w-full min-w-0 rounded-none px-2 text-xs',
+										index % 2 !== 0 ? '-ml-px' : '',
+										index > 1 ? '-mt-px' : '',
+										['rounded-tl-md', 'rounded-tr-md', 'rounded-bl-md', 'rounded-br-md'][index],
+										data.response === option.id ? `z-10 ${option.selectedColour}` : ''
+									)}
 								>
 									<Icon icon={option.icon} className={option.colour} mr />
 									{option.name}
