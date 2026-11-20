@@ -928,7 +928,7 @@ const PositionedPanel = ({
 
 	return (
 		<Portal>
-			<PanelComponent ref={panelRef} className={`fixed z-50 ${className}`}>
+			<PanelComponent ref={panelRef} className={`fixed z-[60] ${className}`}>
 				{children}
 			</PanelComponent>
 		</Portal>

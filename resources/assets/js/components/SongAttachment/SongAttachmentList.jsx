@@ -1,5 +1,6 @@
 import ButtonV2 from "../inputs/ButtonV2";
-import React, {useState} from "react";
+import { Menu, Portal, Transition } from "@headlessui/react";
+import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
 import Icon from "../Icon";
 import DeleteDialog from "../DeleteDialog";
 import AttachmentType from "../../AttachmentType";
@@ -12,6 +13,7 @@ import Error from "../inputs/Error";
 import classNames from "../../classNames";
 import TextInput from "../inputs/TextInput";
 import SongAttachmentForm from './SongAttachmentForm';
+import Button from '../inputs/ButtonV2';
  
 const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, player }) => {
     const { route } = useRoute();
@@ -55,7 +57,7 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                             {Object.values(attachmentTypes[typeSlug]).map(attachment => (
                                 <li key={attachment.id} className="bg-white hover:bg-purple-50">
                                     <div className="flex items-center space-x-1 pr-6">
-                                        <a href={isVideo(attachment) ? attachment.filepath : '#'} target={isVideo(attachment) ? '_blank' : '_self'} onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 px-6 gap-x-3 items-center group">
+                                        <a href={isVideo(attachment) ? attachment.filepath : '#'} target={isVideo(attachment) ? '_blank' : '_self'} onClick={() => openAttachment(attachment)} className="flex-1 min-w-0 flex py-5 pl-6 gap-x-3 items-center group">
                                             <div className="shrink-0">
                                                 {isAudio(attachment) && (
                                                     <Icon icon={isCurrentTrack(attachment) ? 'waveform' : 'play'} className="text-sm text-gray-700 group-hover:text-purple-600" />
@@ -68,35 +70,29 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
                                                 <p className="text-sm font-medium text-gray-900 group-hover:text-purple-600 break-all">{attachment.title !== '' ? attachment.title : attachment.filepath}</p>
                                             </div>
                                         </a>
-                                        { song.can['update_song'] &&
-                                            <ButtonV2
-                                                intent="secondary"
-                                                weight="clear"
-                                                size="md"
-                                                onClick={() => setAttachmentToRename(attachment)}
-                                            >
-                                                <Icon icon="edit" />
-                                            </ButtonV2>
-                                        }
-                                        { song.can['update_song'] &&
-                                            <ButtonV2
-                                                intent="danger"
-                                                weight="clear"
-                                                size="md"
-                                                onClick={() => {setDeletingAttachmentId(attachment.id);
-                                                setDeleteDialogIsOpen(true)}}
-                                            >
-                                                <Icon icon="trash" />
-                                            </ButtonV2>
-                                        }
-                                        {isVideo(attachment) ? (
-                                            <ButtonV2 href={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md">
-                                                <Icon icon="external-link" />
-                                            </ButtonV2>
+                                        {song.can['update_song'] ? (
+                                            <Menu as="div" className="relative shrink-0">
+                                                {({ open }) => (
+                                                    <AttachmentActionsMenuContent
+                                                        attachment={attachment}
+                                                        isVideo={isVideo}
+                                                        open={open}
+                                                        setAttachmentToRename={setAttachmentToRename}
+                                                        setDeletingAttachmentId={setDeletingAttachmentId}
+                                                        setDeleteDialogIsOpen={setDeleteDialogIsOpen}
+                                                    />
+                                                )}
+                                            </Menu>
                                         ) : (
-                                            <ButtonV2 href={attachment.download_url} download={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md">
-                                                <Icon icon="download" />
-                                            </ButtonV2>
+                                            isVideo(attachment) ? (
+                                                <ButtonV2 href={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md" aria-label="Open attachment">
+                                                    <Icon icon="external-link" />
+                                                </ButtonV2>
+                                            ) : (
+                                                <ButtonV2 href={attachment.download_url} download={attachment.filepath} target="_blank" external intent="primary" weight="clear" size="md" aria-label="Download attachment">
+                                                    <Icon icon="download" />
+                                                </ButtonV2>
+                                            )
                                         )}
                                     </div>
                                 </li>
@@ -153,6 +149,128 @@ const SongAttachmentList = ({ attachmentTypes, song, currentPdf, setCurrentPdf, 
 }
 
 export default SongAttachmentList;
+
+const AttachmentActionsMenuContent = ({ attachment, isVideo, open, setAttachmentToRename, setDeletingAttachmentId, setDeleteDialogIsOpen }) => {
+    const [menuPosition, setMenuPosition] = useState(null);
+    const buttonRef = useRef(null);
+    const menuItemsRef = useRef(null);
+
+    useLayoutEffect(() => {
+        if (!open) {
+            return undefined;
+        }
+
+        const updateMenuPosition = () => {
+            if (!buttonRef.current || !menuItemsRef.current) {
+                return;
+            }
+
+            const buttonBounds = buttonRef.current.getBoundingClientRect();
+            const menuWidth = menuItemsRef.current.offsetWidth;
+            const menuHeight = menuItemsRef.current.offsetHeight;
+            const gap = 8;
+            const viewportPadding = 8;
+            const availableBelow = window.innerHeight - buttonBounds.bottom - viewportPadding;
+            const availableAbove = buttonBounds.top - viewportPadding;
+            const top = menuHeight + gap <= availableBelow
+                ? buttonBounds.bottom + gap
+                : menuHeight + gap <= availableAbove
+                    ? buttonBounds.top - menuHeight - gap
+                    : Math.min(buttonBounds.bottom + gap, window.innerHeight - menuHeight - viewportPadding);
+            const left = Math.max(
+                viewportPadding,
+                Math.min(buttonBounds.right - menuWidth, window.innerWidth - menuWidth - viewportPadding)
+            );
+
+            setMenuPosition({ top: Math.max(viewportPadding, top), left });
+        };
+
+        const animationFrame = window.requestAnimationFrame(updateMenuPosition);
+        window.addEventListener('resize', updateMenuPosition);
+        window.addEventListener('scroll', updateMenuPosition, true);
+
+        return () => {
+            window.cancelAnimationFrame(animationFrame);
+            window.removeEventListener('resize', updateMenuPosition);
+            window.removeEventListener('scroll', updateMenuPosition, true);
+        };
+    }, [open]);
+
+    return (
+        <>
+            <Menu.Button
+                ref={buttonRef}
+				as={Button}
+				weight="clear"
+                className="flex size-10 items-center justify-center"
+            >
+                <span className="sr-only">Open attachment actions</span>
+                <Icon icon="ellipsis-v" />
+            </Menu.Button>
+            <Portal>
+                <Transition
+                    show={open}
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
+                >
+                    <Menu.Items
+                        static
+                        ref={menuItemsRef}
+                        style={menuPosition ? { ...menuPosition, visibility: 'visible' } : { visibility: 'hidden' }}
+                        className="fixed z-[60] max-h-[calc(100vh-1rem)] w-40 origin-top-right overflow-y-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                    >
+                        <Menu.Item>
+                            {({ active }) => (
+                                <button
+                                    type="button"
+                                    onClick={() => setAttachmentToRename(attachment)}
+                                    className={classNames('flex w-full items-center px-4 py-2 text-left text-sm text-gray-700', active ? 'bg-gray-100' : '')}
+                                >
+                                    <Icon icon="edit" mr />
+                                    Edit
+                                </button>
+                            )}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {({ active }) => (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setDeletingAttachmentId(attachment.id);
+                                        setDeleteDialogIsOpen(true);
+                                    }}
+                                    className={classNames('flex w-full items-center px-4 py-2 text-left text-sm text-red-500', active ? 'bg-gray-100' : '')}
+                                >
+                                    <Icon icon="trash" mr />
+                                    Delete
+                                </button>
+                            )}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {({ active }) => (
+                                <a
+                                    href={isVideo(attachment) ? attachment.filepath : attachment.download_url}
+                                    download={isVideo(attachment) ? undefined : attachment.filepath}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={classNames('flex w-full items-center px-4 py-2 text-left text-sm text-gray-700', active ? 'bg-gray-100' : '')}
+                                >
+                                    <Icon icon={isVideo(attachment) ? 'external-link' : 'download'} mr />
+                                    {isVideo(attachment) ? 'Open' : 'Download'}
+                                </a>
+                            )}
+                        </Menu.Item>
+                    </Menu.Items>
+                </Transition>
+            </Portal>
+        </>
+    );
+};
 
 function splitFilename(filename)
 {
