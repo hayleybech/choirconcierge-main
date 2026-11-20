@@ -215,6 +215,7 @@ const AttendanceReport = ({
 					filters={filters}
 					sorts={sorts}
 					form={sortFilterForm}
+					showMobileDateRangeFilter
 					filterLabel="attendance report"
 					hasChangedFilters={hasNonDefaultFilters}
 					onToggleFilters={() => setShowFilters(previousValue => !previousValue)}

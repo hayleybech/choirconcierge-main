@@ -17,7 +17,7 @@ vi.mock('@headlessui/react', async () => {
 
 	return {
 		Popover: Object.assign(Wrapper, { Button: Wrapper, Panel: Wrapper }),
-		Transition: ({ children }) => React.createElement(React.Fragment, null, children),
+		Transition: ({ children }) => React.createElement('div', { 'data-testid': 'transition-wrapper' }, children),
 	};
 });
 
@@ -69,6 +69,18 @@ describe('DateRangeCalendarInput', () => {
 		const calendarPanel = screen.getByTestId('day-picker').closest('.absolute.right-0');
 		expect(calendarPanel).not.toBeNull();
 		expect(calendarPanel.className).not.toContain('overflow-hidden');
+	});
+
+	it('renders the mobile calendar left-aligned within the viewport with a transition', () => {
+		render(<DateRangeCalendarInput mobile updateFn={vi.fn()} />);
+
+		const calendar = screen.getByTestId('day-picker');
+		const calendarPanel = calendar.closest('.absolute.left-0');
+
+		expect(calendar.closest('[data-testid="transition-wrapper"]')).not.toBeNull();
+		expect(calendarPanel).not.toBeNull();
+		expect(calendarPanel.className).toContain('max-w-[calc(100vw-1rem)]');
+		expect(calendarPanel.className).toContain('max-h-[calc(100dvh-1rem)]');
 	});
 
 	it('does not update the applied range until Apply is pressed', () => {

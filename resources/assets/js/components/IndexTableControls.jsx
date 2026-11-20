@@ -19,6 +19,7 @@ const IndexTableControls = ({
 	bulkEdit,
 	filterLabel,
 	hasChangedFilters: hasChangedFiltersOverride,
+	showMobileDateRangeFilter = false,
 }) => {
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const previousData = useRef(form.data);
@@ -30,6 +31,9 @@ const IndexTableControls = ({
 			(firstFilter, secondFilter) =>
 				Number(secondFilter.type === 'daterange') - Number(firstFilter.type === 'daterange')
 		);
+	const mobileDateRangeFilter = showMobileDateRangeFilter
+		? filters.find(filter => filter.type === 'daterange')
+		: null;
 
 	useEffect(() => {
 		if (previousData.current === form.data) {
@@ -180,6 +184,21 @@ const IndexTableControls = ({
 					/>
 				)}
 				<div className="flex items-center gap-2 w-full justify-end">
+					{mobileDateRangeFilter && (
+						<div className="min-w-0 flex-1">
+							<DateRangeCalendarInput
+								ariaLabel={mobileDateRangeFilter.ariaLabel ?? `${mobileDateRangeFilter.label} date range`}
+								startDate={form.data[mobileDateRangeFilter.start_name]}
+								endDate={form.data[mobileDateRangeFilter.end_name]}
+								startMonth={mobileDateRangeFilter.startMonth}
+								endMonth={mobileDateRangeFilter.endMonth}
+								mobile
+								updateFn={value => changeFilter(mobileDateRangeFilter, value)}
+							>
+								{mobileDateRangeFilter.children}
+							</DateRangeCalendarInput>
+						</div>
+					)}
 					{searchableFilters.map(filter => (
 						<NameSearchInput
 							key={filter.name}

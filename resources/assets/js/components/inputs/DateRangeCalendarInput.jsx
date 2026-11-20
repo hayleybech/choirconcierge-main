@@ -6,7 +6,7 @@ import { DateTime } from 'luxon';
 import Icon from '../Icon';
 import 'react-day-picker/style.css';
 import Button from './ButtonV2';
- 
+
 const DateRangeCalendarInput = ({
 	startDate,
 	endDate,
@@ -16,13 +16,15 @@ const DateRangeCalendarInput = ({
 	children,
 	ariaLabel = 'Attendance report date range',
 	inline = false,
+	mobile = false,
 	onClose,
 	onDraftChange,
 	hideActions = false,
 	renderActions,
 }) => {
 	const { user } = usePage().props;
-	const firstDayOfWeek = user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
+	const firstDayOfWeek =
+		user?.first_day_of_week ?? (['CA', 'IN', 'JP', 'US'].includes(user?.address_country) ? 0 : 1);
 	const selected = {
 		from: parseDate(startDate),
 		to: parseDate(endDate),
@@ -111,17 +113,25 @@ const DateRangeCalendarInput = ({
 			{({ close, open }) => (
 				<>
 					<Popover.Button as="div" className="relative rounded-md">
-						<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-							<Icon icon="calendar-day" type="regular" className="text-gray-400" />
+						<div
+							className={`pointer-events-none absolute inset-y-0 flex items-center ${
+								mobile ? 'left-2' : 'left-0 pl-3'
+							}`}
+						>
+							<Icon
+								icon="calendar-day"
+								type="regular"
+								className={`text-gray-400 ${mobile ? 'text-xs' : ''}`}
+							/>
 						</div>
 						<input
 							aria-label={ariaLabel}
 							readOnly
 							value={rangeLabel}
 							placeholder="Select date range"
-							className={`block w-full rounded-md border-gray-300 pl-10 text-sm focus:border-purple-500 focus:ring-purple-500 ${
-								open ? 'bg-gray-100' : 'bg-white'
-							}`}
+							className={`block w-full min-w-0 rounded-md border-gray-300 focus:border-purple-500 focus:ring-purple-500 ${
+								mobile ? 'h-8 py-0 pl-7 pr-2 text-xs text-gray-500' : 'pl-10 text-sm'
+							} ${open ? 'bg-gray-100' : 'bg-white'}`}
 						/>
 					</Popover.Button>
 					<Transition
@@ -132,7 +142,7 @@ const DateRangeCalendarInput = ({
 						leaveFrom="scale-100 opacity-100"
 						leaveTo="scale-95 opacity-0"
 					>
-						<Popover.Panel className="absolute right-0 z-40 mt-2 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-lg">
+						<Popover.Panel className="absolute left-0 mt-2 z-40 rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-lg">
 							{renderCalendar(close)}
 						</Popover.Panel>
 					</Transition>
