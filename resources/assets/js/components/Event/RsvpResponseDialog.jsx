@@ -9,22 +9,19 @@ export const rsvpOptions = [
 		id: 'yes',
 		name: 'Going',
 		icon: 'check',
-		colour: 'text-emerald-500',
-		selectedColour: 'border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 [&>i]:text-emerald-600',
+		iconColour: 'text-emerald-500!',
 	},
 	{
 		id: 'maybe',
 		name: 'Maybe',
 		icon: 'question',
-		colour: 'text-amber-500',
-		selectedColour: 'border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 [&>i]:text-amber-600',
+		iconColour: 'text-amber-500!',
 	},
 	{
 		id: 'no',
 		name: 'Not Going',
 		icon: 'times',
-		colour: 'text-red-500',
-		selectedColour: 'border-red-300 bg-red-50 text-red-700 hover:bg-red-100 [&>i]:text-red-600',
+		iconColour: 'text-red-500!',
 	},
 ];
 
@@ -95,10 +92,10 @@ const RsvpResponseDialog = ({ response, details, title, onSave, children }) => {
 								className={`relative w-full min-w-0 rounded-none px-1.5 text-xs ${
 									index === 0 ? 'rounded-l-md' : '-ml-px'
 								} ${index === rsvpOptions.length - 1 ? 'rounded-r-md' : ''} ${
-									selectedResponse === option.id ? `z-10 ${option.selectedColour}` : ''
+									selectedResponse === option.id ? 'z-10' : ''
 								}`}
 							>
-								<Icon icon={option.icon} className={option.colour} />
+								<Icon icon={option.icon} className={option.iconColour} />
 								{option.name}
 							</ButtonV2>
 						))}

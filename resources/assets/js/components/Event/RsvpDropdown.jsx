@@ -43,9 +43,9 @@ const RsvpDropdown = ({ event, size = 'sm' }) => {
 						<Icon
 							icon={event.my_rsvp.icon}
 							type={event.my_rsvp.icon === 'circle' ? 'regular' : 'solid'}
-							className={currentOption?.colour ?? 'text-gray-500'}
+							className={currentOption?.iconColour ?? 'text-gray-500'}
 						/>
-						<span className={currentOption?.colour ?? 'text-gray-500'}>{event.my_rsvp.label}</span>
+						<span>{event.my_rsvp.label}</span>
 						<Icon icon="chevron-down" className="text-gray-500" />
 					</ButtonV2>
 				)}

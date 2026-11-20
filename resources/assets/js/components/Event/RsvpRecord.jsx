@@ -36,7 +36,7 @@ const RsvpRecord = ({ rsvp, singerId, event }) => {
 				<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={openDialog}>
 					<Icon
 						icon={currentOption?.icon ?? 'circle'}
-						className={currentOption?.colour ?? 'text-gray-500'}
+						className={currentOption?.iconColour ?? 'text-gray-500'}
 						mr
 					/>
 					{currentOption?.name ?? rsvp.label}
