@@ -5,6 +5,10 @@ import * as qs from 'qs';
 
 const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) => {
 	const { route } = useRoute();
+	const defaultFilterData = getDefaultFilters(filters);
+	const searchableFilterNames = filters
+		.filter(filter => ['date', 'text'].includes(filter.type))
+		.map(filter => filter.name);
 
 	const { data, setData, get, transform } = useForm({
 		sort: getSort(sorts.find(option => option.default)?.id),
@@ -32,7 +36,7 @@ const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) =
 		},
 	}));
 
-	return { data, setData, submit };
+	return { data, setData, submit, defaultFilterData, searchableFilterNames };
 };
 
 export default useSortFilterForm;
@@ -52,6 +56,22 @@ function getFilters(filters) {
 		filterValues[name] = multiple
 			? getFilterMultiple(params, name, defaultValue, multipleBool)
 			: getFilterSingle(params, name, defaultValue);
+
+		return filterValues;
+	}, {});
+}
+
+function getDefaultFilters(filters) {
+	return filters.reduce((filterValues, filter) => {
+		if (filter.type === 'daterange') {
+			filterValues[filter.start_name] = filter.defaultValue?.from ?? '';
+			filterValues[filter.end_name] = filter.defaultValue?.to ?? '';
+
+			return filterValues;
+		}
+
+		const defaultValue = filter.defaultValue ?? (filter.multiple ? [] : '');
+		filterValues[filter.name] = Array.isArray(defaultValue) ? [...defaultValue] : defaultValue;
 
 		return filterValues;
 	}, {});

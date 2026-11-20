@@ -136,6 +136,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 	);
 	const appliedFilterDataRef = useRef(draftFilterData);
 	const [applyDraftFilters, setApplyDraftFilters] = useState(false);
+	const shouldSubmitAfterApplyRef = useRef(false);
 	const draftSingerFilterForm = {
 		data: draftFilterData,
 		setData: (name, value) => setDraftFilterData(previousData => ({ ...previousData, [name]: value })),
@@ -160,11 +161,19 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 		}
 
 		setApplyDraftFilters(false);
+		if (!isDesktop && shouldSubmitAfterApplyRef.current) {
+			sortFilterForm.submit(undefined, { preserveState: true });
+		}
 		setShowFilters(false);
-	}, [applyDraftFilters, sortFilterForm.data]);
+	}, [applyDraftFilters, isDesktop, sortFilterForm.data, sortFilterForm.submit]);
 
-	const applyFilterChanges = () => {
-		sortFilterForm.setData({ ...sortFilterForm.data, ...draftFilterData });
+	const applyFilterChanges = (filterData = draftFilterData, submitRegardless = false) => {
+		shouldSubmitAfterApplyRef.current =
+			submitRegardless ||
+			!filters
+				.filter(filter => ['date', 'text'].includes(filter.type))
+				.some(({ name }) => sortFilterForm.data[name] !== filterData[name]);
+		sortFilterForm.setData({ ...sortFilterForm.data, ...filterData });
 		setApplyDraftFilters(true);
 	};
 	const cancelFilterChanges = () => {
@@ -172,6 +181,14 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 		appliedFilterDataRef.current = appliedFilterData;
 		setDraftFilterData(appliedFilterData);
 		setShowFilters(false);
+	};
+	const clearFilterChanges = () => {
+		const defaultFilterData = Object.fromEntries(
+			filters.map(({ name, defaultValue }) => [name, Array.isArray(defaultValue) ? [...defaultValue] : defaultValue])
+		);
+
+		setDraftFilterData(defaultFilterData);
+		applyFilterChanges(defaultFilterData, true);
 	};
 
 	const tableActions = [
@@ -314,6 +331,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						closeFn={() => setShowFilters(false)}
 						onApply={applyFilterChanges}
 						onCancel={cancelFilterChanges}
+						onClearAll={clearFilterChanges}
 					>
 						<SingerFilters
 							statuses={statuses}

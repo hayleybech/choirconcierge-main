@@ -63,6 +63,25 @@ const DateRangeFilterControl = () => {
 	return null;
 };
 
+const FilterDefaults = () => {
+	const form = useSortFilterForm(
+		'singers.index',
+		[
+			{ name: 'status', multiple: true, defaultValue: ['members'] },
+			{
+				name: 'date_range',
+				start_name: 'starts_after',
+				end_name: 'starts_before',
+				type: 'daterange',
+				defaultValue: { from: '2026-04-10', to: '2026-04-12' },
+			},
+		],
+		[]
+	);
+
+	return <div data-testid="filter-defaults">{JSON.stringify(form.defaultFilterData)}</div>;
+};
+
 it('passes preserveState through to the Inertia visit', () => {
 	render(<SubmitControl />);
 
@@ -100,4 +119,12 @@ it('hydrates both fields from a date-range filter in the query string', () => {
 
 	expect(mocks.initialData).toHaveBeenLastCalledWith(expectedData);
 	window.history.replaceState({}, '', '/');
+});
+
+it('returns default values for standard and date-range filters', () => {
+	render(<FilterDefaults />);
+
+	expect(screen.getByTestId('filter-defaults')).toHaveTextContent(
+		JSON.stringify({ status: ['members'], starts_after: '2026-04-10', starts_before: '2026-04-12' })
+	);
 });

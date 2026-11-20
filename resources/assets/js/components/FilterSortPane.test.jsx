@@ -16,8 +16,9 @@ beforeEach(() => {
 
 it('keeps an Apply action visible at the bottom of a scrollable filter pane', () => {
 	const applyFilters = vi.fn();
+	const closeDrawer = vi.fn();
 	const { container } = render(
-		<FilterDrawer closeFn={vi.fn()} onApply={applyFilters}>
+		<FilterDrawer closeFn={closeDrawer} onApply={applyFilters}>
 			<div>Filter fields</div>
 		</FilterDrawer>
 	);
@@ -25,15 +26,37 @@ it('keeps an Apply action visible at the bottom of a scrollable filter pane', ()
 	const applyButton = screen.getByRole('button', { name: 'Apply' });
 
 	expect(applyButton.closest('.sticky')).toHaveClass('sticky', 'bottom-0');
-	expect(screen.getByRole('button', { name: 'Cancel' })).toHaveClass('flex-1');
 	expect(applyButton).toHaveClass('flex-1');
+	expect(applyButton.querySelector('.fa-check')).toBeInTheDocument();
 	expect(container.querySelector('.overflow-y-auto')).toContainElement(screen.getByText('Filter fields'));
 	fireEvent.click(applyButton);
 
 	expect(applyFilters).toHaveBeenCalledOnce();
+	expect(closeDrawer).toHaveBeenCalledOnce();
 });
 
-it('calls the cancel action without applying the staged filters', () => {
+it('applies cleared filters and closes the drawer', () => {
+	const applyFilters = vi.fn();
+	const clearAllFilters = vi.fn(applyFilters);
+	const closeDrawer = vi.fn();
+	render(
+		<FilterDrawer closeFn={closeDrawer} onApply={applyFilters} onClearAll={clearAllFilters}>
+			<div>Filter fields</div>
+		</FilterDrawer>
+	);
+
+	const clearAllButton = screen.getByRole('button', { name: 'Clear all' });
+
+	expect(clearAllButton).toHaveClass('flex-1');
+	expect(clearAllButton.querySelector('.fa-trash')).toBeInTheDocument();
+	fireEvent.click(clearAllButton);
+
+	expect(clearAllFilters).toHaveBeenCalledOnce();
+	expect(applyFilters).toHaveBeenCalledOnce();
+	expect(closeDrawer).toHaveBeenCalledOnce();
+});
+
+it('discards staged filters when the drawer is closed without applying', () => {
 	const applyFilters = vi.fn();
 	const cancelFilters = vi.fn();
 	render(
@@ -42,7 +65,7 @@ it('calls the cancel action without applying the staged filters', () => {
 		</FilterDrawer>
 	);
 
-	fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+	fireEvent.click(screen.getByRole('button', { name: 'Close filter drawer' }));
 
 	expect(cancelFilters).toHaveBeenCalledOnce();
 	expect(applyFilters).not.toHaveBeenCalled();
