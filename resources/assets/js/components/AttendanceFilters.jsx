@@ -108,7 +108,7 @@ const AttendanceFilters = ({ event, voiceParts, form, ensembles, singerStatuses 
 						value={data['attendance.response']}
 						updateFn={value => setData('attendance.response', value)}
 						renderOption={option => (
-							<span className="inline-flex items-center gap-1.5">
+							<span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500">
 								<Icon icon={option.icon} className={option.colour} />
 								{option.name}
 							</span>

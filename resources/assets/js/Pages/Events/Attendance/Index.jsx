@@ -116,12 +116,23 @@ const Index = ({
 			label: 'Attendance Response',
 			multiple: true,
 			options: [
-				{ id: 'present', name: 'On Time' },
-				{ id: 'late', name: 'Late' },
-				{ id: 'unknown', name: 'Not recorded' },
-				{ id: 'late_deemed_absent', name: 'Late (Deemed Absent)' },
-				{ id: 'absent', name: 'Absent' },
+				{ id: 'present', name: 'On Time', icon: 'check', colour: 'text-emerald-500' },
+				{ id: 'late', name: 'Late', icon: 'alarm-snooze', colour: 'text-yellow-500' },
+				{ id: 'unknown', name: 'Not recorded', icon: 'circle', colour: 'text-gray-500' },
+				{
+					id: 'late_deemed_absent',
+					name: 'Late (Deemed Absent)',
+					icon: 'alarm-exclamation',
+					colour: 'text-orange-500',
+				},
+				{ id: 'absent', name: 'Absent', icon: 'times', colour: 'text-red-500' },
 			],
+			renderOption: option => (
+				<span className="inline-flex items-center gap-1.5">
+					<Icon icon={option.icon} className={option.colour} />
+					{option.name}
+				</span>
+			),
 		},
 		{
 			name: 'status.id',

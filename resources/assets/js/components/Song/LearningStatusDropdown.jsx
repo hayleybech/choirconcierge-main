@@ -29,8 +29,8 @@ const LearningStatusDropdown = ({
 					size={size}
 					className="relative z-0 w-full md:w-auto"
 				>
-					<Icon icon={current.icon} className={current.textColour} />
-					<span className={current.textColour}>{compact ? current.shortTitle : current.title}</span>
+					<Icon icon={current.icon} className={current.iconTextColour} />
+					<span>{compact ? current.shortTitle : current.title}</span>
 					<Icon icon="chevron-down" className="text-gray-500" />
 				</Menu.Button>
 
@@ -62,10 +62,9 @@ const LearningStatusDropdown = ({
 												preserveScroll
 												method={method}
 												data={{ status: slug }}
-												className={classNames(
-													'block w-full text-left px-4 py-2 text-sm',
-													option.textColour,
-													active ? 'bg-gray-100' : ''
+								className={classNames(
+									'block w-full text-left px-4 py-2 text-sm text-gray-500',
+									active ? 'bg-gray-100' : ''
 												)}
 											>
 												<Icon icon={option.icon} mr className={option.textColour} />

@@ -89,7 +89,7 @@ const RsvpResponseDialog = ({ response, details, title, onSave, children }) => {
 									}
 								}}
 								aria-pressed={selectedResponse === option.id}
-								className={`relative w-full min-w-0 rounded-none px-1.5 text-xs ${
+								className={`relative w-full min-w-0 rounded-none px-1.5 text-sm ${
 									index === 0 ? 'rounded-l-md' : '-ml-px'
 								} ${index === rsvpOptions.length - 1 ? 'rounded-r-md' : ''} ${
 									selectedResponse === option.id ? 'z-10' : ''

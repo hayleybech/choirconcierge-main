@@ -73,7 +73,7 @@ const LearningStatusFilters = ({ song, voiceParts, form, ensembles, singerStatus
                         const status = new LearningStatus(option.id);
 
                         return (
-                            <span className="inline-flex items-center gap-1.5">
+                            <span className="inline-flex items-center gap-1.5 text-gray-500">
                                 <Icon icon={status.icon} className={status.textColour} />
                                 {status.title}
                             </span>

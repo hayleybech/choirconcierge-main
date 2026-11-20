@@ -270,7 +270,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 									onClick={() => setData('response', option.id)}
 									aria-pressed={data.response === option.id}
 									className={classNames(
-										'relative w-full min-w-0 rounded-none px-2 text-xs',
+										'relative w-full min-w-0 rounded-none px-2 text-sm justify-start',
 										index > 0 ? '-mt-px' : '',
 										index === 0 ? 'rounded-t-md' : '',
 										index === options.length - 1 ? 'rounded-b-md' : '',

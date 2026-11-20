@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { Menu, Transition } from '@headlessui/react';
 import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
@@ -28,6 +29,7 @@ import VoicePartTag from '../../../components/VoicePartTag';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
 import { router } from '@inertiajs/react';
+import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 
 const Index = ({
 	song,
@@ -92,7 +94,7 @@ const Index = ({
 				const status = new LearningStatus(option.id);
 
 				return (
-					<span className="inline-flex items-center gap-1.5">
+					<span className="inline-flex items-center gap-1.5 text-gray-500">
 						<Icon icon={status.icon} className={status.textColour} />
 						{status.title}
 					</span>
@@ -123,6 +125,74 @@ const Index = ({
 			{ preserveScroll: true, onSuccess: () => bulkEdit.clearSelections() }
 		);
 	};
+	const moreBulkEditStatuses = ['not-started', 'assessment-ready'];
+	const bulkActions = (
+		<>
+			{Object.keys(LearningStatus.statuses)
+				.filter(slug => !moreBulkEditStatuses.includes(slug))
+				.map(slug => {
+					const status = new LearningStatus(slug);
+
+					return (
+						<Button
+							key={slug}
+							size="sm"
+							intent="secondary"
+							weight="clear"
+							theme="dark"
+							onClick={() => markSelectedAs(slug)}
+						>
+							<Icon icon={status.icon} className={status.textColour} />
+							{status.title}
+						</Button>
+					);
+				})}
+			<Menu as="div" className="relative flex">
+				<Menu.Button
+					as={Button}
+					theme="dark"
+					weight="clear"
+					size="sm"
+					className="flex items-center !gap-x-0 font-medium hover:bg-gray-600 focus:outline-none transition ease-in-out duration-150 cursor-pointer"
+				>
+					More
+					<Icon icon="chevron-up" className="ml-1 text-[10px]" />
+				</Menu.Button>
+				<Transition
+					as={Fragment}
+					enter="transition ease-out duration-100"
+					enterFrom="transform opacity-0 scale-95"
+					enterTo="transform opacity-100 scale-100"
+					leave="transition ease-in duration-75"
+					leaveFrom="transform opacity-100 scale-100"
+					leaveTo="transform opacity-0 scale-95"
+				>
+					<Menu.Items className="origin-bottom-right absolute right-0 bottom-full mb-4 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black/5 focus:outline-none">
+						{Object.keys(LearningStatus.statuses)
+							.filter(slug => moreBulkEditStatuses.includes(slug))
+							.map(slug => {
+								const status = new LearningStatus(slug);
+
+								return (
+									<Menu.Item key={slug}>
+										{({ active }) => (
+											<button
+												type="button"
+												onClick={() => markSelectedAs(slug)}
+												className={menuItemStyles('secondary', active, '', 'xs')}
+											>
+												<Icon icon={status.icon} mr className={status.textColour} />
+												{status.title}
+											</button>
+										)}
+									</Menu.Item>
+								);
+							})}
+					</Menu.Items>
+				</Transition>
+			</Menu>
+		</>
+	);
 
 	const breadcrumbs = [
 		{ name: 'Songs', url: route('songs.index') },
@@ -148,23 +218,7 @@ const Index = ({
 
 			<BulkEditBar
 				bulkEdit={bulkEdit}
-				actions={Object.keys(LearningStatus.statuses).map(slug => {
-					const status = new LearningStatus(slug);
-
-					return (
-						<Button
-							key={slug}
-							size="sm"
-							intent="secondary"
-							weight="clear"
-							theme="dark"
-							onClick={() => markSelectedAs(slug)}
-						>
-							<Icon icon={status.icon} className={status.textColour} />
-							{status.title}
-						</Button>
-					);
-				})}
+				actions={bulkActions}
 			/>
 
 			<IndexContainer
