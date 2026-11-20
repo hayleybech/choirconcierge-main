@@ -76,6 +76,7 @@ const AttendanceTableMobile = ({
 									attendance={singer.attendance}
 									singerId={singer.id}
 									event={event}
+									isMobile
 								/>
 							</div>
 							<div className="shrink-0 pl-4 pr-4 sm:pr-6">

@@ -16,6 +16,7 @@ const Dialog = ({
 	isOpen,
 	setIsOpen,
 	processing,
+	okDisabled = false,
 	icon = 'exclamation-triangle',
 }) => (
 	<Transition.Root show={isOpen} as={Fragment}>
@@ -86,7 +87,7 @@ const Dialog = ({
 									data={data}
 									as="button"
 									className="sm:ml-3 w-full"
-									disabled={processing}
+									disabled={processing || okDisabled}
 								>
 									{okLabel}
 								</ButtonV2>
