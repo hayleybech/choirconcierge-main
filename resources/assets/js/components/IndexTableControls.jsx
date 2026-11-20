@@ -472,7 +472,6 @@ const AddFilterButton = ({ filters, onAdd }) => {
 	const [draftValues, setDraftValues] = useState([]);
 	const [textValue, setTextValue] = useState('');
 	const selectedFilter = filters.find(filter => filter.name === selectedFilterName);
-	const hasDraftSelection = draftValues.some(selectedValue => selectedValue !== '');
 
 	const chooseFilter = filterName => {
 		const nextFilter = filters.find(filter => filter.name === filterName);
@@ -530,7 +529,6 @@ const AddFilterButton = ({ filters, onAdd }) => {
 					draftValues={draftValues}
 					textValue={textValue}
 					options={options}
-					hasDraftSelection={hasDraftSelection}
 					chooseFilter={chooseFilter}
 					chooseFilterValue={chooseFilterValue}
 					toggleDraftValue={toggleDraftValue}
@@ -553,7 +551,6 @@ const AddFilterMenuContent = ({
 	draftValues,
 	textValue,
 	options,
-	hasDraftSelection,
 	chooseFilter,
 	chooseFilterValue,
 	toggleDraftValue,
@@ -730,18 +727,25 @@ const AddFilterMenuContent = ({
 										</label>
 									))}
 								</div>
-								<div className="shrink-0 border-t border-gray-200 px-2 pt-2">
-									<Menu.Item
-										as={Button}
+								<div className="flex justify-between shrink-0 gap-1 border-t border-gray-200 px-2 pt-2 pb-1">
+									<Button
 										type="button"
-										intent={hasDraftSelection ? 'primary' : 'secondary'}
+										intent="primary"
 										size="sm"
 										onClick={() => applyDraftValues(selectedFilter)}
-										className="w-full"
 									>
 										<Icon icon="fa-check" />
 										Apply
-									</Menu.Item>
+									</Button>
+									<Button
+										type="button"
+										size="sm"
+										weight="clear"
+										onClick={cancelFilterValue}
+									>
+										<Icon icon="times" type="regular" />
+										Close
+									</Button>
 								</div>
 							</div>
 						)}

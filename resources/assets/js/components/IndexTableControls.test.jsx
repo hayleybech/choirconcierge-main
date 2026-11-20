@@ -556,9 +556,47 @@ it('stages all configured values from Add Filter before applying them', async ()
 	expect(within(valuePanel).getByLabelText('Expired')).toBeChecked();
 	expect(setData).not.toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
 
-	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
+	const applyButton = screen.getByRole('menuitem', { name: 'Apply' });
+	const closeButton = screen.getByRole('menuitem', { name: 'Close' });
+
+	expect(applyButton).toHaveClass('bg-purple-600', 'py-0.5', 'px-1');
+	expect(closeButton).toHaveClass('py-0.5', 'px-1');
+	expect(applyButton.nextElementSibling).toBe(closeButton);
+	expect(closeButton.querySelector('.fa-times')).toBeInTheDocument();
+	await user.click(applyButton);
 
 	expect(setData).toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
+});
+
+it('closes the Add Filter popover without applying staged values', async () => {
+	const user = userEvent.setup();
+	const feeFilter = {
+		name: 'fee_status',
+		label: 'Fee Status',
+		multiple: true,
+		defaultValue: [],
+		options: [
+			{ id: 'paid', name: 'Paid' },
+			{ id: 'expired', name: 'Expired' },
+		],
+	};
+	const { setData } = renderControls({
+		controlFilters: [...filters, feeFilter],
+		data: { ...initialData, fee_status: [] },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
+	const valuePanel = screen.getByRole('group', { name: 'Fee Status values' });
+	await user.click(within(valuePanel).getByLabelText('Paid'));
+	await user.click(screen.getByRole('menuitem', { name: 'Close' }));
+
+	expect(setData).not.toHaveBeenCalledWith('fee_status', ['paid']);
+	expect(screen.queryByRole('group', { name: 'Fee Status values' })).not.toBeInTheDocument();
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
+	expect(within(screen.getByRole('group', { name: 'Fee Status values' })).getByLabelText('Paid')).not.toBeChecked();
 });
 
 it('keeps sort controls open and marks the selected direction with selected intent', async () => {

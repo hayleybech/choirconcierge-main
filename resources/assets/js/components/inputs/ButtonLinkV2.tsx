@@ -7,7 +7,7 @@ type ButtonLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
 	href: string;
 	intent?: 'primary' | 'secondary' | 'selected' | 'danger' | 'warning' | 'success';
 	weight?: 'solid' | 'outline' | 'clear';
-	size?: 'lg' | 'md' | 'sm';
+	size?: 'lg' | 'md' | 'sm' | 'xs';
 	theme?: 'light' | 'dark';
 	external?: boolean;
 	method?: Method;
