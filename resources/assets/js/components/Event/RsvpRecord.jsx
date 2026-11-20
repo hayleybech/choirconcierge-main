@@ -37,10 +37,9 @@ const RsvpRecord = ({ rsvp, singerId, event }) => {
 					<Icon
 						icon={currentOption?.icon ?? 'circle'}
 						className={currentOption?.iconColour ?? 'text-gray-500'}
-						mr
 					/>
 					{currentOption?.name ?? rsvp.label}
-					<Icon icon="chevron-down" ml className="text-gray-400" />
+					<Icon icon="chevron-down" className="text-gray-400" />
 				</ButtonV2>
 			)}
 		</RsvpResponseDialog>

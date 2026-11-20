@@ -48,7 +48,8 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 		},
 		{
 			id: 'late_deemed_absent',
-			name: 'Late (Deemed Absent)',
+			shortName: 'Very Late',
+			name: 'Very Late (Deemed Absent)',
 			icon: 'alarm-exclamation',
 			iconColour: 'text-orange-500!',
 		},
@@ -111,13 +112,13 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 						>
 							{currentOption ? (
 								<>
-									<Icon icon={currentOption.icon} className={currentOption.iconColour} mr />
-									<span className="truncate">{currentOption.name}</span>
+									<Icon icon={currentOption.icon} className={currentOption.iconColour} />
+									<span className="truncate">{currentOption.shortName ?? currentOption.name}</span>
 								</>
 							) : (
 								'Select status'
 							)}
-							<Icon icon="chevron-down" ml className="text-gray-400" />
+							<Icon icon="chevron-down" className="text-gray-400" />
 						</ButtonV2>
 					)}
 					{!isMobile && <Menu as="div" className="relative inline-block text-left">

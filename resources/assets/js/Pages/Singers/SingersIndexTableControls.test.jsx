@@ -459,7 +459,7 @@ it('portals filter dropdowns above the mobile header and configures viewport-awa
 
 	await user.click(statusPill);
 
-	const filterPanel = screen.getByText('Clear selected').closest('.z-50');
+	const filterPanel = screen.getByRole('button', { name: 'Clear' }).closest('.fixed');
 	const filterPosition = popperCalls.find(call => call.reference === statusPill);
 
 	expect(filterPanel).toBeTruthy();

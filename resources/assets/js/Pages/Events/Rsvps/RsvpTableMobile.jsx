@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
- 
-import TableMobile, {
-	TableMobileListItem,
-	TableMobileSelect,
-} from '../../../components/TableMobile';
+
+import TableMobile, { TableMobileListItem, TableMobileSelect } from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
 import RsvpTag from '../../../components/Event/RsvpTag';
 import RsvpRecord from '../../../components/Event/RsvpRecord';
@@ -11,10 +8,8 @@ import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
-import SingerStatus from '../../../SingerStatus';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
-import SingerStatusTag from '../../../components/SingerStatusTag';
 
 const RsvpTableMobile = ({
 	singers,
@@ -55,7 +50,7 @@ const RsvpTableMobile = ({
 					<TableMobileListItem key={singer.id}>
 						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
 						<div
-							className={`flex items-center pr-4 py-4 sm:pr-6 gap-4 transition-[padding] ease-out ${
+							className={`flex items-center pr-4 py-4 sm:pr-6 gap-2 transition-[padding] ease-out ${
 								bulkEdit.isActiveMobile ? 'pl-11' : 'pl-4 sm:pl-6'
 							}`}
 						>
@@ -67,17 +62,14 @@ const RsvpTableMobile = ({
 								/>
 							</div>
 							<div className="min-w-0 flex-1">
-								<div className="flex items-center justify-between mb-1">
+								<div className="flex items-center justify-between mb-1 gap-1">
 									<div>
-										<div>
-											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 truncate"
-											>
-												{singer.user.name}
-											</Link>
-										</div>
+										<Link
+											href={route('singers.show', { singer })}
+											className="ml-1 text-sm font-medium text-purple-600 truncate"
+										>
+											{singer.user.name}
+										</Link>
 										<div className="text-sm text-gray-500">
 											<Icon icon="phone" mr className="text-gray-400 text-sm" />
 											{singer.user.phone ? (
@@ -89,18 +81,9 @@ const RsvpTableMobile = ({
 											)}
 										</div>
 									</div>
-    					<div className="div">
-    						{visibleColumns.includes('rsvp') && (
-    							<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
-    								{canEditRsvps ? (
-    									<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
-    								) : (
-    									<RsvpTag
-    										icon={singer.rsvp.icon}
-    										label={singer.rsvp.label}
-    										colour={singer.rsvp.colour}
-    									/>
-    								)}
+									<div className="div">
+										{visibleColumns.includes('rsvp') && (
+											<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
 												{singer.rsvp.details && (
 													<div
 														className="relative"
@@ -128,6 +111,15 @@ const RsvpTableMobile = ({
 														)}
 													</div>
 												)}
+												{canEditRsvps ? (
+													<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
+												) : (
+													<RsvpTag
+														icon={singer.rsvp.icon}
+														label={singer.rsvp.label}
+														colour={singer.rsvp.colour}
+													/>
+												)}
 											</div>
 										)}
 										{visibleColumns.includes('updated') && !!singer.rsvp.updated_at && (
@@ -135,7 +127,7 @@ const RsvpTableMobile = ({
 												icon="pencil"
 												date={singer.rsvp.updated_at}
 												format="DATE_SHORT"
-												className="text-gray-400 text-sm"
+												className="text-gray-400 text-sm text-right"
 												mr={false}
 											/>
 										)}
