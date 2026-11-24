@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 
 import TableMobile, { TableMobileListItem, TableMobileSelect } from '../../../components/TableMobile';
 import Pagination from '../../../components/Pagination';
@@ -10,6 +10,7 @@ import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
+import Tooltip from '../../../components/Tooltip';
 
 const RsvpTableMobile = ({
 	singers,
@@ -23,20 +24,6 @@ const RsvpTableMobile = ({
 }) => {
 	const { route } = useRoute();
 	const [expandedSingers, setExpandedSingers] = useState([]);
-	const [openReasonId, setOpenReasonId] = useState(null);
-	const reasonRef = useRef(null);
-
-	useEffect(() => {
-		const handleClickOutside = event => {
-			if (reasonRef.current && !reasonRef.current.contains(event.target)) {
-				setOpenReasonId(null);
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
 
 	const toggleExpanded = (id, e) => {
 		e.preventDefault();
@@ -84,33 +71,7 @@ const RsvpTableMobile = ({
 									<div className="div">
 										{visibleColumns.includes('rsvp') && (
 											<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
-												{singer.rsvp.details && (
-													<div
-														className="relative"
-														ref={openReasonId === singer.id ? reasonRef : null}
-													>
-														<button
-															type="button"
-															aria-label="Show RSVP reason"
-															aria-expanded={openReasonId === singer.id}
-															onClick={e => {
-																e.preventDefault();
-																e.stopPropagation();
-																setOpenReasonId(
-																	openReasonId === singer.id ? null : singer.id
-																);
-															}}
-															className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
-														>
-															<Icon icon="comment-dots" />
-														</button>
-														{openReasonId === singer.id && (
-															<div className="absolute right-0 top-5 z-10 w-48 rounded bg-gray-800 px-2 py-1.5 text-left text-[11px] font-normal leading-tight text-white shadow-lg">
-																{singer.rsvp.details}
-															</div>
-														)}
-													</div>
-												)}
+                                                {singer.rsvp.details && <RsvpReasonTooltip details={singer.rsvp.details} />}
 												{canEditRsvps ? (
 													<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} isMobile />
 												) : (
@@ -201,3 +162,19 @@ const RsvpTableMobile = ({
 };
 
 export default RsvpTableMobile;
+
+const RsvpReasonTooltip = ({ details }) => (
+	<Tooltip content={details} placement="bottom-end" trigger="click">
+		<button
+			type="button"
+			aria-label="Show RSVP reason"
+			onClick={event => {
+				event.preventDefault();
+				event.stopPropagation();
+			}}
+			className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
+		>
+			<Icon icon="comment-dots" />
+		</button>
+	</Tooltip>
+);

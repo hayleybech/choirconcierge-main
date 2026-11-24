@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import TextInput from '../inputs/TextInput';
@@ -8,49 +8,7 @@ import useRoute from '../../hooks/useRoute';
 import { router, useForm, usePage } from '@inertiajs/react';
 import classNames from '../../classNames';
 import Dialog from '../Dialog';
-
-const AttendanceReasonTooltip = ({ reason }) => {
-	const [isOpen, setIsOpen] = useState(false);
-	const reasonRef = useRef(null);
-
-	useEffect(() => {
-		const handleClickOutside = event => {
-			if (reasonRef.current && !reasonRef.current.contains(event.target)) {
-				setIsOpen(false);
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
-
-	return (
-		<div className="relative" ref={reasonRef}>
-			<button
-				type="button"
-				aria-label="Show attendance reason"
-				aria-expanded={isOpen}
-				onClick={event => {
-					event.preventDefault();
-					event.stopPropagation();
-					setIsOpen(open => !open);
-				}}
-				className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
-			>
-				<Icon icon="comment-dots" />
-			</button>
-			{isOpen && (
-				<div
-					role="tooltip"
-					className="absolute right-0 top-5 z-10 w-48 rounded bg-gray-800 px-2 py-1.5 text-left text-[11px] font-normal leading-tight text-white shadow-lg"
-				>
-					{reason}
-				</div>
-			)}
-		</div>
-	);
-};
+import Tooltip from '../Tooltip';
 
 const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobile = false }) => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -146,7 +104,19 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 			<div className="flex flex-col gap-y-1.5">
 				<div className="flex items-center gap-1">
 					{isMobile && attendance.response === 'absent' && attendance.absent_reason && (
-						<AttendanceReasonTooltip reason={attendance.absent_reason} />
+						<Tooltip content={attendance.absent_reason} placement="bottom-end" trigger="click">
+							<button
+								type="button"
+								aria-label="Show attendance reason"
+								onClick={event => {
+									event.preventDefault();
+									event.stopPropagation();
+								}}
+								className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
+							>
+								<Icon icon="comment-dots" />
+							</button>
+						</Tooltip>
 					)}
 					{isMobile && (
 						<ButtonV2
@@ -242,12 +212,11 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 				{attendance.response === 'absent' && (
 					<div className="flex gap-1.5 items-center">
 						{attendance.absent_reason && !isEditing && (
-							<div
-								className="text-[11px] text-gray-500 italic max-w-[200px] truncate"
-								title={attendance.absent_reason}
-							>
-								Reason: {attendance.absent_reason}
-							</div>
+							<Tooltip content={attendance.absent_reason}>
+								<div className="text-[11px] text-gray-500 italic max-w-[200px] truncate" tabIndex={0}>
+									Reason: {attendance.absent_reason}
+								</div>
+							</Tooltip>
 						)}
 
 						{!isMobile && !isEditing && !!attendance.absent_reason && (

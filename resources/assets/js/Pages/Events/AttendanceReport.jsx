@@ -14,6 +14,7 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import AppHead from '../../components/AppHead';
 import { DateTime } from 'luxon';
 import AttendanceTag from '../../components/Event/AttendanceTag';
+import Tooltip from '../../components/Tooltip';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
@@ -317,12 +318,11 @@ const AttendanceReport = ({
 														>
 															{!event.isBeforeHistory &&
 															!event.consideredSingerIds.includes(singer.id) ? (
-																<span
-																	className="text-xs text-gray-400"
-																	title="Not an active member at the time"
-																>
-																	N/A
-																</span>
+                                                <Tooltip content="Not an active member at the time">
+                                                    <span className="text-xs text-gray-400" tabIndex={0}>
+                                                        N/A
+                                                    </span>
+                                                </Tooltip>
 															) : (
 																<AttendanceTag
 																	status={

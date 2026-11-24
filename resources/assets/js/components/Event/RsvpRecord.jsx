@@ -8,6 +8,7 @@ import useRoute from '../../hooks/useRoute';
 import RsvpResponseDialog, { rsvpOptions } from './RsvpResponseDialog';
 import classNames from '../../classNames';
 import menuItemStyles from '../ActionMenu/menuItemStyles';
+import Tooltip from '../Tooltip';
 
 const RsvpRecord = ({ rsvp, singerId, event, isMobile = false }) => {
 	const [isEditing, setIsEditing] = useState(false);
@@ -147,9 +148,11 @@ const RsvpRecord = ({ rsvp, singerId, event, isMobile = false }) => {
 			{responseAllowsDetails && (
 				<div className="mt-1 flex items-center gap-1.5">
 					{rsvp.details && !isEditing && (
-						<div className="max-w-[200px] truncate text-[11px] italic text-gray-500" title={rsvp.details}>
-							{detailsLabel}: {rsvp.details}
-						</div>
+						<Tooltip content={rsvp.details}>
+							<div className="max-w-[200px] truncate text-[11px] italic text-gray-500" tabIndex={0}>
+								{detailsLabel}: {rsvp.details}
+							</div>
+						</Tooltip>
 					)}
 					{rsvp.details && !isEditing && (
 						<ButtonV2 intent="secondary" weight="outline" size="sm" onClick={startEditing}>
