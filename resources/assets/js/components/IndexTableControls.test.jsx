@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import IndexTableControls from './IndexTableControls';
+import TableHeadingSort from './TableHeadingSort';
 import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
 import { createSingerStatusFilter } from './SingerFilterDescriptors';
 import { createAttendanceFilterDescriptors } from '../Pages/Events/Attendance/AttendanceFilterDescriptors';
@@ -183,6 +184,7 @@ const renderControls = ({
 	onToggleFilters = vi.fn(),
 	filterLabel = 'members',
 	showMobileDateRangeFilter = false,
+	includeSortableHeaders = false,
 } = {}) => {
 	const setData = vi.fn();
 	const submit = vi.fn();
@@ -190,27 +192,120 @@ const renderControls = ({
 	const Controls = () => {
 		const [formData, updateFormData] = useState(data);
 		const updateData = (name, value) => {
+			if (typeof name === 'function') {
+				const nextData = name(formData);
+				setData(nextData);
+				updateFormData(nextData);
+				return;
+			}
+
 			setData(name, value);
 			updateFormData(previousData => ({ ...previousData, [name]: value }));
 		};
 
+		const form = { data: formData, setData: updateData, submit };
+
 		return (
-			<IndexTableControls
-				filters={controlFilters}
-				sorts={controlSorts}
-				form={{ data: formData, setData: updateData, submit }}
-				tableActions={tableActions}
-				tableActionContent={tableActionContent}
-				bulkEdit={bulkEdit}
-				onToggleFilters={onToggleFilters}
-				filterLabel={filterLabel}
-				showMobileDateRangeFilter={showMobileDateRangeFilter}
-			/>
+			<>
+				<IndexTableControls
+					filters={controlFilters}
+					sorts={controlSorts}
+					form={form}
+					tableActions={tableActions}
+					tableActionContent={tableActionContent}
+					bulkEdit={bulkEdit}
+					onToggleFilters={onToggleFilters}
+					filterLabel={filterLabel}
+					showMobileDateRangeFilter={showMobileDateRangeFilter}
+				/>
+				{includeSortableHeaders && (
+					<div>
+						<div data-testid="sort-state">{formData.sort}:{formData.sortDir}</div>
+						{['full-name', 'status', 'team'].map(sort => (
+							<TableHeadingSort key={sort} form={form} sort={sort}>
+								{sort}
+							</TableHeadingSort>
+						))}
+					</div>
+				)}
+			</>
 		);
 	};
 
 	return { ...render(<Controls />), setData, submit, onToggleFilters };
 };
+
+it('submits a desktop filter pill change once when multiple sortable headers share the form', async () => {
+	const user = userEvent.setup();
+	const { submit } = renderControls({ includeSortableHeaders: true });
+
+	expect(submit).not.toHaveBeenCalled();
+
+	await user.click(screen.getByRole('button', { name: 'Status: Inactive; open filter values' }));
+	await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+	await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
+});
+
+it('keeps a desktop filter pill submission when the page rerenders during the debounce', async () => {
+	const user = userEvent.setup();
+	const submit = vi.fn();
+	const RerenderingControls = () => {
+		const [formData, updateFormData] = useState(initialData);
+		const [, forceRerender] = useState(0);
+		const form = {
+			data: formData,
+			setData: (name, value) => updateFormData(previousData => ({ ...previousData, [name]: value })),
+			submit,
+		};
+
+		return (
+			<>
+				<IndexTableControls filters={filters.map(filter => ({ ...filter }))} form={form} />
+				<button type="button" onClick={() => forceRerender(previousValue => previousValue + 1)}>
+					Rerender page
+				</button>
+				<div data-testid="status-filter-value">{JSON.stringify(formData.status)}</div>
+			</>
+		);
+	};
+
+	render(<RerenderingControls />);
+	await user.click(screen.getByRole('button', { name: 'Status: Inactive; open filter values' }));
+	await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+	expect(screen.getByTestId('status-filter-value')).toHaveTextContent('[""]');
+	await user.click(screen.getByRole('button', { name: 'Rerender page' }));
+
+	await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
+});
+
+it('updates sort state and submits once when a sortable header is clicked', async () => {
+	const user = userEvent.setup();
+	const { submit } = renderControls({ includeSortableHeaders: true });
+
+	expect(screen.getByTestId('sort-state')).toHaveTextContent('full-name:asc');
+	await user.click(screen.getByRole('button', { name: 'status' }));
+
+	expect(screen.getByTestId('sort-state')).toHaveTextContent('status:desc');
+	await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
+});
+
+it('submits mobile sort changes once through the SortDropdown', async () => {
+	mockUseMediaQuery.mockReturnValue(false);
+	const user = userEvent.setup();
+	const { submit, setData } = renderControls();
+
+	await user.click(screen.getByRole('button', { name: 'Sort options' }));
+	await user.click(screen.getByRole('radio', { name: 'Status' }));
+
+	expect(setData).toHaveBeenCalledWith('sort', 'status');
+	await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
+});
 
 it('uses the secondary clear reset button only when a non-search filter is shown', () => {
 	mockUseMediaQuery.mockReturnValue(true);
@@ -824,10 +919,12 @@ it('uses a filter change handler to update related form state', async () => {
 		],
 		onChange,
 	};
-	const { setData } = renderControls({
+	const { setData, submit } = renderControls({
 		controlFilters: [...filters, dateFilter],
 		data: { ...initialData, date_range: '' },
+		includeSortableHeaders: true,
 	});
+	expect(submit).not.toHaveBeenCalled();
 
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Date range' }));
@@ -846,6 +943,8 @@ it('uses a filter change handler to update related form state', async () => {
 		['sort', 'date'],
 		['sortDir', 'asc'],
 	]);
+	await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
 });
 
 it('adds breathing room and closes an Add Filter text panel without applying its value', async () => {

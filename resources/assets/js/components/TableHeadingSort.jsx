@@ -1,20 +1,10 @@
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import classNames from "../classNames";
 import Icon from "./Icon";
  
-const TableHeadingSort = ({ form: { submit, data, setData }, sort, children, onClick, indicator }) => {
+const TableHeadingSort = ({ form: { data, setData }, sort, children, onClick, indicator }) => {
     const isActive = data.sort === sort || (Array.isArray(sort) && sort.includes(data.sort));
     const sortDir = isActive ? data.sortDir : 'asc';
-
-    const firstUpdate = useRef(true);
-    useEffect(() => {
-        if (firstUpdate.current) {
-            firstUpdate.current = false;
-            return;
-        }
-
-        submit();
-    }, [data]);
 
     return (
         <button

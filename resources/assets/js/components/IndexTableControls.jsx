@@ -39,6 +39,8 @@ const IndexTableControls = ({
 	const [addedFilters, setAddedFilters] = useState([]);
 	const visibleFilterDescriptors = filters.filter(filter => filter.visible !== false);
 	const autoSubmitFilters = visibleFilterDescriptors.filter(filter => ['date', 'text'].includes(filter.type));
+	const autoSubmitFiltersRef = useRef(autoSubmitFilters);
+	autoSubmitFiltersRef.current = autoSubmitFilters;
 	const searchableFilters = visibleFilterDescriptors.filter(
 		filter => ['date', 'text'].includes(filter.type) && filter.toolbarMode !== 'pill'
 	);
@@ -57,7 +59,7 @@ const IndexTableControls = ({
 			return undefined;
 		}
 
-		const hasChangedSearch = autoSubmitFilters.some(
+		const hasChangedSearch = autoSubmitFiltersRef.current.some(
 			filter => getFilterValue(filter, previousData.current) !== getFilterValue(filter, form.data)
 		);
 		previousData.current = form.data;
@@ -69,7 +71,7 @@ const IndexTableControls = ({
 		const timeout = window.setTimeout(() => form.submit(undefined, { preserveState: true }), 300);
 
 		return () => window.clearTimeout(timeout);
-	}, [autoSubmitFilters, form.data, isDesktop]);
+	}, [form.data, isDesktop]);
 
 	const visibleFilters = filtersForPills.filter(filter => {
 		const value = getFilterValue(filter, form.data);
