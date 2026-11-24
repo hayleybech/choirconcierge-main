@@ -4,7 +4,11 @@ import { useMediaQuery } from 'react-responsive';
 const useFilterPane = () => {
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const [showFilters, setShowFiltersState] = useState(
-		() => isDesktop && (localStorage.getItem('showFilters') === 'true' ?? isDesktop)
+		() => {
+			const storedShowFilters = localStorage.getItem('showFilters');
+
+			return isDesktop && (storedShowFilters === null || storedShowFilters === 'true');
+		}
 	);
 
 	const setShowFilters = value => {
