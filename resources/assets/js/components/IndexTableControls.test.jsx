@@ -820,6 +820,26 @@ it('uses a filter change handler to update related form state', async () => {
 	]);
 });
 
+it('adds breathing room and closes an Add Filter text panel without applying its value', async () => {
+	const user = userEvent.setup();
+	const { setData } = renderControls({
+		controlFilters: [{ name: 'from', label: 'From', type: 'text', toolbarMode: 'pill', defaultValue: '' }],
+		data: { from: '' },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'From' }));
+
+	const valuesPanel = screen.getByRole('group', { name: 'From values' });
+	const input = within(valuesPanel).getByLabelText('Value for From');
+	expect(input.parentElement).toHaveClass('px-3', 'pb-3');
+	await user.type(input, 'sender@example.com');
+	await user.click(within(valuesPanel).getByRole('menuitem', { name: 'Close' }));
+
+	expect(screen.queryByRole('group', { name: 'From values' })).not.toBeInTheDocument();
+	expect(setData).not.toHaveBeenCalled();
+});
+
 it('renders Riser Stacks ensemble choices with shared option styling and reset behavior', async () => {
 	const user = userEvent.setup();
 	const riserStackFilters = createRiserStackFilterDescriptors(

@@ -2,11 +2,18 @@ import React from 'react';
 import Icon from '../../../components/Icon';
 import TenantSelect from '../../../components/inputs/TenantSelect';
 
-const renderTenantSelect = ({ value, onChange, options }) => {
+const renderTenantSelect = ({ value, onChange, options, surface }) => {
 	const tenantOptions = options.map(option => ({ label: option.name, value: option.id }));
 	const selectedTenant = tenantOptions.find(option => String(option.value) === String(value)) ?? null;
 
-	return <TenantSelect options={tenantOptions} value={selectedTenant} updateFn={onChange} />;
+	return (
+		<TenantSelect
+			options={tenantOptions}
+			value={selectedTenant}
+			updateFn={onChange}
+			className={surface === 'add-filter' ? 'mt-1 mb-3 w-full min-w-0 max-w-full px-3' : undefined}
+		/>
+	);
 };
 
 export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defaultMailTypes }) {

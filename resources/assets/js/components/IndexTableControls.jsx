@@ -631,7 +631,7 @@ const AddFilterMenuContent = ({
 							</div>
 						) : selectedFilter.type === 'text' ? (
 							<div>
-								<div className="px-3">
+								<div className="px-3 pb-3">
 									<input
 										aria-label={`Value for ${selectedFilter.label}`}
 										autoFocus
@@ -653,6 +653,21 @@ const AddFilterMenuContent = ({
 										<Icon icon="fa-check" />
 										Apply
 									</Menu.Item>
+									<Menu.Item
+										as={Button}
+										type="button"
+										role="menuitem"
+										size="sm"
+										weight="clear"
+										className="py-0.5 px-1"
+										onClick={() => {
+											cancelFilterValue();
+											closeMenu();
+										}}
+									>
+										<Icon icon="times" type="regular" />
+										Close
+									</Menu.Item>
 								</div>
 							</div>
 						) : (
@@ -662,7 +677,7 @@ const AddFilterMenuContent = ({
 										value: isMultipleFilter(selectedFilter)
 											? draftValues
 											: draftValues.find(value => value !== '') ?? '',
-							onChange: value => setDraftValues(Array.isArray(value) ? value : [value]),
+										onChange: value => setDraftValues(Array.isArray(value) ? value : [value]),
 										options,
 										filter: selectedFilter,
 										surface: 'add-filter',

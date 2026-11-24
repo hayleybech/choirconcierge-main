@@ -22,13 +22,14 @@ vi.mock('../../../components/inputs/TenantSelect', async () => {
 	const React = await vi.importActual('react');
 
 	return {
-		default: ({ options, defaultValue, value, updateFn }) =>
+		default: ({ options, defaultValue, value, updateFn, className }) =>
 			React.createElement(
 				'button',
 				{
 					'type': 'button',
 					'aria-label': 'Select tenant',
 					'data-testid': 'tenant-selector',
+					'data-class-name': className,
 					'onClick': () => updateFn(options[0]?.value ?? ''),
 				},
 				value?.label ?? defaultValue?.label ?? 'No tenant selected'
@@ -119,6 +120,10 @@ it('puts tenant selection in both the Add Filter panel and the desktop filter pi
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Tenant' }));
 	expect(screen.getByRole('group', { name: 'Tenant values' })).toHaveClass('overflow-visible');
+	expect(screen.getByTestId('tenant-selector')).toHaveAttribute(
+		'data-class-name',
+		'mt-1 mb-3 w-full min-w-0 max-w-full px-3'
+	);
 	await user.click(screen.getByTestId('tenant-selector'));
 	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
 

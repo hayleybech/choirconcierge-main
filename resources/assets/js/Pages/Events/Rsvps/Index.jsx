@@ -170,7 +170,8 @@ const Index = ({
 
 	const columnsMenu = (
 		<ColumnsMenu
-			size={isDesktop ? 'md' : 'sm'}
+			size="sm"
+			className="h-8"
 			intent="secondary"
 			weight={isDesktop ? 'solid' : 'clear'}
 			visibleColumns={visibleColumns}
@@ -477,7 +478,7 @@ const ColumnsMenu = ({
 }) => (
 	<Menu as="div" className="relative inline-block text-left">
 		<Menu.Button as={Button} intent={intent} weight={weight} className={className} size={size}>
-			<Icon icon="columns" mr />
+			<Icon icon="columns" type="regular" />
 			Columns
 		</Menu.Button>
 		<Transition

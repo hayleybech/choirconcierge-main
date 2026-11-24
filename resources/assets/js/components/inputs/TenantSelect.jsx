@@ -4,8 +4,8 @@ import Select from 'react-select';
 import Icon from '../Icon';
 import reactSelectStyles from './reactSelectStyles';
 
-const TenantSelect = ({ options, defaultValue, value, updateFn, isClearable = true }) => (
-	<div className="mt-1">
+const TenantSelect = ({ options, defaultValue, value, updateFn, isClearable = true, className = 'mt-1' }) => (
+	<div className={className}>
 		<Select
 			cacheOptions
 			options={options}
