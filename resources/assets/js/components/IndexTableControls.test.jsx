@@ -316,6 +316,34 @@ it('shows and submits the search input inline with mobile controls', async () =>
 	await waitFor(() => expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true }));
 });
 
+it('shows the number of active filters in the mobile filter button', () => {
+	useMediaQuery.mockReturnValue(false);
+	const { container } = renderControls({
+		controlFilters: [
+			{
+				name: 'type',
+				label: 'Type',
+				type: 'choice',
+				multiple: true,
+				defaultValue: [],
+				options: [{ id: 'broadcast', name: 'Broadcast' }],
+			},
+			{
+				name: 'read',
+				label: 'Read status',
+				type: 'choice',
+				defaultValue: '',
+				options: [{ id: 'read', name: 'Read' }],
+			},
+			{ name: 'sender', label: 'Sender', type: 'text', toolbarMode: 'pill', defaultValue: '' },
+		],
+		data: { ...initialData, type: ['broadcast'], read: 'read', sender: 'sender@example.com' },
+	});
+	const mobile = container.querySelector('[data-testid="mobile-index-table-controls"]');
+
+	expect(within(mobile).getByRole('button', { name: 'Filter members' })).toHaveTextContent('Filters (3)');
+});
+
 it('provides mobile bulk selection, filter, sort, and action menu controls', async () => {
 	useMediaQuery.mockReturnValue(false);
 	const user = userEvent.setup();

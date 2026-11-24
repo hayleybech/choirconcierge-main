@@ -47,11 +47,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 
 	const filters = createEventFilterDescriptors({ eventTypes, ensembles, userEnsemblesCount });
 
-	const transforms = data => ({
-		date: data.date === 'all' ? null : data.date,
-	});
-
-	const sortFilterForm = useSortFilterForm('events.index', filters, sorts, transforms);
+	const sortFilterForm = useSortFilterForm('events.index', filters, sorts);
 
 	const actions = [
 		{

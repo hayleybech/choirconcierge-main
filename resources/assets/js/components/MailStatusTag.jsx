@@ -1,4 +1,3 @@
-import classNames from '../classNames';
 import Icon from './Icon';
 import React from 'react';
  
@@ -63,25 +62,15 @@ export const mailLabels = {
 	'send-failed': 'Send failed',
 }
 
-const MailStatusTag = ({event, showLabel = true}) => (
-	<div className="relative flex space-x-3">
-		<div>
-            <span
-				className={classNames(
-					mailIconColours[event.status] ?? 'bg-gray-500',
-					'flex h-6 w-6 items-center justify-center rounded-full',
-				)}
-			>
-                <Icon icon={mailIcons[event.status] ?? 'question-circle'} type="regular" size="text-xs" className="text-white" />
-            </span>
-		</div>
-		{showLabel && (
-			<div className="flex min-w-0 flex-1 justify-between space-x-4 items-center">
-				<p className="text-sm text-gray-500">
-					{mailLabels[event.status] ?? 'Unknown status'}
-				</p>
-			</div>
-		)}
+const MailStatusTag = ({ event, showLabel = true }) => (
+	<div className="flex items-center gap-3">
+		<Icon
+			icon={mailIcons[event.status] ?? 'question-circle'}
+			type="regular"
+			size="text-xs"
+			className="shrink-0 text-gray-400"
+		/>
+		{showLabel && <p className="min-w-0 flex-1 text-sm text-gray-500">{mailLabels[event.status] ?? 'Unknown status'}</p>}
 	</div>
 );
 

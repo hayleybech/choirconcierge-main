@@ -85,9 +85,10 @@ const IndexTableControls = ({
 			addedFilters.includes(getFilterName(filter))
 		);
 	});
-	const hasChangedFilters =
-		hasChangedFiltersOverride ??
-		visibleFilterDescriptors.some(filter => isNonDefault(filter, getFilterValue(filter, form.data)));
+	const changedFiltersCount = visibleFilterDescriptors.filter(filter =>
+		isNonDefault(filter, getFilterValue(filter, form.data))
+	).length;
+	const hasChangedFilters = hasChangedFiltersOverride ?? changedFiltersCount > 0;
 	const availableFilters = filtersForPills.filter(filter => !visibleFilters.includes(filter));
 	const changeFilter = (filter, value) => {
 		if (filter.onChange) {
@@ -233,7 +234,7 @@ const IndexTableControls = ({
 						aria-label={`Filter ${filterLabel || 'items'}`}
 					>
 						<Icon icon="filter" type="regular" />
-						Filter
+						Filters{changedFiltersCount > 0 && ` (${changedFiltersCount})`}
 					</Button>
 					{sorts.length > 0 && <SortDropdown sorts={sorts} form={form} compact autoSubmit={!isDesktop} />}
 					{(tableActions.length > 0 || tableActionContent || bulkEdit?.action) && (

@@ -24,7 +24,7 @@ import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
 import { createDocumentFilterDescriptors } from './DocumentFilterDescriptors';
 
-const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) => {
+const Index = ({ folders, documents, ensembles = [], userEnsemblesCount, can, setSidebarOpen }) => {
 	const { route } = useRoute();
 
 	const [deletingFolder, setDeletingFolder] = useState(null);
@@ -37,7 +37,7 @@ const Index = ({ folders, documents, userEnsemblesCount, can, setSidebarOpen }) 
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = createDocumentFilterDescriptors();
+	const filters = createDocumentFilterDescriptors(ensembles, userEnsemblesCount);
 
 	const sortFilterForm = useSortFilterForm('folders.index', filters, sorts);
 	const actions = [

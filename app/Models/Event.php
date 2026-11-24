@@ -446,6 +446,7 @@ class Event extends Model
     public function scopeDate(Builder $query, string $mode = 'upcoming', Carbon $date = null, Carbon $date2 = null): Builder
     {
         return match ($mode) {
+            'all' => $query,
             'after' => $query->where('call_time', '>=', $date),
             'upcoming' => $query->where('call_time', '>=', Carbon::today()),
             'before' => $query->where('call_time', '<=', $date),

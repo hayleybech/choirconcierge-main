@@ -37,7 +37,8 @@ const MailingListTableDesktop = ({ lists, bulkEdit, sortFilterForm }) => {
                             </Link>
                         </TableCell>
                         <TableCell>
-                            <Icon icon={list.type_icon} mr className="text-gray-400" />{list_type_labels[list.list_type]}
+                            <Icon icon={list.type_icon} mr className="text-gray-400" />
+                            <span className="text-gray-500">{list_type_labels[list.list_type]}</span>
                         </TableCell>
                         <TableCell>
                             <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>
