@@ -85,7 +85,7 @@ it('reuses singer displays and reset behavior in RSVP filters', async () => {
 	const statusField = screen.getByText('Singer Status').closest('fieldset');
 
 	expect(within(statusField).getByText('1 selected')).toBeInTheDocument();
-	expect(within(statusField).getByText('Default')).toBeInTheDocument();
+	expect(within(statusField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	expect(screen.getByLabelText('Members').labels[0].querySelector('.fa-circle')).toHaveClass('text-emerald-500');
 
 	await user.click(screen.getByLabelText('Soprano'));
@@ -97,7 +97,7 @@ it('reuses singer displays and reset behavior in RSVP filters', async () => {
 	expect(screen.getByLabelText('Members')).toBeChecked();
 
 	const responseField = screen.getByText('RSVP Response').closest('fieldset');
-	expect(within(responseField).getByText('Default')).toBeInTheDocument();
+	expect(within(responseField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	await user.click(screen.getByLabelText('Going'));
 	expect(screen.getByLabelText(/Going/).labels[0].querySelector('.text-emerald-500')).toBeInTheDocument();
 });
@@ -109,15 +109,17 @@ it('renders Learning Status options with their shared status and voice-part desc
 	const learningField = screen.getByText('Learning Status').closest('fieldset');
 
 	expect(within(learningField).getByText('0 selected')).toBeInTheDocument();
-	expect(within(learningField).getByText('Default')).toBeInTheDocument();
+	expect(within(learningField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	await user.click(screen.getByLabelText('Assessment Ready'));
 
 	expect(setData).toHaveBeenCalledWith('learning.status', ['assessment-ready']);
-	expect(screen.getByLabelText(/Assessment Ready/).labels[0].querySelector('.fa-check')).toHaveClass('text-amber-500');
-	expect(within(learningField).getByText('Modified')).toBeInTheDocument();
+	expect(screen.getByLabelText(/Assessment Ready/).labels[0].querySelector('.fa-check')).toHaveClass(
+		'text-amber-500'
+	);
+	expect(within(learningField).getByTitle('Filter differs from default')).toBeInTheDocument();
 	await user.click(within(learningField).getByRole('button', { name: 'Reset Learning Status filter' }));
 	expect(screen.getByLabelText('Assessment Ready')).not.toBeChecked();
-	expect(within(learningField).getByText('Default')).toBeInTheDocument();
+	expect(within(learningField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 
 	const statusField = screen.getByText('Singer Status').closest('fieldset');
 	expect(within(statusField).getByText('1 selected')).toBeInTheDocument();

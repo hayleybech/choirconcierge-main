@@ -1,10 +1,11 @@
 import React from 'react';
- 
+import { linkStyles } from '../StyledLink';
+
 const FilterActions = ({
 	onSelectAll,
 	onClear,
 	onReset,
-	selectAllLabel = 'All',
+	selectAllLabel = 'Select All',
 	clearLabel = 'Clear',
 	resetDisabled = false,
 	resetAriaLabel = 'Reset',
@@ -13,21 +14,13 @@ const FilterActions = ({
 		<div className="flex items-center space-x-2">
 			{onSelectAll && (
 				<>
-					<button
-						type="button"
-						onClick={onSelectAll}
-						className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
-					>
+					<button type="button" onClick={onSelectAll} className={linkStyles('secondary', 'text-xs')}>
 						{selectAllLabel}
 					</button>
 					<span className="text-gray-300 text-xs">|</span>
 				</>
 			)}
-			<button
-				type="button"
-				onClick={onClear}
-				className="text-xs text-purple-600 hover:text-purple-800 font-medium underline hover:no-underline"
-			>
+			<button type="button" onClick={onClear} className={linkStyles('secondary', 'text-xs')}>
 				{clearLabel}
 			</button>
 			{onReset && (
@@ -36,7 +29,10 @@ const FilterActions = ({
 					onClick={onReset}
 					disabled={resetDisabled}
 					aria-label={resetAriaLabel}
-					className="text-xs font-medium text-purple-600 underline hover:text-purple-800 hover:no-underline disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline"
+					className={linkStyles(
+						'secondary',
+						'text-xs disabled:cursor-not-allowed disabled:text-gray-400 disabled:no-underline disabled:hover:text-gray-400'
+					)}
 				>
 					Reset
 				</button>

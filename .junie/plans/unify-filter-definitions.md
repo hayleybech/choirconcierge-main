@@ -75,3 +75,17 @@ Specialized fields and option visuals use explicit shared adapters or hooks, wit
 - Adapt custom fields such as `TenantSelect` and event-date selections with sort side effects to the shared renderer extension points.
 - Promote repeated bespoke option presentations to reusable adapters where appropriate, without replacing existing domain components.
 - Confirm every existing toolbar and drawer filter consumer is migrated and test representative custom fields, responsive variants, reset semantics, and existing Apply/submit contracts.
+
+### ✓ Step 5: Polish filter controls and communications filter behavior
+Filter menus, action labels, rail controls, and tenant/email fields follow consistent responsive interaction and styling requirements.
+- Close the entire Add Filter menu when its Close action is selected; use Select All consistently and make Apply/Cancel actions justify their space between them.
+- Apply the requested compact desktop typography for attendance response and singer status options, purple ensemble options, and purple asterisk modified indicators.
+- Standardize drawer and desktop-rail reset actions, remove redundant clear-all actions, and use shared `linkStyles` for purple underlined clickables. The desktop “Reset all filters” action uses the shared button component with secondary intent and clear weight, and is hidden when search is the only filter.
+- Keep From/To controls hidden on mobile and absent from the rail until they have non-default values. On Communications desktop, render To as a searchable select directly in the pill with a “To:” prefix and its own clear action; keep From in a pill popover. Central Mail Logs keeps its To pill popover and text-input From pill, without duplicate labels or padding.
+- Refine the Communications To pill: use smaller regular-weight X/chevron icons and the shared pill border; show one selected mailing list as plain inline text or multiple selections as “To: N selected”; list selected items by list name at the top of the open dropdown with remove actions, and reduce the heading and icon size for unselected options. Portal its open menu above sticky table headers and match standard filter pills in icon colors, padding, font size/color, and height.
+- Keep the Communications To pill at auto width with tighter single-item icon spacing and selected dropdown text matching the unselected list-name size; use the drawer/mobile selector in Add Filter while retaining the desktop pill.
+- Give open mailing-list selects a 250px minimum menu width, truncate a single selected To label at about 20 characters, keep the Add Filter selector within panel padding with spacing above its footer, and widen Add Filter panels slightly across filter types.
+- Keep selected mailing-list chips content-sized; let names use the chip's available width and truncate when needed, wrap chips as needed, and constrain the selector and chips to the drawer width.
+- Use a searchable tenant selector in both Add Filter and the filter rail, reusing the existing drawer selector behavior.
+- Ensure searchable selects opened from Add Filter are not clipped by the menu’s overflow container.
+- Add focused coverage for menu closing, labels/actions, modified markers, mail-log rail visibility and controls, overflow behavior, and tenant selection.

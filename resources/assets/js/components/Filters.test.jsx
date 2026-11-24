@@ -124,12 +124,15 @@ it('stages mobile filter changes until Apply', async () => {
 	expect(mocks.closeDrawer).toHaveBeenCalledOnce();
 });
 
-it('applies default values and closes the drawer when Clear all is clicked', async () => {
+it('resets to default values and closes the drawer when Reset to Default is clicked', async () => {
 	render(<FilterForm searchableFilterNames={['name']} />);
 	const nameFilter = screen.getByRole('textbox', { name: 'Name filter' });
 
 	fireEvent.change(nameFilter, { target: { value: 'Draft name' } });
-	fireEvent.click(screen.getByRole('button', { name: 'Clear all' }));
+	const resetButton = screen.getByRole('button', { name: 'Reset to Default' });
+	expect(resetButton.querySelector('.fa-undo')).toBeInTheDocument();
+	expect(resetButton.parentElement).toHaveClass('justify-between');
+	fireEvent.click(resetButton);
 
 	expect(nameFilter).toHaveValue('');
 	await waitFor(() => expect(mocks.setData).toHaveBeenCalledWith({ name: '' }));
@@ -142,18 +145,19 @@ it('renders styled Riser Stacks fields and stages ensemble selections until Appl
 	const choirOption = screen.getByLabelText('Choir');
 
 	expect(screen.getByText('Ensemble')).toBeInTheDocument();
-	expect(screen.getByText('Default')).toBeInTheDocument();
-	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-gray-100');
+	expect(screen.queryByText('Default')).not.toBeInTheDocument();
+	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-purple-100', 'text-purple-800');
 
 	fireEvent.click(choirOption);
 
 	expect(mocks.setData).not.toHaveBeenCalled();
 	expect(screen.getByText('1 selected')).toBeInTheDocument();
+	expect(screen.getByTitle('Filter differs from default')).toBeInTheDocument();
 
 	fireEvent.click(screen.getByRole('button', { name: 'Reset Ensemble filter' }));
 
 	expect(screen.getByText('0 selected')).toBeInTheDocument();
-	expect(screen.getByText('Default')).toBeInTheDocument();
+	expect(screen.queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	expect(mocks.setData).not.toHaveBeenCalled();
 	fireEvent.click(choirOption);
 

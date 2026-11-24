@@ -27,7 +27,9 @@ it('renders styled multi-choice options and spacious actions in the drawer varia
 
 	expect(screen.getByText('Ensemble')).toBeInTheDocument();
 	expect(screen.getByText('1 selected')).toBeInTheDocument();
-	expect(screen.getByText('Modified')).toBeInTheDocument();
+	expect(screen.queryByText('Modified')).not.toBeInTheDocument();
+	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(2);
+	expect(container.querySelectorAll('.fa-asterisk')[0]).toHaveClass('text-purple-700');
 	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-gray-100');
 	expect(container.querySelector('.grid-cols-2')).toBeInTheDocument();
 
@@ -35,7 +37,7 @@ it('renders styled multi-choice options and spacious actions in the drawer varia
 
 	expect(onChange).toHaveBeenCalledWith([1, 2]);
 
-	fireEvent.click(screen.getByRole('button', { name: 'All' }));
+	fireEvent.click(screen.getByRole('button', { name: 'Select All' }));
 	expect(onChange).toHaveBeenLastCalledWith([1, 2]);
 
 	fireEvent.click(screen.getByRole('button', { name: 'Clear' }));
@@ -66,10 +68,12 @@ it('renders the same option adapter in the compact toolbar option panel', () => 
 
 it('marks drawer options that differ from their descriptor defaults', () => {
 	const filter = { ...ensembleFilter, defaultValue: [1] };
+	const { container } = render(
+		<FilterFieldRenderer filter={filter} value={[]} onChange={vi.fn()} variant="drawer" />
+	);
 
-	render(<FilterFieldRenderer filter={filter} value={[]} onChange={vi.fn()} variant="drawer" />);
-
-	expect(screen.getByTitle('Filter value differs from default')).toHaveTextContent('*');
+	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(2);
+	expect(container.querySelectorAll('.fa-asterisk')[0]).toHaveClass('text-purple-700');
 });
 
 it('adds the default marker centrally around custom drawer option displays', () => {
@@ -81,6 +85,9 @@ it('adds the default marker centrally around custom drawer option displays', () 
 	expect(renderOption).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }), false, true);
 	expect(screen.getByText('Choir')).toBeInTheDocument();
 	expect(screen.getAllByTitle('Filter value differs from default')).toHaveLength(1);
+	expect(screen.getByTitle('Filter value differs from default').querySelector('.fa-asterisk')).toHaveClass(
+		'text-purple-700'
+	);
 });
 
 it('uses a descriptive reset label for text drawer fields', () => {

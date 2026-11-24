@@ -2,6 +2,13 @@ import React from 'react';
 import Icon from '../../../components/Icon';
 import TenantSelect from '../../../components/inputs/TenantSelect';
 
+const renderTenantSelect = ({ value, onChange, options }) => {
+	const tenantOptions = options.map(option => ({ label: option.name, value: option.id }));
+	const selectedTenant = tenantOptions.find(option => String(option.value) === String(value)) ?? null;
+
+	return <TenantSelect options={tenantOptions} value={selectedTenant} updateFn={onChange} />;
+};
+
 export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defaultMailTypes }) {
 	return [
 		{
@@ -16,6 +23,8 @@ export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defa
 			name: 'to',
 			label: 'To',
 			type: 'text',
+			toolbarMode: 'pill',
+			toolbarOnlyWhenNonDefault: true,
 			defaultValue: '',
 			showActions: true,
 			showDefaultMarker: true,
@@ -24,6 +33,8 @@ export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defa
 			name: 'from',
 			label: 'From',
 			type: 'text',
+			toolbarMode: 'pill',
+			toolbarOnlyWhenNonDefault: true,
 			defaultValue: '',
 			showActions: true,
 			showDefaultMarker: true,
@@ -42,15 +53,8 @@ export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defa
 					{option.name}
 				</span>
 			),
-			renderField: ({ value, onChange, options }) => (
-				<TenantSelect
-					options={options.map(option => ({ label: option.name, value: option.id }))}
-					defaultValue={options
-						.map(option => ({ label: option.name, value: option.id }))
-						.find(option => String(option.value) === String(value)) ?? null}
-					updateFn={onChange}
-				/>
-			),
+			renderField: renderTenantSelect,
+			renderToolbarField: renderTenantSelect,
 		},
 		{
 			name: 'type',

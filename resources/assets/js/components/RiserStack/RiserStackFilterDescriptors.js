@@ -1,3 +1,6 @@
+import React from 'react';
+import EnsembleBadge from '../EnsembleBadge';
+
 export function createRiserStackFilterDescriptors(ensembles, userEnsemblesCount) {
 	return [
 		{
@@ -17,6 +20,8 @@ export function createRiserStackFilterDescriptors(ensembles, userEnsemblesCount)
 						defaultValue: [],
 						options: ensembles.map(ensemble => ({ id: ensemble.id, name: ensemble.name })),
 						allValuesLabel: 'All',
+						renderOption: (option, compact) =>
+							React.createElement(EnsembleBadge, { ensemble: option, compact }),
 						showActions: true,
 						showDefaultMarker: true,
 					},

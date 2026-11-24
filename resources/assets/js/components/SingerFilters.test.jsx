@@ -71,9 +71,9 @@ it('stages filter edits until Apply and marks changed fields and values', async 
 	expect(submit).not.toHaveBeenCalled();
 	expect(statusField.querySelector('legend')).toHaveClass('text-purple-700');
 	expect(statusField.querySelector('legend')).toHaveTextContent('Status');
-	expect(within(statusField).getByText('Modified')).toBeInTheDocument();
+	expect(within(statusField).getAllByTitle('Filter differs from default').length).toBeGreaterThan(0);
 	expect(screen.getByLabelText(/Prospects/).labels[0]).not.toHaveClass('text-purple-700');
-	expect(screen.getByLabelText(/Prospects/).labels[0]).toHaveTextContent('*');
+	expect(screen.getByLabelText(/Prospects/).labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toBeEnabled();
 	expect(within(statusField).getByRole('button', { name: 'None' })).toBeEnabled();
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toHaveClass(
@@ -123,16 +123,16 @@ it('uses the site styles for filter values and marks non-default values with an 
 
 	await user.click(screen.getByLabelText(/Prospects/));
 	const prospectsLabel = screen.getByLabelText(/Prospects/).labels[0];
-	expect(prospectsLabel).toHaveTextContent('*');
+	expect(prospectsLabel.querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
 	expect(prospectsLabel.querySelector('.fa-circle')).toHaveClass('text-amber-500');
 	expect(prospectsLabel).not.toHaveClass('text-purple-700');
 
 	await user.click(screen.getByLabelText(/Members/));
-	expect(screen.getByLabelText(/Members/).labels[0]).toHaveTextContent('*');
+	expect(screen.getByLabelText(/Members/).labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
 
 	await user.click(screen.getByRole('checkbox', { name: /Expired/ }));
 	const expiredOption = screen.getByRole('checkbox', { name: /Expired/ });
-	expect(expiredOption.labels[0]).toHaveTextContent('*');
+	expect(expiredOption.labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
 	expect(expiredOption.labels[0].querySelector('.fa-times-circle')).toHaveClass('text-red-500');
 });
 
@@ -153,7 +153,7 @@ it('supports selecting multiple fee statuses and selecting all of them', async (
 	expect(within(feeStatusField).getByRole('checkbox', { name: /Unknown/ })).toBeChecked();
 	expect(setData).toHaveBeenLastCalledWith('fee_status', ['expired', 'unknown']);
 
-	await user.click(within(feeStatusField).getByRole('button', { name: 'All' }));
+	await user.click(within(feeStatusField).getByRole('button', { name: 'Select All' }));
 	feeStatusOptions.forEach(option => {
 		expect(within(feeStatusField).getByRole('checkbox', { name: new RegExp(option) })).toBeChecked();
 	});
@@ -169,7 +169,7 @@ it('shows the fee status selection count next to its filter name', async () => {
 	expect(selectedCount).toHaveTextContent('0 selected');
 	await user.click(within(feeStatusField).getByRole('checkbox', { name: /Paid/ }));
 	expect(selectedCount).toHaveTextContent('1 selected');
-	expect(within(feeStatusField).getByRole('button', { name: 'All' })).toBeInTheDocument();
+	expect(within(feeStatusField).getByRole('button', { name: 'Select All' })).toBeInTheDocument();
 });
 
 it('restores a field default with Reset without submitting the form', async () => {

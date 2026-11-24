@@ -28,6 +28,7 @@ export function createAttendanceFilterDescriptors({ voiceParts, ensembles, singe
 			label: 'Attendance Response',
 			defaultValue: [],
 			drawerOrder: 3,
+			addFilterOptionCompact: true,
 			options: [
 				{ id: 'present', name: 'On Time', icon: 'check', colour: 'text-emerald-500' },
 				{ id: 'late', name: 'Late', icon: 'alarm-snooze', colour: 'text-yellow-500' },

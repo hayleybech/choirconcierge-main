@@ -27,6 +27,7 @@ const FilterFieldRenderer = ({
 	options: optionsOverride,
 	optionsContext,
 	inline = false,
+	optionCompact = false,
 	onClose,
 	onDraftChange,
 	hideActions = false,
@@ -37,13 +38,16 @@ const FilterFieldRenderer = ({
 }) => {
 	const options = optionsOverride ?? getFilterOptions(filter, optionsContext);
 	const multiple = isMultipleFilter(filter);
+	if (variant === 'toolbar' && filter.renderToolbarField) {
+		return filter.renderToolbarField({ value, onChange, options, filter });
+	}
 
 	if (variant === 'drawer' && filter.renderField) {
 		const defaultValue = getDefaultFilterValue(filter);
 		const nonDefault = isFilterValueNonDefault(filter, value);
 
 		return (
-			<fieldset className="space-y-2">
+			<fieldset className="min-w-0 space-y-2">
 				<div className="flex items-center justify-between gap-2">
 					<div className="flex min-w-0 items-center gap-2">
 						<legend
@@ -58,13 +62,9 @@ const FilterFieldRenderer = ({
 						{multiple && (
 							<span className="shrink-0 text-xs text-gray-500">{getSelectedCount(value)} selected</span>
 						)}
-						{filter.showDefaultMarker && (
-							<span
-								className={`shrink-0 text-xs ${
-									nonDefault ? 'font-medium text-purple-700' : 'text-gray-500'
-								}`}
-							>
-								{nonDefault ? 'Modified' : 'Default'}
+						{filter.showDefaultMarker && nonDefault && (
+							<span title="Filter differs from default" className="shrink-0 text-purple-700">
+								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
 							</span>
 						)}
 					</div>
@@ -75,14 +75,14 @@ const FilterFieldRenderer = ({
 							}
 							onClear={() => (onClear ? onClear() : onChange(getClearedFilterValue(filter)))}
 							onReset={() => (onReset ? onReset() : onChange(defaultValue))}
-							selectAllLabel={filter.drawerAllValuesLabel ?? filter.allValuesLabel}
+							selectAllLabel={filter.selectAllLabel ?? 'Select All'}
 							clearLabel={filter.clearLabel}
 							resetDisabled={!nonDefault}
 							resetAriaLabel={filter.resetAriaLabel ?? `Reset ${filter.label} filter`}
 						/>
 					)}
 				</div>
-				{filter.renderField({ value, onChange, options, filter })}
+				{filter.renderField({ value, onChange, options, filter, surface: 'drawer' })}
 			</fieldset>
 		);
 	}
@@ -153,9 +153,10 @@ const FilterFieldRenderer = ({
 		const defaultValue = getDefaultFilterValue(filter);
 		const nonDefault = isFilterValueNonDefault(filter, value);
 		const showDrawerActions = variant === 'drawer' && (filter.showActions || filter.showDefaultMarker);
+		const isToolbarPopoverField = variant === 'toolbar' && layout === 'options';
 		const input = (
-			<div className={variant === 'drawer' ? 'space-y-1' : 'space-y-1 px-3 pb-2'}>
-				{!showDrawerActions && <Label label={filter.label} forInput={filter.name} />}
+			<div className={variant === 'drawer' || isToolbarPopoverField ? 'space-y-1' : 'space-y-1 px-3 pb-2'}>
+				{!showDrawerActions && !isToolbarPopoverField && <Label label={filter.label} forInput={filter.name} />}
 				<TextInput
 					name={filter.name}
 					type={filter.inputType ?? (filter.type === 'date' ? 'date' : 'text')}
@@ -186,13 +187,9 @@ const FilterFieldRenderer = ({
 									: 'text-gray-700'
 							}`}
 						/>
-						{filter.showDefaultMarker && (
-							<span
-								className={`shrink-0 text-xs ${
-									nonDefault ? 'font-medium text-purple-700' : 'text-gray-500'
-								}`}
-							>
-								{nonDefault ? 'Modified' : 'Default'}
+						{filter.showDefaultMarker && nonDefault && (
+							<span title="Filter differs from default" className="shrink-0 text-purple-700">
+								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
 							</span>
 						)}
 					</div>
@@ -233,13 +230,9 @@ const FilterFieldRenderer = ({
 						{multiple && (
 							<span className="shrink-0 text-xs text-gray-500">{getSelectedCount(value)} selected</span>
 						)}
-						{filter.showDefaultMarker && (
-							<span
-								className={`shrink-0 text-xs ${
-									nonDefault ? 'font-medium text-purple-700' : 'text-gray-500'
-								}`}
-							>
-								{nonDefault ? 'Modified' : 'Default'}
+						{filter.showDefaultMarker && nonDefault && (
+							<span title="Filter differs from default" className="shrink-0 text-purple-700">
+								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
 							</span>
 						)}
 					</div>
@@ -250,7 +243,7 @@ const FilterFieldRenderer = ({
 							}
 							onClear={clearValue}
 							onReset={resetValue}
-							selectAllLabel={filter.drawerAllValuesLabel ?? filter.allValuesLabel}
+							selectAllLabel={filter.selectAllLabel ?? 'Select All'}
 							clearLabel={filter.clearLabel}
 							resetDisabled={!nonDefault}
 							resetAriaLabel={filter.resetAriaLabel ?? `Reset ${filter.label} filter`}
@@ -299,8 +292,9 @@ const FilterFieldRenderer = ({
 				return (
 					<label
 						key={String(option.id)}
-						className={`flex cursor-pointer items-center gap-2 rounded text-sm text-gray-700 ${optionClassName ||
-							'px-2 py-1.5 hover:bg-gray-50'}`}
+						className={`flex cursor-pointer items-center gap-2 rounded ${
+							optionCompact ? 'text-xs' : 'text-sm'
+						} text-gray-700 ${optionClassName || 'px-2 py-1.5 hover:bg-gray-50'}`}
 					>
 						<input
 							type={multiple ? 'checkbox' : 'radio'}
@@ -315,7 +309,7 @@ const FilterFieldRenderer = ({
 							}}
 							className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
 						/>
-						{renderFilterOption(filter, option)}
+						{renderFilterOption(filter, option, optionCompact)}
 					</label>
 				);
 			})}
@@ -367,11 +361,9 @@ function renderDrawerFilterOption(filter, option, isChanged) {
 	}
 
 	return (
-		<span className="inline-flex items-center gap-1.5">
+		<span className="inline-flex items-center gap-1.5" title="Filter value differs from default">
 			{renderedOption}
-			<span aria-hidden="true" title="Filter value differs from default" className="text-gray-500">
-				*
-			</span>
+			<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
 		</span>
 	);
 }

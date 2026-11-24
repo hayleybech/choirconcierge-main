@@ -5,6 +5,7 @@ import ActionMenuItem from './ActionMenu/ActionMenuItem';
 import Button from './inputs/ButtonV2';
 import DateRangeCalendarInput from './inputs/DateRangeCalendarInput';
 import Icon from './Icon';
+import { linkStyles } from './StyledLink';
 import { useMediaQuery } from 'react-responsive';
 import { DateTime } from 'luxon';
 import FilterFieldRenderer, { renderFilterOption } from './FilterFieldRenderer';
@@ -37,9 +38,12 @@ const IndexTableControls = ({
 	const previousData = useRef(form.data);
 	const [addedFilters, setAddedFilters] = useState([]);
 	const visibleFilterDescriptors = filters.filter(filter => filter.visible !== false);
-	const searchableFilters = visibleFilterDescriptors.filter(filter => ['date', 'text'].includes(filter.type));
+	const autoSubmitFilters = visibleFilterDescriptors.filter(filter => ['date', 'text'].includes(filter.type));
+	const searchableFilters = visibleFilterDescriptors.filter(
+		filter => ['date', 'text'].includes(filter.type) && filter.toolbarMode !== 'pill'
+	);
 	const filtersForPills = visibleFilterDescriptors
-		.filter(filter => !['date', 'text'].includes(filter.type))
+		.filter(filter => filter.toolbarMode === 'pill' || !['date', 'text'].includes(filter.type))
 		.sort(
 			(firstFilter, secondFilter) =>
 				Number(secondFilter.type === 'daterange') - Number(firstFilter.type === 'daterange')
@@ -53,7 +57,7 @@ const IndexTableControls = ({
 			return undefined;
 		}
 
-		const hasChangedSearch = searchableFilters.some(
+		const hasChangedSearch = autoSubmitFilters.some(
 			filter => getFilterValue(filter, previousData.current) !== getFilterValue(filter, form.data)
 		);
 		previousData.current = form.data;
@@ -65,12 +69,17 @@ const IndexTableControls = ({
 		const timeout = window.setTimeout(() => form.submit(undefined, { preserveState: true }), 300);
 
 		return () => window.clearTimeout(timeout);
-	}, [form.data, isDesktop, searchableFilters]);
+	}, [autoSubmitFilters, form.data, isDesktop]);
 
 	const visibleFilters = filtersForPills.filter(filter => {
 		const value = getFilterValue(filter, form.data);
 
+		if (filter.toolbarOnlyWhenNonDefault) {
+			return isNonDefault(filter, value);
+		}
+
 		return (
+			filter.toolbarAlwaysVisible ||
 			hasSelectedValue(filter, value) ||
 			hasSelectedValue(filter, getDefaultFilterValue(filter)) ||
 			addedFilters.includes(getFilterName(filter))
@@ -110,7 +119,6 @@ const IndexTableControls = ({
 		changeFilter(filter, defaultValue);
 		removeAddedFilter(getFilterName(filter));
 	};
-	const clearAllFilters = () => visibleFilterDescriptors.forEach(clearFilter);
 	const resetAllFilters = () => visibleFilterDescriptors.forEach(resetFilter);
 
 	return (
@@ -149,14 +157,19 @@ const IndexTableControls = ({
 					</div>
 					{availableFilters.length > 0 && <AddFilterButton filters={availableFilters} onAdd={addFilter} />}
 					<div className="flex shrink-0 items-center gap-1">
-						<Button size="sm" weight="clear" onClick={clearAllFilters}>
-							<Icon icon="trash" type="regular" />
-							Clear all filters
-						</Button>
-						<Button size="sm" weight="clear" onClick={resetAllFilters}>
-							<Icon icon="undo" type="regular" />
-							Reset to default
-						</Button>
+						{visibleFilters.length > 0 && (
+							<Button
+								type="button"
+								size="xs"
+								intent="secondary"
+								weight="clear"
+								className="text-xs"
+								onClick={resetAllFilters}
+							>
+								<Icon icon="undo" type="regular" />
+								Reset all filters
+							</Button>
+						)}
 					</div>
 				</div>
 				<div className="sticky right-0 z-20 ml-auto flex shrink-0 items-center gap-2 bg-white">
@@ -251,11 +264,27 @@ const NameSearchInput = ({ filter, filterLabel, value, onChange, className = 'w-
 	);
 };
 
-const FilterPill = props => (
-	<Popover as="div" className="shrink-0">
-		{({ open, close }) => <FilterPillContent {...props} open={open} close={close} />}
-	</Popover>
-);
+const FilterPill = props => {
+	if (props.filter.toolbarMode === 'select') {
+		return (
+			<div className="shrink-0">
+				<FilterFieldRenderer
+					filter={props.filter}
+					value={props.value}
+					onChange={props.onChange}
+					variant="toolbar"
+					layout="pill"
+				/>
+			</div>
+		);
+	}
+
+	return (
+		<Popover as="div" className="shrink-0">
+			{({ open, close }) => <FilterPillContent {...props} open={open} close={close} />}
+		</Popover>
+	);
+};
 
 const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onReset, open, close }) => {
 	const buttonRef = useRef(null);
@@ -311,13 +340,13 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 							<FilterValueSummary filter={filter} value={value} />
 						</div>
 					)}
-					{filter.allValuesLabel && isMultipleFilter(filter) && getFilterOptions(filter).length > 0 && (
+					{isMultipleFilter(filter) && getFilterOptions(filter).length > 0 && (
 						<button
 							type="button"
 							onClick={() => onChange(getFilterOptions(filter).map(option => option.id))}
-							className="shrink-0 text-xs font-medium text-purple-600 underline hover:text-purple-800 hover:no-underline"
+							className={linkStyles('secondary', 'shrink-0 text-xs')}
 						>
-							{filter.allValuesLabel}
+							Select All
 						</button>
 					)}
 				</div>
@@ -347,14 +376,22 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 							</Button>
 						)}
 					</div>
-					<div className="flex gap-1">
-						<Button size="sm" weight="clear" onClick={onClear}>
+					<div className="flex items-center gap-2">
+						<button
+							type="button"
+							className={linkStyles('secondary', 'inline-flex items-center gap-1 text-xs')}
+							onClick={onClear}
+						>
 							<Icon icon="trash" type="regular" /> Clear
-						</Button>
-						<Button size="sm" weight="clear" onClick={onReset}>
+						</button>
+						<button
+							type="button"
+							className={linkStyles('secondary', 'inline-flex items-center gap-1 text-xs')}
+							onClick={onReset}
+						>
 							<Icon icon="undo" type="regular" />
 							Default
-						</Button>
+						</button>
 					</div>
 				</div>
 			</PositionedPanel>
@@ -520,20 +557,20 @@ const AddFilterMenuContent = ({
 						aria-label={`${selectedFilter.label} values`}
 						className={`fixed z-50 flex max-h-[calc(100vh-1rem)] flex-col ${
 							selectedFilter.type === 'daterange'
-								? 'w-80 max-w-[calc(100vw-1rem)] overflow-visible'
-								: 'w-56 max-w-[calc(100vw-1rem)] overflow-hidden'
+								? 'w-[22rem] max-w-[calc(100vw-1rem)] overflow-visible'
+								: 'w-64 max-w-[calc(100vw-1rem)] overflow-visible'
 						} rounded-md border border-gray-200 bg-white p-1 shadow-lg`}
 					>
 						<div className="flex shrink-0 items-center justify-between gap-2 px-3 py-2">
 							<p className="text-sm font-semibold text-gray-900">{selectedFilter.label}</p>
-							{selectedFilter.allValuesLabel && isMultipleFilter(selectedFilter) && (
+							{isMultipleFilter(selectedFilter) && options.length > 0 && (
 								<button
 									type="button"
-									aria-label={selectedFilter.allValuesLabel}
+									aria-label="Select All"
 									onClick={() => selectAllDraftValues(selectedFilter)}
-									className="shrink-0 text-xs font-medium text-purple-600 underline hover:text-purple-800 hover:no-underline"
+									className={linkStyles('secondary', 'shrink-0 text-xs')}
 								>
-									{selectedFilter.allValuesLabel}
+									Select All
 								</button>
 							)}
 						</div>
@@ -580,6 +617,7 @@ const AddFilterMenuContent = ({
 														updateDraftRange(selected);
 														cancelFilterValue();
 														close();
+														closeMenu();
 													}}
 												>
 													<Icon icon="times" type="regular" /> Cancel
@@ -592,66 +630,88 @@ const AddFilterMenuContent = ({
 								</DateRangeCalendarInput>
 							</div>
 						) : selectedFilter.type === 'text' ? (
-							<div className="space-y-2 px-3 pb-2">
-								<input
-									aria-label={`Value for ${selectedFilter.label}`}
-									autoFocus
-									value={textValue}
-									onChange={event => setTextValue(event.target.value)}
-									className="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
-								/>
-								<Menu.Item
-									as="button"
-									type="button"
-									disabled={!textValue.trim()}
-									onClick={() => chooseFilterValue(selectedFilter, textValue)}
-									className="block w-full rounded px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-								>
-									Apply
-								</Menu.Item>
+							<div>
+								<div className="px-3">
+									<input
+										aria-label={`Value for ${selectedFilter.label}`}
+										autoFocus
+										value={textValue}
+										onChange={event => setTextValue(event.target.value)}
+										className="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-purple-500 focus:ring-purple-500"
+									/>
+								</div>
+								<div className="flex shrink-0 justify-between gap-1 border-t border-gray-200 px-2 pt-2 pb-1">
+									<Menu.Item
+										as={Button}
+										type="button"
+										disabled={!textValue.trim()}
+										onClick={() => chooseFilterValue(selectedFilter, textValue)}
+										intent="primary"
+										size="sm"
+										className="py-0.5 px-1"
+									>
+										<Icon icon="fa-check" />
+										Apply
+									</Menu.Item>
+								</div>
 							</div>
 						) : (
 							<div className="flex min-h-0 flex-1 flex-col">
-								<FilterFieldRenderer
-									filter={selectedFilter}
-									value={
-										isMultipleFilter(selectedFilter)
+								{selectedFilter.renderField ? (
+									selectedFilter.renderField({
+										value: isMultipleFilter(selectedFilter)
 											? draftValues
-											: draftValues.find(value => value !== '') ?? ''
-									}
-									onChange={value => setDraftValues(Array.isArray(value) ? value : [value])}
-									options={options}
-									variant="toolbar"
-									layout="options"
-									showEmptyOption={false}
-									className="min-h-0 flex-1 px-2"
-									optionClassName="px-3 py-2 hover:bg-purple-100"
-								/>
-								<div className="flex justify-between shrink-0 gap-1 border-t border-gray-200 px-2 pt-2 pb-1">
-									<div className="flex gap-1">
-										<Button
-											role="menuitem"
-											type="button"
-											intent="primary"
-											size="sm"
-											className="py-0.5 px-1"
-											onClick={() => applyDraftValues(selectedFilter)}
-										>
-											<Icon icon="fa-check" />
-											Apply
-										</Button>
-										<Button
-											role="menuitem"
-											type="button"
-											size="sm"
-											weight="clear"
-											className="py-0.5 px-1"
-											onClick={cancelFilterValue}
-										>
-											<Icon icon="times" type="regular" />
-											Close
-										</Button>
-									</div>
+											: draftValues.find(value => value !== '') ?? '',
+							onChange: value => setDraftValues(Array.isArray(value) ? value : [value]),
+										options,
+										filter: selectedFilter,
+										surface: 'add-filter',
+									})
+								) : (
+									<FilterFieldRenderer
+										filter={selectedFilter}
+										value={
+											isMultipleFilter(selectedFilter)
+												? draftValues
+												: draftValues.find(value => value !== '') ?? ''
+										}
+										onChange={value => setDraftValues(Array.isArray(value) ? value : [value])}
+										options={options}
+										variant="toolbar"
+										layout="options"
+										showEmptyOption={false}
+										className="min-h-0 flex-1 px-2"
+										optionClassName={`px-3 py-2 hover:bg-purple-100 ${selectedFilter.addFilterOptionClassName ??
+											''}`}
+										optionCompact={selectedFilter.addFilterOptionCompact ?? false}
+									/>
+								)}
+								<div className="flex shrink-0 justify-between gap-1 border-t border-gray-200 px-2 pt-2 pb-1">
+									<Button
+										role="menuitem"
+										type="button"
+										intent="primary"
+										size="sm"
+										className="py-0.5 px-1"
+										onClick={() => applyDraftValues(selectedFilter)}
+									>
+										<Icon icon="fa-check" />
+										Apply
+									</Button>
+									<Button
+										role="menuitem"
+										type="button"
+										size="sm"
+										weight="clear"
+										className="py-0.5 px-1"
+										onClick={() => {
+											cancelFilterValue();
+											closeMenu();
+										}}
+									>
+										<Icon icon="times" type="regular" />
+										Close
+									</Button>
 								</div>
 							</div>
 						)}

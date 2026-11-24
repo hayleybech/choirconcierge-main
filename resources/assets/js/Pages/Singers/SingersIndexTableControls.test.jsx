@@ -91,7 +91,13 @@ const renderControls = (initialData, sorts = [], tableActions = []) => {
 
 it('uses selected intent for active filter pills and matches import/export height to sort', () => {
 	const { Controls } = renderControls(
-		{ sort: 'full-name', sortDir: 'asc', status: ['prospects'], 'enrolments.voice_part_id': [], fee_status: '' },
+		{
+			'sort': 'full-name',
+			'sortDir': 'asc',
+			'status': ['prospects'],
+			'enrolments.voice_part_id': [],
+			'fee_status': '',
+		},
 		[
 			{ id: 'full-name', name: 'Name', default: true },
 			{ id: 'status-title', name: 'Status' },
@@ -144,15 +150,18 @@ it('keeps Add Filter open while staging a value, then applies it from the second
 
 	expect(screen.getByRole('button', { name: 'Add filter' })).toBeTruthy();
 	expect(screen.getByRole('menu')).toBeTruthy();
-	expect(
-		screen.getByRole('group', { name: 'Fee Status values' }).classList.contains('fixed')
-	).toBe(true);
+	expect(screen.getByRole('group', { name: 'Fee Status values' }).classList.contains('fixed')).toBe(true);
 	expect(screen.getByRole('menuitem', { name: 'Fee Status' })).toBeTruthy();
 	expect(screen.getByRole('menuitem', { name: 'Apply' }).getAttribute('data-intent')).toBe('primary');
 	expect(screen.getByRole('menuitem', { name: 'Apply' }).querySelector('[data-icon="fa-check"]')).toBeTruthy();
 
 	const paidCheckbox = screen.getByLabelText('Paid');
-	expect(paidCheckbox.closest('label').querySelector('[data-icon="check-circle"]').classList.contains('text-green-500')).toBe(true);
+	expect(
+		paidCheckbox
+			.closest('label')
+			.querySelector('[data-icon="check-circle"]')
+			.classList.contains('text-green-500')
+	).toBe(true);
 	await user.click(paidCheckbox);
 	expect(screen.getByRole('menu')).toBeTruthy();
 	expect(paidCheckbox).toHaveProperty('checked', true);
@@ -167,7 +176,11 @@ it('keeps Add Filter open while staging a value, then applies it from the second
 });
 
 it('applies multiple checkbox selections together from Add Filter', async () => {
-	const { Controls, setData } = renderControls({ status: ['members'], fee_status: '', 'enrolments.ensemble_id': [] });
+	const { Controls, setData } = renderControls({
+		'status': ['members'],
+		'fee_status': '',
+		'enrolments.ensemble_id': [],
+	});
 	render(<Controls />);
 	const user = userEvent.setup();
 
@@ -189,7 +202,7 @@ it('selects all Fee Status options in the Add Filter menu', async () => {
 
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
-	await user.click(screen.getByText('All', { selector: 'button' }));
+	await user.click(screen.getByText('Select All', { selector: 'button' }));
 
 	['Paid', 'Expires Soon', 'Expired', 'Unknown'].forEach(option => {
 		expect(screen.getByLabelText(option)).toHaveProperty('checked', true);
@@ -201,7 +214,7 @@ it('selects all Fee Status options in the Add Filter menu', async () => {
 	expect(screen.getByRole('button', { name: 'Fee Status: 4 selected; open filter values' })).toBeTruthy();
 });
 
-it('shows a selected count beside the filter name and places All at the far right of the popover header', async () => {
+	it('shows a selected count beside the filter name and places Select All at the far right of the popover header', async () => {
 	const { Controls } = renderControls({ status: ['members'], fee_status: ['paid'] });
 	render(<Controls />);
 	const user = userEvent.setup();
@@ -211,7 +224,7 @@ it('shows a selected count beside the filter name and places All at the far righ
 	const heading = screen.getByRole('heading', { name: 'Fee Status' });
 	const header = heading.parentElement.parentElement;
 	const selectedCount = within(header).getByText('1 selected');
-	const allButton = within(header).getByRole('button', { name: 'All' });
+	const allButton = within(header).getByRole('button', { name: 'Select All' });
 
 	expect(heading.parentElement.contains(selectedCount)).toBe(true);
 	expect(heading.compareDocumentPosition(selectedCount) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
@@ -219,7 +232,7 @@ it('shows a selected count beside the filter name and places All at the far righ
 });
 
 it('keeps Apply outside the scrollable filter options', async () => {
-	const { Controls } = renderControls({ status: ['members'], fee_status: '', 'enrolments.ensemble_id': [] });
+	const { Controls } = renderControls({ 'status': ['members'], 'fee_status': '', 'enrolments.ensemble_id': [] });
 	render(<Controls />);
 	const user = userEvent.setup();
 
@@ -261,7 +274,7 @@ it('keeps the sort popover open while changing sort and direction', async () => 
 });
 
 it('shows name search before filter pills and excludes it from Add Filter', () => {
-	const { Controls, setData } = renderControls({ 'user.name': 'Ada', status: ['members'], fee_status: '' });
+	const { Controls, setData } = renderControls({ 'user.name': 'Ada', 'status': ['members'], 'fee_status': '' });
 	const { container } = render(<Controls />);
 
 	const nameSearch = screen.getAllByRole('searchbox', { name: 'Search singers by name' })[0];
@@ -285,9 +298,9 @@ it('shows name search before filter pills and excludes it from Add Filter', () =
 
 it('renders singer filter values with the site styles in pills and option lists', async () => {
 	const { Controls } = renderControls({
-		status: ['members'],
+		'status': ['members'],
 		'enrolments.voice_part_id': ['soprano'],
-		fee_status: ['paid'],
+		'fee_status': ['paid'],
 		'enrolments.ensemble_id': ['adult'],
 	});
 	render(<Controls />);
@@ -296,16 +309,24 @@ it('renders singer filter values with the site styles in pills and option lists'
 	const statusPill = screen.getByRole('button', { name: 'Status: Members; open filter values' });
 	expect(statusPill.querySelector('[data-icon="circle"]').classList.contains('text-emerald-500')).toBe(true);
 	expect(statusPill.querySelector('[data-icon="circle"]').classList.contains('text-[10px]')).toBe(true);
-	expect(Array.from(statusPill.querySelectorAll('span')).some(element => element.textContent === 'Members' && element.classList.contains('text-xs'))).toBe(true);
+	expect(
+		Array.from(statusPill.querySelectorAll('span')).some(
+			element => element.textContent === 'Members' && element.classList.contains('text-xs')
+		)
+	).toBe(true);
 
 	const voicePartPill = screen.getByRole('button', { name: 'Voice Part: Soprano; open filter values' });
-	const voicePartBadge = Array.from(voicePartPill.querySelectorAll('span')).find(element => element.textContent === 'Soprano');
+	const voicePartBadge = Array.from(voicePartPill.querySelectorAll('span')).find(
+		element => element.textContent === 'Soprano'
+	);
 	expect(voicePartBadge.classList.contains('bg-rose-500/75')).toBe(true);
 	expect(voicePartBadge.classList.contains('px-1.5')).toBe(true);
 	expect(voicePartBadge.querySelector('svg').classList.contains('text-white')).toBe(true);
 
 	const ensemblePill = screen.getByRole('button', { name: 'Ensemble: Adult; open filter values' });
-	const ensembleBadge = Array.from(ensemblePill.querySelectorAll('span')).find(element => element.textContent === 'Adult');
+	const ensembleBadge = Array.from(ensemblePill.querySelectorAll('span')).find(
+		element => element.textContent === 'Adult'
+	);
 	expect(ensembleBadge.classList.contains('bg-purple-100')).toBe(true);
 	expect(ensembleBadge.classList.contains('px-1')).toBe(true);
 
@@ -315,7 +336,12 @@ it('renders singer filter values with the site styles in pills and option lists'
 
 	await user.click(statusPill);
 	const prospectOption = screen.getByLabelText('Prospects');
-	expect(prospectOption.closest('label').querySelector('[data-icon="circle"]').classList.contains('text-amber-500')).toBe(true);
+	expect(
+		prospectOption
+			.closest('label')
+			.querySelector('[data-icon="circle"]')
+			.classList.contains('text-amber-500')
+	).toBe(true);
 
 	await user.click(voicePartPill);
 	const altoOption = screen.getByLabelText('Alto');
@@ -325,15 +351,25 @@ it('renders singer filter values with the site styles in pills and option lists'
 
 	await user.click(ensemblePill);
 	const youthOption = screen.getByLabelText('Youth');
-	expect(youthOption.closest('label').querySelector('span').classList.contains('bg-purple-100')).toBe(true);
+	expect(
+		youthOption
+			.closest('label')
+			.querySelector('span')
+			.classList.contains('bg-purple-100')
+	).toBe(true);
 
 	await user.click(feeStatusPill);
 	const expiredOption = screen.getByLabelText('Expired');
-	expect(expiredOption.closest('label').querySelector('[data-icon="times-circle"]').classList.contains('text-red-500')).toBe(true);
+	expect(
+		expiredOption
+			.closest('label')
+			.querySelector('[data-icon="times-circle"]')
+			.classList.contains('text-red-500')
+	).toBe(true);
 });
 
 it('places search before active pills and Add Filter after them on desktop', () => {
-	const { Controls } = renderControls({ 'user.name': '', status: ['members'], fee_status: '' });
+	const { Controls } = renderControls({ 'user.name': '', 'status': ['members'], 'fee_status': '' });
 	render(<Controls />);
 
 	const searchInput = screen.getAllByRole('searchbox', { name: 'Search singers by name' })[0];
@@ -345,7 +381,7 @@ it('places search before active pills and Add Filter after them on desktop', () 
 });
 
 it('places Add Filter after the active pills on desktop without a prototype switcher', () => {
-	const { Controls } = renderControls({ 'user.name': '', status: ['members'], fee_status: '' });
+	const { Controls } = renderControls({ 'user.name': '', 'status': ['members'], 'fee_status': '' });
 	const { container } = render(<Controls />);
 
 	const addFilterButton = screen.getByRole('button', { name: 'Add filter' });
@@ -355,41 +391,32 @@ it('places Add Filter after the active pills on desktop without a prototype swit
 	expect(container.querySelector('[aria-label="Next prototype layout"]')).toBeNull();
 });
 
-it('clears every singer filter while preserving an empty override for defaulted filters', async () => {
-	const { Controls, setData } = renderControls({
+it('omits the redundant Clear all filters action from the desktop rail', () => {
+	const { Controls } = renderControls({
 		'user.name': 'Ada',
-		status: ['prospects'],
+		'status': ['prospects'],
 		'enrolments.voice_part_id': ['alto'],
-		fee_status: ['paid'],
+		'fee_status': ['paid'],
 		'enrolments.ensemble_id': ['adult'],
 	});
 	render(<Controls />);
-	const user = userEvent.setup();
 
-	await user.click(screen.getByRole('button', { name: 'Clear all filters' }));
-
-	expect(setData).toHaveBeenCalledWith('user.name', '');
-	expect(setData).toHaveBeenCalledWith('status', ['']);
-	expect(setData).toHaveBeenCalledWith('enrolments.voice_part_id', []);
-	expect(setData).toHaveBeenCalledWith('fee_status', []);
-	expect(setData).toHaveBeenCalledWith('enrolments.ensemble_id', []);
-	expect(screen.getByRole('button', { name: 'Status: Any; open filter values' })).toBeTruthy();
-	expect(screen.queryByRole('button', { name: 'Voice Part: Alto; open filter values' })).toBeNull();
-	expect(screen.queryByRole('button', { name: 'Fee Status: Paid; open filter values' })).toBeNull();
+	expect(screen.queryByRole('button', { name: 'Clear all filters' })).toBeNull();
+	expect(screen.getByRole('button', { name: 'Reset all filters' })).toBeTruthy();
 });
 
 it('restores default values for every singer filter', async () => {
 	const { Controls, setData } = renderControls({
 		'user.name': 'Ada',
-		status: ['prospects'],
+		'status': ['prospects'],
 		'enrolments.voice_part_id': ['alto'],
-		fee_status: ['paid'],
+		'fee_status': ['paid'],
 		'enrolments.ensemble_id': ['adult'],
 	});
 	render(<Controls />);
 	const user = userEvent.setup();
 
-	await user.click(screen.getByRole('button', { name: 'Reset to default' }));
+	await user.click(screen.getByRole('button', { name: 'Reset all filters' }));
 
 	expect(setData).toHaveBeenCalledWith('user.name', '');
 	expect(setData).toHaveBeenCalledWith('status', ['members']);

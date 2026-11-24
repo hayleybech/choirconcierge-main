@@ -116,15 +116,15 @@ it('shows attendance type counts and restores the default selection before apply
 	const eventTypeField = screen.getByText('Event Type').closest('fieldset');
 
 	expect(within(eventTypeField).getByText('0 selected')).toBeInTheDocument();
-	expect(within(eventTypeField).getByText('Default')).toBeInTheDocument();
+	expect(within(eventTypeField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	await user.click(screen.getByLabelText('Rehearsal'));
 	expect(within(eventTypeField).getByText('1 selected')).toBeInTheDocument();
-	expect(within(eventTypeField).getByText('Modified')).toBeInTheDocument();
+	expect(within(eventTypeField).getByTitle('Filter differs from default')).toBeInTheDocument();
 
 	await user.click(within(eventTypeField).getByRole('button', { name: 'Reset Event Type filter' }));
 	expect(screen.getByLabelText('Rehearsal')).not.toBeChecked();
-	expect(within(eventTypeField).getByText('Default')).toBeInTheDocument();
-	await user.click(within(eventTypeField).getByRole('button', { name: 'All' }));
+	expect(within(eventTypeField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
+	await user.click(within(eventTypeField).getByRole('button', { name: 'Select All' }));
 	await user.click(screen.getAllByRole('button', { name: 'Apply' })[1]);
 
 	await waitFor(() =>

@@ -3,7 +3,7 @@ import React from 'react';
 
 const StyledLink = ({ intent = 'none', href, className, children, ...extraProps }) =>
 	href ? (
-		<a {...extraProps} className={linkStyles(intent, className)}>
+		<a href={href} {...extraProps} className={linkStyles(intent, className)}>
 			{children}
 		</a>
 	) : (
@@ -14,12 +14,12 @@ const StyledLink = ({ intent = 'none', href, className, children, ...extraProps 
 
 export default StyledLink;
 
-const linkStyles = (intent, className) =>
+export const linkStyles = (intent, className) =>
 	classNames(
-		'font-medium',
+		'font-medium cursor-pointer hover:text-sky-500',
 		{
-			primary: 'text-purple-700 no-underline hover:text-sky-500',
-			secondary: 'text-purple-700 underline hover:no-underline',
+			primary: 'text-purple-700 no-underline',
+			secondary: 'text-purple-700 underline',
 		}[intent],
 		className
 	);

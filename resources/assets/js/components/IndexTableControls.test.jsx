@@ -5,6 +5,8 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import IndexTableControls from './IndexTableControls';
 import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
+import { createSingerStatusFilter } from './SingerFilterDescriptors';
+import { createAttendanceFilterDescriptors } from '../Pages/Events/Attendance/AttendanceFilterDescriptors';
 import { createSingerAttendanceFilterDescriptors } from '../Pages/Singers/Attendance/SingerAttendanceFilterDescriptors';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
@@ -210,6 +212,28 @@ const renderControls = ({
 	return { ...render(<Controls />), setData, submit, onToggleFilters };
 };
 
+it('uses the secondary clear reset button only when a non-search filter is shown', () => {
+	mockUseMediaQuery.mockReturnValue(true);
+	const searchOnlyFilter = [{ name: 'search', label: 'Search', type: 'text', defaultValue: '' }];
+	const searchOnly = renderControls({ controlFilters: searchOnlyFilter, data: { search: '' } });
+
+	expect(screen.queryByRole('button', { name: 'Reset all filters' })).not.toBeInTheDocument();
+	searchOnly.unmount();
+
+	renderControls({
+		controlFilters: [
+			...searchOnlyFilter,
+			{ name: 'status', label: 'Status', defaultValue: '', options: [{ id: 'active', name: 'Active' }] },
+		],
+		data: { search: '', status: 'active' },
+	});
+
+	expect(screen.getByRole('button', { name: 'Reset all filters' })).toHaveClass(
+		'text-gray-600',
+		'border-transparent'
+	);
+});
+
 it('shows default-aware desktop filters and applies staged values from the secondary panel', async () => {
 	const user = userEvent.setup();
 	const { container, setData } = renderControls();
@@ -236,6 +260,7 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	await user.click(screen.getByRole('menuitem', { name: 'Team' }));
 
 	const valuePanel = screen.getByRole('group', { name: 'Team values' });
+	expect(valuePanel).toHaveClass('w-64');
 	const choirOption = within(valuePanel).getByLabelText('Choir');
 	const applyButton = screen.getByRole('menuitem', { name: 'Apply' });
 
@@ -422,6 +447,7 @@ it('adds a date-range filter and updates both configured date bounds', async () 
 	await user.click(screen.getByRole('menuitem', { name: 'Date Range' }));
 	expect(setData).not.toHaveBeenCalled();
 	const addFilterValues = screen.getByRole('group', { name: 'Date Range values' });
+	expect(addFilterValues).toHaveClass('w-[22rem]');
 	expect(within(addFilterValues).queryByLabelText('Date Range date range')).not.toBeInTheDocument();
 	const applyButton = within(addFilterValues).getByRole('menuitem', { name: 'Apply' });
 	const clearButton = within(addFilterValues).getByRole('menuitem', { name: 'Clear' });
@@ -540,7 +566,7 @@ it('highlights a date-range pill when its range differs from the default', () =>
 	);
 });
 
-it('places a configured All action at the right of a multi-filter popover header', async () => {
+it('places a Select All action at the right of a multi-filter popover header', async () => {
 	const user = userEvent.setup();
 	const feeFilter = {
 		name: 'fee_status',
@@ -566,11 +592,36 @@ it('places a configured All action at the right of a multi-filter popover header
 	await user.click(screen.getByRole('button', { name: 'Fee Status: Paid; open filter values' }));
 
 	const header = screen.getByRole('heading', { name: 'Fee Status' }).parentElement.parentElement;
-	const allButton = within(header).getByRole('button', { name: 'All' });
+	const allButton = within(header).getByRole('button', { name: 'Select All' });
 
 	expect(header.lastElementChild).toBe(allButton);
 	await user.click(allButton);
 	expect(setData).toHaveBeenLastCalledWith('fee_status', ['paid', 'expired']);
+});
+
+it('uses shared link styles for desktop filter actions', async () => {
+	const user = userEvent.setup();
+	const feeFilter = {
+		name: 'fee_status',
+		label: 'Fee Status',
+		multiple: true,
+		defaultValue: [],
+		options: [{ id: 'paid', name: 'Paid' }],
+	};
+	renderControls({
+		controlFilters: [...filters, feeFilter],
+		data: { ...initialData, fee_status: ['paid'] },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Fee Status: Paid; open filter values' }));
+
+	['Select All', 'Clear', 'Default'].forEach(label => {
+		expect(screen.getByRole('button', { name: label })).toHaveClass(
+			'cursor-pointer',
+			'underline',
+			'hover:text-sky-500'
+		);
+	});
 });
 
 it('stages all configured values from Add Filter before applying them', async () => {
@@ -580,7 +631,6 @@ it('stages all configured values from Add Filter before applying them', async ()
 		label: 'Fee Status',
 		multiple: true,
 		defaultValue: [],
-		allValuesLabel: 'All',
 		options: [
 			{ id: 'paid', name: 'Paid' },
 			{ id: 'expired', name: 'Expired' },
@@ -594,8 +644,8 @@ it('stages all configured values from Add Filter before applying them', async ()
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
 	const valuePanel = screen.getByRole('group', { name: 'Fee Status values' });
-	const allButton = within(valuePanel).getByText('All', { selector: 'button' });
-	expect(allButton).toHaveAccessibleName('All');
+	const allButton = within(valuePanel).getByText('Select All', { selector: 'button' });
+	expect(allButton).toHaveAccessibleName('Select All');
 	await user.click(allButton);
 
 	expect(within(valuePanel).getByLabelText('Paid')).toBeChecked();
@@ -607,14 +657,44 @@ it('stages all configured values from Add Filter before applying them', async ()
 
 	expect(applyButton).toHaveClass('bg-purple-600', 'py-0.5', 'px-1');
 	expect(closeButton).toHaveClass('py-0.5', 'px-1');
-	expect(applyButton.nextElementSibling).toBe(closeButton);
+	expect(applyButton.parentElement).toHaveClass('justify-between');
+	expect(closeButton.parentElement).toBe(applyButton.parentElement);
 	expect(closeButton.querySelector('.fa-times')).toBeInTheDocument();
 	await user.click(applyButton);
 
 	expect(setData).toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
 });
 
-it('keeps the Add Filter menu open when closing staged values without applying them', async () => {
+it('uses compact option styling for singer status and attendance response in Add Filter', async () => {
+	const user = userEvent.setup();
+	const singerStatusFilter = createSingerStatusFilter({
+		statuses: [{ id: 'members', name: 'Members' }],
+		label: 'Singer Status',
+	});
+	const attendanceResponseFilter = createAttendanceFilterDescriptors({
+		voiceParts: [],
+		ensembles: [],
+		singerStatuses: [],
+	}).find(filter => filter.name === 'attendance.response');
+	const controlFilters = [singerStatusFilter, attendanceResponseFilter];
+	renderControls({
+		controlFilters,
+		data: { 'status': [], 'attendance.response': [] },
+	});
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Singer Status' }));
+	expect(screen.getByLabelText('Members').closest('label')).toHaveClass('text-xs');
+	await user.click(screen.getByRole('menuitem', { name: 'Close' }));
+
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
+	await user.click(screen.getByRole('menuitem', { name: 'Attendance Response' }));
+	const onTimeOption = screen.getByLabelText('On Time').closest('label');
+	expect(onTimeOption).toHaveClass('text-xs');
+	expect(onTimeOption.querySelector('span')).toHaveClass('text-xs');
+});
+
+it('closes the entire Add Filter menu when closing staged values without applying them', async () => {
 	const user = userEvent.setup();
 	const feeFilter = {
 		name: 'fee_status',
@@ -639,8 +719,9 @@ it('keeps the Add Filter menu open when closing staged values without applying t
 
 	expect(setData).not.toHaveBeenCalledWith('fee_status', ['paid']);
 	expect(screen.queryByRole('group', { name: 'Fee Status values' })).not.toBeInTheDocument();
-	expect(screen.getByRole('menuitem', { name: 'Fee Status' })).toBeInTheDocument();
+	expect(screen.queryByRole('menuitem', { name: 'Fee Status' })).not.toBeInTheDocument();
 
+	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Fee Status' }));
 	expect(within(screen.getByRole('group', { name: 'Fee Status values' })).getByLabelText('Paid')).not.toBeChecked();
 });
@@ -760,7 +841,7 @@ it('renders Riser Stacks ensemble choices with shared option styling and reset b
 		within(valuesPanel)
 			.getByText('Choir')
 			.closest('span')
-	).toHaveClass('bg-gray-100');
+	).toHaveClass('bg-purple-100', 'text-purple-800');
 	await user.click(within(valuesPanel).getByLabelText('Choir'));
 	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
 

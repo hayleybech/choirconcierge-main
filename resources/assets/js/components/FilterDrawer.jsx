@@ -26,12 +26,14 @@ const FilterDrawer = ({ closeFn, onApply, onCancel, onClearAll, children }) => {
 					</ButtonV2>
 				</div>
 				<div
-					className={`${showApplyActions ? 'min-h-0 flex-1 overflow-y-auto' : 'flex-1'} border-b border-gray-300 bg-white p-4`}
+					className={`${
+						showApplyActions ? 'min-h-0 flex-1 overflow-y-auto' : 'flex-1'
+					} border-b border-gray-300 bg-white p-4`}
 				>
 					{children}
 				</div>
 				{showApplyActions && (
-					<div className="sticky bottom-0 z-10 flex shrink-0 gap-2 border-t border-gray-200 bg-white p-4">
+					<div className="sticky bottom-0 z-10 flex shrink-0 justify-between gap-2 border-t border-gray-200 bg-white p-4">
 						<ButtonV2
 							intent="primary"
 							className="flex-1"
@@ -48,13 +50,9 @@ const FilterDrawer = ({ closeFn, onApply, onCancel, onClearAll, children }) => {
 							Apply
 						</ButtonV2>
 						{(onClearAll || registeredActions.current?.clearAll) && (
-							<ButtonV2
-								weight="outline"
-								className="flex-1"
-								onClick={clearAllFilters}
-							>
-								<Icon icon="trash" type="regular" />
-								Clear all
+							<ButtonV2 weight="outline" className="flex-1" onClick={clearAllFilters}>
+								<Icon icon="undo" type="regular" />
+								Reset to Default
 							</ButtonV2>
 						)}
 					</div>

@@ -25,6 +25,7 @@ export function createSingerStatusFilter({
 		label,
 		defaultValue,
 		drawerOptionCompact: true,
+		addFilterOptionCompact: true,
 		options: statuses.map(status => ({ id: status.id, name: status.name })),
 		renderOption: (option, compact) => (
 			<SingerStatusTag status={new SingerStatus(option.id)} withLabel compact={compact} />
