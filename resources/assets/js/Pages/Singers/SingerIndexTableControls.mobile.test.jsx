@@ -49,7 +49,7 @@ it('places selection actions in the overflow menu and opens it from the gear but
 	};
 	render(
 		<IndexTableControls
-			filters={[]}
+			filters={[{ name: 'status', label: 'Status', options: [{ id: 'active', name: 'Active' }] }]}
 			bulkEdit={bulkEdit}
 			onToggleFilters={vi.fn()}
 			hasChangedFilters
@@ -73,10 +73,10 @@ it('places selection actions in the overflow menu and opens it from the gear but
 	expect(screen.queryByRole('button', { name: 'Select Singers' })).not.toBeInTheDocument();
 	expect(filterButton.compareDocumentPosition(sortButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 	expect(sortButton.compareDocumentPosition(actionsButton) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
-	expect(filterButton).toHaveClass('h-8', 'py-1', 'px-1.5');
-	expect(sortButton).toHaveClass('h-8', 'py-1', 'px-1.5');
+	expect(filterButton).toHaveClass('h-6', 'py-1', 'px-1.5');
+	expect(sortButton).toHaveClass('h-6', 'py-1', 'px-1.5');
 	expect(filterButton).toHaveClass('bg-purple-50', 'border-purple-200');
-	expect(actionsButton).toHaveClass('h-8');
+	expect(actionsButton).toHaveClass('h-6');
 
 	await user.click(actionsButton);
 	expect(screen.getByRole('menuitem', { name: 'Import' })).toBeTruthy();

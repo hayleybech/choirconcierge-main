@@ -79,7 +79,11 @@ const Filters = ({ routeName, routeParams, form, filters, render, autoSubmit = t
 	const clearDescriptorValue = filter => changeDescriptorValue(filter, getClearedFilterValue(filter));
 	const resetDescriptorValue = filter => changeDescriptorValue(filter, getDefaultFilterValue(filter));
 	const drawerFilters = filters
-		?.filter(filter => filter.visible !== false)
+		?.filter(
+			filter =>
+				filter.visible !== false &&
+				(filter.toolbarMode === 'pill' || !['date', 'text'].includes(filter.type))
+		)
 		.map((filter, index) => ({ filter, index }))
 		.sort(
 			(first, second) => (first.filter.drawerOrder ?? first.index) - (second.filter.drawerOrder ?? second.index)

@@ -28,8 +28,14 @@ it('renders styled multi-choice options and spacious actions in the drawer varia
 	expect(screen.getByText('Ensemble')).toBeInTheDocument();
 	expect(screen.getByText('1 selected')).toBeInTheDocument();
 	expect(screen.queryByText('Modified')).not.toBeInTheDocument();
-	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(2);
-	expect(container.querySelectorAll('.fa-asterisk')[0]).toHaveClass('text-purple-700');
+	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(0);
+	expect(screen.getByTitle('Filter differs from default')).toHaveClass(
+		'h-1.5',
+		'w-1.5',
+		'rounded-full',
+		'bg-purple-700'
+	);
+	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
 	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-gray-100');
 	expect(container.querySelector('.grid-cols-2')).toBeInTheDocument();
 
@@ -66,28 +72,27 @@ it('renders the same option adapter in the compact toolbar option panel', () => 
 	expect(onChange).toHaveBeenCalledWith([1]);
 });
 
-it('marks drawer options that differ from their descriptor defaults', () => {
+it('marks a modified drawer filter on its heading without marking individual options', () => {
 	const filter = { ...ensembleFilter, defaultValue: [1] };
 	const { container } = render(
 		<FilterFieldRenderer filter={filter} value={[]} onChange={vi.fn()} variant="drawer" />
 	);
 
-	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(2);
-	expect(container.querySelectorAll('.fa-asterisk')[0]).toHaveClass('text-purple-700');
+	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(0);
+	expect(screen.getByTitle('Filter differs from default')).toHaveClass('bg-purple-700');
+	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
 });
 
-it('adds the default marker centrally around custom drawer option displays', () => {
+it('does not pass modified state to custom drawer option displays', () => {
 	const renderOption = vi.fn(option => <span>{option.name}</span>);
 	const filter = { ...ensembleFilter, defaultValue: [1], renderOption };
 
 	render(<FilterFieldRenderer filter={filter} value={[]} onChange={vi.fn()} variant="drawer" />);
 
-	expect(renderOption).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }), false, true);
+	expect(renderOption).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }), false, false);
 	expect(screen.getByText('Choir')).toBeInTheDocument();
-	expect(screen.getAllByTitle('Filter value differs from default')).toHaveLength(1);
-	expect(screen.getByTitle('Filter value differs from default').querySelector('.fa-asterisk')).toHaveClass(
-		'text-purple-700'
-	);
+	expect(screen.getByTitle('Filter differs from default')).toHaveClass('bg-purple-700');
+	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
 });
 
 it('uses a descriptive reset label for text drawer fields', () => {

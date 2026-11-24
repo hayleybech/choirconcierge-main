@@ -107,6 +107,40 @@ beforeEach(() => {
 	useMediaQuery.mockReturnValue(false);
 });
 
+it('keeps toolbar search fields out of the filter drawer', () => {
+	const filters = [
+		{ name: 'search', label: 'Search', type: 'text', defaultValue: '' },
+		{ name: 'starts_on', label: 'Starts on', type: 'date', defaultValue: '' },
+		{ name: 'sender', label: 'Sender', type: 'text', toolbarMode: 'pill', defaultValue: '' },
+		{
+			name: 'status',
+			label: 'Status',
+			type: 'choice',
+			options: [{ id: 'active', name: 'Active' }],
+		},
+	];
+
+	render(
+		<FilterDrawer closeFn={mocks.closeDrawer}>
+			<Filters
+				routeName="filters.index"
+				filters={filters}
+				form={{
+					data: { search: '', starts_on: '', sender: '', status: '' },
+					defaultFilterData: { search: '', starts_on: '', sender: '', status: '' },
+					setData: mocks.setData,
+					submit: mocks.submit,
+				}}
+			/>
+		</FilterDrawer>
+	);
+
+	expect(screen.queryByRole('textbox', { name: 'Search' })).not.toBeInTheDocument();
+	expect(screen.queryByRole('textbox', { name: 'Starts on' })).not.toBeInTheDocument();
+	expect(screen.getByRole('textbox', { name: 'Sender' })).toBeInTheDocument();
+	expect(screen.getByLabelText('Active')).toBeInTheDocument();
+});
+
 it('stages mobile filter changes until Apply', async () => {
 	render(<FilterForm />);
 	const nameFilter = screen.getByRole('textbox', { name: 'Name filter' });

@@ -63,9 +63,10 @@ const FilterFieldRenderer = ({
 							<span className="shrink-0 text-xs text-gray-500">{getSelectedCount(value)} selected</span>
 						)}
 						{filter.showDefaultMarker && nonDefault && (
-							<span title="Filter differs from default" className="shrink-0 text-purple-700">
-								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
-							</span>
+							<span
+								title="Filter differs from default"
+								className="h-1.5 w-1.5 shrink-0 rounded-full bg-purple-700"
+							/>
 						)}
 					</div>
 					{filter.showActions && (
@@ -107,10 +108,10 @@ const FilterFieldRenderer = ({
 					type={isDateInput ? 'date' : 'text'}
 					role={isDateInput ? 'textbox' : 'searchbox'}
 					aria-label={inputLabel}
-					placeholder={isDateInput ? '' : `Search ${filterLabel || filter.label}`}
+					placeholder={isDateInput ? '' : 'Search'}
 					value={isDateInput ? formatDateInputValue(value) : value ?? ''}
 					onChange={event => onChange(event.target.value)}
-					className="block h-[26px] w-full rounded-full border-gray-300 py-0 pl-8 pr-8 text-xs shadow-none focus:border-purple-500 focus:ring-purple-500"
+					className="block h-6 w-full rounded-full border-gray-300 py-0 pl-8 pr-8 text-xs shadow-none focus:border-purple-500 focus:ring-purple-500"
 				/>
 				{value && (
 					<button
@@ -188,9 +189,10 @@ const FilterFieldRenderer = ({
 							}`}
 						/>
 						{filter.showDefaultMarker && nonDefault && (
-							<span title="Filter differs from default" className="shrink-0 text-purple-700">
-								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
-							</span>
+							<span
+								title="Filter differs from default"
+								className="h-1.5 w-1.5 shrink-0 rounded-full bg-purple-700"
+							/>
 						)}
 					</div>
 					{filter.showActions && (
@@ -231,9 +233,10 @@ const FilterFieldRenderer = ({
 							<span className="shrink-0 text-xs text-gray-500">{getSelectedCount(value)} selected</span>
 						)}
 						{filter.showDefaultMarker && nonDefault && (
-							<span title="Filter differs from default" className="shrink-0 text-purple-700">
-								<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
-							</span>
+							<span
+								title="Filter differs from default"
+								className="h-1.5 w-1.5 shrink-0 rounded-full bg-purple-700"
+							/>
 						)}
 					</div>
 					{filter.showActions && (
@@ -257,7 +260,7 @@ const FilterFieldRenderer = ({
 						value={Array.isArray(value) ? value : []}
 						defaultValue={Array.isArray(defaultValue) ? defaultValue : []}
 						updateFn={onChange}
-						renderOption={(option, isChanged) => renderDrawerFilterOption(filter, option, isChanged)}
+						renderOption={option => renderDrawerFilterOption(filter, option)}
 					/>
 				) : (
 					<div className="space-y-2">
@@ -353,19 +356,8 @@ function getNextChoiceValue(multiple, selectedValues, option, checked) {
 		: [...nonEmptyValues, option.id];
 }
 
-function renderDrawerFilterOption(filter, option, isChanged) {
-	const renderedOption = renderFilterOption(filter, option, filter.drawerOptionCompact ?? false, isChanged);
-
-	if (!isChanged) {
-		return renderedOption;
-	}
-
-	return (
-		<span className="inline-flex items-center gap-1.5" title="Filter value differs from default">
-			{renderedOption}
-			<Icon icon="asterisk" size="text-[0.5rem]" className="text-purple-700" />
-		</span>
-	);
+function renderDrawerFilterOption(filter, option) {
+	return renderFilterOption(filter, option, filter.drawerOptionCompact ?? false);
 }
 
 function getOptionLabel(option) {

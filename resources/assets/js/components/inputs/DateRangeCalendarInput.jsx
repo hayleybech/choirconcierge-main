@@ -130,7 +130,7 @@ const DateRangeCalendarInput = ({
 							value={rangeLabel}
 							placeholder="Select date range"
 							className={`block w-full min-w-0 rounded-md border-gray-300 focus:border-purple-500 focus:ring-purple-500 ${
-								mobile ? 'h-8 py-0 pl-7 pr-2 text-xs text-gray-500' : 'pl-10 text-sm'
+								mobile ? 'h-6 py-0 pl-7 pr-2 text-xs text-gray-500' : 'pl-10 text-sm'
 							} ${open ? 'bg-gray-100' : 'bg-white'}`}
 						/>
 					</Popover.Button>

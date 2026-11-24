@@ -166,7 +166,7 @@ const IndexTableControls = ({
 								size="xs"
 								intent="secondary"
 								weight="clear"
-								className="text-xs"
+								className="h-6 text-xs"
 								onClick={resetAllFilters}
 							>
 								<Icon icon="undo" type="regular" />
@@ -227,17 +227,19 @@ const IndexTableControls = ({
 							className="w-32 shrink-0 grow md:grow-0"
 						/>
 					))}
-					<Button
-						size="sm"
-						weight="outline"
-						intent={hasChangedFilters ? 'selected' : 'secondary'}
-						className="h-8"
-						onClick={onToggleFilters}
-						aria-label={`Filter ${filterLabel || 'items'}`}
-					>
-						<Icon icon="filter" type="regular" />
-						Filters{changedFiltersCount > 0 && ` (${changedFiltersCount})`}
-					</Button>
+					{filtersForPills.length > 0 && (
+						<Button
+							size="sm"
+							weight="outline"
+							intent={hasChangedFilters ? 'selected' : 'secondary'}
+							className="h-6"
+							onClick={onToggleFilters}
+							aria-label={`Filter ${filterLabel || 'items'}`}
+						>
+							<Icon icon="filter" type="regular" />
+							Filters{changedFiltersCount > 0 && ` (${changedFiltersCount})`}
+						</Button>
+					)}
 					{sorts.length > 0 && <SortDropdown sorts={sorts} form={form} compact autoSubmit={!isDesktop} />}
 					{(tableActions.length > 0 || tableActionContent || bulkEdit?.action) && (
 						<MobileTableActions
@@ -309,7 +311,7 @@ const FilterPillContent = ({ filter, value, nonDefault, onChange, onClear, onRes
 				intent={nonDefault ? 'selected' : 'secondary'}
 				weight="outline"
 				aria-label={`${filter.label}: ${getFilterSummary(filter, value)}; open filter values`}
-				className="h-[26px] rounded"
+				className="h-6 rounded"
 			>
 				{filter.type !== 'daterange' && <span>{filter.label}:</span>}
 				<div className={`${filter.type === 'daterange' ? 'max-w-auto' : 'max-w-32'} truncate text-xs`}>
@@ -516,7 +518,7 @@ const AddFilterMenuContent = ({
 
 	return (
 		<>
-			<Menu.Button ref={buttonRef} as={Button} size="sm" weight="clear">
+			<Menu.Button ref={buttonRef} as={Button} size="sm" weight="clear" className="h-6">
 				<Icon icon="plus" type="regular" />
 				Add filter
 			</Menu.Button>
@@ -784,7 +786,7 @@ const SortDropdown = ({ sorts, form, compact = false, autoSubmit = false }) => {
 						as={Button}
 						size="sm"
 						weight="outline"
-						className="h-8"
+						className="h-6"
 						aria-label={compact ? 'Sort options' : `Sort: ${activeSort}`}
 					>
 						<Icon icon="sort" type="regular" />
@@ -855,7 +857,7 @@ const TableActionButton = ({ action }) => (
 		onClick={action.onClick}
 		size="sm"
 		weight="outline"
-		className="h-8"
+		className="h-6"
 		{...(action.download ? { external: true, download: action.download } : {})}
 	>
 		{action.icon && <Icon icon={action.icon} type="regular" />}
@@ -869,7 +871,7 @@ const MobileTableActions = ({ tableActions, tableActionContent, bulkEdit, filter
 			as={Button}
 			size="sm"
 			weight="outline"
-			className="h-8"
+			className="h-6"
 			aria-label={`${filterLabel || 'Table'} table actions`}
 		>
 			<Icon icon="cog" />

@@ -337,6 +337,8 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	expect(desktop).toHaveClass('hidden', 'lg:flex');
 	const searchInput = within(desktop).getByRole('searchbox', { name: 'Search members by name' });
 	expect(searchInput).toHaveValue('Ada');
+	expect(searchInput).toHaveAttribute('placeholder', 'Search');
+	expect(searchInput).toHaveClass('h-6');
 	expect(searchInput.parentElement.querySelector('.fa-search')).toBeTruthy();
 	expect(within(desktop).getByRole('button', { name: 'Clear members search' })).toBeTruthy();
 
@@ -393,7 +395,25 @@ it('hides the add-filter button when no filters are available to add', () => {
 	expect(within(desktop).queryByRole('button', { name: 'Add filter' })).not.toBeInTheDocument();
 });
 
-it('shows and submits the search input inline with mobile controls', async () => {
+it('aligns desktop table controls to the same height', () => {
+	const { container } = renderControls({
+		data: { ...initialData, status: ['inactive'] },
+		tableActions: [{ label: 'Import' }, { label: 'Export' }],
+	});
+	const desktop = container.querySelector('[data-testid="desktop-index-table-controls"]');
+	const alignedControls = [
+		within(desktop).getByRole('button', { name: 'Add filter' }),
+		within(desktop).getByRole('button', { name: 'Status: Inactive; open filter values' }),
+		within(desktop).getByRole('button', { name: 'Reset all filters' }),
+		within(desktop).getByRole('button', { name: 'Sort: Name' }),
+		within(desktop).getByRole('button', { name: 'Import' }),
+		within(desktop).getByRole('button', { name: 'Export' }),
+	];
+
+	alignedControls.forEach(control => expect(control).toHaveClass('h-6'));
+});
+
+it('shows and submits the search input inline on mobile without an empty filter drawer trigger', async () => {
 	useMediaQuery.mockReturnValue(false);
 	const user = userEvent.setup();
 	const { container, setData, submit } = renderControls({
@@ -404,7 +424,9 @@ it('shows and submits the search input inline with mobile controls', async () =>
 	const mobile = container.querySelector('[data-testid="mobile-index-table-controls"]');
 	const searchInput = within(mobile).getByRole('searchbox', { name: 'Search members by name' });
 
-	expect(within(mobile).getByRole('button', { name: 'Filter members' })).toBeInTheDocument();
+	expect(searchInput).toHaveAttribute('placeholder', 'Search');
+	expect(searchInput).toHaveClass('h-6');
+	expect(within(mobile).queryByRole('button', { name: 'Filter members' })).not.toBeInTheDocument();
 	await user.type(searchInput, 'Folder');
 
 	expect(setData).toHaveBeenLastCalledWith('name', 'Folder');
