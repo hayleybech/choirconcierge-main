@@ -17,17 +17,19 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 	const [isOpen, setIsOpen] = useState(false);
 	const tooltipRef = useRef(null);
 	const tooltipId = useRef(null);
+	const longPressTimeoutRef = useRef(null);
+	const didLongPressRef = useRef(false);
 
 	if (tooltipId.current === null) {
 		tooltipId.current = `tooltip-${nextTooltipId++}`;
 	}
 
 	useEffect(() => {
-		if (!isOpen || trigger !== 'click') {
+		if (!isOpen) {
 			return undefined;
 		}
 
-		const closeOnOutsideClick = event => {
+		const closeOnOutsideInteraction = event => {
 			if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
 				setIsOpen(false);
 			}
@@ -38,14 +40,23 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 			}
 		};
 
-		document.addEventListener('mousedown', closeOnOutsideClick);
+		document.addEventListener('mousedown', closeOnOutsideInteraction);
+		document.addEventListener('touchstart', closeOnOutsideInteraction);
 		document.addEventListener('keydown', closeOnEscape);
 
 		return () => {
-			document.removeEventListener('mousedown', closeOnOutsideClick);
+			document.removeEventListener('mousedown', closeOnOutsideInteraction);
+			document.removeEventListener('touchstart', closeOnOutsideInteraction);
 			document.removeEventListener('keydown', closeOnEscape);
 		};
-	}, [isOpen, trigger]);
+	}, [isOpen]);
+
+	useEffect(
+		() => () => {
+			window.clearTimeout(longPressTimeoutRef.current);
+		},
+		[]
+	);
 
 	if (content === null || content === undefined || content === '') {
 		return children;
@@ -56,6 +67,30 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 	const describedBy = isOpen
 		? [existingDescription, tooltipId.current].filter(Boolean).join(' ')
 		: existingDescription;
+	const cancelLongPress = () => {
+		window.clearTimeout(longPressTimeoutRef.current);
+		longPressTimeoutRef.current = null;
+	};
+	const startLongPress = () => {
+		if (trigger !== 'hover') {
+			return;
+		}
+
+		cancelLongPress();
+		didLongPressRef.current = false;
+		longPressTimeoutRef.current = window.setTimeout(() => {
+			didLongPressRef.current = true;
+			setIsOpen(true);
+			longPressTimeoutRef.current = null;
+		}, 500);
+	};
+	const endLongPress = event => {
+		cancelLongPress();
+		if (didLongPressRef.current) {
+			event.preventDefault();
+			didLongPressRef.current = false;
+		}
+	};
 	const triggerElement = child
 		? cloneElement(child, {
 				'aria-describedby': describedBy,
@@ -78,6 +113,10 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 			onMouseEnter={() => trigger === 'hover' && setIsOpen(true)}
 			onMouseLeave={() => trigger === 'hover' && setIsOpen(false)}
 			onFocus={() => trigger === 'hover' && setIsOpen(true)}
+			onTouchStart={startLongPress}
+			onTouchEnd={endLongPress}
+			onTouchMove={cancelLongPress}
+			onTouchCancel={cancelLongPress}
 			onBlur={event => {
 				if (trigger === 'hover' && !event.currentTarget.contains(event.relatedTarget)) {
 					setIsOpen(false);

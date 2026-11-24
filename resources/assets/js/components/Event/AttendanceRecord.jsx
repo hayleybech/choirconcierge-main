@@ -211,7 +211,7 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 
 				{attendance.response === 'absent' && (
 					<div className="flex gap-1.5 items-center">
-						{attendance.absent_reason && !isEditing && (
+						{attendance.absent_reason && !isEditing && !isMobile && (
 							<Tooltip content={attendance.absent_reason}>
 								<div className="text-[11px] text-gray-500 italic max-w-[200px] truncate" tabIndex={0}>
 									Reason: {attendance.absent_reason}

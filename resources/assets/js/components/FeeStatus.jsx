@@ -3,19 +3,22 @@ import Icon from "./Icon";
 import React from "react";
 import Tooltip from "./Tooltip";
 
-const FeeStatus = ({ status, tooltip, compact = false }) => (
-	<Tooltip content={tooltip}>
-		<div
-			className={classNames(compact ? 'text-xs' : 'text-sm', STATUSES[status].colour)}
-			tabIndex={tooltip ? 0 : undefined}
-		>
-			<Icon icon={STATUSES[status].icon} mr className={classNames(compact ? 'text-xs' : '', STATUSES[status].colour)} />
-			<span className="font-semibold truncate">
-				{STATUSES[status].label}
-			</span>
-		</div>
-	</Tooltip>
-);
+const FeeStatus = ({ status, tooltip, compact = false }) => {
+	const feeStatus = STATUSES[status];
+	const tooltipContent = status === 'unknown' ? null : tooltip;
+
+	return (
+		<Tooltip content={tooltipContent}>
+			<div
+				className={classNames(compact ? 'text-xs' : 'text-sm', feeStatus.colour)}
+				tabIndex={tooltipContent ? 0 : undefined}
+			>
+				<Icon icon={feeStatus.icon} mr className={classNames(compact ? 'text-xs' : '', feeStatus.colour)} />
+				<span className="font-semibold truncate">{feeStatus.label}</span>
+			</div>
+		</Tooltip>
+	);
+};
 
 export default FeeStatus;
 

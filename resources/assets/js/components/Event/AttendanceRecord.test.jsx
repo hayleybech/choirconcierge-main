@@ -81,5 +81,6 @@ describe('AttendanceRecord', () => {
 		fireEvent.click(screen.getByRole('button', { name: 'Show attendance reason' }));
 
 		expect(screen.getByRole('tooltip')).toHaveTextContent('Family emergency');
+		expect(screen.queryByText(/^Reason:/)).toBeNull();
 	});
 });
