@@ -35,7 +35,7 @@ it('keeps an Apply action visible at the bottom of a scrollable filter pane', ()
 	expect(closeDrawer).toHaveBeenCalledOnce();
 });
 
-it('applies cleared filters and closes the drawer', () => {
+	it('applies reset filters and closes the drawer', () => {
 	const applyFilters = vi.fn();
 	const clearAllFilters = vi.fn(applyFilters);
 	const closeDrawer = vi.fn();
@@ -45,10 +45,10 @@ it('applies cleared filters and closes the drawer', () => {
 		</FilterDrawer>
 	);
 
-	const clearAllButton = screen.getByRole('button', { name: 'Clear all' });
+	const clearAllButton = screen.getByRole('button', { name: 'Reset to Default' });
 
 	expect(clearAllButton).toHaveClass('flex-1');
-	expect(clearAllButton.querySelector('.fa-trash')).toBeInTheDocument();
+	expect(clearAllButton.querySelector('.fa-undo')).toBeInTheDocument();
 	fireEvent.click(clearAllButton);
 
 	expect(clearAllFilters).toHaveBeenCalledOnce();

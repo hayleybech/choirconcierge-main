@@ -66,12 +66,12 @@ describe('DateRangeCalendarInput', () => {
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('15 Jan 2025');
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('20 Feb 2025');
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).className).toContain('bg-gray-100');
-		const calendarPanel = screen.getByTestId('day-picker').closest('.absolute.right-0');
+		const calendarPanel = screen.getByTestId('day-picker').closest('.absolute.left-0');
 		expect(calendarPanel).not.toBeNull();
 		expect(calendarPanel.className).not.toContain('overflow-hidden');
 	});
 
-	it('renders the mobile calendar left-aligned within the viewport with a transition', () => {
+	it('renders the mobile calendar in a left-aligned popover with a transition', () => {
 		render(<DateRangeCalendarInput mobile updateFn={vi.fn()} />);
 
 		const calendar = screen.getByTestId('day-picker');
@@ -79,8 +79,7 @@ describe('DateRangeCalendarInput', () => {
 
 		expect(calendar.closest('[data-testid="transition-wrapper"]')).not.toBeNull();
 		expect(calendarPanel).not.toBeNull();
-		expect(calendarPanel.className).toContain('max-w-[calc(100vw-1rem)]');
-		expect(calendarPanel.className).toContain('max-h-[calc(100dvh-1rem)]');
+		expect(calendarPanel.className).toContain('mt-2');
 	});
 
 	it('does not update the applied range until Apply is pressed', () => {
@@ -108,7 +107,7 @@ describe('DateRangeCalendarInput', () => {
 		render(<DateRangeCalendarInput inline onClose={onClose} updateFn={updateFn} />);
 
 		expect(screen.queryByRole('textbox', { name: 'Attendance report date range' })).toBeNull();
-		expect(screen.getByRole('button', { name: 'Clear selected' })).toBeTruthy();
+		expect(screen.getByRole('button', { name: 'Reset' })).toBeTruthy();
 		expect(screen.getByRole('button', { name: 'Cancel' })).toBeTruthy();
 		screen.getByRole('button', { name: 'Choose range' }).click();
 		screen.getByRole('button', { name: 'Apply' }).click();

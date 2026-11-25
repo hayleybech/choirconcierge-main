@@ -72,8 +72,9 @@ it('keeps page actions in the title row and places primary actions last', () => 
 
 	expect(actions.parentElement).toBe(title.parentElement);
 	expect(actions.className).toContain('xl:ml-auto');
+	expect(actions.className).toContain('flex-row-reverse');
 	expect(Array.from(actions.querySelectorAll('button')).map(button => button.textContent)).toEqual([
-		'Export',
 		'Add New',
+		'Export',
 	]);
 });

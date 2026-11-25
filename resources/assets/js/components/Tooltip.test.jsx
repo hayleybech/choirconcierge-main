@@ -1,5 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import Tooltip from './Tooltip';
 
@@ -72,10 +73,14 @@ describe('Tooltip', () => {
 			const wrapper = trigger.parentElement;
 
 			fireEvent.touchStart(wrapper);
-			act(() => vi.advanceTimersByTime(499));
+			act(() => {
+				vi.advanceTimersByTime(499);
+			});
 			expect(screen.queryByRole('tooltip')).toBeNull();
 
-			act(() => vi.advanceTimersByTime(1));
+			act(() => {
+				vi.advanceTimersByTime(1);
+			});
 			expect(screen.getByRole('tooltip')).toHaveTextContent('Helpful information');
 
 			fireEvent.touchEnd(wrapper);

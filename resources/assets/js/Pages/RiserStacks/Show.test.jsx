@@ -19,10 +19,11 @@ vi.mock('../../components/PageTopBar', () => ({
 vi.mock('../../components/PageHeader/PageHeader', () => ({
     PageHeader: ({ children }) => <div>{children}</div>,
     PageHeaderActions: ({ children }) => <div>{children}</div>,
-    PageHeaderBreadcrumbs: () => null,
-    PageHeaderContent: ({ children }) => <div>{children}</div>,
-    PageHeaderMeta: ({ children }) => <div>{children}</div>,
-    PageHeaderTitle: ({ children }) => <div>{children}</div>,
+	PageHeaderBreadcrumbs: () => null,
+	PageHeaderContent: ({ children }) => <div>{children}</div>,
+	PageHeaderMeta: ({ children }) => <div>{children}</div>,
+	PageHeaderTitleRow: ({ children }) => <div>{children}</div>,
+	PageHeaderTitle: ({ children }) => <div>{children}</div>,
 }));
 vi.mock('../../components/AppHead', () => ({ default: () => null }));
 vi.mock('../../components/DateTag', () => ({ default: () => null }));

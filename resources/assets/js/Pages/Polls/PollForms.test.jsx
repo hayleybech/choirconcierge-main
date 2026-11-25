@@ -35,6 +35,7 @@ vi.mock('../../components/PageHeader/PageHeader', async () => {
 		PageHeader: Container,
 		PageHeaderBreadcrumbs: () => null,
 		PageHeaderContent: Container,
+		PageHeaderTitleRow: Container,
 		PageHeaderTitle: Container,
 	};
 });

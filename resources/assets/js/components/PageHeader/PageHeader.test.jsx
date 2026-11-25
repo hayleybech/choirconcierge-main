@@ -16,6 +16,7 @@ describe('PageHeader2', () => {
 	it('uses the mobile page header padding below the layout top-bar spacing', () => {
 		const { container } = render(<PageHeader><h1>Singers</h1></PageHeader>);
 
-		expect(container.firstChild.classList.contains('pt-4')).toBe(true);
+		expect(container.firstChild.classList.contains('py-3')).toBe(true);
+		expect(container.firstChild.classList.contains('xl:py-4')).toBe(true);
 	});
 });

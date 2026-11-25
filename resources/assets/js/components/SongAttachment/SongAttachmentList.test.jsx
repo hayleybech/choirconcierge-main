@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom';
 import SongAttachmentList from './SongAttachmentList';
 
@@ -21,9 +21,9 @@ vi.mock('../../AttachmentType', () => ({
 	},
 }));
 vi.mock('../inputs/ButtonV2', () => ({
-	default: ({ href, download, target, onClick, children }) => href
-		? <a href={href} download={download} target={target} onClick={onClick}>{children}</a>
-		: <button onClick={onClick}>{children}</button>,
+	default: React.forwardRef(({ href, download, target, onClick, children }, ref) => href
+		? <a ref={ref} href={href} download={download} target={target} onClick={onClick}>{children}</a>
+		: <button ref={ref} onClick={onClick}>{children}</button>),
 }));
 vi.mock('../DeleteDialog', () => ({ default: () => null }));
 vi.mock('../Dialog', () => ({ default: () => null }));
@@ -56,10 +56,17 @@ const renderAttachmentList = (can = { update_song: true }, setCurrentPdf = vi.fn
 	);
 
 describe('SongAttachmentList', () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
 	it('moves multiple secondary actions into an overflow menu and preserves primary actions', async () => {
 		const user = userEvent.setup();
 		const player = { src: null, play: vi.fn() };
 		const setCurrentPdf = vi.fn();
+		vi.spyOn(window, 'requestAnimationFrame').mockImplementation(callback => {
+			return window.setTimeout(() => callback(0), 0);
+		});
 		renderAttachmentList({ update_song: true }, setCurrentPdf, player);
 
 		const menuButtons = screen.getAllByRole('button', { name: 'Open attachment actions' });

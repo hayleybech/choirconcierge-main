@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { router, usePage } from '@inertiajs/react';
 import { vi } from 'vitest';
 import RsvpRecord from './RsvpRecord';
@@ -105,7 +106,7 @@ describe('RsvpRecord', () => {
 		);
 
 		fireEvent.click(screen.getByRole('button', { name: /Going/ }));
-		fireEvent.click(await screen.findByRole('button', { name: 'Maybe' }));
+		fireEvent.click(await screen.findByRole('menuitem', { name: 'Maybe' }));
 
 		await waitFor(() =>
 			expect(router.put).toHaveBeenCalledWith(

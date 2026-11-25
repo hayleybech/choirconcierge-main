@@ -73,7 +73,6 @@ it('stages filter edits until Apply and marks changed fields and values', async 
 	expect(statusField.querySelector('legend')).toHaveTextContent('Status');
 	expect(within(statusField).getAllByTitle('Filter differs from default').length).toBeGreaterThan(0);
 	expect(screen.getByLabelText(/Prospects/).labels[0]).not.toHaveClass('text-purple-700');
-	expect(screen.getByLabelText(/Prospects/).labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toBeEnabled();
 	expect(within(statusField).getByRole('button', { name: 'None' })).toBeEnabled();
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toHaveClass(
@@ -97,7 +96,7 @@ it('keeps the Singer drawer ensemble field directly after voice part', () => {
 	expect(filterLabels).toEqual(['Status', 'Voice Part', 'Ensemble', 'Role', 'Fee Status']);
 });
 
-it('uses the site styles for filter values and marks non-default values with an asterisk', async () => {
+	it('uses the site styles for filter values and marks changed filter fields', async () => {
 	renderSingerFilters();
 	const user = userEvent.setup();
 
@@ -123,16 +122,18 @@ it('uses the site styles for filter values and marks non-default values with an 
 
 	await user.click(screen.getByLabelText(/Prospects/));
 	const prospectsLabel = screen.getByLabelText(/Prospects/).labels[0];
-	expect(prospectsLabel.querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
+	const statusField = screen.getByText('Status').closest('fieldset');
+	expect(within(statusField).getByTitle('Filter differs from default')).toBeInTheDocument();
 	expect(prospectsLabel.querySelector('.fa-circle')).toHaveClass('text-amber-500');
 	expect(prospectsLabel).not.toHaveClass('text-purple-700');
 
 	await user.click(screen.getByLabelText(/Members/));
-	expect(screen.getByLabelText(/Members/).labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
+	expect(statusField.querySelector('legend')).toHaveClass('text-purple-700');
 
 	await user.click(screen.getByRole('checkbox', { name: /Expired/ }));
 	const expiredOption = screen.getByRole('checkbox', { name: /Expired/ });
-	expect(expiredOption.labels[0].querySelector('.fa-asterisk')).toHaveClass('text-purple-700');
+	const feeStatusField = screen.getByText('Fee Status').closest('fieldset');
+	expect(within(feeStatusField).getByTitle('Filter differs from default')).toBeInTheDocument();
 	expect(expiredOption.labels[0].querySelector('.fa-times-circle')).toHaveClass('text-red-500');
 });
 
