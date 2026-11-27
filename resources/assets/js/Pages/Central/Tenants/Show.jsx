@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
@@ -78,10 +79,20 @@ const Show = ({ tenant, inbox_enabled, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<div className="flex items-center gap-4">
-						{tenant.logo_url && <img src={tenant.logo_url} alt="" className="h-16 rounded-md" />}
-						<PageHeaderTitle>{tenant.name}</PageHeaderTitle>
-					</div>
+					<PageHeaderTitleRow>
+						<div className="flex items-center gap-4">
+							{tenant.logo_url && <img src={tenant.logo_url} alt="" className="h-16 rounded-md" />}
+							<PageHeaderTitle>{tenant.name}</PageHeaderTitle>
+						</div>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button key={action.label} href={action.url} size="md" intent={action.intent} weight={action.weight} className={action.className}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 					<>
 					<>
@@ -100,14 +111,6 @@ const Show = ({ tenant, inbox_enabled, setSidebarOpen }) => {
 					</>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button key={action.label} href={action.url} size="md" intent={action.intent} weight={action.weight} className={action.className}>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<SectionLayout

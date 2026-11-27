@@ -21,6 +21,7 @@ class UpdateSingerRsvpRequest extends FormRequest
     {
         return [
             'response' => ['required', 'in:yes,maybe,no'],
+            'details' => ['nullable', 'string', 'max:50'],
         ];
     }
 

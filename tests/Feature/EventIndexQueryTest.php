@@ -39,3 +39,28 @@ test('events index loads the current membership and its rsvps without per-event 
 
     expect($queryCounts[1])->toBe($queryCounts[0]);
 });
+
+test('events index keeps the all-dates filter on pagination links', function () {
+    $user = $this->createUserWithRole('Events Team');
+    Event::factory()->count(26)->create([
+        'call_time' => now()->subDays(2),
+        'start_date' => now()->subDays(2),
+        'end_date' => now()->subDay(),
+    ]);
+    Event::factory()->count(26)->create();
+
+    $this->actingAs($user)
+        ->get(the_tenant_route('events.index', ['filter' => ['date' => 'all']]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('events.total', 52)
+            ->has('events.data', 50)
+            ->where('events.next_page_url', function (string $url): bool {
+                $query = [];
+                parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);
+
+                return ($query['filter']['date'] ?? null) === 'all'
+                    && ($query['page'] ?? null) === '2';
+            })
+        );
+});

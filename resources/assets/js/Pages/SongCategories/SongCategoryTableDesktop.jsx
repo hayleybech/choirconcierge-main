@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, usePage } from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table/Table";
 import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/ButtonV2";
 import Icon from "../../components/Icon";
@@ -37,13 +37,13 @@ const SongCategoryTableDesktop = ({ categories, showEditCategory, showDeleteCate
                       <TableCell>
                         <div className="flex gap-2 justify-end">
                           {can.create_song && (
-                            <Button intent="secondary" weight="solid" size="sm" onClick={() => showEditCategory(category)}>
+                            <Button intent="secondary" size="sm" onClick={() => showEditCategory(category)}>
                               <Icon icon="edit" />
                               Edit
                             </Button>
                           )}
                           {can.create_song && (
-                            <Button intent="danger" weight="outline" size="sm" onClick={() => showDeleteCategory(category)}>
+                            <Button intent="danger" weight="clear" size="sm" onClick={() => showDeleteCategory(category)}>
                               <Icon icon="trash" />
                               Delete
                             </Button>

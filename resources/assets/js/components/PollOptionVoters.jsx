@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Dialog from './Dialog';
+import Tooltip from './Tooltip';
 
 const PollOptionVoters = ({ option }) => {
 	const [isOpen, setIsOpen] = useState(false);
@@ -15,13 +16,13 @@ const PollOptionVoters = ({ option }) => {
 		<>
 			<div className="flex shrink-0 items-center -space-x-3">
 				{previewVoters.map(voter => (
-					<img
-						key={voter.id}
-						className="h-8 w-8 shrink-0 cursor-default rounded-full border-2 border-white object-cover"
-						src={voter.avatar_url}
-						alt={voter.name}
-						title={voter.name}
-					/>
+					<Tooltip key={voter.id} content={voter.name} className="shrink-0">
+						<img
+							className="h-8 w-8 shrink-0 cursor-default rounded-full border-2 border-white object-cover"
+							src={voter.avatar_url}
+							alt={voter.name}
+						/>
+					</Tooltip>
 				))}
 				{hiddenVoterCount > 0 && (
 					<button

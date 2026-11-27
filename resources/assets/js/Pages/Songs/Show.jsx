@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -25,14 +26,14 @@ import { PlayerContext } from '../../contexts/player-context';
 import SongStatus from '../../SongStatus';
 import Icon from '../../components/Icon';
 import Prose from '../../components/Prose';
-import ButtonLink from '../../components/inputs/ButtonLinkV2';
-import Button from '../../components/inputs/ButtonV2';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import { useInstrument } from '../../hooks/useInstrument';
- 
+import Button from '../../components/inputs/ButtonV2';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+
 const Show = ({ song, attachment_types, status_count, voice_parts_count, setSidebarOpen }) => {
 	const { route } = useRoute();
 
@@ -46,16 +47,21 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const actions = [
-		{ label: 'Edit', icon: 'edit', url: route('songs.edit', { song }), can: song.can.update_song },
+		{
+			label: 'Edit',
+			icon: 'edit',
+			href: route('songs.edit', { song }),
+			can: 'update_song',
+			weight: 'outline',
+		},
 		{
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 			intent: 'danger',
-			weight: 'outline',
-			can: song.can.delete_song,
+			can: 'delete_song',
 		},
-	].filter(action => action.can);
+	].filter(action => song.can[action.can] || pageProps.can[action.can]);
 	const [currentPdf, setCurrentPdf] = useState(() => {
 		if (isMobile || isCompactDesktop) {
 			return null;
@@ -116,7 +122,7 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 							{actions.map((action, key) => (
 								<ActionMenuItem
 									key={key}
-									url={action.url}
+									url={action.href}
 									onClick={action.onClick}
 									intent={action.intent}
 								>
@@ -129,7 +135,17 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 					<PageHeader>
 						<PageHeaderContent>
 							<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-							<PageHeaderTitle>{song.title}</PageHeaderTitle>
+							<PageHeaderTitleRow>
+								<PageHeaderTitle>{song.title}</PageHeaderTitle>
+								<PageHeaderActions>
+									{actions.map((action, key) => (
+										<Button key={key} {...action} size="md" weight={action.weight ?? 'clear'}>
+											<Icon icon={action.icon} mr />
+											{action.label}
+										</Button>
+									))}
+								</PageHeaderActions>
+							</PageHeaderTitleRow>
 							<PageHeaderMeta>
 								<PitchButton instrument={instrument} note={song.pitch.split('/')[0]} size="md" />
 								<SongStatusTag status={new SongStatus(song.status.slug)} withLabel />
@@ -168,22 +184,6 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 								)}
 							</PageHeaderMeta>
 						</PageHeaderContent>
-						<PageHeaderActions>
-							{actions.map((action, key) => (
-								<Button
-									key={key}
-									href={action.url}
-									onClick={action.onClick}
-									size="md"
-									intent={action.intent}
-									weight={action.weight}
-									className={action.className}
-								>
-									<Icon icon={action.icon} mr />
-									{action.label}
-								</Button>
-							))}
-						</PageHeaderActions>
 					</PageHeader>
 					<DeleteDialog
 						title="Delete Song"
@@ -212,7 +212,8 @@ const Show = ({ song, attachment_types, status_count, voice_parts_count, setSide
 								},
 								{
 									id: 'details',
-									className: 'sm:col-span-1 sm:order-2 xl:order-3 xl:flex xl:min-h-0 xl:flex-col xl:overflow-hidden',
+									className:
+										'sm:col-span-1 sm:order-2 xl:order-3 xl:flex xl:min-h-0 xl:flex-col xl:overflow-hidden',
 								},
 							],
 						}}

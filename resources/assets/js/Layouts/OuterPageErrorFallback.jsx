@@ -31,19 +31,19 @@ export const OuterPageErrorFallback = ({ error, resetErrorBoundary }) => {
 				<div className="flex-shrink-0 bg-gray-50">
 					<div className="mx-auto max-w-7xl w-full px-4 py-16 sm:px-6 lg:px-8">
 						<nav className="flex space-x-4 justify-center">
-							<StyledLink href="mailto:hello@choirconcierge.com" target="_blank" variant="secondary">
+							<StyledLink href="mailto:hello@choirconcierge.com" target="_blank" intent="secondary">
 								Email Us
 							</StyledLink>
 							<span className="inline-block border-l border-gray-300" aria-hidden="true"/>
-							<StyledLink href="https://stats.uptimerobot.com/99Y2MUmKA5" target="_blank" variant="secondary">
+							<StyledLink href="https://stats.uptimerobot.com/99Y2MUmKA5" target="_blank" intent="secondary">
 								Status
 							</StyledLink>
 							<span className="inline-block border-l border-gray-300" aria-hidden="true"/>
-							<StyledLink href="https://twitter.com/ChoirConcierge" target="_blank" variant="secondary">
+							<StyledLink href="https://twitter.com/ChoirConcierge" target="_blank" intent="secondary">
 								Twitter
 							</StyledLink>
 							<span className="inline-block border-l border-gray-300" aria-hidden="true"/>
-							<StyledLink href="https://www.facebook.com/choirconcierge" target="_blank" variant="secondary">
+							<StyledLink href="https://www.facebook.com/choirconcierge" target="_blank" intent="secondary">
 								Facebook
 							</StyledLink>
 						</nav>

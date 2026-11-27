@@ -36,7 +36,10 @@ const VISUAL_REGRESSION_SCREENSHOT_STABILIZATION_CSS = '*:not(.fa):not(.fas):not
 test('captures every catalog case at every viewport without JavaScript errors', function () {
     $catalog = app(ScreenshotCatalog::class);
     $latestDirectory = config('visual-regression.latest_directory');
-    $baselineDirectory = config('visual-regression.baseline_directory');
+    $workerId = getenv('VISUAL_REGRESSION_WORKER_ID');
+    $workerId = is_string($workerId) && preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $workerId)
+        ? $workerId
+        : 'single';
 
     $testDatabase = config('database.connections.mysql.database');
     expect(app()->environment())
@@ -47,7 +50,7 @@ test('captures every catalog case at every viewport without JavaScript errors', 
 
     $originalSuperAdminEmail = config('app.super_admin_email', 'hayleybech@gmail.com');
     config(['app.debug' => false]);
-    config(['app.super_admin_email' => 'visual-regression-admin@example.test']);
+    config(['app.super_admin_email' => 'visual-regression-admin-' . $workerId . '@example.test']);
     Carbon::setTestNow('2026-10-23 12:00:00');
     $authenticatedUser = null;
     $tenantSuperAdmin = null;
@@ -63,6 +66,9 @@ test('captures every catalog case at every viewport without JavaScript errors', 
     $visualRegressionFolderId = null;
     $visualRegressionRiserStackId = null;
     $visualRegressionVoicePartId = null;
+    $visualRegressionSongId = null;
+    $visualRegressionTaskId = null;
+    $visualRegressionPollId = null;
     $tenantAdminSetUp = false;
     $browserOrigin = null;
     $screenshotStyle = json_encode(
@@ -92,16 +98,34 @@ window.google = {
     },
 };
 JS;
-    $cases = collect($catalog->cases());
+    $caseIds = getenv('VISUAL_REGRESSION_CASE_IDS');
     $caseIdFilter = getenv('VISUAL_REGRESSION_CASE_ID');
+    $requestedCaseIds = is_string($caseIds) && $caseIds !== ''
+        ? json_decode($caseIds, true, 512, JSON_THROW_ON_ERROR)
+        : (is_string($caseIdFilter) && $caseIdFilter !== '' ? [$caseIdFilter] : null);
+    $cases = collect($catalog->cases());
 
-    if (is_string($caseIdFilter) && $caseIdFilter !== '') {
-        $cases = $cases->where('id', $caseIdFilter)->values();
-
-        if ($cases->isEmpty()) {
-            throw new \InvalidArgumentException('Unknown visual-regression case ID: ' . $caseIdFilter);
+    if ($requestedCaseIds !== null) {
+        if (! is_array($requestedCaseIds) || $requestedCaseIds === [] || count($requestedCaseIds) !== count(array_unique($requestedCaseIds))) {
+            throw new \InvalidArgumentException('Visual-regression worker case IDs must be a non-empty unique list.');
         }
+
+        $unknownCaseIds = array_diff($requestedCaseIds, $cases->pluck('id')->all());
+
+        if ($unknownCaseIds !== []) {
+            throw new \InvalidArgumentException('Unknown visual-regression case ID: ' . implode(', ', $unknownCaseIds));
+        }
+
+        $cases = $cases->whereIn('id', $requestedCaseIds)->values();
     }
+
+    $cases = $cases->map(function (array $case) use ($workerId): array {
+        if (isset($case['parameters']['tenant'])) {
+            $case['parameters']['tenant'] .= '-' . $workerId;
+        }
+
+        return $case;
+    });
 
     try {
         foreach ($cases as $case) {
@@ -110,7 +134,7 @@ JS;
                     $authenticatedUser = User::factory()->create([
                         'first_name' => 'Visual',
                         'last_name' => 'Regression',
-                        'email' => 'visual-regression@example.test',
+                        'email' => 'visual-regression-' . $workerId . '@example.test',
                         'dob' => '1990-01-15',
                         'phone' => '555-0100',
                         'ice_name' => 'Emergency Contact',
@@ -137,7 +161,7 @@ JS;
                 $visualRegressionTenant ??= Tenant::factory()
                     ->withDomain()
                     ->create([
-                        'id' => 'visual-regression',
+                        'id' => 'visual-regression-' . $workerId,
                         'name' => 'Visual Regression Choir',
                         'timezone' => 'Australia/Perth',
                         'created_by' => $authenticatedUser->id,
@@ -170,7 +194,6 @@ JS;
 
                     $eventType = EventType::create(['title' => 'Rehearsal']);
                     $event = Event::factory()->create([
-                        'id' => 1,
                         'title' => 'Autumn Rehearsal',
                         'type_id' => $eventType->id,
                         'call_time' => Carbon::parse('2027-01-05 17:00:00'),
@@ -214,13 +237,16 @@ JS;
                         ['tenant_id' => tenant('id'), 'title' => 'Archived', 'created_at' => $now, 'updated_at' => $now],
                     ]);
                     Song::factory()->create([
-                        'id' => 1,
                         'title' => 'Northern Lights',
-                        'status_id' => DB::table('song_statuses')->where('title', 'Active')->value('id'),
+                        'status_id' => DB::table('song_statuses')
+                            ->where('tenant_id', tenant('id'))
+                            ->where('title', 'Active')
+                            ->value('id'),
                         'pitch_blown' => 0,
                     ]);
+                    $visualRegressionSongId = Song::query()->where('title', 'Northern Lights')->value('id');
                     SongAttachment::create([
-                        'song_id' => 1,
+                        'song_id' => $visualRegressionSongId,
                         'title' => 'Sample Sheet Music',
                         'file' => new UploadedFile(
                             base_path('storage/app/sample/pdf/pdf-sample.pdf'),
@@ -238,14 +264,14 @@ JS;
                     $visualRegressionFolderId = $folder->id;
                     $mailingList = UserGroup::factory()->create([
                         'title' => 'Visual Regression Mailing List',
-                        'slug' => 'visual-regression-mailing-list',
+                        'slug' => 'visual-regression-mailing-list-' . $workerId,
                         'tenant_id' => tenant('id'),
                         'list_type' => 'distribution',
                     ]);
                     $visualRegressionMailingListId = $mailingList->id;
 
                     $mailLog = MailLog::factory()->create([
-                        'uid' => 'broadcast-visual-regression',
+                        'uid' => 'broadcast-visual-regression-' . $workerId,
                         'from' => 'choir@example.test',
                         'to' => 'member@example.test',
                         'cc' => null,
@@ -287,8 +313,14 @@ JS;
                     ]);
                     $visualRegressionPlacementId = $placement->id;
 
+                    $task = Task::factory()->create([
+                        'name' => 'Pass Audition',
+                        'role_id' => $role->id,
+                    ]);
+                    $visualRegressionTaskId = $task->id;
+
                     $notification = NotificationTemplate::factory()->create([
-                        'task_id' => 1,
+                        'task_id' => $task->id,
                         'subject' => 'Visual Regression Task Notification',
                         'recipients' => 'role:' . $role->id,
                         'body' => 'A deterministic task notification body.',
@@ -299,17 +331,11 @@ JS;
                     $riserStack = RiserStack::factory()->create(['title' => 'Visual Regression Stack']);
                     $visualRegressionRiserStackId = $riserStack->id;
 
-                    Task::factory()->create([
-                        'id' => 1,
-                        'name' => 'Pass Audition',
-                        'role_id' => $role->id,
-                    ]);
-
                     $poll = Poll::factory()->create([
-                        'id' => 1,
                         'title' => 'Rehearsal Preference',
                         'description' => 'Choose a rehearsal time.',
                     ]);
+                    $visualRegressionPollId = $poll->id;
                     $poll->options()->create(['label' => 'Tuesday evening']);
                 } finally {
                     tenancy()->end();
@@ -405,9 +431,10 @@ JS;
                 }
             }
 
+            $page = null;
+
             foreach ($catalog->viewports() as $viewport) {
                 File::ensureDirectoryExists($latestDirectory . DIRECTORY_SEPARATOR . $case['id']);
-                File::ensureDirectoryExists($baselineDirectory . DIRECTORY_SEPARATOR . $case['id']);
 
                 if ($case['component'] === 'Roles/Show') {
                     $case['parameters']['role'] = $visualRegressionAdminRoleId;
@@ -468,6 +495,29 @@ JS;
                     $case['parameters']['voice_part'] = $visualRegressionVoicePartId;
                 }
 
+                if (in_array($case['component'], ['Songs/Edit', 'Songs/Learning/Index', 'Songs/Show'], true)
+                    && $case['state'] !== 'empty') {
+                    $case['parameters']['song'] = $visualRegressionSongId;
+                }
+
+                if (in_array($case['component'], [
+                    'Tasks/Notifications/Create',
+                    'Tasks/Notifications/Edit',
+                    'Tasks/Notifications/Show',
+                    'Tasks/Show',
+                    'Tasks/Edit',
+                ], true)) {
+                    $case['parameters']['task'] = $visualRegressionTaskId;
+                }
+
+                if (in_array($case['component'], ['Roles/Edit', 'Roles/Show'], true)) {
+                    $case['parameters']['role'] = $visualRegressionAdminRoleId;
+                }
+
+                if (in_array($case['component'], ['Polls/Edit', 'Polls/Show'], true)) {
+                    $case['parameters']['poll'] = $visualRegressionPollId;
+                }
+
                 $pageUrl = route($case['route'], $case['parameters'], false);
 
                 if ($case['component'] === 'Events/Attendance/CheckIn') {
@@ -494,18 +544,20 @@ JS;
                     }
                 }
 
-                if (in_array($case['component'], ['Events/Create', 'Events/Edit'], true)) {
-                    $page = visit(route('login', [], false));
-                    $browserOrigin ??= $page->script('window.location.origin');
-                    $page->page()->context()->addInitScript($googlePlacesMock);
-                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
-                } elseif ($case['component'] === 'Singers/Placements/Edit') {
-                    $page = visit(route('login', [], false));
-                    $browserOrigin ??= $page->script('window.location.origin');
-                    $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
-                } else {
-                    $page = visit($pageUrl);
-                    $browserOrigin ??= $page->script('window.location.origin');
+                if ($page === null || ! empty($case['pdf_viewer'])) {
+                    if (in_array($case['component'], ['Events/Create', 'Events/Edit'], true)) {
+                        $page = visit(route('login', [], false));
+                        $browserOrigin ??= $page->script('window.location.origin');
+                        $page->page()->context()->addInitScript($googlePlacesMock);
+                        $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                    } elseif ($case['component'] === 'Singers/Placements/Edit') {
+                        $page = visit(route('login', [], false));
+                        $browserOrigin ??= $page->script('window.location.origin');
+                        $page->page()->goto(rtrim($browserOrigin, '/') . $pageUrl);
+                    } else {
+                        $page = visit($pageUrl);
+                        $browserOrigin ??= $page->script('window.location.origin');
+                    }
                 }
 
                 $page->resize($viewport['width'], $viewport['height']);
@@ -557,7 +609,7 @@ JS;
                 $page->script(
                     "(async () => { await document.fonts.ready; document.head.insertAdjacentHTML('beforeend', {$screenshotStyle}); })()",
                 );
-                $page->screenshot(true, 'Latest/' . $case['id'] . '/' . $viewport['id'] . '.png');
+                $page->screenshot(true, 'ArgosCaptures/' . $case['id'] . '/' . $viewport['id'] . '.png');
             }
         }
     } finally {
@@ -566,9 +618,9 @@ JS;
                 tenancy()->end();
             }
 
-            if ($visualRegressionTenant !== null) {
+            if ($visualRegressionTenant !== null && $visualRegressionSongId !== null) {
                 tenancy()->initialize($visualRegressionTenant);
-                Storage::disk('tenant')->delete('songs/1/pdf-sample.pdf');
+                Storage::disk('tenant')->delete('songs/' . $visualRegressionSongId . '/pdf-sample.pdf');
             }
         } finally {
             if (tenancy()->initialized) {

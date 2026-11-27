@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Panel, { PanelTitle } from '../../components/Panel';
-import TableMobile, { TableMobileLink, TableMobileListItem } from '../../components/TableMobile';
+import TableMobile, { TableMobileLink, TableMobileListItem } from '../../components/Table/TableMobile';
 import DateTag from '../../components/DateTag';
 import { DateTime } from 'luxon';
 import GoogleMap from '../../components/GoogleMap';

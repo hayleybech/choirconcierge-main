@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table/Table';
 import Icon from '../../../components/Icon';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
 import ButtonLink from "../../../components/inputs/ButtonLinkV2";

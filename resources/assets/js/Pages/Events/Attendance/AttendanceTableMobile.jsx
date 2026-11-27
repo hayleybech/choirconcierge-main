@@ -1,100 +1,71 @@
 import React from 'react';
- 
+
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
-	TableMobileSelectableLink,
-} from '../../../components/TableMobile';
+} from '../../../components/Table/TableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
-import SingerStatus from '../../../SingerStatus';
-import SingerStatusTag from '../../../components/SingerStatusTag';
-import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
+import { Link } from '@inertiajs/react';
 
-const AttendanceTableMobile = ({
-	singers,
-	pagination,
-	showEnsemble,
-	event,
-	bulkEdit,
-	hasNonDefaultFilters,
-	setShowFilters,
-}) => {
+const AttendanceTableMobile = ({ singers, pagination, showEnsemble, event, bulkEdit }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>
 						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
-						<div className="flex items-center">
-							<TableMobileSelectableLink
-								bulkEdit={bulkEdit}
-								value={singer.id}
-								url={route('singers.show', { singer })}
-								showChevron={false}
+						<div className="flex items-center justify-between">
+							<div
+								className={`flex items-center pr-4 py-4 sm:pr-6 gap-2 transition-[padding] ease-out ${
+									bulkEdit.isActiveMobile ? 'pl-11' : 'pl-4 sm:pl-6'
+								}`}
 							>
-								<div className="flex min-w-0 items-center gap-4">
-									<div className="shrink-0">
-										<img
-											className="h-8 w-8 rounded-md object-cover"
-											src={singer.user.avatar_url}
-											alt={singer.user.name}
-										/>
-									</div>
-									<div className="flex min-w-0 flex-col gap-1">
-										<div>
-											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
-											<span className="ml-1 text-sm font-medium text-purple-600 truncate">
-												{singer.user.name}
-											</span>
-										</div>
-										<div className="flex flex-wrap gap-1">
-											{singer.enrolments.map(enrolment => (
-												<div key={enrolment.id} className="flex gap-1 items-center">
-													{showEnsemble && (
-														<Badge colour="bg-purple-100 text-purple-800">
-															{enrolment.ensemble.name}
-														</Badge>
-													)}
-													{enrolment.voice_part && (
-														<VoicePartTag
-															title={enrolment.voice_part.title}
-															colour={enrolment.voice_part.colour}
-														/>
-													)}
-												</div>
-											))}
-										</div>
+								<div className="shrink-0">
+									<img
+										className="h-8 w-8 rounded-md object-cover"
+										src={singer.user.avatar_url}
+										alt={singer.user.name}
+									/>
+								</div>
+								<div className="flex min-w-0 flex-col gap-1">
+									<Link
+										href={route('singers.show', { singer })}
+										className="ml-1 text-sm font-medium text-purple-600 truncate"
+									>
+										{singer.user.name}
+									</Link>
+									<div className="flex flex-wrap gap-1">
+										{singer.enrolments.map(enrolment => (
+											<div key={enrolment.id} className="flex gap-1 items-center">
+												{showEnsemble && (
+													<Badge colour="bg-purple-100 text-purple-800">
+														{enrolment.ensemble.name}
+													</Badge>
+												)}
+												{enrolment.voice_part && (
+													<VoicePartTag
+														title={enrolment.voice_part.title}
+														colour={enrolment.voice_part.colour}
+													/>
+												)}
+											</div>
+										))}
 									</div>
 								</div>
-							</TableMobileSelectableLink>
-							<div className="shrink-0">
+							</div>
+							<div className="shrink-0 pr-4">
 								<AttendanceRecord
 									attendance={singer.attendance}
 									singerId={singer.id}
 									event={event}
+									isMobile
 								/>
-							</div>
-							<div className="shrink-0 pl-4 pr-4 sm:pr-6">
-								<Icon icon="chevron-right" className="text-gray-400" />
 							</div>
 						</div>
 					</TableMobileListItem>

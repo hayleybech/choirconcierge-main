@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
@@ -30,10 +31,12 @@ const Edit = ({ event, types, mode, ensembles, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="calendar-edit" type="solid" className="mr-2" />
-						Edit Event
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="calendar-edit" type="solid" className="mr-2" />
+							Edit Event
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

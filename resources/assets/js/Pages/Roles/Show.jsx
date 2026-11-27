@@ -6,6 +6,7 @@ import {
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -76,27 +77,29 @@ const Show = ({ role, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="user-tag" type="solid" className="mr-2" />
-						{role.name}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="user-tag" type="solid" className="mr-2" />
+							{role.name}
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button
+									key={action.label}
+									href={action.url}
+									onClick={action.onClick}
+									size="md"
+									intent={action.intent}
+									weight={action.weight}
+									className={action.className}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

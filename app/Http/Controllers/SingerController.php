@@ -357,10 +357,16 @@ class SingerController extends Controller
                         ->whereRaw('CONCAT(first_name, ?, last_name) LIKE LOWER(?)', [' ', "%$value%"])
                         ->orWhereRaw('email LIKE LOWER(?)', ["%$value%"])
                     )),
-                AllowedFilter::callback('status', fn(Builder $query, $value) => $query
-                    ->whereHas('status', fn(Builder $query) => $query
-                        ->whereIn('status', (array)$value)
-                    ))
+                AllowedFilter::callback('status', function (Builder $query, $value): void {
+                    $statuses = collect((array) $value)
+                        ->filter(fn ($status) => filled($status));
+
+                    if ($statuses->isNotEmpty()) {
+                        $query->whereHas('status', fn (Builder $query) => $query
+                            ->whereIn('status', $statuses->all())
+                        );
+                    }
+                })
                     ->default([$defaultStatus]),
                 AllowedFilter::callback('enrolments.voice_part_id', fn(Builder $query, $value) => $query
                     ->whereHas('enrolments', fn(Builder $query) => $query
@@ -373,12 +379,31 @@ class SingerController extends Controller
                     )
                 ),
                 AllowedFilter::exact('roles.id'),
-                AllowedFilter::callback('fee_status', fn(Builder $query, $value) => match ($value) {
-                    'unknown' => $query->whereNull('paid_until'),
-                    'expired' => $query->whereDate('paid_until', '<', now()),
-                    'expires-soon' => $query->whereDate('paid_until', '>', now())
-                        ->whereDate('paid_until', '<', now()->addMonth()),
-                    default => $query->whereDate('paid_until', '>', now()->addMonth()),
+                AllowedFilter::callback('fee_status', function (Builder $query, $value): void {
+                    $feeStatuses = collect((array) $value)
+                        ->filter(fn ($status) => in_array($status, ['paid', 'expires-soon', 'expired', 'unknown'], true))
+                        ->unique()
+                        ->values();
+
+                    if ($feeStatuses->isEmpty() || $feeStatuses->count() === 4) {
+                        return;
+                    }
+
+                    $query->where(function (Builder $query) use ($feeStatuses): void {
+                        $feeStatuses->each(function (string $status, int $index) use ($query): void {
+                            $method = $index === 0 ? 'where' : 'orWhere';
+
+                            $query->{$method}(function (Builder $query) use ($status): void {
+                                match ($status) {
+                                    'unknown' => $query->whereNull('paid_until'),
+                                    'expired' => $query->whereDate('paid_until', '<', now()),
+                                    'expires-soon' => $query->whereDate('paid_until', '>', now())
+                                        ->whereDate('paid_until', '<', now()->addMonth()),
+                                    'paid' => $query->whereDate('paid_until', '>', now()->addMonth()),
+                                };
+                            });
+                        });
+                    });
                 })
             ])
             ->allowedSorts([

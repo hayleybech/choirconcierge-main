@@ -1,15 +1,23 @@
 import classNames from "../classNames";
 import Icon from "./Icon";
 import React from "react";
- 
-const FeeStatus = ({ status, tooltip }) => (
-	<div className={classNames('text-sm', STATUSES[status].colour)} title={tooltip}>
-		<Icon icon={STATUSES[status].icon} mr className={STATUSES[status].colour} />
-		<span className="font-semibold truncate">
-            {STATUSES[status].label}
-        </span>
-	</div>
-);
+import Tooltip from "./Tooltip";
+
+const FeeStatus = ({ status, tooltip, compact = false }) => {
+	const feeStatus = STATUSES[status];
+	const tooltipContent = status === 'unknown' ? null : tooltip;
+
+	return (
+		<Tooltip content={tooltipContent}>
+			<span
+				className={classNames(compact ? 'text-xs' : 'text-sm', feeStatus.colour)}
+			>
+				<Icon icon={feeStatus.icon} mr className={classNames(compact ? 'text-xs' : '', feeStatus.colour)} />
+				<span className="font-semibold truncate">{feeStatus.label}</span>
+			</span>
+		</Tooltip>
+	);
+};
 
 export default FeeStatus;
 

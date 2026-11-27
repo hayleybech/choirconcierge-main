@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
@@ -29,10 +30,12 @@ const Create = ({ ensembles, roles, voiceParts, singerStatuses, setSidebarOpen }
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="folder-plus" type="solid" className="mr-2" />
-						Create Folder
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="folder-plus" type="solid" className="mr-2" />
+							Create Folder
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

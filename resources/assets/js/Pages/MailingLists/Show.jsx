@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -24,19 +25,18 @@ const Show = ({ list, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const actions = [
+		{ label: 'Edit', icon: 'edit', href: route('groups.edit', { group: list }), can: 'update_group', weight: 'outline' },
 		{
 			label: 'Compose',
 			icon: 'paper-plane',
-			url: route('communications.create', { list: list.id }),
+			href: route('communications.create', { list: list.id }),
 			can: 'create_broadcast',
 		},
-		{ label: 'Edit', icon: 'edit', url: route('groups.edit', { group: list }), can: 'update_group' },
 		{
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 			intent: 'danger',
-			weight: 'outline',
 			can: 'delete_group',
 		},
 	].filter(action => list.can[action.can]);
@@ -65,7 +65,7 @@ const Show = ({ list, setSidebarOpen }) => {
 					{actions.map(action => (
 						<ActionMenuItem
 							key={action.label}
-							url={action.url}
+							url={action.href}
 							onClick={action.onClick}
 												intent={action.intent}
 						>
@@ -78,10 +78,25 @@ const Show = ({ list, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon={list.type_icon} mr />
-						{list.title}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon={list.type_icon} mr />
+							{list.title}
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button
+									key={action.label}
+									{...action}
+									size="md"
+									weight={action.weight ?? 'clear'}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>
 							<Icon icon={list.type_icon} mr className="text-gray-400" />
@@ -97,22 +112,6 @@ const Show = ({ list, setSidebarOpen }) => {
 						</div>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

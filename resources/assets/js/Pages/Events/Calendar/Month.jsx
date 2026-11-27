@@ -4,9 +4,10 @@ import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
-	PageHeaderContent,
+	PageHeaderContent, PageHeaderLink, PageHeaderLinks,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
@@ -22,6 +23,15 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 	const { can } = usePage().props;
 	const [showSyncModal, setShowSyncModal] = React.useState(false);
 	const { route } = useRoute();
+	const links = [
+		{
+			label: 'Attendance Report',
+			icon: 'analytics',
+			href: route('events.reports.attendance'),
+			can: can.list_attendances,
+		},
+		{ label: 'List View', icon: 'th-list', href: route('events.index'), can: can.list_events },
+	].filter(action => action.can);
 	const actions = [
 		{
 			label: 'Add New',
@@ -31,13 +41,6 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 			weight: 'solid',
 			can: can.create_event,
 		},
-		{
-			label: 'Attendance Report',
-			icon: 'analytics',
-			href: route('events.reports.attendance'),
-			can: can.list_attendances,
-		},
-		{ label: 'List View', icon: 'th-list', href: route('events.index'), can: can.list_events },
 		{
 			label: 'Sync to Calendar App',
 			icon: 'calendar-plus',
@@ -73,27 +76,28 @@ const Month = ({ days, month, firstDayOfWeek, calendarSyncUrl, setSidebarOpen })
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="calendar-alt" type="solid" className="mr-2" />
-						Calendar
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="calendar-alt" type="solid" className="mr-2" />
+							Calendar
+						</PageHeaderTitle>
+						<PageHeaderLinks>
+							{links.map(action => (
+								<PageHeaderLink key={action.label} {...action}>
+									{action.label}
+								</PageHeaderLink>
+							))}
+						</PageHeaderLinks>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.href}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<CalendarSyncDialog calendarSyncUrl={calendarSyncUrl} isOpen={showSyncModal} setIsOpen={setShowSyncModal} />

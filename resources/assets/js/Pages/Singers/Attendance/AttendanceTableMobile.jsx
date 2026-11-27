@@ -1,30 +1,17 @@
 import React from 'react';
-import TableMobile, { TableMobileHeader, TableMobileListItem, TableMobileLink } from '../../../components/TableMobile';
+import TableMobile, { TableMobileHeader, TableMobileListItem, TableMobileLink } from '../../../components/Table/TableMobile';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';
-import Button from '../../../components/inputs/ButtonV2';
-import Badge from '../../../components/Badge';
-import EventType from '../../../EventType';
+import EventTypeBadge from '../../../components/EventTypeBadge';
 import AttendanceTag from '../../../components/Event/AttendanceTag';
 import DateTag from '../../../components/DateTag';
  
-const AttendanceTableMobile = ({ attendances, pagination, hasNonDefaultFilters, setShowFilters }) => {
+const AttendanceTableMobile = ({ attendances, pagination }) => {
 	const { route } = useRoute();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={{ isAllowed: false, isActiveMobile: false, noun: 'Attendance Record' }}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{attendances
 					.filter(attendance => !!attendance.event)
@@ -37,9 +24,7 @@ const AttendanceTableMobile = ({ attendances, pagination, hasNonDefaultFilters, 
 											<p className="flex items-center min-w-0 mr-1.5 truncate text-sm font-medium text-purple-600">
 												{attendance.event.title}
 											</p>
-											<Badge colour={new EventType(attendance.event.type.title).badgeColour}>
-												{attendance.event.type.title}
-											</Badge>
+											<EventTypeBadge eventTypeName={attendance.event.type.title} />
 										</div>
 										<div className="flex items-center justify-between mt-2">
 											<div className="flex items-center text-sm text-gray-500 min-w-0">

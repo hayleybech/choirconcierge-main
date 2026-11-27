@@ -84,6 +84,95 @@ class SingerControllerTest extends TestCase
             );
     }
 
+    public function test_index_shows_all_singers_when_status_filter_is_explicitly_empty(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $member = Membership::factory()->create();
+        $prospect = Membership::factory()->create();
+        $prospect->statuses()->create(['status' => SingerStatus::PROSPECTS->value]);
+
+        $this->get(the_tenant_route('singers.index', ['filter[status]' => ['']]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', fn ($singers) => collect($singers)->pluck('id')->contains($member->id)
+                    && collect($singers)->pluck('id')->contains($prospect->id))
+            );
+    }
+
+    public function test_index_filters_singers_by_multiple_fee_statuses(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $paid = Membership::factory()->create(['paid_until' => now()->addMonths(2)->toDateString()]);
+        $expiresSoon = Membership::factory()->create(['paid_until' => now()->addDays(10)->toDateString()]);
+        $expired = Membership::factory()->create(['paid_until' => now()->subMonth()->toDateString()]);
+        $unknown = Membership::factory()->create(['paid_until' => null]);
+
+        $this->get(the_tenant_route('singers.index', [
+            'filter[status]' => [''],
+            'filter[fee_status]' => ['expired', 'unknown'],
+        ]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', function ($singers) use ($paid, $expiresSoon, $expired, $unknown) {
+                    $ids = collect($singers)->pluck('id');
+
+                    return $ids->contains($expired->id)
+                        && $ids->contains($unknown->id)
+                        && !$ids->contains($paid->id)
+                        && !$ids->contains($expiresSoon->id);
+                })
+            );
+    }
+
+    public function test_index_shows_all_fee_statuses_when_all_are_selected(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $singers = collect([
+            Membership::factory()->create(['paid_until' => now()->addMonths(2)->toDateString()]),
+            Membership::factory()->create(['paid_until' => now()->addDays(10)->toDateString()]),
+            Membership::factory()->create(['paid_until' => now()->subMonth()->toDateString()]),
+            Membership::factory()->create(['paid_until' => null]),
+        ]);
+
+        $this->get(the_tenant_route('singers.index', [
+            'filter[status]' => [''],
+            'filter[fee_status]' => ['paid', 'expires-soon', 'expired', 'unknown'],
+        ]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', fn ($results) => $singers->every(
+                    fn (Membership $singer) => collect($results)->pluck('id')->contains($singer->id)
+                ))
+            );
+    }
+
+    public function test_index_sorts_singers_by_status_title(): void
+    {
+        $this->actingAs($this->createUserWithRole('Membership Team'));
+
+        $prospect = Membership::factory()->create();
+        $prospect->statuses()->create(['status' => SingerStatus::PROSPECTS->value]);
+        $member = Membership::factory()->create();
+
+        $this->get(the_tenant_route('singers.index', [
+            'filter[status]' => [''],
+            'sort' => 'status-title',
+        ]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('allSingers', function ($singers) use ($member, $prospect) {
+                    $orderedIds = collect($singers)->pluck('id')->map(fn ($id) => (int) $id);
+                    $memberPosition = $orderedIds->search($member->id);
+                    $prospectPosition = $orderedIds->search($prospect->id);
+
+                    return $memberPosition !== false && $prospectPosition !== false && $memberPosition < $prospectPosition;
+                })
+            );
+    }
+
     public function test_show_returns_an_ok_response(): void
     {
         $this->actingAs($this->createUserWithRole('Membership Team'));

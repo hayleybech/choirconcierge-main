@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
@@ -29,10 +30,12 @@ const Create = ({ types, ensembles, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="calendar-plus" type="solid" className="mr-2" />
-						Create Event
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="calendar-plus" type="solid" className="mr-2" />
+							Create Event
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

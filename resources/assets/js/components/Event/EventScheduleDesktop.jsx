@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Table, { TableCell, THead, TBody, TableHeading } from '../Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../Table/Table';
 import ButtonV2 from '../inputs/ButtonV2';
 import Icon from '../Icon';
 import DeleteDialog from '../DeleteDialog';

@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import ButtonV2 from './ButtonV2';
 import Icon from '../Icon';
+import Tooltip from '../Tooltip';
 import {Popover} from '@headlessui/react';
 import TextInput from './TextInput';
 import {useMediaQuery} from "react-responsive";
@@ -208,19 +209,21 @@ const RichTextMenu = ({editor}) => {
 
 export default RichTextMenu;
 
-const MenuButton = React.forwardRef(({onClick, isActive, title, children}, ref) => (
-    <ButtonV2
-        intent="secondary"
-        weight="clear"
-        onClick={onClick}
-        type="button"
-        size="md"
-        className={isActive ? 'text-purple-500' : ''}
-        title={title}
-        ref={ref}
-    >
-        {children}
-    </ButtonV2>
+const MenuButton = React.forwardRef(({onClick, isActive, title, children, ...props}, ref) => (
+	<Tooltip content={title}>
+		<ButtonV2
+			intent="secondary"
+			weight="clear"
+			onClick={onClick}
+			type="button"
+			size="md"
+			className={isActive ? 'text-purple-500' : ''}
+			{...props}
+			ref={ref}
+		>
+			{children}
+		</ButtonV2>
+	</Tooltip>
 ));
 
 const LinkPopover = props => {

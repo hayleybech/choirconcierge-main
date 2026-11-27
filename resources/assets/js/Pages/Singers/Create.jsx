@@ -14,6 +14,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import AppHead from '../../components/AppHead';
@@ -124,9 +125,11 @@ const Create = ({ voice_parts, ensembles, roles, statuses, setSidebarOpen }) => 
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="users" type="solid" className="mr-2" /> Create Singer
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="users" type="solid" className="mr-2" /> Create Singer
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

@@ -3,7 +3,7 @@ import Icon from "../../../components/Icon";
 import LearningStatus from "../../../LearningStatus";
  
 const LearningStatusSummary = ({ counts }) => (
-	<div className="bg-white border-b border-gray-200 grid grid-cols-3">
+	<div className="bg-white border-y border-gray-200 grid grid-cols-3">
 		{['performance-ready', 'assessment-ready', 'not-started'].map(slug => {
 			const status = new LearningStatus(slug);
 			const count = counts[slug] ?? 0;

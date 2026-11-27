@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
@@ -28,15 +29,15 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 		{
 			label: 'Edit',
 			icon: 'edit',
-			url: route('tasks.notifications.edit', { task, notification }),
+			href: route('tasks.notifications.edit', { task, notification }),
 			can: task.can.update_task,
+			weight: 'outline',
 		},
 		{
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 			intent: 'danger',
-			weight: 'outline',
 			can: task.can.delete_task,
 		},
 	].filter(action => action.can);
@@ -59,7 +60,7 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 					{actions.map(action => (
 						<ActionMenuItem
 							key={action.label}
-							url={action.url}
+							url={action.href}
 							onClick={action.onClick}
 							intent={action.intent}
 						>
@@ -72,10 +73,25 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="bell" type="solid" className="mr-2" />
-						{notification.subject}
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="bell" type="solid" className="mr-2" />
+							{notification.subject}
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button
+									key={action.label}
+									{...action}
+									size="md"
+									weight={action.weight ?? 'clear'}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>Recipients: {notification.recipients}</div>
 						<div>Delay: {notification.delay}</div>
@@ -83,22 +99,6 @@ const Show = ({ task, notification, setSidebarOpen }) => {
 						<DateTag icon="pencil" date={notification.updated_at} label="Updated" />
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog

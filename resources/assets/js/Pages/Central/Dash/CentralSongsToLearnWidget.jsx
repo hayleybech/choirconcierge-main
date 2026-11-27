@@ -1,7 +1,7 @@
 import React from 'react';
 import SectionTitle from "../../../components/SectionTitle";
 import Panel, { PanelTitle } from '../../../components/Panel';
-import TableMobile, {TableMobileItem} from "../../../components/TableMobile";
+import TableMobile, {TableMobileItem} from "../../../components/Table/TableMobile";
 import LearningStatusTag from "../../../components/Song/LearningStatusTag";
 import LearningStatus from "../../../LearningStatus";
 import useRoute from "../../../hooks/useRoute";

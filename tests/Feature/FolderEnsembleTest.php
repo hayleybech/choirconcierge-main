@@ -11,6 +11,8 @@ use App\Models\User;
 use App\Models\VoicePart;
 use Inertia\Testing\AssertableInertia;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -96,6 +98,57 @@ class FolderEnsembleTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->has('folders', 1)
                 ->where('folders.0.id', $folder->id)
+            );
+    }
+
+    public function test_filters_folders_and_documents_by_selected_ensemble(): void
+    {
+        Storage::fake('tenant');
+
+        $selectedEnsemble = Ensemble::factory()->create();
+        $otherEnsemble = Ensemble::factory()->create();
+        $selectedFolder = Folder::factory()->create(['title' => 'Shared Folder']);
+        $otherFolder = Folder::factory()->create(['title' => 'Shared Folder']);
+        $selectedFolder->ensembles()->attach($selectedEnsemble);
+        $otherFolder->ensembles()->attach($otherEnsemble);
+        $selectedDocument = Document::factory()->for($selectedFolder)->create([
+            'document_upload' => UploadedFile::fake()->create('Shared score.pdf', 5),
+        ]);
+        Document::factory()->for($otherFolder)->create([
+            'document_upload' => UploadedFile::fake()->create('Shared score.pdf', 5),
+        ]);
+
+        $user = $this->createMusicTeamUser();
+        $user->membership->roles()->attach(
+            Role::updateOrCreate(['name' => 'Admin'], ['abilities' => ['*']])->id,
+        );
+        $user->membership->load('roles');
+
+        $this->actingAs($user)
+            ->get(the_tenant_route('folders.index', [
+                'filter' => ['ensembles.id' => [$selectedEnsemble->id]],
+            ]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('ensembles', 2)
+                ->where('userEnsemblesCount', 2)
+                ->has('folders', 1)
+                ->where('folders.0.id', $selectedFolder->id)
+                ->has('documents', 0)
+            );
+
+        $this->get(the_tenant_route('folders.index', [
+            'filter' => [
+                'title' => 'Shared',
+                'ensembles.id' => [$selectedEnsemble->id],
+            ],
+        ]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('folders', 1)
+                ->where('folders.0.id', $selectedFolder->id)
+                ->has('documents', 1)
+                ->where('documents.0.id', $selectedDocument->id)
             );
     }
 

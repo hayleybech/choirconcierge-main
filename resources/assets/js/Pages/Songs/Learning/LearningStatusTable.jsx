@@ -8,7 +8,7 @@ import Table, {
 	TBody,
 	THead,
 	TItemRow,
-} from "../../../components/Table";
+} from "../../../components/Table/Table";
 import DateTag from "../../../components/DateTag";
 import LearningStatus from "../../../LearningStatus";
 import LearningStatusDropdown from "../../../components/Song/LearningStatusDropdown";
@@ -17,7 +17,7 @@ import Badge from "../../../components/Badge";
 import SingerStatus from "../../../SingerStatus";
 import SingerStatusTag from "../../../components/SingerStatusTag";
 import Pagination from "../../../components/Pagination";
-import TableHeadingSort from "../../../components/TableHeadingSort";
+import TableHeadingSort from "../../../components/Table/TableHeadingSort";
 import { handleNameSort } from "../../../utils/sortHelpers";
 import useRoute from "../../../hooks/useRoute";
  

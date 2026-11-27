@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import { PageHeader, PageHeaderContent, PageHeaderTitle, PageHeaderTitleRow } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
 import { useForm } from '@inertiajs/react';
 import Label from '../../components/inputs/Label';
@@ -38,10 +38,14 @@ const Edit = ({ organisation, centralDomain, timezones, setSidebarOpen }) => {
 				<PageTopNavigation title="Organisation Settings" />
 			</PageTopBar>
 			<PageHeader>
-				<PageHeaderTitle>
-					<Icon icon="cogs" type="solid" className="mr-2" />
-					Organisation Settings
-				</PageHeaderTitle>
+				<PageHeaderContent>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="cogs" type="solid" className="mr-2" />
+							Organisation Settings
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
+				</PageHeaderContent>
 			</PageHeader>
 
 			<FormWrapper>

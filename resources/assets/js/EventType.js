@@ -18,6 +18,18 @@ class EventType {
             borderColour: 'border-sky-400',
 			iconColour: 'text-sky-400',
         },
+        'Meeting': {
+            badgeColour: 'bg-purple-400/50',
+            dotColour: 'bg-purple-400',
+            borderColour: 'border-purple-400',
+			iconColour: 'text-purple-400',
+        },
+        'Workshop': {
+            badgeColour: 'bg-yellow-400/50',
+            dotColour: 'bg-yellow-400',
+            borderColour: 'border-yellow-400',
+			iconColour: 'text-yellow-400',
+        },
         'Other': {
             badgeColour: 'bg-gray-400/50',
             dotColour: 'bg-gray-400',

@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
@@ -29,10 +30,12 @@ const Create = ({ categories, statuses, pitches, ensembles, setSidebarOpen }) =>
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="list-music" type="solid" className="mr-2" />
-						Create Song
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="list-music" type="solid" className="mr-2" />
+							Create Song
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

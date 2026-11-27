@@ -145,10 +145,10 @@ const NavButtons = ({ goToTenant = true }) => {
 
 const SocialButtons = () => (
     <div className="flex gap-x-2 text-2xl justify-center">
-        <StyledLink href="https://www.facebook.com/choirconcierge" target="_blank">
+        <StyledLink href="https://www.facebook.com/choirconcierge" target="_blank" intent="primary">
             <Icon icon="facebook" type="brand" />
         </StyledLink>
-        <StyledLink href="https://twitter.com/ChoirConcierge" target="_blank">
+        <StyledLink href="https://twitter.com/ChoirConcierge" target="_blank" intent="primary">
             <Icon icon="twitter" type="brand" />
         </StyledLink>
     </div>

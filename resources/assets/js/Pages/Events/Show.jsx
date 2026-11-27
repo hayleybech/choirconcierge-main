@@ -5,15 +5,18 @@ import {
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/ButtonV2';
 import AppHead from '../../components/AppHead';
 import DateTag from '../../components/DateTag';
-import Badge from '../../components/Badge';
+import EventTypeBadge from '../../components/EventTypeBadge';
 import GoogleMap from '../../components/GoogleMap';
 import MyAttendance from '../../components/Event/MyAttendance';
 import RsvpSummary from '../../components/Event/RsvpSummary';
@@ -23,17 +26,15 @@ import Icon from '../../components/Icon';
 import EditRepeatingEventDialog from '../../components/Event/EditRepeatingEventDialog';
 import DeleteDialog from '../../components/DeleteDialog';
 import Prose from '../../components/Prose';
-import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import SimplePanel from '../../components/SimplePanel';
 import SectionLayout from '../../components/SectionLayout';
-import EventType from '../../EventType';
 import EventSchedule from '../../components/Event/EventSchedule';
 import useRoute from '../../hooks/useRoute';
 import { DateTime } from 'luxon';
 import RsvpDropdown from '../../components/Event/RsvpDropdown';
 import AddToCalendarDropdown from '../../components/Event/AddToCalendarDropdown';
 import SelfCheckInDialog from '../../components/Event/SelfCheckInDialog';
- 
+
 const Show = ({
 	event,
 	rsvpCount,
@@ -50,28 +51,11 @@ const Show = ({
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
-	const actions = [
-		{
-			label: 'Edit',
-			icon: 'edit',
-			url: event.is_repeating ? undefined : route('events.edit', { event }),
-			onClick: event.is_repeating ? () => setEditDialogIsOpen(true) : undefined,
-			can: 'update_event',
-		},
-		{ label: 'Duplicate', icon: 'copy', url: route('events.clone', { event }), can: 'create_event' },
-		{
-			label: 'Delete',
-			icon: 'trash',
-			onClick: () => setDeleteDialogIsOpen(true),
-
-			intent: 'danger',
-			weight: 'outline',
-			can: 'delete_event',
-		},
+	const links = [
 		{
 			label: 'Launch Kiosk',
 			icon: 'calendar-check',
-			url: route('events.kiosk-check-ins.index', { event }),
+			href: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
 		{
@@ -79,6 +63,25 @@ const Show = ({
 			icon: 'qrcode',
 			onClick: () => setCheckInDialogIsOpen(true),
 			can: 'create_attendance',
+		},
+	].filter(action => event.can[action.can] || pageProps.can[action.can]);
+	const actions = [
+		{
+			label: 'Edit',
+			icon: 'edit',
+			href: event.is_repeating ? undefined : route('events.edit', { event }),
+			onClick: event.is_repeating ? () => setEditDialogIsOpen(true) : undefined,
+			weight: 'outline',
+			can: 'update_event',
+		},
+		{ label: 'Duplicate', icon: 'copy', href: route('events.clone', { event }), can: 'create_event' },
+		{
+			label: 'Delete',
+			icon: 'trash',
+			onClick: () => setDeleteDialogIsOpen(true),
+
+			intent: 'danger',
+			can: 'delete_event',
 		},
 	].filter(action => event.can[action.can] || pageProps.can[action.can]);
 
@@ -93,10 +96,10 @@ const Show = ({
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}>
 					<PageActionsMenu>
-						{actions.map(action => (
+						{[...actions, ...links].map(action => (
 							<ActionMenuItem
 								key={action.label}
-								url={action.url}
+								url={action.href}
 								onClick={action.onClick}
 								intent={action.intent}
 							>
@@ -110,14 +113,33 @@ const Show = ({
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<span className="flex items-center">
-							{event.title}
-							{event.is_repeating && (
-								<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
-							)}
-						</span>
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<span className="flex items-center">
+								{event.title}
+								{event.is_repeating && (
+									<Icon icon={event.is_repeat_parent ? 'repeat-1' : 'repeat'} className="ml-1.5" />
+								)}
+							</span>
+						</PageHeaderTitle>
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(action => (
+									<PageHeaderLink key={action.label} {...action}>
+										{action.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						{DateTime.fromISO(event.start_date).hasSame(DateTime.fromISO(event.end_date), 'day') ? (
 							<div className="text-lg font-bold">
@@ -142,7 +164,7 @@ const Show = ({
 						)}
 						<DateTag label="Arrive" date={event.call_time} format="TIME_SIMPLE" />
 						<div>
-							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+							<EventTypeBadge eventTypeName={event.type.title} />
 						</div>
 						{event.ensembles.length > 0 && (
 							<div className="space-x-1.5 flex items-center">
@@ -161,22 +183,6 @@ const Show = ({
 						</div>
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<DeleteDialog
@@ -343,10 +349,10 @@ const ViewRsvpsButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
+		<Button intent="primary" weight="solid" size="sm" href={route('events.rsvps.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View Roster
-		</ButtonLink>
+		</Button>
 	);
 };
 
@@ -354,9 +360,9 @@ const EditAttendanceButton = ({ event }) => {
 	const { route } = useRoute();
 
 	return (
-		<ButtonLink intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
+		<Button intent="primary" weight="solid" size="sm" href={route('events.attendances.index', { event })}>
 			<Icon icon="clipboard-list" />
 			View Roster
-		</ButtonLink>
+		</Button>
 	);
 };

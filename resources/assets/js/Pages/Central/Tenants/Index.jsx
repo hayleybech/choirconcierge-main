@@ -1,42 +1,30 @@
 import React from 'react';
- 
-import {
-	PageHeader,
-	PageHeaderActions,
-	PageHeaderContent,
-	PageHeaderTitle,
-} from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+
+import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../../components/PageHeader/PageHeader';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import useRoute from '../../../hooks/useRoute';
+import TableControls from '../../../components/Table/TableControls';
 import TenantTableDesktop from './TenantTableDesktop';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import TenantTableMobile from './TenantTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
-import TenantFilters from './TenantFilters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import TenantStatsWidget from '../Dash/TenantStatsWidget';
+import { createTenantFilterDescriptors } from './TenantFilterDescriptors';
 
 const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
-	const { route } = useRoute();
-
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'id', name: 'Organisation Name', default: true },
 		{ id: 'created_at', name: 'Date Created' },
 	];
 
-	const filters = [
-		{ name: 'id', defaultValue: '' },
-		{ name: 'billing_status', defaultValue: '' },
-	];
+	const filters = createTenantFilterDescriptors();
 
 	const sortFilterForm = useSortFilterForm('central.tenants.index', filters, sorts);
 
@@ -44,61 +32,39 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 		<>
 			<AppHead title="Tenants" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
-				<PageTopNavigation title="Tenants">
-					{filterAction && (
-						<PageActionsMenu>
-							<ActionMenuItem {...filterAction}>
-								<Icon icon={filterAction.icon} mr />
-								{filterAction.label}
-							</ActionMenuItem>
-						</PageActionsMenu>
-					)}
-				</PageTopNavigation>
+				<PageTopNavigation title="Tenants" />
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="building" type="solid" className="mr-2" /> Tenants
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon={filterAction.icon} mr />
-							{filterAction.label}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
-			{!!tenantStats && (
-				<div className="w-full bg-white border-b">
-					<TenantStatsWidget {...tenantStats} panel={false} />
-				</div>
-			)}
-
 			<IndexContainer
 				showFilters={showFilters}
+				tableSummary={
+					!!tenantStats && (
+						<div className="w-full bg-white border-y">
+							<TenantStatsWidget {...tenantStats} panel={false} />
+						</div>
+					)
+				}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="tenants"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<TenantFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters routeName="central.tenants.index" form={sortFilterForm} filters={filters} />
+					</FilterDrawer>
 				}
-				tableMobile={
-					<TenantTableMobile
-						tenants={tenants}
-						pagination={pagination}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
-				}
+				tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}
 				tableDesktop={
 					<TenantTableDesktop tenants={tenants} sortFilterForm={sortFilterForm} pagination={pagination} />
 				}

@@ -1,10 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
- 
-import TableMobile, {
-	TableMobileHeader,
-	TableMobileListItem,
-	TableMobileSelect,
-} from '../../../components/TableMobile';
+import React, { useState } from 'react';
+
+import TableMobile, { TableMobileListItem, TableMobileSelect } from '../../../components/Table/TableMobile';
 import Pagination from '../../../components/Pagination';
 import RsvpTag from '../../../components/Event/RsvpTag';
 import RsvpRecord from '../../../components/Event/RsvpRecord';
@@ -12,11 +8,9 @@ import Badge from '../../../components/Badge';
 import VoicePartTag from '../../../components/VoicePartTag';
 import useRoute from '../../../hooks/useRoute';
 import { Link } from '@inertiajs/react';
-import SingerStatus from '../../../SingerStatus';
 import Icon from '../../../components/Icon';
 import DateTag from '../../../components/DateTag';
-import Button from '../../../components/inputs/ButtonV2';
-import SingerStatusTag from '../../../components/SingerStatusTag';
+import Tooltip from '../../../components/Tooltip';
 
 const RsvpTableMobile = ({
 	singers,
@@ -24,29 +18,12 @@ const RsvpTableMobile = ({
 	showEnsemble,
 	visibleColumns,
 	customFields,
-	columnsMenu,
 	event,
 	bulkEdit,
 	canEditRsvps,
-	hasNonDefaultFilters,
-	setShowFilters,
 }) => {
 	const { route } = useRoute();
 	const [expandedSingers, setExpandedSingers] = useState([]);
-	const [openReasonId, setOpenReasonId] = useState(null);
-	const reasonRef = useRef(null);
-
-	useEffect(() => {
-		const handleClickOutside = event => {
-			if (reasonRef.current && !reasonRef.current.contains(event.target)) {
-				setOpenReasonId(null);
-			}
-		};
-
-		document.addEventListener('mousedown', handleClickOutside);
-
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
 
 	const toggleExpanded = (id, e) => {
 		e.preventDefault();
@@ -55,24 +32,12 @@ const RsvpTableMobile = ({
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				{columnsMenu}
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={pagination} />}>
 				{singers.map(singer => (
 					<TableMobileListItem key={singer.id}>
 						<TableMobileSelect bulkEdit={bulkEdit} value={singer.id} />
 						<div
-							className={`flex items-center pr-4 py-4 sm:pr-6 gap-4 transition-[padding] ease-out ${
+							className={`flex items-center pr-4 py-4 sm:pr-6 gap-2 transition-[padding] ease-out ${
 								bulkEdit.isActiveMobile ? 'pl-11' : 'pl-4 sm:pl-6'
 							}`}
 						>
@@ -84,17 +49,14 @@ const RsvpTableMobile = ({
 								/>
 							</div>
 							<div className="min-w-0 flex-1">
-								<div className="flex items-center justify-between mb-1">
+								<div className="flex items-center justify-between mb-1 gap-1">
 									<div>
-										<div>
-											<SingerStatusTag status={new SingerStatus(singer.status.status)} />
-											<Link
-												href={route('singers.show', { singer })}
-												className="ml-1 text-sm font-medium text-purple-600 truncate"
-											>
-												{singer.user.name}
-											</Link>
-										</div>
+										<Link
+											href={route('singers.show', { singer })}
+											className="ml-1 text-sm font-medium text-purple-600 truncate"
+										>
+											{singer.user.name}
+										</Link>
 										<div className="text-sm text-gray-500">
 											<Icon icon="phone" mr className="text-gray-400 text-sm" />
 											{singer.user.phone ? (
@@ -106,44 +68,18 @@ const RsvpTableMobile = ({
 											)}
 										</div>
 									</div>
-    					<div className="div">
-    						{visibleColumns.includes('rsvp') && (
-    							<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
-    								{canEditRsvps ? (
-    									<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} />
-    								) : (
-    									<RsvpTag
-    										icon={singer.rsvp.icon}
-    										label={singer.rsvp.label}
-    										colour={singer.rsvp.colour}
-    									/>
-    								)}
-												{singer.rsvp.details && (
-													<div
-														className="relative"
-														ref={openReasonId === singer.id ? reasonRef : null}
-													>
-														<button
-															type="button"
-															aria-label="Show RSVP reason"
-															aria-expanded={openReasonId === singer.id}
-															onClick={e => {
-																e.preventDefault();
-																e.stopPropagation();
-																setOpenReasonId(
-																	openReasonId === singer.id ? null : singer.id
-																);
-															}}
-															className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
-														>
-															<Icon icon="comment-dots" />
-														</button>
-														{openReasonId === singer.id && (
-															<div className="absolute right-0 top-5 z-10 w-48 rounded bg-gray-800 px-2 py-1.5 text-left text-[11px] font-normal leading-tight text-white shadow-lg">
-																{singer.rsvp.details}
-															</div>
-														)}
-													</div>
+									<div className="div">
+										{visibleColumns.includes('rsvp') && (
+											<div className="flex flex-wrap gap-x-0.5 items-center justify-end">
+                                                {singer.rsvp.details && <RsvpReasonTooltip details={singer.rsvp.details} />}
+												{canEditRsvps ? (
+													<RsvpRecord rsvp={singer.rsvp} singerId={singer.id} event={event} isMobile />
+												) : (
+													<RsvpTag
+														icon={singer.rsvp.icon}
+														label={singer.rsvp.label}
+														colour={singer.rsvp.colour}
+													/>
 												)}
 											</div>
 										)}
@@ -152,7 +88,7 @@ const RsvpTableMobile = ({
 												icon="pencil"
 												date={singer.rsvp.updated_at}
 												format="DATE_SHORT"
-												className="text-gray-400 text-sm"
+												className="text-gray-400 text-sm text-right"
 												mr={false}
 											/>
 										)}
@@ -226,3 +162,16 @@ const RsvpTableMobile = ({
 };
 
 export default RsvpTableMobile;
+
+const RsvpReasonTooltip = ({ details }) => (
+	<Tooltip
+		content={details}
+		placement="bottom-end"
+		triggerProps={{
+			'aria-label': 'Show RSVP reason',
+			className: 'h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500',
+		}}
+	>
+		<Icon icon="comment-dots" />
+	</Tooltip>
+);

@@ -49,6 +49,7 @@ class FolderController extends Controller
             })
             ->allowedFilters([
                 AllowedFilter::partial('title'),
+                AllowedFilter::exact('ensembles.id'),
             ])
             ->allowedSorts(['title', 'created_at'])
             ->defaultSort('title')
@@ -59,6 +60,9 @@ class FolderController extends Controller
             $documents = QueryBuilder::for(Document::class)
                 ->allowedFilters([
                     AllowedFilter::partial('title'),
+                    AllowedFilter::callback('ensembles.id', static function (Builder $query, mixed $values): void {
+                        $query->whereHas('folder.ensembles', static fn (Builder $query) => $query->whereKey($values));
+                    }),
                 ])
                 ->whereHas('folder', function (Builder $query) use ($user) {
                     $query
@@ -79,15 +83,19 @@ class FolderController extends Controller
         }
 
         $totalEnsemblesCount = Ensemble::count();
-        $userEnsemblesCount = ($user?->isSuperAdmin || $user->membership->hasRole('Admin'))
+        $canUpdateFolders = $user?->isSuperAdmin
+            || $user->membership->hasRole('Admin')
+            || $user->membership->hasAbility('folders_update');
+        $userEnsemblesCount = $canUpdateFolders
             ? $totalEnsemblesCount
             : $user?->membership?->enrolments->count() ?? 0;
+        $ensembles = $canUpdateFolders ? Ensemble::query()->get() : Ensemble::forUser()->get();
 
         return Inertia::render('Folders/Index', [
             'folders' => $folders->values(),
             'documents' => $documents->values(),
             'userEnsemblesCount' => $userEnsemblesCount,
-            'ensembles' => Ensemble::forUser()->get(),
+            'ensembles' => $ensembles,
             'filters' => $request->only(['filter', 'sort']),
         ]);
     }

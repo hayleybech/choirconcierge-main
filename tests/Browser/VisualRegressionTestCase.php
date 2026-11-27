@@ -14,6 +14,15 @@ class VisualRegressionTestCase extends \Tests\TestCase
     /** @var array{environment: string|false, server: string|null, env: string|null} */
     private array $originalSessionDriver = [];
 
+    public function refreshDatabase(): void
+    {
+        if (getenv('VISUAL_REGRESSION_DATABASE_PREPARED') === '1') {
+            return;
+        }
+
+        parent::refreshDatabase();
+    }
+
     public function createApplication(): Application
     {
         $this->setCentralDomainForBrowserServer();

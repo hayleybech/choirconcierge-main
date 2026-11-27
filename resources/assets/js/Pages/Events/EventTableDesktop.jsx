@@ -9,12 +9,11 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../components/Table';
-import Badge from '../../components/Badge';
+} from '../../components/Table/Table';
 import EnsembleBadges from '../../components/EnsembleBadges';
+import EventTypeBadge from '../../components/EventTypeBadge';
 import DateTag from '../../components/DateTag';
-import EventType from '../../EventType';
-import TableHeadingSort from '../../components/TableHeadingSort';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
 import Icon from '../../components/Icon';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
@@ -71,7 +70,7 @@ const EventTableDesktop = ({ events, sortFilterForm, userEnsemblesCount, bulkEdi
 							</Link>
 						</TableCell>
 						<TableCell>
-							<Badge colour={new EventType(event.type.title).badgeColour}>{event.type.title}</Badge>
+							<EventTypeBadge eventTypeName={event.type.title} />
 						</TableCell>
 						{showEnsemblesColumn && (
 							<TableCell>

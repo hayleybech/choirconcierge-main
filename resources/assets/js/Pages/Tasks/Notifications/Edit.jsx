@@ -4,6 +4,7 @@ import {
 	PageHeader,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
+	PageHeaderTitleRow,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
@@ -30,10 +31,12 @@ const Edit = ({ task, notification, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="bell" type="solid" className="mr-2" />
-						Edit Notification
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="bell" type="solid" className="mr-2" />
+							Edit Notification
+						</PageHeaderTitle>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
 			</PageHeader>
 

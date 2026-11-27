@@ -40,7 +40,7 @@ const Index = ({ parts, setSidebarOpen }) => {
 					</PageActionsMenu>
 				)}
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>

@@ -3,15 +3,16 @@ import { components } from 'react-select';
 import Select from 'react-select';
 import Icon from '../Icon';
 import reactSelectStyles from './reactSelectStyles';
- 
-const TenantSelect = ({ options, defaultValue, updateFn, isClearable = true }) => (
-	<div className="mt-1">
+
+const TenantSelect = ({ options, defaultValue, value, updateFn, isClearable = true, className = 'mt-1' }) => (
+	<div className={className}>
 		<Select
 			cacheOptions
 			options={options}
 			components={{ SingleValue, Option }}
 			isClearable={isClearable}
-			defaultValue={defaultValue}
+			isSearchable
+			value={value ?? defaultValue ?? null}
 			onChange={option => updateFn(option?.value ?? '')}
 			styles={reactSelectStyles}
 		/>

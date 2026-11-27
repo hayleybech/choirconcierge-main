@@ -28,7 +28,7 @@ const Pagination = ({details}) => (
 						link.url === null ? (
 							<span key={link.label} className="inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium border-transparent text-gray-500">{link.label}</span>
 						) : (
-							<a
+							<Link
 								href={link.url}
 								key={link.label}
 								className={classNames(
@@ -37,7 +37,7 @@ const Pagination = ({details}) => (
 								)}
 							>
 								{link.label}
-							</a>
+							</Link>
 						)
 				))}
 			</div>

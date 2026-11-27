@@ -1,5 +1,5 @@
 import React from 'react';
- 
+
 import TenantLayout from '../../Layouts/TenantLayout';
 import SongTableDesktop from './SongTableDesktop';
 import SongTableMobile from './SongTableMobile';
@@ -7,18 +7,21 @@ import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
-import SongFilters from '../../components/Song/SongFilters';
+import Filters from '../../components/Filters/Filters';
 import IndexContainer from '../../components/IndexContainer';
+import TableControls from '../../components/Table/TableControls';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
@@ -26,6 +29,8 @@ import BulkEditSongsModal from './BulkEditSongsModal';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import { createSongFilterDescriptors } from '../../components/Song/SongFilterDescriptors';
 
 const Index = ({
 	songs,
@@ -39,7 +44,7 @@ const Index = ({
 	can,
 	setSidebarOpen,
 }) => {
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 	const { route } = useRoute();
 
 	const bulkEdit = useBulkEdit(songs.data, can.update_song, can.delete_song, 'Song');
@@ -50,28 +55,30 @@ const Index = ({
 		{ id: 'status-title', name: 'Status' },
 	];
 
-	const filters = [
-		{ name: 'title', defaultValue: '' },
-		{ name: 'status.id', multiple: true, defaultValue: defaultStatuses },
-		{ name: 'categories.id', multiple: true },
-		{ name: 'ensembles.id', multiple: true },
-		{ name: 'show_for_prospects', multiple: true, multipleBool: true, defaultValue: showForProspectsDefault },
-	];
+	const filters = createSongFilterDescriptors({
+		statuses,
+		defaultStatuses,
+		categories,
+		userEnsemblesCount,
+		ensembles,
+		showForProspectsDefault,
+	});
 
 	const sortFilterForm = useSortFilterForm('songs.index', filters, sorts);
+
+	const links = [
+		{ label: 'Categories', icon: 'tags', href: route('song-categories.index'), can: 'list_songs' },
+	].filter(action => (action.can ? can[action.can] : true));
 
 	const actions = [
 		{
 			label: 'Add New',
 			icon: 'plus',
-			url: route('songs.create'),
+			href: route('songs.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_song',
 		},
-		{ label: 'Categories', icon: 'tags', url: route('song-categories.index'), can: 'list_songs' },
-		bulkEdit.action,
-		filterAction,
 	]
 		.filter(action => !!action)
 		.filter(action => (action.can ? can[action.can] : true));
@@ -82,8 +89,8 @@ const Index = ({
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Songs">
 					<PageActionsMenu>
-						{actions.map((action, key) => (
-							<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+						{[...actions, ...links].map((action, key) => (
+							<ActionMenuItem key={key} url={action.href} {...action}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -91,29 +98,32 @@ const Index = ({
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
-					<PageHeaderTitle>
-						<Icon icon="list-music" type="solid" className="mr-2" />
-						Songs
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="list-music" type="solid" className="mr-2" />
+							Songs
+						</PageHeaderTitle>
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(link => (
+									<PageHeaderLink key={link.label} {...link}>
+										{link.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
+						<PageHeaderActions>
+							{actions.map(action => (
+								<ButtonLink key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</ButtonLink>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<Dialog
@@ -138,30 +148,23 @@ const Index = ({
 
 			<IndexContainer
 				showFilters={showFilters}
-				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={
-							<SongFilters
-								statuses={statuses}
-								categories={categories}
-								ensembles={ensembles}
-								userEnsemblesCount={userEnsemblesCount}
-								showForProspectsDefault={showForProspectsDefault}
-								form={sortFilterForm}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="songs"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
 					/>
 				}
+				filterPane={
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters routeName="songs.index" filters={filters} form={sortFilterForm} />
+					</FilterDrawer>
+				}
 				tableMobile={
-					<SongTableMobile
-						songs={songs}
-						userEnsemblesCount={userEnsemblesCount}
-						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
+					<SongTableMobile songs={songs} userEnsemblesCount={userEnsemblesCount} bulkEdit={bulkEdit} />
 				}
 				tableDesktop={
 					<SongTableDesktop

@@ -16,7 +16,9 @@ const Dialog = ({
 	isOpen,
 	setIsOpen,
 	processing,
+	okDisabled = false,
 	icon = 'exclamation-triangle',
+	showCancelButton = true,
 }) => (
 	<Transition.Root show={isOpen} as={Fragment}>
 		<BaseDialog as="div" className="fixed z-20 inset-0 overflow-y-auto" onClose={setIsOpen}>
@@ -74,32 +76,36 @@ const Dialog = ({
 								<div className="mt-2 text-sm text-gray-500">{children}</div>
 							</div>
 						</div>
-						<div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-							{okLabel && (
-								<ButtonV2
-									intent={okColour}
-									weight="solid"
-									size="md"
-									href={okUrl}
-									onClick={e => (!!onOk ? onOk(e) : setIsOpen(false))}
-									method={okMethod}
-									data={data}
-									as="button"
-									className="sm:ml-3 w-full"
-									disabled={processing}
-								>
-									{okLabel}
-								</ButtonV2>
-							)}
-							<ButtonV2
-								size="md"
-								onClick={() => setIsOpen(false)}
-								disabled={processing}
-								className="w-full mt-3 sm:mt-0"
-							>
-								Cancel
-							</ButtonV2>
-						</div>
+						{(okLabel || showCancelButton) && (
+							<div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
+								{okLabel && (
+									<ButtonV2
+										intent={okColour}
+										weight="solid"
+										size="md"
+										href={okUrl}
+										onClick={e => (!!onOk ? onOk(e) : setIsOpen(false))}
+										method={okMethod}
+										data={data}
+										as="button"
+										className="sm:ml-3 w-full"
+										disabled={processing || okDisabled}
+									>
+										{okLabel}
+									</ButtonV2>
+								)}
+								{showCancelButton && (
+									<ButtonV2
+										size="md"
+										onClick={() => setIsOpen(false)}
+										disabled={processing}
+										className="w-full mt-3 sm:mt-0"
+									>
+										Cancel
+									</ButtonV2>
+								)}
+							</div>
+						)}
 					</div>
 				</Transition.Child>
 			</div>

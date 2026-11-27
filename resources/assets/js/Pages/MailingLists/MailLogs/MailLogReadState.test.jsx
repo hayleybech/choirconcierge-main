@@ -18,11 +18,11 @@ vi.mock('../../../components/MailStatusTag', () => ({
 	default: () => null,
 	mailTypeIcons: { broadcast: 'mail' },
 }));
-vi.mock('../../../components/TableHeadingSort', async () => {
+vi.mock('../../../components/Table/TableHeadingSort', async () => {
 	const React = await vi.importActual('react');
 	return { default: ({ children }) => React.createElement('span', null, children) };
 });
-vi.mock('../../../components/Table', async () => {
+vi.mock('../../../components/Table/Table', async () => {
 	const React = await vi.importActual('react');
 	return {
 		__esModule: true,
@@ -33,7 +33,7 @@ vi.mock('../../../components/Table', async () => {
 		TableHeading: ({ children }) => React.createElement('th', null, children),
 	};
 });
-vi.mock('../../../components/TableMobile', async () => {
+vi.mock('../../../components/Table/TableMobile', async () => {
 	const React = await vi.importActual('react');
 	return {
 		__esModule: true,

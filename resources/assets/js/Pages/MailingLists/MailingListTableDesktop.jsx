@@ -1,11 +1,11 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow} from "../../components/Table/Table";
 import Icon from "../../components/Icon";
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
-import TableHeadingSort from '../../components/TableHeadingSort';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
  
 const MailingListTableDesktop = ({ lists, bulkEdit, sortFilterForm }) => {
     const { route } = useRoute();
@@ -37,7 +37,8 @@ const MailingListTableDesktop = ({ lists, bulkEdit, sortFilterForm }) => {
                             </Link>
                         </TableCell>
                         <TableCell>
-                            <Icon icon={list.type_icon} mr className="text-gray-400" />{list_type_labels[list.list_type]}
+                            <Icon icon={list.type_icon} mr className="text-gray-400" />
+                            <span className="text-gray-500">{list_type_labels[list.list_type]}</span>
                         </TableCell>
                         <TableCell>
                             <strong>{ list.email.split('@')[0] }@</strong><span className="text-gray-500">{ list.email.split('@')[1] }</span>

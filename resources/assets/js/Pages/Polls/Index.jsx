@@ -19,34 +19,33 @@ import Table, {
 	TableSelectAll,
 	TItemRow,
 	TableCellSelect,
-} from '../../components/Table';
+} from '../../components/Table/Table';
 import Pagination from '../../components/Pagination';
 import Icon from '../../components/Icon';
 import IndexContainer from '../../components/IndexContainer';
+import TableControls from '../../components/Table/TableControls';
 import DateTag from '../../components/DateTag';
 import TableMobile, {
 	TableMobileSelect,
 	TableMobileSelectableLink,
 	TableMobileListItem,
-	TableMobileHeader,
-} from '../../components/TableMobile';
-import Badge from '../../components/Badge';
+} from '../../components/Table/TableMobile';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
-import PollFilters from '../../components/PollFilters';
-import TableHeadingSort from '../../components/TableHeadingSort';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import BulkEditBar from '../../components/BulkEditBar';
 import BulkEditPollsModal from './BulkEditPollsModal';
 import Dialog from '../../components/Dialog';
 import Button from '../../components/inputs/ButtonV2';
- 
+import { createPollFilterDescriptors } from '../../components/PollFilterDescriptors';
+
 const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const showEnsembleColumn = (ensembles ?? tenant.ensembles).length > 1;
 
@@ -57,11 +56,10 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 		{ id: 'close_at', name: 'Deadline' },
 	];
 
-	const filters = [
-		{ name: 'title', defaultValue: '' },
-		{ name: 'status', defaultValue: '' },
-		{ name: 'ensembles.id', multiple: true },
-	];
+	const filters = createPollFilterDescriptors({
+		ensembles: ensembles ?? tenant.ensembles,
+		showEnsembleColumn,
+	});
 
 	const sortFilterForm = useSortFilterForm('polls.index', filters, sorts);
 
@@ -70,14 +68,6 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 	const actions = [
 		{ label: 'Add New', url: route('polls.create'), icon: 'plus', intent: 'primary', weight: 'solid' },
 	];
-
-	if (bulkEdit.action) {
-		actions.push(bulkEdit.action);
-	}
-
-	if (filterAction) {
-		actions.push(filterAction);
-	}
 
 	return (
 		<>
@@ -94,7 +84,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="poll" type="solid" className="mr-2" /> Polls
@@ -140,26 +130,23 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 
 			<IndexContainer
 				showFilters={showFilters}
-				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<PollFilters form={sortFilterForm} ensembles={ensembles} />}
-						closeFn={() => setShowFilters(false)}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="polls"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
 					/>
+				}
+				filterPane={
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters routeName="polls.index" form={sortFilterForm} filters={filters} />
+					</FilterDrawer>
 				}
 				tableMobile={
 					<div>
-						<TableMobileHeader bulkEdit={bulkEdit}>
-							<Button
-								size="sm"
-								intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-								weight="clear"
-								onClick={() => setShowFilters(prev => !prev)}
-							>
-								<Icon icon="filter" mr />
-								Filter/Sort
-							</Button>
-						</TableMobileHeader>
 						<TableMobile pagination={<Pagination details={pagination} />}>
 							{polls.map(p => (
 								<TableMobileListItem key={p.id}>

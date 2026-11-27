@@ -2,36 +2,31 @@ import React from 'react';
 import TenantLayout from '../../../Layouts/TenantLayout';
 import {
 	PageHeader,
-	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
 } from '../../../components/PageHeader/PageHeader';
-import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
-import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
+import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
-import Button from '../../../components/inputs/ButtonV2';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterSortPane from '../../../components/FilterSortPane';
-import SingerAttendanceFilters from './SingerAttendanceFilters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import EmptyState from '../../../components/EmptyState';
 import IndexContainer from '../../../components/IndexContainer';
+import TableControls from '../../../components/Table/TableControls';
 import AttendanceTableDesktop from './AttendanceTableDesktop';
 import AttendanceTableMobile from './AttendanceTableMobile';
- 
+import { createSingerAttendanceFilterDescriptors } from './SingerAttendanceFilterDescriptors';
+
 const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [];
-	const filters = [
-		{ name: 'type.id', multiple: true, defaultValue: [] },
-		{ name: 'starts_after' },
-		{ name: 'starts_before' },
-	];
+	const filters = createSingerAttendanceFilterDescriptors(eventTypes);
 
 	const sortFilterForm = useSortFilterForm(['singers.attendance', { singer }], filters, sorts);
 
@@ -46,17 +41,9 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 			<AppHead title={`Attendance - ${singer.user.name}`} />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-				{filterAction && (
-					<PageActionsMenu>
-						<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
-							<Icon icon="filter" mr />
-							Filter
-						</ActionMenuItem>
-					</PageActionsMenu>
-				)}
 			</PageTopBar>
 
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -64,40 +51,30 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 						Attendance Records
 					</PageHeaderTitle>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon="filter" mr />
-							Filter
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<IndexContainer
 				showFilters={showFilters}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						filterLabel="attendance records"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+					/>
+				}
 				filterPane={
-					<FilterSortPane
-						filters={
-							<SingerAttendanceFilters eventTypes={eventTypes} form={sortFilterForm} singer={singer} />
-						}
-						closeFn={() => setShowFilters(false)}
-					/>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters
+							routeName="singers.attendance"
+							routeParams={{ singer }}
+							filters={filters}
+							form={sortFilterForm}
+						/>
+					</FilterDrawer>
 				}
-				tableMobile={
-					<AttendanceTableMobile
-						attendances={attendances}
-						pagination={pagination}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
-					/>
-				}
+				tableMobile={<AttendanceTableMobile attendances={attendances} pagination={pagination} />}
 				tableDesktop={<AttendanceTableDesktop attendances={attendances} pagination={pagination} />}
 				emptyState={
 					attendances.length === 0 ? (

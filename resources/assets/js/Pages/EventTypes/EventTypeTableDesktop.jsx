@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, usePage } from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table/Table";
 import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/ButtonV2";
 import Icon from "../../components/Icon";
@@ -45,7 +45,7 @@ const EventTypeTableDesktop = ({ categories, showEditCategory, showDeleteCategor
 									</Button>
 								)}
 								{can.create_event && (
-									<Button intent="danger" weight="outline" size="sm" onClick={() => showDeleteCategory(category)}>
+									<Button intent="danger" weight="clear" size="sm" onClick={() => showDeleteCategory(category)}>
 										<Icon icon="trash" />
 										Delete
 									</Button>

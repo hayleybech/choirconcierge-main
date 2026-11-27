@@ -325,6 +325,7 @@ Choir Concierge is a multi-tenant SaaS platform for choir management, including 
 - Tests use Pest. Prefer feature tests; each test class creates a fresh `phpunit` tenant.
 - `actingAsRole('Admin')` creates a user with that role in the test tenant.
 - Use factories and their existing states when creating test models.
+- You must not commit tests that test styles or classnames.
 
 ### Billing Plans and Timezone Helpers
 
@@ -337,3 +338,4 @@ Choir Concierge is a multi-tenant SaaS platform for choir management, including 
 - Strong preference for fluent method chaining rather than individual statements.
 - Treat every loop as an opportunity to refactor to collections.
 - Look for opportunities to refactor existing collection code to a collection pipeline. e.g. Try replacing an early return inside an `each` callback with a prior `reject` call.
+- Limit of one react component per file. Exception granted for components 10 lines or less. 

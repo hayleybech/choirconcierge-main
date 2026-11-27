@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import TenantLayout from '../../Layouts/TenantLayout';
-import { PageHeader, PageHeaderActions, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderActions,
+	PageHeaderContent,
+	PageHeaderLink,
+	PageHeaderLinks,
+	PageHeaderTitle,
+	PageHeaderTitleRow,
+} from '../../components/PageHeader/PageHeader';
 import SingerTableDesktop from './SingerTableDesktop';
 import SingerTableMobile from './SingerTableMobile';
 import AppHead from '../../components/AppHead';
 import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
-import SingerFilters from '../../components/SingerFilters';
+import Filters from '../../components/Filters/Filters';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import ImportSingersDialog from '../../components/ImportSingersDialog';
@@ -24,14 +32,17 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
 import RenewFeesDialog from './components/RenewFeesDialog';
- 
+import TableControls from '../../components/Table/TableControls';
+import ButtonLink from '../../components/inputs/ButtonLinkV2';
+import { createSingerIndexFilterDescriptors } from '../../components/SingerFilterDescriptors';
+
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
+	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 	const [showImportDialog, setShowImportDialog] = useState(false);
 	const [showBulkRenewFeesDialog, setShowBulkRenewFeesDialog] = useState(false);
 	const { can } = usePage().props;
 	const { route } = useRoute();
-
 	const bulkEdit = useBulkEdit(
 		allSingers,
 		can.update_singer || can.manage_finances,
@@ -48,48 +59,45 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 		{ id: 'paid_until', name: 'Paid Until' },
 	];
 
-	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'status', multiple: true, defaultValue: [defaultStatus] },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-		{ name: 'roles.id', multiple: true },
-		{ name: 'fee_status', defaultValue: '' },
-		{ name: 'enrolments.ensemble_id', multiple: true },
-	];
+	const filters = createSingerIndexFilterDescriptors({ statuses, defaultStatus, voiceParts, roles, ensembles });
 
 	const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
 
-	const actions = [
+	const tableActions = [
 		{
-			label: 'Add New',
-			icon: 'user-plus',
-			url: route('singers.create'),
-			intent: 'primary',
-			weight: 'solid',
-			can: 'create_singer',
-		},
-		{
-			label: 'Voice Parts',
-			icon: 'users-class',
-			url: route('voice-parts.index'),
-			can: 'list_voice_parts',
-		},
-		{ label: 'User Roles', icon: 'user-tag', url: route('roles.index'), can: 'list_roles' },
-		{
-			label: 'Import Singers',
+			label: 'Import',
 			icon: 'file-import',
 			onClick: () => setShowImportDialog(true),
 			can: 'import_singers',
 		},
 		{
-			label: 'Export Singers',
+			label: 'Export',
 			icon: 'file-export',
-			url: route('singers.export'),
+			href: route('singers.export'),
 			download: true,
 			can: 'export_singers',
 		},
-		bulkEdit.action,
-		filterAction,
+	].filter(action => can[action.can]);
+
+	const links = [
+		{
+			label: 'Voice Parts',
+			icon: 'users-class',
+			href: route('voice-parts.index'),
+			can: 'list_voice_parts',
+		},
+		{ label: 'User Roles', icon: 'user-tag', href: route('roles.index'), can: 'list_roles' },
+	].filter(action => (action?.can ? can[action.can] : !!action));
+
+	const actions = [
+		{
+			label: 'Add New',
+			icon: 'user-plus',
+			href: route('singers.create'),
+			intent: 'primary',
+			weight: 'solid',
+			can: 'create_singer',
+		},
 	].filter(action => (action?.can ? can[action.can] : !!action));
 
 	usePhoneBreadcrumb('Singers', []);
@@ -100,16 +108,8 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation title="Singers">
 					<PageActionsMenu>
-						{actions.map((action, key) => (
-							<ActionMenuItem
-								key={key}
-								url={action.url}
-								onClick={action.onClick}
-								download={action.download}
-								intent={action.intent}
-								method={action.method}
-								disabled={action.disabled}
-							>
+						{[...actions, ...links].map((action, key) => (
+							<ActionMenuItem key={key} url={action.href} {...action}>
 								<Icon icon={action.icon} mr />
 								{action.label}
 							</ActionMenuItem>
@@ -118,35 +118,31 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 				</PageTopNavigation>
 			</PageTopBar>
 
-			<PageHeader>
-				<PageHeaderTitle>
-					<Icon icon="users" type="solid" className="mr-2" /> Singers
-				</PageHeaderTitle>
-				<PageHeaderActions>
-					{actions.map((action, key) => (
-						<React.Fragment key={key}>
-							{action.label ? (
-								<Button
-									href={action.url}
-									onClick={action.onClick}
-									size="md"
-									intent={action.intent}
-									weight={action.weight}
-									className={action.className}
-									external={action.download}
-									download={action.download}
-									method={action.method}
-									disabled={action.disabled}
-								>
+			<PageHeader hideOnMobile className="xl:items-center">
+				<PageHeaderContent>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="users" type="solid" className="mr-2" /> Singers
+						</PageHeaderTitle>
+						{links.length > 0 && (
+							<PageHeaderLinks>
+								{links.map(action => (
+									<PageHeaderLink key={action.label} {...action}>
+										{action.label}
+									</PageHeaderLink>
+								))}
+							</PageHeaderLinks>
+						)}
+						<PageHeaderActions>
+							{actions.map(action => (
+								<ButtonLink key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 									<Icon icon={action.icon} mr />
 									{action.label}
-								</Button>
-							) : (
-								action
-							)}
-						</React.Fragment>
-					))}
-				</PageHeaderActions>
+								</ButtonLink>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
+				</PageHeaderContent>
 			</PageHeader>
 
 			<Dialog
@@ -180,7 +176,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 							weight="clear"
 							theme="dark"
 							onClick={() => setShowBulkRenewFeesDialog(true)}
-							className="gap-1 hover:bg-gray-600 hover:!text-gray-100"
+							className="gap-1 hover:bg-gray-600 hover:text-gray-100!"
 						>
 							<Icon icon="calendar-check" />
 							Renew Fees
@@ -190,21 +186,26 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			/>
 
 			<IndexContainer
-				showFilters={showFilters}
-				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={
-							<SingerFilters
-								statuses={statuses}
-								voiceParts={voiceParts}
-								roles={roles}
-								form={sortFilterForm}
-								ensembles={ensembles}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
+				showFilters={!isDesktop && showFilters}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						tableActions={tableActions}
+						bulkEdit={bulkEdit}
+						filterLabel="singers"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
 					/>
+				}
+				filterPane={
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters
+							routeName="singers.index"
+							form={sortFilterForm}
+							filters={filters}
+						/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<SingerTableMobile
@@ -212,8 +213,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						pagination={pagination}
 						ensembles={ensembles}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

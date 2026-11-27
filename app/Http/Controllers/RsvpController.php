@@ -178,7 +178,9 @@ class RsvpController extends Controller
     {
         abort_unless($event->relevant_memberships()->whereKey($singer->id)->exists(), 404);
 
-        $this->saveSingerRsvp($event, $singer->id, $request->validated()['response']);
+        $validated = $request->validated();
+
+        $this->saveSingerRsvp($event, $singer->id, $validated['response'], $validated['details'] ?? null);
 
         return redirect()
             ->route('events.rsvps.index', ['event' => $event])
@@ -209,13 +211,13 @@ class RsvpController extends Controller
             ->with(['status' => 'RSVPs recorded.']);
     }
 
-    private function saveSingerRsvp(Event $event, int $singerId, string $response): void
+    private function saveSingerRsvp(Event $event, int $singerId, string $response, ?string $details): void
     {
         $event->rsvps()->updateOrCreate(
             ['membership_id' => $singerId],
             [
                 'response' => $response,
-                'details' => null,
+                'details' => in_array($response, ['maybe', 'no'], true) ? $details : null,
             ],
         );
     }

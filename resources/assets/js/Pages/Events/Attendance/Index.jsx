@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react';
- 
+
 import {
 	PageHeader,
 	PageHeaderActions,
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
-	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../../components/PageTopBar';
 import ActionMenuItem from '../../../components/ActionMenu/ActionMenuItem';
@@ -16,6 +16,7 @@ import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import { Link, usePage } from '@inertiajs/react';
 import SelfCheckInDialog from '../../../components/Event/SelfCheckInDialog';
+import AttendanceInstructionsDialog from '../../../components/Event/AttendanceInstructionsDialog';
 import DateTag from '../../../components/DateTag';
 import Table, {
 	TableCell,
@@ -25,17 +26,17 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../../components/Table';
+} from '../../../components/Table/Table';
 import IndexContainer from '../../../components/IndexContainer';
+import TableControls from '../../../components/Table/TableControls';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
-import FilterSortPane from '../../../components/FilterSortPane';
-import Sorts from '../../../components/Sorts';
-import AttendanceFilters from '../../../components/AttendanceFilters';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
@@ -43,6 +44,7 @@ import SingerStatusTag from '../../../components/SingerStatusTag';
 import { handleNameSort } from '../../../utils/sortHelpers';
 import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
+import { createAttendanceFilterDescriptors } from './AttendanceFilterDescriptors';
 import Button from '../../../components/inputs/ButtonV2';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
@@ -68,11 +70,12 @@ const Index = ({
 	setSidebarOpen,
 }) => {
 	const [checkInDialogIsOpen, setCheckInDialogIsOpen] = useState(false);
+	const [instructionsDialogIsOpen, setInstructionsDialogIsOpen] = useState(false);
 
 	const { route } = useRoute();
 	const { props: pageProps } = usePage();
 
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const showEnsemble = event.ensembles.length > 0 || totalEnsemblesCount > 1;
 
@@ -83,13 +86,7 @@ const Index = ({
 		{ id: 'attendance-updated', name: 'Updated' },
 	];
 
-	const filters = [
-		{ name: 'user.name', defaultValue: '' },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-		{ name: 'enrolments.ensemble_id', multiple: true },
-		{ name: 'attendance.response', multiple: true },
-		{ name: 'status.id', multiple: true },
-	];
+	const filters = createAttendanceFilterDescriptors({ voiceParts, ensembles, singerStatuses });
 
 	const sortFilterForm = useSortFilterForm(['events.attendances.index', { event: event.id }], filters, sorts);
 
@@ -98,7 +95,7 @@ const Index = ({
 		{
 			label: 'Launch Kiosk',
 			icon: 'calendar-check',
-			url: route('events.kiosk-check-ins.index', { event }),
+			href: route('events.kiosk-check-ins.index', { event }),
 			can: 'create_attendance',
 		},
 		{
@@ -107,8 +104,11 @@ const Index = ({
 			onClick: () => setCheckInDialogIsOpen(true),
 			can: 'create_attendance',
 		},
-		filterAction,
-		bulkEdit.action,
+		{
+			label: 'Instructions',
+			icon: 'info-circle',
+			onClick: () => setInstructionsDialogIsOpen(true),
+		},
 	].filter(action => (action?.can ? pageProps.can[action.can] : !!action));
 
 	const bulkUpdateAttendance = response => {
@@ -233,62 +233,31 @@ const Index = ({
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{pageActions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+						<ActionMenuItem key={key} url={action.href} {...action}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
 					))}
 				</PageActionsMenu>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="clipboard-list" className="mr-2" />
-						Attendance Roster
-					</PageHeaderTitle>
-					<PageHeaderMeta>
-						<div>
-							<p className="mb-2">We offer three ways to track attendance: </p>
-							<ul className="list-disc list-inside ml-4 mb-4 [&>li]:mb-1">
-								<li>
-									<strong>Manual</strong> attendance tracking on this page
-								</li>
-								<li>
-									<strong>Kiosk</strong> check-in for shared device use
-								</li>
-								<li>
-									<strong>QR Code</strong> check-in for individual use
-								</li>
-							</ul>
-							<p className="mb-2">
-								Both device check-in pages automatically mark singers as late after the call time, or
-								absent 20 minutes later.
-							</p>
-							<p className="mb-2">
-								If attendance was partially recorded during the event (either manually here or using the
-								kiosk), remaining singers will automatically be marked absent once the event ends.
-							</p>
-							<p className="mb-2">The check-in pages also send an attendance report after each event.</p>
-						</div>
-					</PageHeaderMeta>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="clipboard-list" className="mr-2" />
+							Attendance Roster
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{pageActions.map(action => (
+								<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{pageActions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 
 			<SelfCheckInDialog
@@ -297,42 +266,55 @@ const Index = ({
 				setIsOpen={setCheckInDialogIsOpen}
 			/>
 
-			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
+			<AttendanceInstructionsDialog
+				isOpen={instructionsDialogIsOpen}
+				setIsOpen={setInstructionsDialogIsOpen}
+			/>
 
-			<div className="bg-white border-b border-gray-200 grid grid-cols-2 md:grid-cols-5">
-				{countsData.map(({ label, textColour, icon, count, extraText }) => (
-					<div
-						className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
-						key={label}
-					>
-						<div className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}>
-							<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
-							{label}
-						</div>
-						<div className="flex gap-2 items-center">
-							<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
-							{extraText}
-						</div>
-					</div>
-				))}
-			</div>
+			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
 			<IndexContainer
 				showFilters={showFilters}
-				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={
-							<AttendanceFilters
-								event={event}
-								voiceParts={voiceParts}
-								ensembles={ensembles}
-								form={sortFilterForm}
-								singerStatuses={singerStatuses}
-							/>
-						}
-						closeFn={() => setShowFilters(false)}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
+						bulkEdit={bulkEdit}
+						filterLabel="attendees"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
 					/>
+				}
+				tableSummary={
+					<div className="bg-white border-y border-gray-200 grid grid-cols-2 md:grid-cols-5">
+						{countsData.map(({ label, textColour, icon, count, extraText }) => (
+							<div
+								className="text-center flex flex-col items-center justify-center py-2 lg:py-4 flex-1 border-gray-100"
+								key={label}
+							>
+								<div
+									className={`flex items-center gap-2 font-bold ${textColour} mb-1 text-sm md:text-base`}
+								>
+									<Icon icon={icon} type={icon === 'circle' ? 'regular' : 'solid'} />
+									{label}
+								</div>
+								<div className="flex gap-2 items-center">
+									<span className="text-xl md:text-2xl font-bold text-gray-900">{count}</span>
+									{extraText}
+								</div>
+							</div>
+						))}
+					</div>
+				}
+				filterPane={
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+					<Filters
+						routeName="events.attendances.index"
+						routeParams={{ event: event.id }}
+						form={sortFilterForm}
+						filters={filters}
+					/>
+					</FilterDrawer>
 				}
 				tableMobile={
 					<AttendanceTableMobile
@@ -341,8 +323,6 @@ const Index = ({
 						showEnsemble={showEnsemble}
 						event={event}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
 					/>
 				}
 				tableDesktop={

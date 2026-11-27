@@ -70,6 +70,9 @@
             font-size: 1.125rem;
         }
 
+        .case-indicators { display: inline-flex; align-items: center; gap: .35rem; margin-left: .35rem; vertical-align: middle; }
+        .indicator-icon { width: 1.15rem; height: 1.15rem; vertical-align: middle; }
+
         .metadata {
             margin: 0 0 1rem;
             color: #4b5563;
@@ -118,19 +121,8 @@
             cursor: zoom-in;
         }
 
-        .images {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-            gap: 1rem;
-        }
-
         figure {
             margin: 0;
-        }
-
-        figcaption {
-            margin-bottom: .5rem;
-            font-weight: 700;
         }
 
         img {
@@ -207,7 +199,7 @@
 <body>
 <header>
     <h1>CGAL Screenshot Gallery</h1>
-    <p>Local visual-regression captures and approved references</p>
+    <p>Local catalog screenshot captures</p>
 </header>
 <main>
     <form class="filters" aria-label="Screenshot filters">
@@ -241,70 +233,47 @@
                 @endforeach
             </select>
         </label>
-        <label>
-            View
-            <select data-gallery-view>
-                <option value="grid" selected>Grid</option>
-                <option value="compare">Compare</option>
-            </select>
-        </label>
-        <label>
-            Grid image
-            <select data-grid-variant-select>
-                <option value="latest" selected>Latest capture</option>
-                <option value="baseline">Approved baseline</option>
-            </select>
-        </label>
     </form>
 
     <p class="screenshot-count" data-screenshot-count role="status" aria-live="polite"></p>
 
     <section class="gallery" data-gallery data-view="grid" aria-label="Screenshot cases">
         @forelse ($entries as $entry)
-            <article class="case" data-screenshot
+            <article class="case" data-screenshot data-case-id="{{ $entry['id'] }}"
                      data-module="{{ $entry['module'] }}"
                      data-page_type="{{ $entry['page_type'] }}"
                      data-state="{{ $entry['state'] }}"
                      data-persona="{{ $entry['persona'] }}"
                      data-browser="{{ $entry['browser'] ?? 'chromium' }}"
                      data-route="{{ $entry['route'] }}"
-                     data-comparison="{{ $entry['comparison'] }}"
                      data-viewport="{{ $entry['viewport']['label'] }}">
-                <h2>{{ $entry['component'] }} — {{ $entry['viewport']['label'] }}</h2>
+                <h2>{{ $entry['component'] }} — {{ $entry['viewport']['label'] }}
+                    <span class="case-indicators" aria-label="{{ $entry['viewport']['label'] }} device, {{ $entry['capture_status'] }}">
+                        @if (str_contains(strtolower($entry['viewport']['label']), 'mobile'))
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+                        @elseif (str_contains(strtolower($entry['viewport']['label']), 'tablet'))
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M11 18h2"/></svg>
+                        @else
+                            <svg class="indicator-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></svg>
+                        @endif
+                    </span>
+                </h2>
                 <p class="metadata">
                     {{ $entry['id'] }} · {{ $entry['route'] }} · {{ $entry['viewport']['width'] }}
-                    × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['comparison'] }}
+                    × {{ $entry['viewport']['height'] }} · {{ $entry['persona'] }} · {{ $entry['capture_status'] }}
                 </p>
                 <div class="grid-captures" data-grid-captures>
-                    @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture'] as $variant => $label)
-                        <figure data-grid-variant="{{ $variant }}" @if ($variant !== 'latest') hidden @endif>
-                            @if ($entry['images'][$variant])
-                                <button type="button" class="zoom-trigger" data-zoom-trigger
-                                        aria-label="Zoom {{ strtolower($label) }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                    <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], $variant]) }}"
-                                         alt="{{ $label }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                </button>
-                            @else
-                                <p class="missing">No {{ strtolower($label) }} captured.</p>
-                            @endif
-                        </figure>
-                    @endforeach
-                </div>
-                <div class="images comparison-images" data-comparison-captures hidden>
-                    @foreach (['baseline' => 'Approved baseline', 'latest' => 'Latest capture', 'diff' => 'Diff'] as $variant => $label)
-                        <figure>
-                            <figcaption>{{ $label }}</figcaption>
-                            @if ($entry['images'][$variant])
-                                <button type="button" class="zoom-trigger" data-zoom-trigger
-                                        aria-label="Zoom {{ strtolower($label) }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                    <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], $variant]) }}"
-                                         alt="{{ $label }} for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
-                                </button>
-                            @else
-                                <p class="missing">No {{ strtolower($label) }} captured.</p>
-                            @endif
-                        </figure>
-                    @endforeach
+                    <figure>
+                        @if ($entry['images']['latest'])
+                            <button type="button" class="zoom-trigger" data-zoom-trigger
+                                    aria-label="Zoom latest capture for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
+                                <img src="{{ route('local.visual-regression.image', [$entry['id'], $entry['viewport']['id'], 'latest']) }}"
+                                     alt="Latest capture for {{ $entry['component'] }} at {{ $entry['viewport']['label'] }}">
+                            </button>
+                        @else
+                            <p class="missing">No capture available.</p>
+                        @endif
+                    </figure>
                 </div>
             </article>
         @empty
@@ -318,15 +287,12 @@
     </form>
     <img data-zoom-image alt="">
     <p data-zoom-caption aria-live="polite"></p>
-    <p class="zoom-help" data-zoom-help hidden>Use the left and right arrow keys to browse screenshots.</p>
+    <p class="zoom-help" data-zoom-help hidden>Use the left and right arrow keys to browse screenshots, R to change device, and M to change module.</p>
 </dialog>
 <script>
 	const filters = Array.from(document.querySelectorAll('[data-filter]'));
 	const cards = Array.from(document.querySelectorAll('[data-screenshot]'));
-	const gallery = document.querySelector('[data-gallery]');
 	const screenshotCount = document.querySelector('[data-screenshot-count]');
-	const galleryView = document.querySelector('[data-gallery-view]');
-	const gridVariantSelect = document.querySelector('[data-grid-variant-select]');
 	const imageZoomDialog = document.querySelector('[data-image-zoom]');
 	const zoomTriggers = Array.from(document.querySelectorAll('[data-zoom-trigger]'));
 	const zoomImage = imageZoomDialog.querySelector('[data-zoom-image]');
@@ -347,20 +313,33 @@
 		screenshotCount.textContent = `Showing ${visibleCount} of ${cards.length} screenshots`;
 	}
 
-	function applyGalleryView() {
-		gallery.dataset.view = galleryView.value;
+	function handleFilterChange(filter) {
+		applyFilters();
+		if (!imageZoomDialog.open) {
+			return;
+		}
 
-		document.querySelectorAll('[data-grid-captures]').forEach(captures => {
-			captures.hidden = galleryView.value !== 'grid';
+		const currentCard = currentZoomTrigger?.closest('[data-screenshot]');
+		const filterName = filter.dataset.filter;
+		const matchingTrigger = zoomTriggers.find(trigger => {
+			const card = trigger.closest('[data-screenshot]');
+			if (!card) {
+				return false;
+			}
+
+			const matches = filterName === 'viewport'
+				? card.dataset.caseId === currentCard?.dataset.caseId && card.dataset.viewport === filter.value
+				: card.dataset.viewport === currentCard?.dataset.viewport && card.dataset[filterName] === filter.value;
+
+			return matches && filters.every(activeFilter => !activeFilter.value || activeFilter.dataset.filter === filterName || card.dataset[activeFilter.dataset.filter] === activeFilter.value);
 		});
 
-		document.querySelectorAll('[data-comparison-captures]').forEach(captures => {
-			captures.hidden = galleryView.value !== 'compare';
-		});
+		if (matchingTrigger) {
+			showZoomImage(matchingTrigger);
+			return;
+		}
 
-		document.querySelectorAll('[data-grid-variant]').forEach(variant => {
-			variant.hidden = variant.dataset.gridVariant !== gridVariantSelect.value;
-		});
+		zoomCaption.textContent = `${zoomImage.alt} — no matching image for the selected ${filterName === 'viewport' ? 'device' : 'filter'}. The current image remains open; change filters or press Escape to close.`;
 	}
 
 	function showZoomImage(trigger) {
@@ -368,7 +347,7 @@
 		zoomImage.src = image.currentSrc || image.src;
 		zoomImage.alt = image.alt;
 		zoomCaption.textContent = image.alt;
-		zoomHelp.hidden = galleryView.value !== 'grid';
+		zoomHelp.hidden = false;
 		currentZoomTrigger = trigger;
 		if (!imageZoomDialog.open) {
 			imageZoomDialog.showModal();
@@ -378,8 +357,7 @@
 	function navigateZoomedImage(direction) {
 		const visibleGridTriggers = zoomTriggers.filter(trigger => {
 			const card = trigger.closest('[data-screenshot]');
-			const variant = trigger.closest('[data-grid-variant]');
-			return card && !card.hidden && variant && !variant.hidden;
+			return card && !card.hidden;
 		});
 		const currentIndex = visibleGridTriggers.indexOf(currentZoomTrigger);
 
@@ -391,9 +369,7 @@
 		showZoomImage(visibleGridTriggers[nextIndex]);
 	}
 
-	filters.forEach(filter => filter.addEventListener('change', applyFilters));
-	galleryView.addEventListener('change', applyGalleryView);
-	gridVariantSelect.addEventListener('change', applyGalleryView);
+	filters.forEach(filter => filter.addEventListener('change', () => handleFilterChange(filter)));
 	applyFilters();
 
 	zoomTriggers.forEach(trigger => {
@@ -401,7 +377,20 @@
 	});
 
 	imageZoomDialog.addEventListener('keydown', event => {
-		if (!imageZoomDialog.open || galleryView.value !== 'grid') {
+		if (!imageZoomDialog.open) {
+			return;
+		}
+
+		if (['r', 'm'].includes(event.key.toLowerCase())) {
+			const filterName = event.key.toLowerCase() === 'r' ? 'viewport' : 'module';
+			const filter = filters.find(item => item.dataset.filter === filterName);
+			if (filter) {
+				const options = Array.from(filter.options).filter(option => option.value);
+				const currentIndex = options.findIndex(option => option.value === filter.value);
+				filter.value = options[(currentIndex + 1) % options.length]?.value ?? '';
+				filter.dispatchEvent(new Event('change'));
+				event.preventDefault();
+			}
 			return;
 		}
 

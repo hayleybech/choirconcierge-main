@@ -9,6 +9,7 @@ import {
 	PageHeaderBreadcrumbs,
 	PageHeaderContent,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../../components/PageHeader/PageHeader';
 import PageTopBar, { PageTopNavigation } from "../../../components/PageTopBar";
 import Icon from "../../../components/Icon";
@@ -48,9 +49,11 @@ const Onboarding = ({ tenant, setSidebarOpen }) => {
                         { name: tenant.name, url: route('central.tenants.show', { tenant }) },
                         { name: 'Onboarding', url: route('central.tenants.onboarding', { tenant }) },
                     ]} />
-                    <PageHeaderTitle>
-                        <Icon icon="building" type="solid" className="mr-2" /> Organisation Created
-                    </PageHeaderTitle>
+	                    <PageHeaderTitleRow>
+	                        <PageHeaderTitle>
+	                            <Icon icon="building" type="solid" className="mr-2" /> Organisation Created
+	                        </PageHeaderTitle>
+	                    </PageHeaderTitleRow>
                 </PageHeaderContent>
             </PageHeader>
 

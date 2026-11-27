@@ -7,29 +7,30 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import AppHead from '../../components/AppHead';
 import { DateTime } from 'luxon';
 import AttendanceTag from '../../components/Event/AttendanceTag';
+import Tooltip from '../../components/Tooltip';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterSortPane from '../../components/FilterSortPane';
-import AttendanceReportFilters from './AttendanceReportFilters';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
-import { TableMobileHeader } from '../../components/TableMobile';
 import AttendanceChart from '../../components/Event/AttendanceChart';
-import Sorts from '../../components/Sorts';
+import TableControls from '../../components/Table/TableControls';
 import VoicePartTag from '../../components/VoicePartTag';
-import FilterDialog from '../../components/FilterDialog';
+import FilterDialog from '../../components/Filters/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
-import DateRangeCalendarInput from '../../components/inputs/DateRangeCalendarInput';
- 
+import { createAttendanceReportFilterDescriptors } from './AttendanceReportFilterDescriptors';
+
 const AttendanceReport = ({
 	events,
 	eventTypes,
@@ -45,7 +46,7 @@ const AttendanceReport = ({
 }) => {
 	const { route } = useRoute();
 	const [isChartCollapsed, setIsChartCollapsed] = React.useState(false);
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters, , hasNonDefaultFilters] = useFilterPane();
 	const isDesktop = useMediaQuery({ query: '(min-width: 1024px)' });
 
 	const sorts = [
@@ -59,16 +60,57 @@ const AttendanceReport = ({
 		{ label: 'Last 30 days', start: today.minus({ days: 29 }) },
 		{ label: 'Last 90 days', start: today.minus({ days: 89 }) },
 		{ label: 'Last 365 days', start: today.minus({ days: 364 }) },
-		{ label: 'Last month', start: today.minus({ months: 1 }).startOf('month'), end: today.minus({ months: 1 }).endOf('month') },
-		{ label: 'Last quarter', start: today.startOf('quarter').minus({ quarters: 1 }), end: today.startOf('quarter').minus({ days: 1 }) },
-		{ label: 'Last year', start: today.minus({ years: 1 }).startOf('year'), end: today.minus({ years: 1 }).endOf('year') },
+		{
+			label: 'Last month',
+			start: today.minus({ months: 1 }).startOf('month'),
+			end: today.minus({ months: 1 }).endOf('month'),
+		},
+		{
+			label: 'Last quarter',
+			start: today.startOf('quarter').minus({ quarters: 1 }),
+			end: today.startOf('quarter').minus({ days: 1 }),
+		},
+		{
+			label: 'Last year',
+			start: today.minus({ years: 1 }).startOf('year'),
+			end: today.minus({ years: 1 }).endOf('year'),
+		},
 	];
-	const filters = [
-		{ name: 'type.id', multiple: true, defaultValue: [defaultEventType] },
-		{ name: 'starts_after', defaultValue: defaultStartsAfter },
-		{ name: 'starts_before', defaultValue: defaultStartsBefore },
-		{ name: 'enrolments.voice_part_id', multiple: true },
-	];
+	const renderDateRangePresets = setDraftRange => (
+		<div className="mb-2 grid grid-cols-2">
+			{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
+				<div
+					key={columnIndex}
+					className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}
+				>
+					{column.map(({ label, start, end }) => (
+						<Button
+							key={label}
+							intent="secondary"
+							weight="clear"
+							size="sm"
+							onClick={() =>
+								setDraftRange({
+									from: start.toJSDate(),
+									to: (end ?? today).toJSDate(),
+								})
+							}
+						>
+							{label}
+						</Button>
+					))}
+				</div>
+			))}
+		</div>
+	);
+	const filters = createAttendanceReportFilterDescriptors({
+		eventTypes,
+		voiceParts,
+		defaultEventType,
+		defaultStartsAfter,
+		defaultStartsBefore,
+		dateRangePresets: renderDateRangePresets,
+	});
 
 	const sortFilterForm = useSortFilterForm('events.reports.attendance', filters, sorts);
 	const previousDateRange = React.useRef({
@@ -78,27 +120,21 @@ const AttendanceReport = ({
 	React.useEffect(() => {
 		const startsAfter = sortFilterForm.data['starts_after'];
 		const startsBefore = sortFilterForm.data['starts_before'];
+		const dateRangeChanged =
+			previousDateRange.current.startsAfter !== startsAfter ||
+			previousDateRange.current.startsBefore !== startsBefore;
 
-		if (previousDateRange.current.startsAfter !== startsAfter || previousDateRange.current.startsBefore !== startsBefore) {
-			previousDateRange.current = { startsAfter, startsBefore };
-			sortFilterForm.submit();
+		previousDateRange.current = { startsAfter, startsBefore };
+
+		if (!isDesktop && dateRangeChanged) {
+			sortFilterForm.submit(undefined);
 		}
-	}, [sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
+	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
-		<FilterSortPane
-			sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-			showSortsOnDesktop
-			filters={<AttendanceReportFilters eventTypes={eventTypes} voiceParts={voiceParts} form={sortFilterForm} />}
-			closeFn={() => setShowFilters(false)}
-		/>
+		<FilterDrawer closeFn={() => setShowFilters(false)}>
+			<Filters routeName="events.reports.attendance" form={sortFilterForm} filters={filters} />
+		</FilterDrawer>
 	);
-
-	const bulkEdit = {
-		isActiveMobile: false,
-		noun: 'Attendance',
-		selectedIds: [],
-		totalItems: events.length,
-	};
 
 	const breadcrumbs = [
 		{ name: 'Events', url: route('events.index') },
@@ -110,18 +146,12 @@ const AttendanceReport = ({
 			<AppHead title="Attendance Report" />
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
-				{(filterAction || (events.length > 0 && numSingers > 0)) && (
+				{events.length > 0 && numSingers > 0 && (
 					<PageActionsMenu>
 						{events.length > 0 && numSingers > 0 && (
 							<ActionMenuItem onClick={() => setIsChartCollapsed(prev => !prev)}>
 								<Icon icon="analytics" mr />
 								{isChartCollapsed ? 'Show chart' : 'Hide chart'}
-							</ActionMenuItem>
-						)}
-						{filterAction && (
-							<ActionMenuItem onClick={filterAction.onClick} intent={filterAction.intent}>
-								<Icon icon="filter" mr />
-								Filter
 							</ActionMenuItem>
 						)}
 					</PageActionsMenu>
@@ -130,76 +160,49 @@ const AttendanceReport = ({
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<Icon icon="analytics" type="solid" className="mr-2" />
-						Attendance Report
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<Icon icon="analytics" type="solid" className="mr-2" />
+							Attendance Report
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{events.length > 0 && numSingers > 0 && (
+								<Button
+									onClick={() => setIsChartCollapsed(prev => !prev)}
+									size="md"
+									intent="secondary"
+									weight="solid"
+								>
+									<Icon icon="analytics" mr />
+									{isChartCollapsed ? 'Show chart' : 'Hide chart'}
+								</Button>
+							)}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<div>Avg. singers per event: {avgSingersPerEvent}</div>
 						<div>Avg. events per singer: {avgEventsPerSinger}</div>
 					</PageHeaderMeta>
-					<div className="mt-3 w-full max-w-xs">
-						<DateRangeCalendarInput
-							startDate={sortFilterForm.data['starts_after']}
-							endDate={sortFilterForm.data['starts_before']}
-							startMonth={new Date(2017, 0)}
-							endMonth={new Date(new Date().getFullYear() + 5, 11)}
-							updateFn={range => {
-								sortFilterForm.setData('starts_after', range?.from ? DateTime.fromJSDate(range.from).toISODate() : '');
-								sortFilterForm.setData('starts_before', range?.to ? DateTime.fromJSDate(range.to).toISODate() : '');
-							}}
-						>
-							{setDraftRange => (
-								<div className="mb-2 grid grid-cols-2">
-									{[dateRangePresets.slice(0, 3), dateRangePresets.slice(3)].map((column, columnIndex) => (
-										<div key={columnIndex} className={`flex flex-col gap-1 ${columnIndex === 1 ? 'border-l border-gray-200 pl-2' : 'pr-2'}`}>
-											{column.map(({ label, start, end }) => (
-												<Button
-													key={label}
-													intent="secondary"
-													weight="clear"
-													size="sm"
-													onClick={() => setDraftRange({ from: start.toJSDate(), to: (end ?? today).toJSDate() })}
-												>
-													{label}
-												</Button>
-											))}
-										</div>
-									))}
-								</div>
-							)}
-						</DateRangeCalendarInput>
-					</div>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{filterAction && (
-						<Button
-							onClick={filterAction.onClick}
-							size="md"
-							intent={filterAction.intent}
-							weight="outline"
-							className={filterAction.intent === 'success' ? 'bg-white' : undefined}
-						>
-							<Icon icon="filter" mr />
-							Filter
-						</Button>
-					)}
-					{events.length > 0 && numSingers > 0 && (
-						<Button
-							onClick={() => setIsChartCollapsed(prev => !prev)}
-							size="md"
-							intent="secondary"
-							weight="solid"
-						>
-							<Icon icon="analytics" mr />
-							{isChartCollapsed ? 'Show chart' : 'Hide chart'}
-						</Button>
-					)}
-				</PageHeaderActions>
 			</PageHeader>
+			<div className="sticky top-[47px] z-30 shrink-0 bg-white lg:static lg:z-auto">
+				<TableControls
+					filters={filters}
+					sorts={sorts}
+					form={sortFilterForm}
+					showMobileDateRangeFilter
+					filterLabel="attendance report"
+					hasChangedFilters={hasNonDefaultFilters}
+					onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
+				/>
+			</div>
 
 			{events.length > 0 && numSingers > 0 && (
-				<AttendanceChart events={events} isCollapsed={isChartCollapsed} onClose={() => setIsChartCollapsed(true)} />
+				<AttendanceChart
+					events={events}
+					isCollapsed={isChartCollapsed}
+					onClose={() => setIsChartCollapsed(true)}
+				/>
 			)}
 
 			{!isDesktop && (
@@ -207,23 +210,7 @@ const AttendanceReport = ({
 					{filterPane}
 				</FilterDialog>
 			)}
-			<TableMobileHeader bulkEdit={bulkEdit} className="lg:hidden">
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
-
 			<div className="flex min-w-0 flex-none flex-col divide-y divide-gray-300 lg:min-h-0 lg:flex-1 lg:overflow-auto lg:flex-row lg:divide-x lg:divide-y-0">
-				{isDesktop && showFilters && (
-					<div className="flex h-full shrink-0 flex-col lg:z-10 lg:w-1/5">{filterPane}</div>
-				)}
-
 				<div className="flex min-w-0 flex-none flex-col lg:min-h-0 lg:flex-1 lg:overflow-x-auto">
 					<div className="min-w-0 flex-1">
 						{events.length === 0 && (
@@ -331,12 +318,13 @@ const AttendanceReport = ({
 														>
 															{!event.isBeforeHistory &&
 															!event.consideredSingerIds.includes(singer.id) ? (
-																<span
-																	className="text-xs text-gray-400"
-																	title="Not an active member at the time"
-																>
-																	N/A
-																</span>
+																<Tooltip content="Not an active member at the time">
+																	<span
+																		className="text-xs text-gray-400"
+																	>
+																		N/A
+																	</span>
+																</Tooltip>
 															) : (
 																<AttendanceTag
 																	status={

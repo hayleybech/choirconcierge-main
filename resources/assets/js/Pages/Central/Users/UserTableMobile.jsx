@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileHeader, TableMobileItem } from '../../../components/TableMobile';
+import TableMobile, { TableMobileHeader, TableMobileItem } from '../../../components/Table/TableMobile';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import Pagination from '../../../components/Pagination';

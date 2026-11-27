@@ -10,7 +10,12 @@ import ErrorAlert from '../../components/ErrorAlert';
 import WarningAlert from '../../components/WarningAlert';
 import SingerAttendanceWidget from './SingerAttendanceWidget';
 import PageTopBar, { PageTopNavigation } from '../../components/PageTopBar';
-import { PageHeader, PageHeaderContent, PageHeaderTitle } from '../../components/PageHeader/PageHeader';
+import {
+	PageHeader,
+	PageHeaderContent,
+	PageHeaderTitle,
+	PageHeaderTitleRow,
+} from '../../components/PageHeader/PageHeader';
 import Icon from '../../components/Icon';
  
 const Show = ({
@@ -34,9 +39,11 @@ const Show = ({
 		</PageTopBar>
 		<PageHeader>
 			<PageHeaderContent>
-				<PageHeaderTitle>
-					<Icon icon="tachometer-alt" type="solid" className="mr-2" /> Dashboard
-				</PageHeaderTitle>
+				<PageHeaderTitleRow>
+					<PageHeaderTitle>
+						<Icon icon="tachometer-alt" type="solid" className="mr-2" /> Dashboard
+					</PageHeaderTitle>
+				</PageHeaderTitleRow>
 			</PageHeaderContent>
 		</PageHeader>
 

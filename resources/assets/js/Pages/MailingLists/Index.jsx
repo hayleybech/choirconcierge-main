@@ -16,6 +16,7 @@ import MailingListTableDesktop from './MailingListTableDesktop';
 import MailingListTableMobile from './MailingListTableMobile';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
+import TableControls from '../../components/Table/TableControls';
 import useRoute from '../../hooks/useRoute';
 import TrialAntiSpamNotice from './TrialAntiSpamNotice';
 import useBulkEdit from '../../hooks/useBulkEdit';
@@ -23,13 +24,13 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterSortPane from '../../components/FilterSortPane';
-import Sorts from '../../components/Sorts';
-import MailingListFilters from './MailingListFilters';
- 
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
+import { createMailingListFilterDescriptors } from './MailingListFilterDescriptors';
+
 const Index = ({ lists, can, setSidebarOpen }) => {
 	const { route } = useRoute();
-	const [showFilters, setShowFilters, filterAction, hasNonDefaultFilters] = useFilterPane();
+	const [showFilters, setShowFilters] = useFilterPane();
 
 	const sorts = [
 		{ id: 'title', name: 'Title', default: true },
@@ -37,10 +38,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{ id: 'address', name: 'Address' },
 		{ id: 'created_at', name: 'Created' },
 	];
-	const filters = [
-		{ name: 'search', defaultValue: '' },
-		{ name: 'list_type', multiple: true },
-	];
+	const filters = createMailingListFilterDescriptors();
 	const sortFilterForm = useSortFilterForm('groups.index', filters, sorts);
 
 	const bulkEdit = useBulkEdit(lists.data, false, can.delete_group, 'List');
@@ -48,7 +46,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{
 			label: 'Add New',
 			icon: 'plus',
-			url: route('groups.create'),
+			href: route('groups.create'),
 			intent: 'primary',
 			weight: 'solid',
 			can: 'create_group',
@@ -56,14 +54,14 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 		{
 			label: 'Compose',
 			icon: 'inbox-out',
-			url: route('communications.create'),
+			href: route('communications.create'),
 			intent: 'secondary',
-			weight: 'solid',
 			can: 'create_broadcast',
 		},
 		bulkEdit.action,
-		filterAction,
 	].filter(action => (action?.can ? can[action.can] : !!action));
+	const pageMenuActions = actions.filter(action => action !== bulkEdit.action);
+	const pageHeaderActions = actions.filter(action => action !== bulkEdit.action);
 
 	const breadcrumbs = [
 		{ name: 'Communications', url: route('communications.index') },
@@ -79,10 +77,10 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			<PageTopBar setSidebarOpen={setSidebarOpen}>
 				<PageTopNavigation breadcrumbs={breadcrumbs}>
 					<PageActionsMenu>
-						{actions.map(action => (
+						{pageMenuActions.map(action => (
 							<ActionMenuItem
 								key={action.label}
-								url={action.url}
+								url={action.href}
 								onClick={action.onClick}
 								intent={action.intent}
 							>
@@ -93,7 +91,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
 					<PageHeaderTitle>
@@ -103,16 +101,8 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 				</PageHeaderContent>
 
 				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
+					{pageHeaderActions.map(action => (
+						<Button key={action.label} {...action} size="md" weight={action.weight ?? 'clear'}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</Button>
@@ -142,22 +132,25 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 
 			<IndexContainer
 				showFilters={showFilters}
-				filterPane={
-					<FilterSortPane
-						sorts={<Sorts sorts={sorts} form={sortFilterForm} />}
-						filters={<MailingListFilters form={sortFilterForm} />}
-						closeFn={() => setShowFilters(false)}
-					/>
-				}
-				tableDesktop={<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} sortFilterForm={sortFilterForm} />}
-				tableMobile={
-					<MailingListTableMobile
-						lists={lists}
+				tableControls={
+					<TableControls
+						filters={filters}
+						sorts={sorts}
+						form={sortFilterForm}
 						bulkEdit={bulkEdit}
-						hasNonDefaultFilters={hasNonDefaultFilters}
-						setShowFilters={setShowFilters}
+						filterLabel="mailing lists"
+						onToggleFilters={() => setShowFilters(previousValue => !previousValue)}
 					/>
 				}
+				filterPane={
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
+						<Filters routeName="groups.index" form={sortFilterForm} filters={filters} />
+					</FilterDrawer>
+				}
+				tableDesktop={
+					<MailingListTableDesktop lists={lists} bulkEdit={bulkEdit} sortFilterForm={sortFilterForm} />
+				}
+				tableMobile={<MailingListTableMobile lists={lists} bulkEdit={bulkEdit} />}
 				emptyState={
 					lists.data.length === 0 ? (
 						<EmptyState

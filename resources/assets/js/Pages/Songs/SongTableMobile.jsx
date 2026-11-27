@@ -1,38 +1,24 @@
 import React from 'react';
-import PitchButton from '../../components/PitchButton';
 import SongStatusTag from '../../components/SongStatusTag';
 import TableMobile, {
-	TableMobileHeader,
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from '../../components/TableMobile';
+} from '../../components/Table/TableMobile';
 import SongStatus from '../../SongStatus';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
-import { useInstrument } from '../../hooks/useInstrument';
 import EnsembleBadges from '../../components/EnsembleBadges';
-import Button from '../../components/inputs/ButtonV2';
-import Icon from '../../components/Icon';
+import PitchButton from '../../components/PitchButton';
+import { useInstrument } from '../../hooks/useInstrument';
  
-const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFilters, setShowFilters }) => {
+const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
 
 	const [instrument] = useInstrument();
 
 	return (
 		<div>
-			<TableMobileHeader bulkEdit={bulkEdit}>
-				<Button
-					size="sm"
-					intent={hasNonDefaultFilters ? 'success' : 'secondary'}
-					weight="clear"
-					onClick={() => setShowFilters(prev => !prev)}
-				>
-					<Icon icon="filter" mr />
-					Filter/Sort
-				</Button>
-			</TableMobileHeader>
 			<TableMobile pagination={<Pagination details={songs} />}>
 				{songs.data.map(song => (
 					<TableMobileListItem key={song.id}>
@@ -54,7 +40,7 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit, hasNonDefaultFil
 									</div>
 									<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
 										<div className="flex items-center justify-between">
-											<div className="flex items-center min-w-0 mr-1.5 px-4">
+											<div className="flex items-center min-w-0 mx-1.5">
 												<SongStatusTag status={new SongStatus(song.status.slug)} />
 												<span className="text-sm font-medium text-purple-600 truncate">
 													{song.title}

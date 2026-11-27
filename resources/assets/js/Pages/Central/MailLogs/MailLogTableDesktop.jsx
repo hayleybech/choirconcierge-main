@@ -1,12 +1,12 @@
 import React from 'react';
-import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table/Table';
 import DateTag from '../../../components/DateTag';
 import { Link } from '@inertiajs/react';
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';
 import MailStatusTag, { mailTypeIcons } from '../../../components/MailStatusTag';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
  
 const MailLogTableDesktop = ({ logs, sortFilterForm }) => {
 	const { route } = useRoute();

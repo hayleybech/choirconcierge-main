@@ -7,6 +7,7 @@ import {
 	PageHeaderContent,
 	PageHeaderMeta,
 	PageHeaderTitle,
+	PageHeaderTitleRow,
 } from '../../components/PageHeader/PageHeader';
 import PageTopBar, { PageActionsMenu, PageTopNavigation } from '../../components/PageTopBar';
 import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
@@ -19,20 +20,19 @@ import DeleteDialog from '../../components/DeleteDialog';
 import useRoute from '../../hooks/useRoute';
 import { usePage } from '@inertiajs/react';
 import Badge from '../../components/Badge';
- 
+
 const Show = ({ stack, setSidebarOpen }) => {
 	const { route } = useRoute();
 	const [deleteDialogIsOpen, setDeleteDialogIsOpen] = useState(false);
 	const { tenant, can } = usePage().props;
 	const actions = [
-		{ label: 'Edit', icon: 'edit', url: route('stacks.edit', { stack }), can: 'update_stack' },
-		{ label: 'Duplicate', icon: 'copy', url: route('stacks.clone', { stack }), can: 'create_stack' },
+		{ label: 'Edit', icon: 'edit', href: route('stacks.edit', { stack }), can: 'update_stack', weight: 'outline' },
+		{ label: 'Duplicate', icon: 'copy', href: route('stacks.clone', { stack }), can: 'create_stack' },
 		{
 			label: 'Delete',
 			icon: 'trash',
 			onClick: () => setDeleteDialogIsOpen(true),
 			intent: 'danger',
-			weight: 'outline',
 			can: 'delete_stack',
 		},
 	].filter(action => stack.can[action.can] || can[action.can]);
@@ -49,7 +49,7 @@ const Show = ({ stack, setSidebarOpen }) => {
 				<PageTopNavigation breadcrumbs={breadcrumbs}></PageTopNavigation>
 				<PageActionsMenu>
 					{actions.map((action, key) => (
-						<ActionMenuItem key={key} url={action.url} onClick={action.onClick} intent={action.intent}>
+						<ActionMenuItem key={key} url={action.href} onClick={action.onClick} intent={action.intent}>
 							<Icon icon={action.icon} mr />
 							{action.label}
 						</ActionMenuItem>
@@ -59,12 +59,27 @@ const Show = ({ stack, setSidebarOpen }) => {
 			<PageHeader>
 				<PageHeaderContent>
 					<PageHeaderBreadcrumbs breadcrumbs={breadcrumbs} />
-					<PageHeaderTitle>
-						<span className="flex items-center">
-							<Icon icon="people-arrows" type="solid" className="mr-2" />
-							{stack.title}
-						</span>
-					</PageHeaderTitle>
+					<PageHeaderTitleRow>
+						<PageHeaderTitle>
+							<span className="flex items-center">
+								<Icon icon="people-arrows" type="solid" className="mr-2" />
+								{stack.title}
+							</span>
+						</PageHeaderTitle>
+						<PageHeaderActions>
+							{actions.map(action => (
+								<Button
+									key={action.label}
+									{...action}
+									size="md"
+									weight={action.weight ?? 'clear'}
+								>
+									<Icon icon={action.icon} mr />
+									{action.label}
+								</Button>
+							))}
+						</PageHeaderActions>
+					</PageHeaderTitleRow>
 					<PageHeaderMeta>
 						<span>Rows: {stack.rows}</span>
 						<span>Columns: {stack.columns}</span>
@@ -83,22 +98,6 @@ const Show = ({ stack, setSidebarOpen }) => {
 						<DateTag icon="pencil" date={stack.updated_at} label="Updated" />
 					</PageHeaderMeta>
 				</PageHeaderContent>
-				<PageHeaderActions>
-					{actions.map(action => (
-						<Button
-							key={action.label}
-							href={action.url}
-							onClick={action.onClick}
-							size="md"
-							intent={action.intent}
-							weight={action.weight}
-							className={action.className}
-						>
-							<Icon icon={action.icon} mr />
-							{action.label}
-						</Button>
-					))}
-				</PageHeaderActions>
 			</PageHeader>
 			<DeleteDialog
 				title="Delete Riser Stack"

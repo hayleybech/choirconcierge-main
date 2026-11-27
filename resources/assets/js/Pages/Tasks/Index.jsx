@@ -37,7 +37,7 @@ const Index = ({ tasks, setSidebarOpen }) => {
 					</PageActionsMenu>
 				</PageTopNavigation>
 			</PageTopBar>
-			<PageHeader>
+			<PageHeader hideOnMobile>
 				<PageHeaderContent>
 					<PageHeaderTitle>
 						<Icon icon="tasks" type="solid" className="mr-2" /> Onboarding Tasks
