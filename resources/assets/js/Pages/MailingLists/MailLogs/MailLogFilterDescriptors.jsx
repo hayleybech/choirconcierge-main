@@ -1,5 +1,6 @@
 import React from 'react';
 import Icon from '../../../components/Icon';
+import { createMailTypeFilterDescriptor } from '../../../components/Filters/MailTypeFilterDescriptor';
 import MailingListSelect from '../../../components/inputs/MailingListSelect';
 
 const renderMailingListSelect = ({ value, onChange, options, surface }) => {
@@ -98,17 +99,7 @@ export function createMailingListMailLogFilterDescriptors({ mailingLists, mailTy
 			showActions: true,
 			showDefaultMarker: true,
 		},
-		{
-			name: 'type',
-			label: 'Mail Type',
-			type: 'choice',
-			multiple: true,
-			defaultValue: defaultMailTypes,
-			showActions: true,
-			showDefaultMarker: true,
-			drawerAllValuesLabel: 'All',
-			options: mailTypes,
-		},
+		createMailTypeFilterDescriptor({ options: mailTypes, defaultValue: defaultMailTypes }),
 		{
 			name: 'read',
 			label: 'Read Status',

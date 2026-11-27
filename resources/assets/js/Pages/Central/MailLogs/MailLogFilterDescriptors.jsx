@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '../../../components/Icon';
 import TenantSelect from '../../../components/inputs/TenantSelect';
+import { createMailTypeFilterDescriptor } from '../../../components/Filters/MailTypeFilterDescriptor';
 
 const renderTenantSelect = ({ value, onChange, options, surface }) => {
 	const tenantOptions = options.map(option => ({ label: option.name, value: option.id }));
@@ -63,16 +64,6 @@ export function createCentralMailLogFilterDescriptors({ tenants, mailTypes, defa
 			renderField: renderTenantSelect,
 			renderToolbarField: renderTenantSelect,
 		},
-		{
-			name: 'type',
-			label: 'Mail Type',
-			type: 'choice',
-			multiple: true,
-			defaultValue: defaultMailTypes,
-			showActions: true,
-			showDefaultMarker: true,
-			drawerAllValuesLabel: 'All',
-			options: mailTypes,
-		},
+		createMailTypeFilterDescriptor({ options: mailTypes, defaultValue: defaultMailTypes }),
 	];
 }

@@ -1,3 +1,5 @@
+import { createMailTypeFilterDescriptor } from '../../components/Filters/MailTypeFilterDescriptor';
+
 export function createMailingListFilterDescriptors() {
 	return [
 		{
@@ -9,20 +11,14 @@ export function createMailingListFilterDescriptors() {
 			showActions: true,
 			showDefaultMarker: true,
 		},
-		{
+		createMailTypeFilterDescriptor({
 			name: 'list_type',
 			label: 'Type',
-			type: 'choice',
-			multiple: true,
-			defaultValue: [],
-			showActions: true,
-			showDefaultMarker: true,
-			drawerAllValuesLabel: 'All',
 			options: [
 				{ id: 'chat', name: 'Chat' },
 				{ id: 'public', name: 'Public' },
 				{ id: 'distribution', name: 'Mailout' },
 			],
-		},
+		}),
 	];
 }
