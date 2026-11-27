@@ -15,10 +15,10 @@ import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
-import Filters from '../../components/Filters';
+import Filters from '../../components/Filters/Filters';
 import IndexContainer from '../../components/IndexContainer';
-import IndexTableControls from '../../components/IndexTableControls';
-import FilterDrawer from '../../components/FilterDrawer';
+import TableControls from '../../components/Table/TableControls';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
@@ -156,7 +156,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

@@ -25,17 +25,17 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../../components/Table';
+} from '../../../components/Table/Table';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
+import TableControls from '../../../components/Table/TableControls';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import SingerStatus from '../../../SingerStatus';
@@ -308,7 +308,7 @@ const Index = ({
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

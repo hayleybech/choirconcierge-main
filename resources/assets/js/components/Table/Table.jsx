@@ -1,5 +1,5 @@
 import React from 'react';
-import CheckboxInput from './inputs/CheckboxInput';
+import CheckboxInput from '../inputs/CheckboxInput';
  
 export const TableHeading = ({ colSpan, children, className }) => (
 	<th

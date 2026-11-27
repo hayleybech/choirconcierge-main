@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { getClearedFilterValue } from '../filterDescriptorUtils';
+import { getClearedFilterValue } from '../Filters/utils';
 import { createEventFilterDescriptors } from './EventFilterDescriptors';
 
 it('clears the event date filter to All and updates sort state for past events', () => {

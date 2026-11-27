@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TableMobile from '../../components/TableMobile';
+import TableMobile from '../../components/Table/TableMobile';
 import DocumentForm from './DocumentForm';
 import EmptyState from '../../components/EmptyState';
 import { DocumentRowMobile, FolderRowMobile } from './FolderTableRows';

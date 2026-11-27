@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Menu, Popover, Portal } from '@headlessui/react';
 import Popper from 'popper.js';
-import ActionMenuItem from './ActionMenu/ActionMenuItem';
-import Button from './inputs/ButtonV2';
-import DateRangeCalendarInput from './inputs/DateRangeCalendarInput';
-import Icon from './Icon';
-import { linkStyles } from './StyledLink';
+import ActionMenuItem from '../ActionMenu/ActionMenuItem';
+import Button from '../inputs/ButtonV2';
+import DateRangeCalendarInput from '../inputs/DateRangeCalendarInput';
+import Icon from '../Icon';
+import { linkStyles } from '../StyledLink';
 import { useMediaQuery } from 'react-responsive';
 import { DateTime } from 'luxon';
-import FilterFieldRenderer, { renderFilterOption } from './FilterFieldRenderer';
+import FilterFieldRenderer, { renderFilterOption } from '../Filters/FilterFieldRenderer';
 import {
 	getClearedFilterValue,
 	getDefaultFilterValue,
@@ -20,9 +20,9 @@ import {
 	hasSelectedFilterValue as hasSelectedValue,
 	isMultipleFilter,
 	isFilterValueNonDefault as isNonDefault,
-} from './filterDescriptorUtils';
+} from '../Filters/utils';
 
-const IndexTableControls = ({
+const TableControls = ({
 	filters = [],
 	sorts = [],
 	form,
@@ -983,4 +983,4 @@ function formatDateRangeValue(value) {
 	return date.isValid ? date.toLocaleString(DateTime.DATE_MED) : String(value);
 }
 
-export default IndexTableControls;
+export default TableControls;

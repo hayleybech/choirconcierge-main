@@ -3,7 +3,7 @@ import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from '../../../components/TableMobile';
+} from '../../../components/Table/TableMobile';
 import DateTag from '../../../components/DateTag';
 import LearningStatus from '../../../LearningStatus';
 import LearningStatusDropdown from '../../../components/Song/LearningStatusDropdown';

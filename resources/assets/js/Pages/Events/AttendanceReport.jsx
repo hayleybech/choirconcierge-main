@@ -17,17 +17,17 @@ import AttendanceTag from '../../components/Event/AttendanceTag';
 import Tooltip from '../../components/Tooltip';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterDrawer from '../../components/FilterDrawer';
-import Filters from '../../components/Filters';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AttendanceChart from '../../components/Event/AttendanceChart';
-import IndexTableControls from '../../components/IndexTableControls';
+import TableControls from '../../components/Table/TableControls';
 import VoicePartTag from '../../components/VoicePartTag';
-import FilterDialog from '../../components/FilterDialog';
+import FilterDialog from '../../components/Filters/FilterDialog';
 import { useMediaQuery } from 'react-responsive';
 import { createAttendanceReportFilterDescriptors } from './AttendanceReportFilterDescriptors';
 
@@ -186,7 +186,7 @@ const AttendanceReport = ({
 				</PageHeaderContent>
 			</PageHeader>
 			<div className="sticky top-[47px] z-30 shrink-0 bg-white lg:static lg:z-auto">
-				<IndexTableControls
+				<TableControls
 					filters={filters}
 					sorts={sorts}
 					form={sortFilterForm}

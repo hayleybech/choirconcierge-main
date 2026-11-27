@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import SectionSubtitle from './SectionSubtitle';
-import useRoute from '../hooks/useRoute';
+import SectionSubtitle from '../SectionSubtitle';
+import useRoute from '../../hooks/useRoute';
 import { FilterDrawerActionsContext } from './FilterDrawer';
-import ButtonLinkV2 from './inputs/ButtonLinkV2';
+import ButtonLinkV2 from '../inputs/ButtonLinkV2';
 import FilterFieldRenderer from './FilterFieldRenderer';
 import {
 	getClearedFilterValue,
@@ -11,7 +11,7 @@ import {
 	getDefaultFilterValue,
 	getFilterData,
 	getFilterValue,
-} from './filterDescriptorUtils';
+} from './utils';
 
 const Filters = ({ routeName, routeParams, form, filters, render, autoSubmit = true, showClearAll = true }) => {
 	const { route } = useRoute();

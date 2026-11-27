@@ -5,7 +5,7 @@ import React, { Fragment } from 'react';
 import classNames from '../../classNames';
 import { Link } from '@inertiajs/react';
 import LearningStatus from '../../LearningStatus';
- 
+
 const LearningStatusDropdown = ({
 	status,
 	allowedStatuses = Object.keys(LearningStatus.statuses),
@@ -62,9 +62,9 @@ const LearningStatusDropdown = ({
 												preserveScroll
 												method={method}
 												data={{ status: slug }}
-								className={classNames(
-									'block w-full text-left px-4 py-2 text-sm text-gray-500',
-									active ? 'bg-gray-100' : ''
+												className={classNames(
+													'block w-full text-left px-4 py-2 text-sm text-gray-500',
+													active ? 'bg-gray-100' : ''
 												)}
 											>
 												<Icon icon={option.icon} mr className={option.textColour} />

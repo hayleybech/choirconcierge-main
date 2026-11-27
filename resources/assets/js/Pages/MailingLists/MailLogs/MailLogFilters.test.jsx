@@ -3,10 +3,10 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import Filters from '../../../components/Filters';
-import IndexTableControls from '../../../components/IndexTableControls';
+import Filters from '../../../components/Filters/Filters';
+import TableControls from '../../../components/Table/TableControls';
 import { createMailingListMailLogFilterDescriptors } from './MailLogFilterDescriptors';
-import { getDefaultFilterData } from '../../../components/filterDescriptorUtils';
+import { getDefaultFilterData } from '../../../components/Filters/utils';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn(() => false) }));
 
@@ -103,7 +103,7 @@ describe('mail log read-status filter', () => {
 		const setData = vi.fn();
 
 		render(
-			<IndexTableControls
+			<TableControls
 				filters={filterDescriptors}
 				form={{
 					data: { subject: '', to: ['announcements@example.com'], from: '', type: ['broadcast'], read: '' },
@@ -134,7 +134,7 @@ describe('mail log read-status filter', () => {
 
 		const setData = vi.fn();
 		render(
-			<IndexTableControls
+			<TableControls
 				filters={filterDescriptors}
 				form={{
 					data: { subject: '', to: [], from: '', type: ['broadcast'], read: '' },
@@ -169,7 +169,7 @@ describe('mail log read-status filter', () => {
 		});
 
 		render(
-			<IndexTableControls
+			<TableControls
 				filters={filterDescriptors}
 				form={{
 					data: { subject: '', to: [], from: 'sender@example.com', type: ['broadcast'], read: '' },

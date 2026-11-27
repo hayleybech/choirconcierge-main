@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, usePage } from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table/Table";
 import useRoute from "../../hooks/useRoute";
 import Button from "../../components/inputs/ButtonV2";
 import Icon from "../../components/Icon";

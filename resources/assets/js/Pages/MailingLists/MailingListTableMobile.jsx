@@ -3,7 +3,7 @@ import TableMobile, {
 	TableMobileListItem,
     TableMobileSelect,
     TableMobileSelectableLink
-} from "../../components/TableMobile";
+} from "../../components/Table/TableMobile";
 import Icon from "../../components/Icon";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';

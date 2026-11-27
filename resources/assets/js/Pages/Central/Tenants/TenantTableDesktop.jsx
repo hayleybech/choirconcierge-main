@@ -1,12 +1,12 @@
 import React from 'react';
-import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading } from '../../../components/Table/Table';
 import DateTag from '../../../components/DateTag';
 import { Link } from '@inertiajs/react';
 import ButtonLink from '../../../components/inputs/ButtonLinkV2';
 import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import BillingTag from './BillingTag';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
 import Pagination from '../../../components/Pagination';
 import DomainTag from '../../../components/DomainTag';
  

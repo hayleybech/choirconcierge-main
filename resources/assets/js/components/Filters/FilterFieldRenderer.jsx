@@ -1,10 +1,10 @@
 import React from 'react';
-import Badge from './Badge';
-import DateRangeCalendarInput from './inputs/DateRangeCalendarInput';
-import FilterActions from './inputs/FilterActions';
-import Icon from './Icon';
-import Label from './inputs/Label';
-import TextInput from './inputs/TextInput';
+import Badge from '../Badge';
+import DateRangeCalendarInput from '../inputs/DateRangeCalendarInput';
+import FilterActions from './FilterActions';
+import Icon from '../Icon';
+import Label from '../inputs/Label';
+import TextInput from '../inputs/TextInput';
 import {
 	formatDateInputValue,
 	getClearedFilterValue,
@@ -12,8 +12,8 @@ import {
 	getFilterOptions,
 	isMultipleFilter,
 	isFilterValueNonDefault,
-} from './filterDescriptorUtils';
-import CheckboxGroup from './inputs/CheckboxGroup';
+} from './utils';
+import CheckboxGroup from '../inputs/CheckboxGroup';
 
 const FilterFieldRenderer = ({
 	filter,

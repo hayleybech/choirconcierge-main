@@ -15,13 +15,13 @@ import RiserStackTableDesktop from './RiserStackTableDesktop';
 import RiserStackTableMobile from './RiserStackTableMobile';
 import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
-import IndexTableControls from '../../components/IndexTableControls';
+import TableControls from '../../components/Table/TableControls';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterDrawer from '../../components/FilterDrawer';
-import Filters from '../../components/Filters';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
 import { createRiserStackFilterDescriptors } from '../../components/RiserStack/RiserStackFilterDescriptors';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
@@ -115,7 +115,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

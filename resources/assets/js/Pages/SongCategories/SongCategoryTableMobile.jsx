@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../components/TableMobile';
+import TableMobile, { TableMobileHeader, TableMobileListItem } from '../../components/Table/TableMobile';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
 import { Link, usePage } from '@inertiajs/react';

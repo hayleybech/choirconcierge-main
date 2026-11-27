@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import TableMobile, { TableMobileLink } from '../../../components/TableMobile';
+import TableMobile, { TableMobileLink } from '../../../components/Table/TableMobile';
 import useRoute from '../../../hooks/useRoute';
 import Icon from '../../../components/Icon';
 import Pagination from '../../../components/Pagination';

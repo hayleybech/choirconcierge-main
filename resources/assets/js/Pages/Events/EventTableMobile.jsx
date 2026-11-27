@@ -4,7 +4,7 @@ import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from '../../components/TableMobile';
+} from '../../components/Table/TableMobile';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import EventTypeBadge from '../../components/EventTypeBadge';
 import { DateTime } from 'luxon';

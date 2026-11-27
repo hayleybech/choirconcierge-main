@@ -14,7 +14,7 @@ import Button from '../../../components/inputs/ButtonV2';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
+import TableControls from '../../../components/Table/TableControls';
 import useRoute from '../../../hooks/useRoute';
 import MailLogTableMobile from './MailLogTableMobile';
 import MailLogTableDesktop from './MailLogTableDesktop';
@@ -23,8 +23,8 @@ import EmptyState from '../../../components/EmptyState';
 import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import { createMailingListMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 
 const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
@@ -123,7 +123,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

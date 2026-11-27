@@ -1,5 +1,5 @@
 import React from 'react';
-import Table, { TableCell, THead, TBody, TableHeading, TItemRow } from '../../../components/Table';
+import Table, { TableCell, THead, TBody, TableHeading, TItemRow } from '../../../components/Table/Table';
 import EventTypeBadge from '../../../components/EventTypeBadge';
 import AttendanceTag from "../../../components/Event/AttendanceTag";
 import Pagination from "../../../components/Pagination";

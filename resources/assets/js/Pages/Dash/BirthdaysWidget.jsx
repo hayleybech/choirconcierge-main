@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileItem } from '../../components/TableMobile';
+import TableMobile, { TableMobileItem } from '../../components/Table/TableMobile';
 import Panel, { PanelTitle } from '../../components/Panel';
 import DateUpcomingTag from '../../components/DateUpcomingTag';
 import useRoute from '../../hooks/useRoute';

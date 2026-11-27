@@ -20,9 +20,9 @@ import LearningStatusTable from './LearningStatusTable';
 import LearningStatusTableMobile from './LearningStatusTableMobile';
 import LearningStatusSummary from './LearningStatusSummary';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import TableControls from '../../../components/Table/TableControls';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import LearningStatus from '../../../LearningStatus';
 import { createLearningStatusFilterDescriptors } from '../../../components/LearningStatusFilterDescriptors';
 import { router } from '@inertiajs/react';
@@ -163,7 +163,7 @@ const Index = ({
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

@@ -3,10 +3,10 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import Filters from '../../../components/Filters';
-import IndexTableControls from '../../../components/IndexTableControls';
+import Filters from '../../../components/Filters/Filters';
+import TableControls from '../../../components/Table/TableControls';
 import { createCentralMailLogFilterDescriptors } from './MailLogFilterDescriptors';
-import { getDefaultFilterData } from '../../../components/filterDescriptorUtils';
+import { getDefaultFilterData } from '../../../components/Filters/utils';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn(() => false) }));
 
@@ -69,7 +69,7 @@ const CentralMailLogControls = ({ initialData, onSetData }) => {
 	const [data, updateData] = useState(initialData);
 
 	return (
-		<IndexTableControls
+		<TableControls
 			filters={filters}
 			form={{
 				data,

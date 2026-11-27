@@ -3,7 +3,7 @@ import React from 'react';
 import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
-} from '../../../components/TableMobile';
+} from '../../../components/Table/TableMobile';
 import Pagination from '../../../components/Pagination';
 import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import Badge from '../../../components/Badge';

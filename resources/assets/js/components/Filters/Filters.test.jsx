@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import FilterDrawer from './FilterDrawer';
 import Filters from './Filters';
-import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
+import { createRiserStackFilterDescriptors } from '../RiserStack/RiserStackFilterDescriptors';
 
 const mocks = vi.hoisted(() => ({
 	setData: vi.fn(),
@@ -17,7 +17,7 @@ vi.mock('react-responsive', () => ({
 	useMediaQuery: vi.fn(),
 }));
 
-vi.mock('../hooks/useRoute', () => ({
+vi.mock('../../hooks/useRoute', () => ({
 	default: () => ({ route: () => '/filters' }),
 }));
 

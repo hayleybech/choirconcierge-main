@@ -17,11 +17,11 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
-import Filters from '../../components/Filters';
+import Filters from '../../components/Filters/Filters';
 import IndexContainer from '../../components/IndexContainer';
-import IndexTableControls from '../../components/IndexTableControls';
+import TableControls from '../../components/Table/TableControls';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterDrawer from '../../components/FilterDrawer';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import useRoute from '../../hooks/useRoute';
@@ -149,7 +149,7 @@ const Index = ({
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

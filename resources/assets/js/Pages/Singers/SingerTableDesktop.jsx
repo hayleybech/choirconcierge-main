@@ -10,12 +10,12 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../components/Table';
+} from '../../components/Table/Table';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import FeeStatus from '../../components/FeeStatus';
 import DateTag from '../../components/DateTag';
-import TableHeadingSort from '../../components/TableHeadingSort';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import Badge from '../../components/Badge';

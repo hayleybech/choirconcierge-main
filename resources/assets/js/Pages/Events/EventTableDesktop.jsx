@@ -9,11 +9,11 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../components/Table';
+} from '../../components/Table/Table';
 import EnsembleBadges from '../../components/EnsembleBadges';
 import EventTypeBadge from '../../components/EventTypeBadge';
 import DateTag from '../../components/DateTag';
-import TableHeadingSort from '../../components/TableHeadingSort';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
 import Icon from '../../components/Icon';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';

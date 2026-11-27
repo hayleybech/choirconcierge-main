@@ -16,7 +16,7 @@ import MailingListTableDesktop from './MailingListTableDesktop';
 import MailingListTableMobile from './MailingListTableMobile';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
-import IndexTableControls from '../../components/IndexTableControls';
+import TableControls from '../../components/Table/TableControls';
 import useRoute from '../../hooks/useRoute';
 import TrialAntiSpamNotice from './TrialAntiSpamNotice';
 import useBulkEdit from '../../hooks/useBulkEdit';
@@ -24,8 +24,8 @@ import Dialog from '../../components/Dialog';
 import BulkEditBar from '../../components/BulkEditBar';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
-import FilterDrawer from '../../components/FilterDrawer';
-import Filters from '../../components/Filters';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
+import Filters from '../../components/Filters/Filters';
 import { createMailingListFilterDescriptors } from './MailingListFilterDescriptors';
 
 const Index = ({ lists, can, setSidebarOpen }) => {
@@ -133,7 +133,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

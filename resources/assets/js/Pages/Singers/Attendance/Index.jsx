@@ -11,12 +11,12 @@ import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import EmptyState from '../../../components/EmptyState';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
+import TableControls from '../../../components/Table/TableControls';
 import AttendanceTableDesktop from './AttendanceTableDesktop';
 import AttendanceTableMobile from './AttendanceTableMobile';
 import { createSingerAttendanceFilterDescriptors } from './SingerAttendanceFilterDescriptors';
@@ -56,7 +56,7 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

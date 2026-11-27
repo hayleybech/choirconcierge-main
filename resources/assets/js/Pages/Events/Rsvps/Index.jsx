@@ -19,21 +19,21 @@ import Table, {
 	TableSelectAll,
 	TableCellSelect,
 	TItemRow,
-} from '../../../components/Table';
+} from '../../../components/Table/Table';
 import useRoute from '../../../hooks/useRoute';
 import DateTag from '../../../components/DateTag';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
+import TableControls from '../../../components/Table/TableControls';
 import RsvpTableMobile from './RsvpTableMobile';
 import Pagination from '../../../components/Pagination';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import { createRsvpFilterDescriptors } from '../../../components/RsvpFilterDescriptors';
-import TableHeadingSort from '../../../components/TableHeadingSort';
+import TableHeadingSort from '../../../components/Table/TableHeadingSort';
 import { Link, router } from '@inertiajs/react';
 import SingerStatus from '../../../SingerStatus';
 import SingerStatusTag from '../../../components/SingerStatusTag';
@@ -215,7 +215,7 @@ const Index = ({
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

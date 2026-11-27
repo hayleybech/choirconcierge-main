@@ -4,7 +4,7 @@ import TableMobile, {
 	TableMobileListItem,
 	TableMobileSelect,
 	TableMobileSelectableLink,
-} from '../../components/TableMobile';
+} from '../../components/Table/TableMobile';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import EnsembleBadges from '../../components/EnsembleBadges';

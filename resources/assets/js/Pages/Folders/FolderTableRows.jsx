@@ -1,5 +1,5 @@
 import React from 'react';
-import { TableCell } from '../../components/Table';
+import { TableCell } from '../../components/Table/Table';
 import FolderIcon from '../../components/FolderIcon';
 import Icon from '../../components/Icon';
 import DateTag from '../../components/DateTag';

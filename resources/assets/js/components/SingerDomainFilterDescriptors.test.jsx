@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import Filters from './Filters';
+import Filters from './Filters/Filters';
 import { createLearningStatusFilterDescriptors } from './LearningStatusFilterDescriptors';
 import { createRsvpFilterDescriptors } from './RsvpFilterDescriptors';
 

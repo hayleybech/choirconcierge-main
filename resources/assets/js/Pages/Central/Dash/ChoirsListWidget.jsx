@@ -1,6 +1,6 @@
 import React from 'react';
 import Panel, { PanelTitle } from '../../../components/Panel';
-import TableMobile, { TableMobileItem } from '../../../components/TableMobile';
+import TableMobile, { TableMobileItem } from '../../../components/Table/TableMobile';
 import { usePage } from '@inertiajs/react';
 import useRoute from '../../../hooks/useRoute';
 import Button from '../../../components/inputs/ButtonV2';

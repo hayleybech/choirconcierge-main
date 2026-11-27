@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table/Table";
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';

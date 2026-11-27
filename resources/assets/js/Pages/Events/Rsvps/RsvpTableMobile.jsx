@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import TableMobile, { TableMobileListItem, TableMobileSelect } from '../../../components/TableMobile';
+import TableMobile, { TableMobileListItem, TableMobileSelect } from '../../../components/Table/TableMobile';
 import Pagination from '../../../components/Pagination';
 import RsvpTag from '../../../components/Event/RsvpTag';
 import RsvpRecord from '../../../components/Event/RsvpRecord';

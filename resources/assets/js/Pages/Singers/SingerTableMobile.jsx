@@ -1,7 +1,7 @@
 import React from 'react';
 import SingerStatusTag from '../../components/SingerStatusTag';
 import VoicePartTag from '../../components/VoicePartTag';
-import TableMobile, { TableMobileListItem, TableMobileSelect, TableMobileSelectableLink } from '../../components/TableMobile';
+import TableMobile, { TableMobileListItem, TableMobileSelect, TableMobileSelectableLink } from '../../components/Table/TableMobile';
 import Icon from '../../components/Icon';
 import SingerStatus from '../../SingerStatus';
 import useRoute from '../../hooks/useRoute';

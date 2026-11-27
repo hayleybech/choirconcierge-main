@@ -1,4 +1,4 @@
-import { getClearedFilterValue, getDefaultFilterData, getFilterData } from '../../components/filterDescriptorUtils';
+import { getClearedFilterValue, getDefaultFilterData, getFilterData } from '../../components/Filters/utils';
 import { createAttendanceReportFilterDescriptors } from './AttendanceReportFilterDescriptors';
 
 it('keeps attendance report date defaults and serializes selected dates to query keys', () => {

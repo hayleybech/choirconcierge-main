@@ -16,12 +16,12 @@ import FolderTableMobile from './FolderTableMobile';
 import DeleteDialog from '../../components/DeleteDialog';
 import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
-import IndexTableControls from '../../components/IndexTableControls';
+import TableControls from '../../components/Table/TableControls';
 import useRoute from '../../hooks/useRoute';
-import Filters from '../../components/Filters';
+import Filters from '../../components/Filters/Filters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterDrawer from '../../components/FilterDrawer';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import { createDocumentFilterDescriptors } from './DocumentFilterDescriptors';
 
 const Index = ({ folders, documents, ensembles = [], userEnsemblesCount, can, setSidebarOpen }) => {
@@ -85,7 +85,7 @@ const Index = ({ folders, documents, ensembles = [], userEnsemblesCount, can, se
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

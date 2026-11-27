@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, { TableMobileLink } from '../../../components/TableMobile';
+import TableMobile, { TableMobileLink } from '../../../components/Table/TableMobile';
 import BillingTag from './BillingTag';
 import Pagination from '../../../components/Pagination';
  

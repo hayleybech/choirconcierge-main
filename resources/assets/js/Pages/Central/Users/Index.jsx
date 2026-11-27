@@ -5,14 +5,14 @@ import PageTopBar, { PageTopNavigation } from '../../../components/PageTopBar';
 import Icon from '../../../components/Icon';
 import AppHead from '../../../components/AppHead';
 import IndexContainer from '../../../components/IndexContainer';
-import IndexTableControls from '../../../components/IndexTableControls';
+import TableControls from '../../../components/Table/TableControls';
 import CentralLayout from '../../../Layouts/CentralLayout';
 import UserTableDesktop from './UserTableDesktop';
 import UserTableMobile from './UserTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import { createUserFilterDescriptors } from './UserFilterDescriptors';
 
 const Index = ({ users, pagination, setSidebarOpen }) => {
@@ -45,7 +45,7 @@ const Index = ({ users, pagination, setSidebarOpen }) => {
 			<IndexContainer
 				showFilters={showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

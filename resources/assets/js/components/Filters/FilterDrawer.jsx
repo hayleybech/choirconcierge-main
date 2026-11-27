@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
-import Icon from './Icon';
-import ButtonV2 from './inputs/ButtonV2';
+import Icon from '../Icon';
+import ButtonV2 from '../inputs/ButtonV2';
 
 export const FilterDrawerActionsContext = React.createContext(null);
 

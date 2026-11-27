@@ -1,6 +1,6 @@
 import React from "react";
-import classNames from "../classNames";
-import Icon from "./Icon";
+import classNames from "../../classNames";
+import Icon from "../Icon";
  
 const TableHeadingSort = ({ form: { data, setData }, sort, children, onClick, indicator }) => {
     const isActive = data.sort === sort || (Array.isArray(sort) && sort.includes(data.sort));

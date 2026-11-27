@@ -1,11 +1,11 @@
 import React from 'react';
 import {Link} from "@inertiajs/react";
-import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading, TableSelectAll, TableCellSelect, TItemRow} from "../../components/Table/Table";
 import DateTag from "../../components/DateTag";
 import useRoute from "../../hooks/useRoute";
 import Pagination from '../../components/Pagination';
 import EnsembleBadges from "../../components/EnsembleBadges";
-import TableHeadingSort from '../../components/TableHeadingSort';
+import TableHeadingSort from '../../components/Table/TableHeadingSort';
  
 const RiserStackTableDesktop = ({ stacks, userEnsemblesCount, bulkEdit, sortFilterForm }) => {
     const { route } = useRoute();

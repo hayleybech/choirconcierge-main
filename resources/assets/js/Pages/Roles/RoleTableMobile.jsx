@@ -1,5 +1,5 @@
 import React from 'react';
-import TableMobile, {TableMobileHeader, TableMobileItem} from "../../components/TableMobile";
+import TableMobile, {TableMobileHeader, TableMobileItem} from "../../components/Table/TableMobile";
 import useRoute from "../../hooks/useRoute";
 import { plural } from '../../util';
  

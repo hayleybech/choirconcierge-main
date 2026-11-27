@@ -2,7 +2,7 @@ import { useForm } from '@inertiajs/react';
 import collect from 'collect.js';
 import useRoute from './useRoute';
 import * as qs from 'qs';
-import { getDefaultFilterData, getDefaultFilterValue, isMultipleFilter } from '../components/filterDescriptorUtils';
+import { getDefaultFilterData, getDefaultFilterValue, isMultipleFilter } from '../components/Filters/utils';
 
 const useSortFilterForm = (routeParams, filters, sorts, transforms = () => {}) => {
 	const { route } = useRoute();

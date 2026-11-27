@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table";
+import Table, {TableCell, THead, TBody, TableHeading} from "../../components/Table/Table";
 import DocumentForm from "./DocumentForm";
 import RenameDocumentDialog from "./RenameDocumentDialog";
 import EmptyState from "../../components/EmptyState";
-import TableHeadingSort from "../../components/TableHeadingSort";
+import TableHeadingSort from "../../components/Table/TableHeadingSort";
 import {DocumentRowDesktop, FolderRowDesktop} from "./FolderTableRows";
  
 const FolderTableDesktop = ({ folders, documents, isFiltered, setDeletingFolder, setDeletingDocument, permissions, userEnsemblesCount, sortFilterForm }) => {

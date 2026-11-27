@@ -3,10 +3,10 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import IndexTableControls from './IndexTableControls';
+import TableControls from './TableControls';
 import TableHeadingSort from './TableHeadingSort';
-import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
-import { createSingerAttendanceFilterDescriptors } from '../Pages/Singers/Attendance/SingerAttendanceFilterDescriptors';
+import { createRiserStackFilterDescriptors } from '../RiserStack/RiserStackFilterDescriptors';
+import { createSingerAttendanceFilterDescriptors } from '../../Pages/Singers/Attendance/SingerAttendanceFilterDescriptors';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
 
@@ -20,7 +20,7 @@ vi.mock('popper.js', () => ({
 	default: vi.fn(() => ({ destroy: vi.fn() })),
 }));
 
-vi.mock('./inputs/DateRangeCalendarInput', async () => {
+vi.mock('../inputs/DateRangeCalendarInput', async () => {
 	const React = await vi.importActual('react');
 
 	return {
@@ -197,7 +197,7 @@ const renderControls = ({
 
 		return (
 			<>
-				<IndexTableControls
+				<TableControls
 					filters={controlFilters}
 					sorts={controlSorts}
 					form={form}
@@ -252,7 +252,7 @@ it('keeps a desktop filter pill submission when the page rerenders during the de
 
 		return (
 			<>
-				<IndexTableControls filters={filters.map(filter => ({ ...filter }))} form={form} />
+				<TableControls filters={filters.map(filter => ({ ...filter }))} form={form} />
 				<button type="button" onClick={() => forceRerender(previousValue => previousValue + 1)}>
 					Rerender page
 				</button>

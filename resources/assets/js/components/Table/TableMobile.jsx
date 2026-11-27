@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import Icon from './Icon';
-import CheckboxInput from './inputs/CheckboxInput';
-import useLongPress from '../hooks/useLongPress';
-import { plural } from '../util';
+import Icon from '../Icon';
+import CheckboxInput from '../inputs/CheckboxInput';
+import useLongPress from '../../hooks/useLongPress';
+import { plural } from '../../util';
  
 export const TableMobileItem = ({ url, children }) => (
 	<TableMobileListItem>

@@ -15,9 +15,9 @@ import SingerTableMobile from './SingerTableMobile';
 import AppHead from '../../components/AppHead';
 import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
-import Filters from '../../components/Filters';
+import Filters from '../../components/Filters/Filters';
 import useFilterPane from '../../hooks/useFilterPane';
-import FilterDrawer from '../../components/FilterDrawer';
+import FilterDrawer from '../../components/Filters/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import ImportSingersDialog from '../../components/ImportSingersDialog';
@@ -32,10 +32,10 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Icon from '../../components/Icon';
 import Button from '../../components/inputs/ButtonV2';
 import RenewFeesDialog from './components/RenewFeesDialog';
-import IndexTableControls from '../../components/IndexTableControls';
-import { areFilterValuesEqual } from '../../lib/filterValues';
+import TableControls from '../../components/Table/TableControls';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import { createSingerIndexFilterDescriptors } from '../../components/SingerFilterDescriptors';
+import { areFilterValuesEqual } from '../../components/Filters/utils';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -248,7 +248,7 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 			<IndexContainer
 				showFilters={!isDesktop && showFilters}
 				tableControls={
-					<IndexTableControls
+					<TableControls
 						filters={filters}
 						sorts={sorts}
 						form={sortFilterForm}

@@ -3,8 +3,8 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import FilterDrawer from '../../../components/FilterDrawer';
-import Filters from '../../../components/Filters';
+import FilterDrawer from '../../../components/Filters/FilterDrawer';
+import Filters from '../../../components/Filters/Filters';
 import { createSingerAttendanceFilterDescriptors } from './SingerAttendanceFilterDescriptors';
 
 const mocks = vi.hoisted(() => ({ setData: vi.fn(), submit: vi.fn(), closeDrawer: vi.fn(), submittedData: null }));
