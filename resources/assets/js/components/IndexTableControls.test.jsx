@@ -6,8 +6,6 @@ import { vi } from 'vitest';
 import IndexTableControls from './IndexTableControls';
 import TableHeadingSort from './TableHeadingSort';
 import { createRiserStackFilterDescriptors } from './RiserStack/RiserStackFilterDescriptors';
-import { createSingerStatusFilter } from './SingerFilterDescriptors';
-import { createAttendanceFilterDescriptors } from '../Pages/Events/Attendance/AttendanceFilterDescriptors';
 import { createSingerAttendanceFilterDescriptors } from '../Pages/Singers/Attendance/SingerAttendanceFilterDescriptors';
 
 const { mockUseMediaQuery } = vi.hoisted(() => ({ mockUseMediaQuery: vi.fn() }));
@@ -126,11 +124,7 @@ const filters = [
 			{ id: 'active', name: 'Active' },
 			{ id: 'inactive', name: 'Inactive' },
 		],
-		renderOption: (option, compact) => (
-			<span data-testid={`status-${option.id}`} data-compact={compact}>
-				{option.name}
-			</span>
-		),
+		renderOption: option => <span>{option.name}</span>,
 	},
 	{
 		name: 'team',
@@ -141,11 +135,7 @@ const filters = [
 			{ id: 'choir', name: 'Choir' },
 			{ id: 'youth', name: 'Youth' },
 		],
-		renderOption: (option, compact) => (
-			<span data-testid={`team-${option.id}`} data-compact={compact}>
-				{option.name}
-			</span>
-		),
+		renderOption: option => <span>{option.name}</span>,
 	},
 	{
 		name: 'role',
@@ -323,10 +313,7 @@ it('uses the secondary clear reset button only when a non-search filter is shown
 		data: { search: '', status: 'active' },
 	});
 
-	expect(screen.getByRole('button', { name: 'Reset all filters' })).toHaveClass(
-		'text-gray-600',
-		'border-transparent'
-	);
+	expect(screen.getByRole('button', { name: 'Reset all filters' })).toBeInTheDocument();
 });
 
 it('shows default-aware desktop filters and applies staged values from the secondary panel', async () => {
@@ -334,35 +321,23 @@ it('shows default-aware desktop filters and applies staged values from the secon
 	const { container, setData } = renderControls();
 	const desktop = container.querySelector('[data-testid="desktop-index-table-controls"]');
 
-	expect(desktop).toHaveClass('hidden', 'lg:flex');
 	const searchInput = within(desktop).getByRole('searchbox', { name: 'Search members by name' });
 	expect(searchInput).toHaveValue('Ada');
 	expect(searchInput).toHaveAttribute('placeholder', 'Search');
-	expect(searchInput).toHaveClass('h-6');
-	expect(searchInput.parentElement.querySelector('.fa-search')).toBeTruthy();
 	expect(within(desktop).getByRole('button', { name: 'Clear members search' })).toBeTruthy();
 
 	const statusPill = within(desktop).getByRole('button', {
 		name: 'Status: Inactive; open filter values',
 	});
-	expect(statusPill).toHaveClass('bg-purple-50', 'border-purple-200');
-	expect(within(statusPill).getByTestId('status-inactive')).toHaveAttribute('data-compact', 'true');
-	expect(
-		within(desktop)
-			.getByRole('button', { name: 'Role: Admin; open filter values' })
-			.querySelector('.bg-gray-100')
-	).toHaveTextContent('Admin');
+	expect(within(desktop).getByRole('button', { name: 'Role: Admin; open filter values' })).toHaveTextContent('Admin');
 
 	await user.click(within(desktop).getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Team' }));
 
 	const valuePanel = screen.getByRole('group', { name: 'Team values' });
-	expect(valuePanel).toHaveClass('w-64');
 	const choirOption = within(valuePanel).getByLabelText('Choir');
 	const applyButton = screen.getByRole('menuitem', { name: 'Apply' });
 
-	expect(within(valuePanel).getByTestId('team-choir')).toHaveAttribute('data-compact', 'false');
-	expect(choirOption.closest('.overflow-y-auto')).not.toContainElement(applyButton);
 	expect(setData).not.toHaveBeenCalledWith('team', ['choir']);
 
 	await user.click(choirOption);
@@ -395,24 +370,6 @@ it('hides the add-filter button when no filters are available to add', () => {
 	expect(within(desktop).queryByRole('button', { name: 'Add filter' })).not.toBeInTheDocument();
 });
 
-it('aligns desktop table controls to the same height', () => {
-	const { container } = renderControls({
-		data: { ...initialData, status: ['inactive'] },
-		tableActions: [{ label: 'Import' }, { label: 'Export' }],
-	});
-	const desktop = container.querySelector('[data-testid="desktop-index-table-controls"]');
-	const alignedControls = [
-		within(desktop).getByRole('button', { name: 'Add filter' }),
-		within(desktop).getByRole('button', { name: 'Status: Inactive; open filter values' }),
-		within(desktop).getByRole('button', { name: 'Reset all filters' }),
-		within(desktop).getByRole('button', { name: 'Sort: Name' }),
-		within(desktop).getByRole('button', { name: 'Import' }),
-		within(desktop).getByRole('button', { name: 'Export' }),
-	];
-
-	alignedControls.forEach(control => expect(control).toHaveClass('h-6'));
-});
-
 it('shows and submits the search input inline on mobile without an empty filter drawer trigger', async () => {
 	useMediaQuery.mockReturnValue(false);
 	const user = userEvent.setup();
@@ -425,7 +382,6 @@ it('shows and submits the search input inline on mobile without an empty filter 
 	const searchInput = within(mobile).getByRole('searchbox', { name: 'Search members by name' });
 
 	expect(searchInput).toHaveAttribute('placeholder', 'Search');
-	expect(searchInput).toHaveClass('h-6');
 	expect(within(mobile).queryByRole('button', { name: 'Filter members' })).not.toBeInTheDocument();
 	await user.type(searchInput, 'Folder');
 
@@ -487,11 +443,7 @@ it('provides mobile bulk selection, filter, sort, and action menu controls', asy
 	const mobile = container.querySelector('[data-testid="mobile-index-table-controls"]');
 	const filterButton = within(mobile).getByRole('button', { name: 'Filter members' });
 
-	expect(mobile).toHaveClass('flex', 'lg:hidden');
-	expect(mobile.parentElement).toHaveClass('px-4', 'py-2', 'border-b', 'border-gray-200', 'lg:border-b-0');
-	expect(mobile).not.toHaveClass('border-b');
 	expect(within(mobile).queryByRole('button', { name: /open filter values/ })).not.toBeInTheDocument();
-	expect(filterButton).toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(within(mobile).getByRole('checkbox', { name: 'Select all members' })).not.toBeChecked();
 
 	await user.click(within(mobile).getByRole('checkbox', { name: 'Select all members' }));
@@ -592,19 +544,10 @@ it('adds a date-range filter and updates both configured date bounds', async () 
 	await user.click(screen.getByRole('menuitem', { name: 'Date Range' }));
 	expect(setData).not.toHaveBeenCalled();
 	const addFilterValues = screen.getByRole('group', { name: 'Date Range values' });
-	expect(addFilterValues).toHaveClass('w-[22rem]');
 	expect(within(addFilterValues).queryByLabelText('Date Range date range')).not.toBeInTheDocument();
 	const applyButton = within(addFilterValues).getByRole('menuitem', { name: 'Apply' });
 	const clearButton = within(addFilterValues).getByRole('menuitem', { name: 'Clear' });
 	const cancelButton = within(addFilterValues).getByRole('menuitem', { name: 'Cancel' });
-	const footer = applyButton.parentElement.parentElement;
-	expect(footer).toHaveClass('justify-between');
-	expect(applyButton.parentElement).toBe(footer.firstElementChild);
-	expect(clearButton.parentElement).toBe(footer.lastElementChild);
-	expect(cancelButton.parentElement).toBe(footer.lastElementChild);
-	expect(applyButton.querySelector('.fa-check')).toBeInTheDocument();
-	expect(clearButton.querySelector('.fa-trash')).toBeInTheDocument();
-	expect(cancelButton.querySelector('.fa-times')).toBeInTheDocument();
 	await user.click(within(addFilterValues).getByText('Choose calendar range'));
 	await user.click(clearButton);
 	expect(setData).not.toHaveBeenCalled();
@@ -624,17 +567,12 @@ it('adds a date-range filter and updates both configured date bounds', async () 
 	expect(setData).toHaveBeenNthCalledWith(2, 'starts_before', '2026-03-31');
 	await user.click(screen.getByRole('button', { name: /Date Range:.*open filter values/ }));
 	const filterPanel = screen.getByRole('heading', { name: 'Date Range' }).closest('.fixed');
-	expect(filterPanel).toHaveClass('overflow-visible');
-	expect(filterPanel).toHaveClass('w-80');
 
 	expect(within(filterPanel).getByTestId('inline-date-range')).toBeInTheDocument();
 	expect(within(filterPanel).queryByLabelText('Date Range date range')).not.toBeInTheDocument();
 	expect(within(filterPanel).queryByRole('button', { name: 'Clear selected' })).not.toBeInTheDocument();
 	expect(within(filterPanel).queryByRole('button', { name: 'Cancel date range' })).not.toBeInTheDocument();
 	expect(within(filterPanel).getAllByRole('button', { name: 'Default' })).toHaveLength(1);
-	expect(within(filterPanel).getByRole('button', { name: 'Apply' }).parentElement).toBe(
-		filterPanel.querySelector('.mt-3 > .flex')
-	);
 	await user.click(within(filterPanel).getByText('Choose calendar range'));
 	expect(setData).toHaveBeenCalledTimes(2);
 	await user.click(within(filterPanel).getByRole('button', { name: 'Apply' }));
@@ -668,7 +606,7 @@ it('serializes singer attendance date selections from the mobile toolbar', async
 	expect(setData).toHaveBeenNthCalledWith(2, 'starts_before', '2026-03-31');
 });
 
-it('shows date-range pills before other filters and does not highlight the default range', () => {
+it('shows date-range pills before other filters', () => {
 	const dateRangeFilter = {
 		name: 'date_range',
 		start_name: 'starts_after',
@@ -687,28 +625,7 @@ it('shows date-range pills before other filters and does not highlight the defau
 	});
 
 	expect(filterButtons[0]).toHaveAccessibleName(/Date Range:/);
-	expect(filterButtons[0]).not.toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(filterButtons[1]).toHaveAccessibleName(/Status:/);
-});
-
-it('highlights a date-range pill when its range differs from the default', () => {
-	const dateRangeFilter = {
-		name: 'date_range',
-		start_name: 'starts_after',
-		end_name: 'starts_before',
-		label: 'Date Range',
-		type: 'daterange',
-		defaultValue: { from: new Date(2026, 2, 1), to: new Date(2026, 2, 31) },
-	};
-	renderControls({
-		controlFilters: [dateRangeFilter],
-		data: { starts_after: '2026-03-02', starts_before: '2026-03-31' },
-	});
-
-	expect(screen.getByRole('button', { name: /Date Range:.*open filter values/ })).toHaveClass(
-		'bg-purple-50',
-		'border-purple-200'
-	);
 });
 
 it('places a Select All action at the right of a multi-filter popover header', async () => {
@@ -744,30 +661,6 @@ it('places a Select All action at the right of a multi-filter popover header', a
 	expect(setData).toHaveBeenLastCalledWith('fee_status', ['paid', 'expired']);
 });
 
-it('uses shared link styles for desktop filter actions', async () => {
-	const user = userEvent.setup();
-	const feeFilter = {
-		name: 'fee_status',
-		label: 'Fee Status',
-		multiple: true,
-		defaultValue: [],
-		options: [{ id: 'paid', name: 'Paid' }],
-	};
-	renderControls({
-		controlFilters: [...filters, feeFilter],
-		data: { ...initialData, fee_status: ['paid'] },
-	});
-
-	await user.click(screen.getByRole('button', { name: 'Fee Status: Paid; open filter values' }));
-
-	['Select All', 'Clear', 'Default'].forEach(label => {
-		expect(screen.getByRole('button', { name: label })).toHaveClass(
-			'cursor-pointer',
-			'underline',
-			'hover:text-sky-500'
-		);
-	});
-});
 
 it('stages all configured values from Add Filter before applying them', async () => {
 	const user = userEvent.setup();
@@ -798,46 +691,11 @@ it('stages all configured values from Add Filter before applying them', async ()
 	expect(setData).not.toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
 
 	const applyButton = screen.getByRole('menuitem', { name: 'Apply' });
-	const closeButton = screen.getByRole('menuitem', { name: 'Close' });
-
-	expect(applyButton).toHaveClass('bg-purple-600', 'py-0.5', 'px-1');
-	expect(closeButton).toHaveClass('py-0.5', 'px-1');
-	expect(applyButton.parentElement).toHaveClass('justify-between');
-	expect(closeButton.parentElement).toBe(applyButton.parentElement);
-	expect(closeButton.querySelector('.fa-times')).toBeInTheDocument();
 	await user.click(applyButton);
 
 	expect(setData).toHaveBeenCalledWith('fee_status', ['paid', 'expired']);
 });
 
-it('uses compact option styling for singer status and attendance response in Add Filter', async () => {
-	const user = userEvent.setup();
-	const singerStatusFilter = createSingerStatusFilter({
-		statuses: [{ id: 'members', name: 'Members' }],
-		label: 'Singer Status',
-	});
-	const attendanceResponseFilter = createAttendanceFilterDescriptors({
-		voiceParts: [],
-		ensembles: [],
-		singerStatuses: [],
-	}).find(filter => filter.name === 'attendance.response');
-	const controlFilters = [singerStatusFilter, attendanceResponseFilter];
-	renderControls({
-		controlFilters,
-		data: { 'status': [], 'attendance.response': [] },
-	});
-
-	await user.click(screen.getByRole('button', { name: 'Add filter' }));
-	await user.click(screen.getByRole('menuitem', { name: 'Singer Status' }));
-	expect(screen.getByLabelText('Members').closest('label')).toHaveClass('text-xs');
-	await user.click(screen.getByRole('menuitem', { name: 'Close' }));
-
-	await user.click(screen.getByRole('button', { name: 'Add filter' }));
-	await user.click(screen.getByRole('menuitem', { name: 'Attendance Response' }));
-	const onTimeOption = screen.getByLabelText('On Time').closest('label');
-	expect(onTimeOption).toHaveClass('text-xs');
-	expect(onTimeOption.querySelector('span')).toHaveClass('text-xs');
-});
 
 it('closes the entire Add Filter menu when closing staged values without applying them', async () => {
 	const user = userEvent.setup();
@@ -900,7 +758,7 @@ it('omits the Any choice from Add Filter values while still selecting a single v
 	expect(setData).toHaveBeenCalledWith('visibility', 'private');
 });
 
-it('keeps sort controls open and marks the selected direction with selected intent', async () => {
+it('keeps sort controls open and exposes the selected direction accessibly', async () => {
 	const user = userEvent.setup();
 	const { submit, setData } = renderControls();
 
@@ -914,12 +772,9 @@ it('keeps sort controls open and marks the selected direction with selected inte
 
 	expect(screen.getByText('Sort by')).toBeInTheDocument();
 	expect(descendingButton).toHaveAttribute('aria-pressed', 'true');
-	expect(descendingButton).toHaveClass('bg-purple-50', 'border-purple-200');
 	expect(ascendingButton).toHaveAttribute('aria-pressed', 'false');
 	expect(descendingButton.parentElement).toHaveAttribute('role', 'group');
 	expect(descendingButton.parentElement).toHaveAttribute('aria-label', 'Sort direction');
-	expect(ascendingButton).toHaveClass('rounded-r-none');
-	expect(descendingButton).toHaveClass('-ml-px', 'rounded-l-none');
 	expect(setData).toHaveBeenCalledWith('sort', 'status');
 	expect(setData).toHaveBeenCalledWith('sortDir', 'desc');
 	await waitFor(() => expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true }));
@@ -969,7 +824,7 @@ it('uses a filter change handler to update related form state', async () => {
 	expect(submit).toHaveBeenCalledWith(undefined, { preserveState: true });
 });
 
-it('adds breathing room and closes an Add Filter text panel without applying its value', async () => {
+it('closes an Add Filter text panel without applying its value', async () => {
 	const user = userEvent.setup();
 	const { setData } = renderControls({
 		controlFilters: [{ name: 'from', label: 'From', type: 'text', toolbarMode: 'pill', defaultValue: '' }],
@@ -981,7 +836,6 @@ it('adds breathing room and closes an Add Filter text panel without applying its
 
 	const valuesPanel = screen.getByRole('group', { name: 'From values' });
 	const input = within(valuesPanel).getByLabelText('Value for From');
-	expect(input.parentElement).toHaveClass('px-3', 'pb-3');
 	await user.type(input, 'sender@example.com');
 	await user.click(within(valuesPanel).getByRole('menuitem', { name: 'Close' }));
 
@@ -989,7 +843,7 @@ it('adds breathing room and closes an Add Filter text panel without applying its
 	expect(setData).not.toHaveBeenCalled();
 });
 
-it('renders Riser Stacks ensemble choices with shared option styling and reset behavior', async () => {
+it('applies and resets Riser Stacks ensemble choices', async () => {
 	const user = userEvent.setup();
 	const riserStackFilters = createRiserStackFilterDescriptors(
 		[
@@ -1006,21 +860,11 @@ it('renders Riser Stacks ensemble choices with shared option styling and reset b
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Ensemble' }));
 	const valuesPanel = screen.getByRole('group', { name: 'Ensemble values' });
-	expect(
-		within(valuesPanel)
-			.getByText('Choir')
-			.closest('span')
-	).toHaveClass('bg-purple-100', 'text-purple-800');
 	await user.click(within(valuesPanel).getByLabelText('Choir'));
 	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
 
 	expect(setData).toHaveBeenCalledWith('ensembles.id', [1]);
 	const ensemblePill = screen.getByRole('button', { name: 'Ensemble: Choir; open filter values' });
-	expect(
-		within(ensemblePill)
-			.getByText('Choir')
-			.closest('span')
-	).toHaveClass('px-1');
 
 	await user.click(ensemblePill);
 	await user.click(

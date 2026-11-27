@@ -23,30 +23,10 @@ describe('IndexContainer', () => {
 			/>
 		);
 
-		expect(screen.getByRole('dialog').className).toContain('z-40');
+		expect(screen.getByRole('dialog')).toBeTruthy();
 		expect(screen.getByText('Filter controls')).toBeTruthy();
 		expect(screen.getByText('Mobile table')).toBeTruthy();
 		expect(screen.queryByText('Cancel')).toBeNull();
-	});
-
-	it('lets mobile table content grow with the page so it can scroll', () => {
-		render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
-
-		const mobileTableContainer = screen.getByText('Mobile table').parentElement;
-
-		expect(mobileTableContainer.className).not.toContain('overflow-hidden');
-		expect(mobileTableContainer.className).toContain('flex-none');
-	});
-
-	it('lets the sticky mobile controls span the full table height', () => {
-		const { container } = render(<IndexContainer tableMobile={<div>Mobile table</div>} />);
-		const indexContainer = container.firstElementChild;
-		const tableLayout = indexContainer.firstElementChild;
-
-		expect(indexContainer.className).toContain('flex-none');
-		expect(indexContainer.className).toContain('lg:flex-1');
-		expect(tableLayout.className).toContain('flex-none');
-		expect(tableLayout.className).toContain('lg:flex-1');
 	});
 
 	it('does not render the filter pane on desktop', () => {
@@ -65,14 +45,6 @@ describe('IndexContainer', () => {
 		expect(screen.getByText('Desktop table')).toBeTruthy();
 	});
 
-	it('keeps the mobile table controls sticky below the mobile top bar', () => {
-		mockUseMediaQuery.mockReturnValue(false);
-
-		render(<IndexContainer tableControls={<div data-testid="table-controls">Table controls</div>} />);
-
-		expect(screen.getByTestId('table-controls').parentElement.className).toContain('sticky');
-		expect(screen.getByTestId('table-controls').parentElement.className).toContain('top-11.75');
-	});
 
 	it('keeps table controls outside the filter and table layout row', () => {
 		mockUseMediaQuery.mockReturnValue(true);

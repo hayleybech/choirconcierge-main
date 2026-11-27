@@ -15,10 +15,9 @@ describe('MailStatusTag announcement statuses', () => {
 		expect(mailIcons[status]).toBeDefined();
 	});
 
-	it('renders a gray status label without badge styling', () => {
-		const { container } = render(React.createElement(MailStatusTag, { event: { status: 'announcement-sent' } }));
+	it('renders an announcement status label', () => {
+		render(React.createElement(MailStatusTag, { event: { status: 'announcement-sent' } }));
 
-		expect(screen.getByText('Announcement sent')).toHaveClass('text-gray-500');
-		expect(container.querySelector('.rounded-full')).toBeNull();
+		expect(screen.getByText('Announcement sent')).toBeInTheDocument();
 	});
 });

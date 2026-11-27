@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import { PageActionsMenu, PageTopBarTitle, PageTopNavigation, default as PageTopBar } from './PageTopBar';
+import { PageActionsMenu, PageTopNavigation, default as PageTopBar } from './PageTopBar';
 
 vi.mock('react-responsive', () => ({
 	useMediaQuery: vi.fn(),
@@ -81,15 +81,5 @@ describe('PageTopNavigation', () => {
 		expect(screen.getByRole('heading', { name: 'Jane Doe' })).toBeTruthy();
 		expect(screen.queryByRole('link', { name: 'Jane Doe' })).toBeNull();
 		expect(screen.getByRole('link', { name: 'Singers' })).toBeTruthy();
-	});
-
-	it('allows long titles to shrink within the top bar', () => {
-		render(<PageTopBarTitle>A very long page title</PageTopBarTitle>);
-
-		const title = screen.getByRole('heading', { name: 'A very long page title' });
-
-		expect(title.classList.contains('min-w-0')).toBe(true);
-		expect(title.classList.contains('flex-1')).toBe(true);
-		expect(title.classList.contains('truncate')).toBe(true);
 	});
 });

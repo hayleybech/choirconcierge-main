@@ -19,25 +19,17 @@ const ensembleFilter = {
 	showDefaultMarker: true,
 };
 
-it('renders styled multi-choice options and spacious actions in the drawer variant', () => {
+it('renders multi-choice options and applies drawer filter actions', () => {
 	const onChange = vi.fn();
-	const { container } = render(
+	render(
 		<FilterFieldRenderer filter={ensembleFilter} value={[1]} onChange={onChange} variant="drawer" />
 	);
 
 	expect(screen.getByText('Ensemble')).toBeInTheDocument();
 	expect(screen.getByText('1 selected')).toBeInTheDocument();
 	expect(screen.queryByText('Modified')).not.toBeInTheDocument();
-	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(0);
-	expect(screen.getByTitle('Filter differs from default')).toHaveClass(
-		'h-1.5',
-		'w-1.5',
-		'rounded-full',
-		'bg-purple-700'
-	);
+	expect(screen.getByTitle('Filter differs from default')).toBeInTheDocument();
 	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
-	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-gray-100');
-	expect(container.querySelector('.grid-cols-2')).toBeInTheDocument();
 
 	fireEvent.click(screen.getByLabelText('Youth'));
 
@@ -60,26 +52,18 @@ it('renders the same option adapter in the compact toolbar option panel', () => 
 	);
 
 	const optionPanel = container.querySelector('[data-filter-field-options]');
-	expect(optionPanel).toHaveClass('max-h-60');
-	expect(
-		within(optionPanel)
-			.getByText('Choir')
-			.closest('span')
-	).toHaveClass('bg-gray-100');
-
 	fireEvent.click(within(optionPanel).getByLabelText('Choir'));
 
 	expect(onChange).toHaveBeenCalledWith([1]);
 });
 
-it('marks a modified drawer filter on its heading without marking individual options', () => {
+it('marks a modified drawer filter without marking individual option values', () => {
 	const filter = { ...ensembleFilter, defaultValue: [1] };
-	const { container } = render(
+	render(
 		<FilterFieldRenderer filter={filter} value={[]} onChange={vi.fn()} variant="drawer" />
 	);
 
-	expect(container.querySelectorAll('.fa-asterisk')).toHaveLength(0);
-	expect(screen.getByTitle('Filter differs from default')).toHaveClass('bg-purple-700');
+	expect(screen.getByTitle('Filter differs from default')).toBeInTheDocument();
 	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
 });
 
@@ -91,7 +75,7 @@ it('does not pass modified state to custom drawer option displays', () => {
 
 	expect(renderOption).toHaveBeenCalledWith(expect.objectContaining({ id: 1 }), false, false);
 	expect(screen.getByText('Choir')).toBeInTheDocument();
-	expect(screen.getByTitle('Filter differs from default')).toHaveClass('bg-purple-700');
+	expect(screen.getByTitle('Filter differs from default')).toBeInTheDocument();
 	expect(screen.queryByTitle('Filter value differs from default')).not.toBeInTheDocument();
 });
 

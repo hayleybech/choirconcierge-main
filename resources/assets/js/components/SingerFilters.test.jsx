@@ -72,15 +72,10 @@ it('stages filter edits until Apply and marks changed fields and values', async 
 	await user.click(screen.getByLabelText(/Prospects/));
 
 	expect(submit).not.toHaveBeenCalled();
-	expect(statusField.querySelector('legend')).toHaveClass('text-purple-700');
 	expect(statusField.querySelector('legend')).toHaveTextContent('Status');
 	expect(within(statusField).getAllByTitle('Filter differs from default').length).toBeGreaterThan(0);
-	expect(screen.getByLabelText(/Prospects/).labels[0]).not.toHaveClass('text-purple-700');
 	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toBeEnabled();
 	expect(within(statusField).getByRole('button', { name: 'None' })).toBeEnabled();
-	expect(within(statusField).getByRole('button', { name: 'Reset Status filter' })).toHaveClass(
-		'disabled:text-gray-400'
-	);
 
 	await user.click(within(statusField).getByRole('button', { name: 'None' }));
 	expect(setData).toHaveBeenCalledWith('status', ['']);
@@ -99,45 +94,13 @@ it('keeps the Singer drawer ensemble field directly after voice part', () => {
 	expect(filterLabels).toEqual(['Status', 'Voice Part', 'Ensemble', 'Role', 'Fee Status']);
 });
 
-	it('uses the site styles for filter values and marks changed filter fields', async () => {
+it('marks the fee-status field as changed when a non-default status is selected', async () => {
 	renderSingerFilters();
 	const user = userEvent.setup();
 
-	const memberLabel = screen.getByLabelText('Members').labels[0];
-	expect(memberLabel.querySelector('.fa-circle')).toHaveClass('text-emerald-500');
-	expect([...memberLabel.querySelectorAll('span')].find(span => span.classList.contains('space-x-0.5'))).toBeTruthy();
-
-	const voicePartLabel = screen.getByLabelText('Soprano').labels[0];
-	const voicePartTag = Array.from(voicePartLabel.querySelectorAll('span')).find(span =>
-		span.classList.contains('bg-rose-500/75')
-	);
-	expect(voicePartTag).toBeTruthy();
-	expect(voicePartTag.querySelector('svg')).toHaveClass('text-white');
-
-	const ensembleLabel = screen.getByLabelText('Adult').labels[0];
-	expect(ensembleLabel.querySelector('.bg-purple-100')).toBeTruthy();
-
-	const roleLabel = screen.getByLabelText('Admin').labels[0];
-	expect(roleLabel.querySelector('.bg-gray-100')).toBeTruthy();
-
-	const paidOption = screen.getByRole('checkbox', { name: /Paid/ });
-	expect(paidOption.labels[0].querySelector('.fa-check-circle')).toHaveClass('text-green-500');
-
-	await user.click(screen.getByLabelText(/Prospects/));
-	const prospectsLabel = screen.getByLabelText(/Prospects/).labels[0];
-	const statusField = screen.getByText('Status').closest('fieldset');
-	expect(within(statusField).getByTitle('Filter differs from default')).toBeInTheDocument();
-	expect(prospectsLabel.querySelector('.fa-circle')).toHaveClass('text-amber-500');
-	expect(prospectsLabel).not.toHaveClass('text-purple-700');
-
-	await user.click(screen.getByLabelText(/Members/));
-	expect(statusField.querySelector('legend')).toHaveClass('text-purple-700');
-
 	await user.click(screen.getByRole('checkbox', { name: /Expired/ }));
-	const expiredOption = screen.getByRole('checkbox', { name: /Expired/ });
 	const feeStatusField = screen.getByText('Fee Status').closest('fieldset');
 	expect(within(feeStatusField).getByTitle('Filter differs from default')).toBeInTheDocument();
-	expect(expiredOption.labels[0].querySelector('.fa-times-circle')).toHaveClass('text-red-500');
 });
 
 it('supports selecting multiple fee statuses and selecting all of them', async () => {
@@ -168,7 +131,7 @@ it('shows the fee status selection count next to its filter name', async () => {
 	renderSingerFilters();
 	const user = userEvent.setup();
 	const feeStatusField = screen.getByText('Fee Status').closest('fieldset');
-	const selectedCount = feeStatusField.querySelector('.text-xs');
+	const selectedCount = within(feeStatusField).getByText('0 selected');
 
 	expect(selectedCount).toHaveTextContent('0 selected');
 	await user.click(within(feeStatusField).getByRole('checkbox', { name: /Paid/ }));

@@ -14,10 +14,10 @@ beforeEach(() => {
 	useMediaQuery.mockReturnValue(false);
 });
 
-it('keeps an Apply action visible at the bottom of a scrollable filter pane', () => {
+it('applies filters and closes the drawer', () => {
 	const applyFilters = vi.fn();
 	const closeDrawer = vi.fn();
-	const { container } = render(
+	render(
 		<FilterDrawer closeFn={closeDrawer} onApply={applyFilters}>
 			<div>Filter fields</div>
 		</FilterDrawer>
@@ -25,10 +25,6 @@ it('keeps an Apply action visible at the bottom of a scrollable filter pane', ()
 
 	const applyButton = screen.getByRole('button', { name: 'Apply' });
 
-	expect(applyButton.closest('.sticky')).toHaveClass('sticky', 'bottom-0');
-	expect(applyButton).toHaveClass('flex-1');
-	expect(applyButton.querySelector('.fa-check')).toBeInTheDocument();
-	expect(container.querySelector('.overflow-y-auto')).toContainElement(screen.getByText('Filter fields'));
 	fireEvent.click(applyButton);
 
 	expect(applyFilters).toHaveBeenCalledOnce();
@@ -47,8 +43,6 @@ it('keeps an Apply action visible at the bottom of a scrollable filter pane', ()
 
 	const clearAllButton = screen.getByRole('button', { name: 'Reset to Default' });
 
-	expect(clearAllButton).toHaveClass('flex-1');
-	expect(clearAllButton.querySelector('.fa-undo')).toBeInTheDocument();
 	fireEvent.click(clearAllButton);
 
 	expect(clearAllFilters).toHaveBeenCalledOnce();

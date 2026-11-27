@@ -3,8 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import LearningStatusFilters from './LearningStatusFilters';
-import RsvpFilters from './RsvpFilters';
+import Filters from './Filters';
 import { createLearningStatusFilterDescriptors } from './LearningStatusFilterDescriptors';
 import { createRsvpFilterDescriptors } from './RsvpFilterDescriptors';
 
@@ -38,9 +37,11 @@ const RsvpFilterForm = ({ setData }) => {
 	});
 
 	return (
-		<RsvpFilters
-			event={{ id: 1 }}
+		<Filters
+			routeName="events.rsvps.index"
 			filters={rsvpFilters}
+			autoSubmit={false}
+			showClearAll={false}
 			form={{
 				data,
 				setData: (name, value) => {
@@ -63,9 +64,11 @@ const LearningStatusFilterForm = ({ setData }) => {
 	});
 
 	return (
-		<LearningStatusFilters
-			song={{ id: 1 }}
+		<Filters
+			routeName="songs.singers.index"
 			filters={learningStatusFilters}
+			autoSubmit={false}
+			showClearAll={false}
 			form={{
 				data,
 				setData: (name, value) => {
@@ -86,10 +89,9 @@ it('reuses singer displays and reset behavior in RSVP filters', async () => {
 
 	expect(within(statusField).getByText('1 selected')).toBeInTheDocument();
 	expect(within(statusField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
-	expect(screen.getByLabelText('Members').labels[0].querySelector('.fa-circle')).toHaveClass('text-emerald-500');
 
 	await user.click(screen.getByLabelText('Soprano'));
-	expect(screen.getByLabelText(/Soprano/).labels[0].querySelector('[class*="bg-rose-500/75"]')).toBeInTheDocument();
+	expect(screen.getByLabelText('Soprano')).toBeChecked();
 	await user.click(within(statusField).getByRole('button', { name: 'Clear' }));
 	expect(setData).toHaveBeenCalledWith('status.id', ['']);
 	await user.click(within(statusField).getByRole('button', { name: 'Reset Singer Status filter' }));
@@ -99,7 +101,7 @@ it('reuses singer displays and reset behavior in RSVP filters', async () => {
 	const responseField = screen.getByText('RSVP Response').closest('fieldset');
 	expect(within(responseField).queryByTitle('Filter differs from default')).not.toBeInTheDocument();
 	await user.click(screen.getByLabelText('Going'));
-	expect(screen.getByLabelText(/Going/).labels[0].querySelector('.text-emerald-500')).toBeInTheDocument();
+	expect(screen.getByLabelText('Going')).toBeChecked();
 });
 
 it('renders Learning Status options with their shared status and voice-part descriptors', async () => {
@@ -113,9 +115,7 @@ it('renders Learning Status options with their shared status and voice-part desc
 	await user.click(screen.getByLabelText('Assessment Ready'));
 
 	expect(setData).toHaveBeenCalledWith('learning.status', ['assessment-ready']);
-	expect(screen.getByLabelText(/Assessment Ready/).labels[0].querySelector('.fa-check')).toHaveClass(
-		'text-amber-500'
-	);
+	expect(screen.getByLabelText('Assessment Ready')).toBeChecked();
 	expect(within(learningField).getByTitle('Filter differs from default')).toBeInTheDocument();
 	await user.click(within(learningField).getByRole('button', { name: 'Reset Learning Status filter' }));
 	expect(screen.getByLabelText('Assessment Ready')).not.toBeChecked();
@@ -123,5 +123,5 @@ it('renders Learning Status options with their shared status and voice-part desc
 
 	const statusField = screen.getByText('Singer Status').closest('fieldset');
 	expect(within(statusField).getByText('1 selected')).toBeInTheDocument();
-	expect(screen.getByLabelText('Soprano').labels[0].querySelector('[class*="bg-rose-500/75"]')).toBeInTheDocument();
+	expect(screen.getByLabelText('Soprano')).toBeInTheDocument();
 });

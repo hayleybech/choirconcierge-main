@@ -8,7 +8,7 @@ import { createPollFilterDescriptors } from './PollFilterDescriptors';
 import { createSingerEnsembleFilters } from './SingerFilterDescriptors';
 import { createSongFilterDescriptors } from './Song/SongFilterDescriptors';
 
-it('shares ensemble option styling across filter descriptors and ensemble badges', () => {
+it('uses EnsembleBadge for ensemble filter options', () => {
 	const ensembles = [
 		{ id: 1, name: 'Choir' },
 		{ id: 2, name: 'Youth' },
@@ -45,10 +45,4 @@ it('shares ensemble option styling across filter descriptors and ensemble badges
 	const ensembleBadges = screen.getAllByText('Choir').map(option => option.closest('span'));
 
 	expect(ensembleBadges).toHaveLength(6);
-	ensembleBadges.slice(0, 4).forEach(badge => {
-		expect(badge).toHaveClass('bg-purple-100', 'text-purple-800', 'px-1', 'py-0');
-	});
-	expect(ensembleBadges[4]).toHaveClass('px-2', 'py-0.5');
-	expect(ensembleBadges[4]).toHaveClass('truncate');
-	expect(ensembleBadges[5]).toHaveClass('px-2', 'py-0.5');
 });

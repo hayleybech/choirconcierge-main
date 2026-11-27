@@ -11,26 +11,8 @@ import {
 	PageHeaderTitleRow,
 } from './PageHeader/PageHeader';
 
-it('can hide index page headers on mobile', () => {
-	const { container } = render(
-		<PageHeader hideOnMobile>
-			<PageHeaderTitle>Index title</PageHeaderTitle>
-		</PageHeader>
-	);
-
-	expect(container.firstElementChild.className).toContain('hidden');
-	expect(container.firstElementChild.className).toContain('xl:block');
-	expect(screen.getByRole('heading', { name: 'Index title' })).toBeTruthy();
-});
-
-it('does not offset page titles for baseline alignment', () => {
-	const { container } = render(<PageHeaderTitle>Page title</PageHeaderTitle>);
-
-	expect(container.firstElementChild.className).not.toContain('-mt-2');
-});
-
-it('centers related page links beside the title', () => {
-	const { container } = render(
+it('renders related page links after the title', () => {
+	render(
 		<PageHeaderTitleRow>
 			<PageHeaderTitle>Events</PageHeaderTitle>
 			<PageHeaderLinks>
@@ -43,13 +25,12 @@ it('centers related page links beside the title', () => {
 	const title = screen.getByRole('heading', { name: 'Events' });
 	const link = screen.getByRole('link', { name: 'Event Types' });
 
-	expect(container.firstElementChild.className).toContain('items-center');
 	expect(title.compareDocumentPosition(link) & Node.DOCUMENT_POSITION_FOLLOWING).not.toBe(0);
 });
 
 it('keeps page actions in the title row and places primary actions last', () => {
 	const HeaderAction = ({ intent, children }) => <button data-intent={intent}>{children}</button>;
-	const { container } = render(
+	render(
 		<PageHeader>
 			<PageHeaderContent>
 				<PageHeaderTitleRow>
@@ -71,8 +52,6 @@ it('keeps page actions in the title row and places primary actions last', () => 
 	const actions = addNew.parentElement;
 
 	expect(actions.parentElement).toBe(title.parentElement);
-	expect(actions.className).toContain('xl:ml-auto');
-	expect(actions.className).toContain('flex-row-reverse');
 	expect(Array.from(actions.querySelectorAll('button')).map(button => button.textContent)).toEqual([
 		'Add New',
 		'Export',

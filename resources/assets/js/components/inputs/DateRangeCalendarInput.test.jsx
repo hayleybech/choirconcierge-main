@@ -17,7 +17,7 @@ vi.mock('@headlessui/react', async () => {
 
 	return {
 		Popover: Object.assign(Wrapper, { Button: Wrapper, Panel: Wrapper }),
-		Transition: ({ children }) => React.createElement('div', { 'data-testid': 'transition-wrapper' }, children),
+		Transition: ({ children }) => React.createElement('div', null, children),
 	};
 });
 
@@ -48,7 +48,7 @@ describe('DateRangeCalendarInput', () => {
 		Settings.defaultLocale = originalLocale;
 	});
 
-	it('renders one range calendar, displays the selected date bounds, and renders children', () => {
+	it('renders a range calendar with the selected date bounds and children', () => {
 		render(
 			<DateRangeCalendarInput
 				startDate="2025-01-15"
@@ -65,21 +65,6 @@ describe('DateRangeCalendarInput', () => {
 		expect(screen.getByRole('button', { name: 'Last 7 days' })).toBeTruthy();
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('15 Jan 2025');
 		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).value).toContain('20 Feb 2025');
-		expect(screen.getByRole('textbox', { name: 'Attendance report date range' }).className).toContain('bg-gray-100');
-		const calendarPanel = screen.getByTestId('day-picker').closest('.absolute.left-0');
-		expect(calendarPanel).not.toBeNull();
-		expect(calendarPanel.className).not.toContain('overflow-hidden');
-	});
-
-	it('renders the mobile calendar in a left-aligned popover with a transition', () => {
-		render(<DateRangeCalendarInput mobile updateFn={vi.fn()} />);
-
-		const calendar = screen.getByTestId('day-picker');
-		const calendarPanel = calendar.closest('.absolute.left-0');
-
-		expect(calendar.closest('[data-testid="transition-wrapper"]')).not.toBeNull();
-		expect(calendarPanel).not.toBeNull();
-		expect(calendarPanel.className).toContain('mt-2');
 	});
 
 	it('does not update the applied range until Apply is pressed', () => {

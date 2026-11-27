@@ -164,8 +164,6 @@ it('resets to default values and closes the drawer when Reset to Default is clic
 
 	fireEvent.change(nameFilter, { target: { value: 'Draft name' } });
 	const resetButton = screen.getByRole('button', { name: 'Reset to Default' });
-	expect(resetButton.querySelector('.fa-undo')).toBeInTheDocument();
-	expect(resetButton.parentElement).toHaveClass('justify-between');
 	fireEvent.click(resetButton);
 
 	expect(nameFilter).toHaveValue('');
@@ -174,13 +172,12 @@ it('resets to default values and closes the drawer when Reset to Default is clic
 	expect(mocks.closeDrawer).toHaveBeenCalledOnce();
 });
 
-it('renders styled Riser Stacks fields and stages ensemble selections until Apply', async () => {
+it('renders Riser Stacks filter fields and stages ensemble selections until Apply', async () => {
 	render(<RiserStackFilterForm />);
 	const choirOption = screen.getByLabelText('Choir');
 
 	expect(screen.getByText('Ensemble')).toBeInTheDocument();
 	expect(screen.queryByText('Default')).not.toBeInTheDocument();
-	expect(screen.getByText('Choir').closest('span')).toHaveClass('bg-purple-100', 'text-purple-800');
 
 	fireEvent.click(choirOption);
 

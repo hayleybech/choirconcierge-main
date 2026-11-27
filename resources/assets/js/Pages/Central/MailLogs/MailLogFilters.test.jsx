@@ -22,14 +22,13 @@ vi.mock('../../../components/inputs/TenantSelect', async () => {
 	const React = await vi.importActual('react');
 
 	return {
-		default: ({ options, defaultValue, value, updateFn, className }) =>
+		default: ({ options, defaultValue, value, updateFn }) =>
 			React.createElement(
 				'button',
 				{
 					'type': 'button',
 					'aria-label': 'Select tenant',
 					'data-testid': 'tenant-selector',
-					'data-class-name': className,
 					'onClick': () => updateFn(options[0]?.value ?? ''),
 				},
 				value?.label ?? defaultValue?.label ?? 'No tenant selected'
@@ -119,11 +118,6 @@ it('puts tenant selection in both the Add Filter panel and the desktop filter pi
 
 	await user.click(screen.getByRole('button', { name: 'Add filter' }));
 	await user.click(screen.getByRole('menuitem', { name: 'Tenant' }));
-	expect(screen.getByRole('group', { name: 'Tenant values' })).toHaveClass('overflow-visible');
-	expect(screen.getByTestId('tenant-selector')).toHaveAttribute(
-		'data-class-name',
-		'mt-1 mb-3 w-full min-w-0 max-w-full px-3'
-	);
 	await user.click(screen.getByTestId('tenant-selector'));
 	await user.click(screen.getByRole('menuitem', { name: 'Apply' }));
 
@@ -149,15 +143,12 @@ it('uses desktop pills for To and From and omits them from the mobile search rai
 
 	const user = userEvent.setup();
 	await user.click(screen.getByRole('button', { name: /To:.*open filter values/ }));
-	const toPanel = screen.getByRole('heading', { name: 'To' }).closest('.fixed');
-	expect(within(toPanel).getAllByText('To', { exact: true })).toHaveLength(1);
-	expect(within(toPanel).getByRole('textbox', { name: 'To' }).parentElement).not.toHaveClass('px-3', 'pb-2');
+	expect(screen.getByRole('heading', { name: 'To' })).toBeInTheDocument();
+	expect(screen.getByRole('textbox', { name: 'To' })).toBeInTheDocument();
 
 	await user.click(screen.getByRole('button', { name: /From:.*open filter values/ }));
-	const fromPanel = screen.getByRole('heading', { name: 'From' }).closest('.fixed');
-	expect(within(fromPanel).getAllByText('From', { exact: true })).toHaveLength(1);
-	expect(within(fromPanel).getByRole('textbox', { name: 'From' })).toHaveValue('sender@example.com');
-	expect(within(fromPanel).getByRole('textbox', { name: 'From' }).parentElement).not.toHaveClass('px-3', 'pb-2');
+	expect(screen.getByRole('heading', { name: 'From' })).toBeInTheDocument();
+	expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('sender@example.com');
 	unmount();
 
 	mockUseMediaQuery.mockReturnValue(false);

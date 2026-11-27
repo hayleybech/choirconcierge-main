@@ -318,11 +318,14 @@ const AttendanceReport = ({
 														>
 															{!event.isBeforeHistory &&
 															!event.consideredSingerIds.includes(singer.id) ? (
-                                                <Tooltip content="Not an active member at the time">
-                                                    <span className="text-xs text-gray-400" tabIndex={0}>
-                                                        N/A
-                                                    </span>
-                                                </Tooltip>
+																<Tooltip content="Not an active member at the time">
+																	<span
+																		className="text-xs text-gray-400"
+																		tabIndex={0}
+																	>
+																		N/A
+																	</span>
+																</Tooltip>
 															) : (
 																<AttendanceTag
 																	status={
