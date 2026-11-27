@@ -104,18 +104,16 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 			<div className="flex flex-col gap-y-1.5">
 				<div className="flex items-center gap-1">
 					{isMobile && attendance.response === 'absent' && attendance.absent_reason && (
-						<Tooltip content={attendance.absent_reason} placement="bottom-end" trigger="click">
-							<button
-								type="button"
-								aria-label="Show attendance reason"
-								onClick={event => {
-									event.preventDefault();
-									event.stopPropagation();
-								}}
-								className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
-							>
-								<Icon icon="comment-dots" />
-							</button>
+						<Tooltip
+							content={attendance.absent_reason}
+							placement="bottom-end"
+							triggerProps={{
+								'aria-label': 'Show attendance reason',
+								className:
+									'h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500',
+							}}
+						>
+							<Icon icon="comment-dots" />
 						</Tooltip>
 					)}
 					{isMobile && (
@@ -213,9 +211,9 @@ const AttendanceRecord = ({ attendance, singerId, event, onToggleEditing, isMobi
 					<div className="flex gap-1.5 items-center">
 						{attendance.absent_reason && !isEditing && !isMobile && (
 							<Tooltip content={attendance.absent_reason}>
-								<div className="text-[11px] text-gray-500 italic max-w-[200px] truncate" tabIndex={0}>
+								<span className="block text-[11px] text-gray-500 italic max-w-[200px] truncate">
 									Reason: {attendance.absent_reason}
-								</div>
+								</span>
 							</Tooltip>
 						)}
 

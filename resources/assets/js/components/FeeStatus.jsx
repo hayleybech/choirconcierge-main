@@ -9,13 +9,12 @@ const FeeStatus = ({ status, tooltip, compact = false }) => {
 
 	return (
 		<Tooltip content={tooltipContent}>
-			<div
+			<span
 				className={classNames(compact ? 'text-xs' : 'text-sm', feeStatus.colour)}
-				tabIndex={tooltipContent ? 0 : undefined}
 			>
 				<Icon icon={feeStatus.icon} mr className={classNames(compact ? 'text-xs' : '', feeStatus.colour)} />
 				<span className="font-semibold truncate">{feeStatus.label}</span>
-			</div>
+			</span>
 		</Tooltip>
 	);
 };

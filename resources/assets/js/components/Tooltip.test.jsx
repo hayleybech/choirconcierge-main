@@ -18,6 +18,12 @@ describe('Tooltip', () => {
 		const trigger = screen.getByRole('button', { name: 'Help' });
 		const wrapper = trigger.parentElement;
 
+		fireEvent.mouseDown(trigger);
+		fireEvent.focus(trigger);
+		fireEvent.click(trigger);
+		fireEvent.mouseUp(trigger);
+		expect(screen.queryByRole('tooltip')).toBeNull();
+
 		fireEvent.mouseEnter(wrapper);
 
 		expect(screen.getByRole('tooltip')).toHaveTextContent('Helpful information');
@@ -28,19 +34,34 @@ describe('Tooltip', () => {
 		expect(screen.queryByRole('tooltip')).toBeNull();
 	});
 
-	it('toggles click content and dismisses it on outside click or Escape', () => {
+	it('supports click activation and dismisses content on outside click or Escape', () => {
 		render(
 			<>
-				<Tooltip content="Reason details" trigger="click" placement="bottom-end">
-					<button type="button">Show reason</button>
+				<Tooltip
+					content="Reason details"
+					placement="bottom-end"
+					triggerProps={{ 'aria-label': 'Show reason' }}
+				>
+					<span>Reason icon</span>
 				</Tooltip>
 				<button type="button">Outside</button>
 			</>
 		);
 
 		const trigger = screen.getByRole('button', { name: 'Show reason' });
+		const wrapper = trigger.parentElement;
+		expect(trigger).toHaveTextContent('Reason icon');
 
+		fireEvent.mouseEnter(wrapper);
+		expect(screen.getByRole('tooltip')).toHaveTextContent('Reason details');
+
+		fireEvent.mouseLeave(wrapper);
+		expect(screen.queryByRole('tooltip')).toBeNull();
+
+		fireEvent.mouseDown(trigger);
+		fireEvent.focus(trigger);
 		fireEvent.click(trigger);
+		fireEvent.mouseUp(trigger);
 
 		expect(screen.getByRole('tooltip')).toHaveTextContent('Reason details');
 		expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -56,6 +77,33 @@ describe('Tooltip', () => {
 		expect(trigger).toHaveAttribute('aria-expanded', 'false');
 	});
 
+	it('does not toggle a tooltip when a button child is clicked', () => {
+		const onClick = vi.fn();
+		const ButtonLike = props => <button {...props} />;
+
+		render(
+			<Tooltip content="Button help">
+				<ButtonLike type="button" onClick={onClick}>
+					Save
+				</ButtonLike>
+			</Tooltip>
+		);
+
+		const trigger = screen.getByRole('button', { name: 'Save' });
+
+		fireEvent.mouseDown(trigger);
+		fireEvent.focus(trigger);
+		fireEvent.click(trigger);
+		fireEvent.mouseUp(trigger);
+
+		expect(onClick).toHaveBeenCalledOnce();
+		expect(screen.queryByRole('tooltip')).toBeNull();
+
+		fireEvent.mouseEnter(trigger.parentElement);
+
+		expect(screen.getByRole('tooltip')).toHaveTextContent('Button help');
+	});
+
 	it('shows hover content after a long touch and dismisses it on an outside tap', () => {
 		vi.useFakeTimers();
 
@@ -63,7 +111,7 @@ describe('Tooltip', () => {
 			render(
 				<>
 					<Tooltip content="Helpful information">
-						<button type="button">Help</button>
+						<span>Help</span>
 					</Tooltip>
 					<button type="button">Outside</button>
 				</>

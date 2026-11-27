@@ -13,12 +13,18 @@ const placements = {
 
 let nextTooltipId = 0;
 
-const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', className = '' }) => {
-	const [isOpen, setIsOpen] = useState(false);
+const Tooltip = ({ children, content, placement = 'top', className = '', triggerProps = {} }) => {
+	const [isHovered, setIsHovered] = useState(false);
+	const [isFocused, setIsFocused] = useState(false);
+	const [isClickOpen, setIsClickOpen] = useState(false);
+	const [isLongPressOpen, setIsLongPressOpen] = useState(false);
+	const [isDismissed, setIsDismissed] = useState(false);
+	const isOpen = !isDismissed && (isHovered || isFocused || isClickOpen || isLongPressOpen);
 	const tooltipRef = useRef(null);
 	const tooltipId = useRef(null);
 	const longPressTimeoutRef = useRef(null);
 	const didLongPressRef = useRef(false);
+	const isPointerInteractionRef = useRef(false);
 
 	if (tooltipId.current === null) {
 		tooltipId.current = `tooltip-${nextTooltipId++}`;
@@ -31,12 +37,20 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 
 		const closeOnOutsideInteraction = event => {
 			if (tooltipRef.current && !tooltipRef.current.contains(event.target)) {
-				setIsOpen(false);
+				setIsHovered(false);
+				setIsFocused(false);
+				setIsClickOpen(false);
+				setIsLongPressOpen(false);
+				setIsDismissed(true);
 			}
 		};
 		const closeOnEscape = event => {
 			if (event.key === 'Escape') {
-				setIsOpen(false);
+				setIsHovered(false);
+				setIsFocused(false);
+				setIsClickOpen(false);
+				setIsLongPressOpen(false);
+				setIsDismissed(true);
 			}
 		};
 
@@ -63,7 +77,14 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 	}
 
 	const child = isValidElement(children) ? children : null;
-	const existingDescription = child?.props['aria-describedby'];
+	const isButtonChild = child?.type === 'button' || child?.props.type === 'button';
+	const {
+		'aria-describedby': triggerDescription,
+		className: triggerClassName = '',
+		onClick: onTriggerClick,
+		...additionalTriggerProps
+	} = triggerProps;
+	const existingDescription = [child?.props['aria-describedby'], triggerDescription].filter(Boolean).join(' ') || undefined;
 	const describedBy = isOpen
 		? [existingDescription, tooltipId.current].filter(Boolean).join(' ')
 		: existingDescription;
@@ -72,54 +93,86 @@ const Tooltip = ({ children, content, placement = 'top', trigger = 'hover', clas
 		longPressTimeoutRef.current = null;
 	};
 	const startLongPress = () => {
-		if (trigger !== 'hover') {
-			return;
-		}
-
+		isPointerInteractionRef.current = true;
 		cancelLongPress();
 		didLongPressRef.current = false;
 		longPressTimeoutRef.current = window.setTimeout(() => {
 			didLongPressRef.current = true;
-			setIsOpen(true);
+			setIsLongPressOpen(true);
+			setIsDismissed(false);
 			longPressTimeoutRef.current = null;
 		}, 500);
 	};
 	const endLongPress = event => {
 		cancelLongPress();
+		isPointerInteractionRef.current = false;
 		if (didLongPressRef.current) {
 			event.preventDefault();
 			didLongPressRef.current = false;
 		}
 	};
-	const triggerElement = child
-		? cloneElement(child, {
-				'aria-describedby': describedBy,
-				...(trigger === 'click'
-					? {
-							'aria-expanded': isOpen,
-							onClick: event => {
-								child.props.onClick?.(event);
-								setIsOpen(open => !open);
-							},
-						}
-					: {}),
-			})
-		: children;
+	const triggerElement = !isButtonChild ? (
+		<button
+			{...additionalTriggerProps}
+			type="button"
+			className={triggerClassName}
+			aria-describedby={describedBy}
+			aria-expanded={isOpen}
+			onClick={event => {
+				onTriggerClick?.(event);
+				if (isClickOpen) {
+					setIsHovered(false);
+					setIsFocused(false);
+					setIsClickOpen(false);
+					setIsLongPressOpen(false);
+					setIsDismissed(true);
+					return;
+				}
+
+				setIsClickOpen(true);
+				setIsDismissed(false);
+			}}
+		>
+			{children}
+		</button>
+	) : (
+		cloneElement(child, {
+			'aria-describedby': describedBy,
+		})
+	);
 
 	return (
 		<div
 			ref={tooltipRef}
 			className={`relative inline-flex ${className}`.trim()}
-			onMouseEnter={() => trigger === 'hover' && setIsOpen(true)}
-			onMouseLeave={() => trigger === 'hover' && setIsOpen(false)}
-			onFocus={() => trigger === 'hover' && setIsOpen(true)}
+			onMouseDown={() => {
+				isPointerInteractionRef.current = true;
+			}}
+			onMouseUp={() => {
+				isPointerInteractionRef.current = false;
+			}}
+			onMouseEnter={() => {
+				setIsHovered(true);
+				setIsDismissed(false);
+			}}
+			onMouseLeave={() => setIsHovered(false)}
+			onFocus={() => {
+				if (!isPointerInteractionRef.current) {
+					setIsFocused(true);
+					setIsDismissed(false);
+				}
+			}}
 			onTouchStart={startLongPress}
 			onTouchEnd={endLongPress}
 			onTouchMove={cancelLongPress}
-			onTouchCancel={cancelLongPress}
+			onTouchCancel={() => {
+				cancelLongPress();
+				isPointerInteractionRef.current = false;
+			}}
 			onBlur={event => {
-				if (trigger === 'hover' && !event.currentTarget.contains(event.relatedTarget)) {
-					setIsOpen(false);
+				if (!event.currentTarget.contains(event.relatedTarget)) {
+					isPointerInteractionRef.current = false;
+					setIsFocused(false);
 				}
 			}}
 		>

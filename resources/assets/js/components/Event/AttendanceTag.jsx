@@ -15,7 +15,7 @@ const AttendanceTag = ({ status, size = 'sm', className = '', hideLabel = false 
 
 	return (
 		<Tooltip content={hideLabel ? label : null}>
-			<span className={`text-${size} text-${colour}-500 ${className}`} tabIndex={hideLabel ? 0 : undefined}>
+			<span className={`text-${size} text-${colour}-500 ${className}`}>
 				<Icon icon={icon} mr={!!label} type={type} />
 				{!hideLabel && label}
 			</span>

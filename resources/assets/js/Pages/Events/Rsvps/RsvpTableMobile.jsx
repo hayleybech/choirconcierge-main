@@ -164,17 +164,14 @@ const RsvpTableMobile = ({
 export default RsvpTableMobile;
 
 const RsvpReasonTooltip = ({ details }) => (
-	<Tooltip content={details} placement="bottom-end" trigger="click">
-		<button
-			type="button"
-			aria-label="Show RSVP reason"
-			onClick={event => {
-				event.preventDefault();
-				event.stopPropagation();
-			}}
-			className="h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500"
-		>
-			<Icon icon="comment-dots" />
-		</button>
+	<Tooltip
+		content={details}
+		placement="bottom-end"
+		triggerProps={{
+			'aria-label': 'Show RSVP reason',
+			className: 'h-8 w-8 rounded-full text-gray-400 hover:text-purple-600 focus:outline-none focus:ring-1 focus:ring-purple-500',
+		}}
+	>
+		<Icon icon="comment-dots" />
 	</Tooltip>
 );

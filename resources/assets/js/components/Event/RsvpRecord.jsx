@@ -149,9 +149,9 @@ const RsvpRecord = ({ rsvp, singerId, event, isMobile = false }) => {
 				<div className="mt-1 flex items-center gap-1.5">
 					{rsvp.details && !isEditing && (
 						<Tooltip content={rsvp.details}>
-							<div className="max-w-[200px] truncate text-[11px] italic text-gray-500" tabIndex={0}>
+							<span className="block max-w-[200px] truncate text-[11px] italic text-gray-500">
 								{detailsLabel}: {rsvp.details}
-							</div>
+							</span>
 						</Tooltip>
 					)}
 					{rsvp.details && !isEditing && (

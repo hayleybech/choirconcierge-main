@@ -16,6 +16,7 @@ import Icon from '../../../components/Icon';
 import useRoute from '../../../hooks/useRoute';
 import { Link, usePage } from '@inertiajs/react';
 import SelfCheckInDialog from '../../../components/Event/SelfCheckInDialog';
+import AttendanceInstructionsDialog from '../../../components/Event/AttendanceInstructionsDialog';
 import DateTag from '../../../components/DateTag';
 import Table, {
 	TableCell,
@@ -45,7 +46,6 @@ import useBulkEdit from '../../../hooks/useBulkEdit';
 import BulkEditBar from '../../../components/BulkEditBar';
 import { createAttendanceFilterDescriptors } from './AttendanceFilterDescriptors';
 import Button from '../../../components/inputs/ButtonV2';
-import Dialog from '../../../components/Dialog';
 import { Menu, Transition } from '@headlessui/react';
 import menuItemStyles from '../../../components/ActionMenu/menuItemStyles';
 import { router } from '@inertiajs/react';
@@ -266,42 +266,10 @@ const Index = ({
 				setIsOpen={setCheckInDialogIsOpen}
 			/>
 
-			<Dialog
-				title={
-					<span className="flex items-center gap-1.5">
-						<Icon icon="info-circle" type="regular" className="text-gray-800" />
-						Attendance Tracking Instructions
-					</span>
-				}
+			<AttendanceInstructionsDialog
 				isOpen={instructionsDialogIsOpen}
 				setIsOpen={setInstructionsDialogIsOpen}
-				icon={null}
-				showCancelButton={false}
-			>
-				<div className="text-left">
-					<p className="mb-2">We offer three ways to track attendance:</p>
-					<ul className="mb-4 ml-4 list-inside list-disc [&>li]:mb-1">
-						<li>
-							<strong>Manual</strong> attendance tracking on this page
-						</li>
-						<li>
-							<strong>Kiosk</strong> check-in for shared device use
-						</li>
-						<li>
-							<strong>QR Code</strong> check-in for individual use
-						</li>
-					</ul>
-					<p className="mb-2">
-						Both device check-in pages automatically mark singers as late after the call time, or absent 20 minutes
-						later.
-					</p>
-					<p className="mb-2">
-						If attendance was partially recorded during the event (either manually here or using the kiosk),
-						remaining singers will automatically be marked absent once the event ends.
-					</p>
-					<p>The check-in pages also send an attendance report after each event.</p>
-				</div>
-			</Dialog>
+			/>
 
 			<BulkEditBar bulkEdit={bulkEdit} actions={bulkActions} />
 
