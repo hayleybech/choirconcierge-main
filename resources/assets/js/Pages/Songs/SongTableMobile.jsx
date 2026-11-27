@@ -9,9 +9,13 @@ import SongStatus from '../../SongStatus';
 import useRoute from '../../hooks/useRoute';
 import Pagination from '../../components/Pagination';
 import EnsembleBadges from '../../components/EnsembleBadges';
+import PitchButton from '../../components/PitchButton';
+import { useInstrument } from '../../hooks/useInstrument';
  
 const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 	const { route } = useRoute();
+
+	const [instrument] = useInstrument();
 
 	return (
 		<div>
@@ -27,16 +31,16 @@ const SongTableMobile = ({ songs, userEnsemblesCount, bulkEdit }) => {
 							<div className="flex-1 min-w-0">
 								<div className="flex">
 									<div className="shrink-0 flex items-center">
-										{/*<PitchButton*/}
-										{/*	instrument={instrument}*/}
-										{/*	note={song.pitch.split('/')[0]}*/}
-										{/*	size="sm"*/}
-										{/*	disabled={bulkEdit.isActiveMobile}*/}
-										{/*/>*/}
+										<PitchButton
+											instrument={instrument}
+											note={song.pitch.split('/')[0]}
+											size="sm"
+											disabled={bulkEdit.isActiveMobile}
+										/>
 									</div>
 									<div className="min-w-0 flex-1 lg:grid lg:grid-cols-2 lg:gap-4">
 										<div className="flex items-center justify-between">
-											<div className="flex items-center min-w-0 mr-1.5 px-4">
+											<div className="flex items-center min-w-0 mx-1.5">
 												<SongStatusTag status={new SongStatus(song.status.slug)} />
 												<span className="text-sm font-medium text-purple-600 truncate">
 													{song.title}
