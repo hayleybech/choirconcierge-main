@@ -3,7 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import MailLogFilters from './MailLogFilters';
+import Filters from '../../../components/Filters';
 import IndexTableControls from '../../../components/IndexTableControls';
 import { createCentralMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 import { getDefaultFilterData } from '../../../components/filterDescriptorUtils';
@@ -58,7 +58,7 @@ const CentralMailLogFilterForm = ({ onSetData }) => {
 		submit: vi.fn(),
 	};
 
-	return <MailLogFilters form={form} filters={filters} />;
+	return <Filters routeName="central.mail-logs.index" form={form} filters={filters} />;
 };
 
 const CentralMailLogControls = ({ initialData, onSetData }) => {

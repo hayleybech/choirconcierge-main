@@ -31,7 +31,7 @@ import Pagination from '../../../components/Pagination';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import FilterDrawer from '../../../components/FilterDrawer';
-import RsvpFilters from '../../../components/RsvpFilters';
+import Filters from '../../../components/Filters';
 import { createRsvpFilterDescriptors } from '../../../components/RsvpFilterDescriptors';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import { Link, router } from '@inertiajs/react';
@@ -245,8 +245,9 @@ const Index = ({
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<RsvpFilters
-							event={event}
+						<Filters
+							routeName="events.rsvps.index"
+							routeParams={{ event: event.id }}
 							form={sortFilterForm}
 							filters={filters}
 						/>

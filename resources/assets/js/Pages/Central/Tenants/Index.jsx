@@ -12,7 +12,7 @@ import TenantTableMobile from './TenantTableMobile';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
-import TenantFilters from './TenantFilters';
+import Filters from '../../../components/Filters';
 import TenantStatsWidget from '../Dash/TenantStatsWidget';
 import { createTenantFilterDescriptors } from './TenantFilterDescriptors';
 
@@ -61,7 +61,7 @@ const Index = ({ tenants, pagination, tenantStats, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<TenantFilters form={sortFilterForm} filters={filters} />
+						<Filters routeName="central.tenants.index" form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={<TenantTableMobile tenants={tenants} pagination={pagination} />}

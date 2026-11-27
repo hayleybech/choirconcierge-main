@@ -18,7 +18,7 @@ import EmptyState from '../../components/EmptyState';
 import IndexContainer from '../../components/IndexContainer';
 import IndexTableControls from '../../components/IndexTableControls';
 import useRoute from '../../hooks/useRoute';
-import DocumentFilters from './DocumentFilters';
+import Filters from '../../components/Filters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
@@ -95,7 +95,7 @@ const Index = ({ folders, documents, ensembles = [], userEnsemblesCount, can, se
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<DocumentFilters form={sortFilterForm} filters={filters} />
+						<Filters routeName="folders.index" form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableDesktop={

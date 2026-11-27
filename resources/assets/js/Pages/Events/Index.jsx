@@ -15,7 +15,7 @@ import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
 import EventTableDesktop from './EventTableDesktop';
 import EventTableMobile from './EventTableMobile';
-import EventFilters from '../../components/Event/EventFilters';
+import Filters from '../../components/Filters';
 import IndexContainer from '../../components/IndexContainer';
 import IndexTableControls from '../../components/IndexTableControls';
 import FilterDrawer from '../../components/FilterDrawer';
@@ -167,7 +167,7 @@ const Index = ({ events, eventTypes, userEnsemblesCount, ensembles, calendarSync
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<EventFilters filters={filters} form={sortFilterForm} />
+						<Filters routeName="events.index" filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={

@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import SingerFilters from './SingerFilters';
+import Filters from './Filters';
 import { createSingerIndexFilterDescriptors } from './SingerFilterDescriptors';
 
 vi.mock('../hooks/useRoute', () => ({
@@ -43,8 +43,11 @@ const renderSingerFilters = () => {
 		});
 
 		return (
-			<SingerFilters
+			<Filters
+				routeName="singers.index"
 				filters={filters}
+				autoSubmit={false}
+				showClearAll={false}
 				form={{
 					data,
 					setData: (name, value) => {

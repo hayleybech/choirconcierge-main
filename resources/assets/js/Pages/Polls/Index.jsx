@@ -34,7 +34,7 @@ import EnsembleBadges from '../../components/EnsembleBadges';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterDrawer from '../../components/FilterDrawer';
-import PollFilters from '../../components/PollFilters';
+import Filters from '../../components/Filters';
 import TableHeadingSort from '../../components/TableHeadingSort';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import BulkEditBar from '../../components/BulkEditBar';
@@ -142,7 +142,7 @@ const Index = ({ polls, pagination, ensembles, can, tenant, setSidebarOpen }) =>
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<PollFilters form={sortFilterForm} filters={filters} />
+						<Filters routeName="polls.index" form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={

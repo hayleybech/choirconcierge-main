@@ -24,7 +24,7 @@ import TrialAntiSpamNotice from '../TrialAntiSpamNotice';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
-import MailLogFilters from './MailLogFilters';
+import Filters from '../../../components/Filters';
 import { createMailingListMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 
 const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnabled, setSidebarOpen }) => {
@@ -133,7 +133,7 @@ const Index = ({ logs, mailingLists, mailTypes, defaultMailTypes, can, inboxEnab
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailLogFilters form={sortFilterForm} filters={filters} />
+						<Filters routeName="communications.index" form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableMobile={

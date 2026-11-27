@@ -12,7 +12,7 @@ import MailLogTableDesktop from './MailLogTableDesktop';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
-import MailLogFilters from './MailLogFilters';
+import Filters from '../../../components/Filters';
 import { createCentralMailLogFilterDescriptors } from './MailLogFilterDescriptors';
 
 const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) => {
@@ -56,7 +56,7 @@ const Index = ({ logs, tenants, mailTypes, defaultMailTypes, setSidebarOpen }) =
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailLogFilters filters={filters} form={sortFilterForm} />
+						<Filters routeName="central.mail-logs.index" filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={<MailLogTableMobile logs={logs} />}

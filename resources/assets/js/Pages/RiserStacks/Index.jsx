@@ -21,7 +21,7 @@ import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterDrawer from '../../components/FilterDrawer';
-import RiserStackFilters from '../../components/RiserStack/RiserStackFilters';
+import Filters from '../../components/Filters';
 import { createRiserStackFilterDescriptors } from '../../components/RiserStack/RiserStackFilterDescriptors';
 import useBulkEdit from '../../hooks/useBulkEdit';
 import Dialog from '../../components/Dialog';
@@ -126,7 +126,7 @@ const Index = ({ stacks, ensembles, userEnsemblesCount, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<RiserStackFilters filters={filters} form={sortFilterForm} />
+						<Filters routeName="stacks.index" filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableDesktop={

@@ -12,7 +12,7 @@ import AppHead from '../../../components/AppHead';
 import useRoute from '../../../hooks/useRoute';
 import useFilterPane from '../../../hooks/useFilterPane';
 import FilterDrawer from '../../../components/FilterDrawer';
-import SingerAttendanceFilters from './SingerAttendanceFilters';
+import Filters from '../../../components/Filters';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import EmptyState from '../../../components/EmptyState';
 import IndexContainer from '../../../components/IndexContainer';
@@ -66,7 +66,12 @@ const Index = ({ singer, attendances, eventTypes, pagination, setSidebarOpen }) 
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<SingerAttendanceFilters filters={filters} form={sortFilterForm} singer={singer} />
+						<Filters
+							routeName="singers.attendance"
+							routeParams={{ singer }}
+							filters={filters}
+							form={sortFilterForm}
+						/>
 					</FilterDrawer>
 				}
 				tableMobile={<AttendanceTableMobile attendances={attendances} pagination={pagination} />}

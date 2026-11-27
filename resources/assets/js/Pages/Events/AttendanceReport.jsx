@@ -18,7 +18,7 @@ import Tooltip from '../../components/Tooltip';
 import useRoute from '../../hooks/useRoute';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
-import AttendanceReportFilters from './AttendanceReportFilters';
+import Filters from '../../components/Filters';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import EmptyState from '../../components/EmptyState';
 import { Link } from '@inertiajs/react';
@@ -132,7 +132,7 @@ const AttendanceReport = ({
 	}, [isDesktop, sortFilterForm.data['starts_after'], sortFilterForm.data['starts_before']]);
 	const filterPane = (
 		<FilterDrawer closeFn={() => setShowFilters(false)}>
-			<AttendanceReportFilters form={sortFilterForm} filters={filters} />
+			<Filters routeName="events.reports.attendance" form={sortFilterForm} filters={filters} />
 		</FilterDrawer>
 	);
 

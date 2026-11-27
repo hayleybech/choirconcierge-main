@@ -25,7 +25,7 @@ import BulkEditBar from '../../components/BulkEditBar';
 import useFilterPane from '../../hooks/useFilterPane';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
 import FilterDrawer from '../../components/FilterDrawer';
-import MailingListFilters from './MailingListFilters';
+import Filters from '../../components/Filters';
 import { createMailingListFilterDescriptors } from './MailingListFilterDescriptors';
 
 const Index = ({ lists, can, setSidebarOpen }) => {
@@ -144,7 +144,7 @@ const Index = ({ lists, can, setSidebarOpen }) => {
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<MailingListFilters form={sortFilterForm} filters={filters} />
+						<Filters routeName="groups.index" form={sortFilterForm} filters={filters} />
 					</FilterDrawer>
 				}
 				tableDesktop={

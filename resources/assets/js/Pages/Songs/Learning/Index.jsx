@@ -22,7 +22,7 @@ import LearningStatusSummary from './LearningStatusSummary';
 import IndexContainer from '../../../components/IndexContainer';
 import IndexTableControls from '../../../components/IndexTableControls';
 import FilterDrawer from '../../../components/FilterDrawer';
-import LearningStatusFilters from '../../../components/LearningStatusFilters';
+import Filters from '../../../components/Filters';
 import LearningStatus from '../../../LearningStatus';
 import { createLearningStatusFilterDescriptors } from '../../../components/LearningStatusFilterDescriptors';
 import { router } from '@inertiajs/react';
@@ -175,8 +175,9 @@ const Index = ({
 				tableSummary={<LearningStatusSummary counts={counts} />}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<LearningStatusFilters
-							song={song}
+						<Filters
+							routeName="songs.singers.index"
+							routeParams={{ song: song.id }}
 							form={sortFilterForm}
 							filters={filters}
 						/>

@@ -15,7 +15,7 @@ import SingerTableMobile from './SingerTableMobile';
 import AppHead from '../../components/AppHead';
 import { usePage } from '@inertiajs/react';
 import IndexContainer from '../../components/IndexContainer';
-import SingerFilters from '../../components/SingerFilters';
+import Filters from '../../components/Filters';
 import useFilterPane from '../../hooks/useFilterPane';
 import FilterDrawer from '../../components/FilterDrawer';
 import useSortFilterForm from '../../hooks/useSortFilterForm';
@@ -265,9 +265,12 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 						onCancel={cancelFilterChanges}
 						onClearAll={clearFilterChanges}
 					>
-						<SingerFilters
+						<Filters
+							routeName="singers.index"
 							form={draftSingerFilterForm}
 							filters={filters}
+							autoSubmit={false}
+							showClearAll={false}
 						/>
 					</FilterDrawer>
 				}

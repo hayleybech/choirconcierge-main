@@ -17,7 +17,7 @@ import ActionMenuItem from '../../components/ActionMenu/ActionMenuItem';
 import Button from '../../components/inputs/ButtonV2';
 import Icon from '../../components/Icon';
 import AppHead from '../../components/AppHead';
-import SongFilters from '../../components/Song/SongFilters';
+import Filters from '../../components/Filters';
 import IndexContainer from '../../components/IndexContainer';
 import IndexTableControls from '../../components/IndexTableControls';
 import useFilterPane from '../../hooks/useFilterPane';
@@ -160,7 +160,7 @@ const Index = ({
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-						<SongFilters filters={filters} form={sortFilterForm} />
+						<Filters routeName="songs.index" filters={filters} form={sortFilterForm} />
 					</FilterDrawer>
 				}
 				tableMobile={

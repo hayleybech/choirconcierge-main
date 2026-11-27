@@ -34,7 +34,7 @@ import AttendanceRecord from '../../../components/Event/AttendanceRecord';
 import useFilterPane from '../../../hooks/useFilterPane';
 import useSortFilterForm from '../../../hooks/useSortFilterForm';
 import FilterDrawer from '../../../components/FilterDrawer';
-import AttendanceFilters from '../../../components/AttendanceFilters';
+import Filters from '../../../components/Filters';
 import TableHeadingSort from '../../../components/TableHeadingSort';
 import VoicePartTag from '../../../components/VoicePartTag';
 import Badge from '../../../components/Badge';
@@ -340,8 +340,9 @@ const Index = ({
 				}
 				filterPane={
 					<FilterDrawer closeFn={() => setShowFilters(false)}>
-					<AttendanceFilters
-						event={event}
+					<Filters
+						routeName="events.attendances.index"
+						routeParams={{ event: event.id }}
 						form={sortFilterForm}
 						filters={filters}
 					/>

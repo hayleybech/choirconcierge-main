@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 import FilterDrawer from '../../../components/FilterDrawer';
-import SingerAttendanceFilters from './SingerAttendanceFilters';
+import Filters from '../../../components/Filters';
 import { createSingerAttendanceFilterDescriptors } from './SingerAttendanceFilterDescriptors';
 
 const mocks = vi.hoisted(() => ({ setData: vi.fn(), submit: vi.fn(), closeDrawer: vi.fn(), submittedData: null }));
@@ -78,9 +78,10 @@ const AttendanceFilterForm = ({ initialData } = {}) => {
 
 	return (
 		<FilterDrawer closeFn={mocks.closeDrawer}>
-			<SingerAttendanceFilters
+			<Filters
+				routeName="singers.attendance"
+				routeParams={{ singer: { id: 1 } }}
 				filters={filters}
-				singer={{ id: 1 }}
 				form={{
 					data,
 					defaultFilterData: { 'type.id': [], 'starts_after': '', 'starts_before': '' },
