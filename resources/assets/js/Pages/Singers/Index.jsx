@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import TenantLayout from '../../Layouts/TenantLayout';
 import {
@@ -35,7 +35,6 @@ import RenewFeesDialog from './components/RenewFeesDialog';
 import TableControls from '../../components/Table/TableControls';
 import ButtonLink from '../../components/inputs/ButtonLinkV2';
 import { createSingerIndexFilterDescriptors } from '../../components/SingerFilterDescriptors';
-import { areFilterValuesEqual } from '../../components/Filters/utils';
 
 const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembles, pagination, setSidebarOpen }) => {
 	const [showFilters, setShowFilters] = useFilterPane();
@@ -63,65 +62,6 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 	const filters = createSingerIndexFilterDescriptors({ statuses, defaultStatus, voiceParts, roles, ensembles });
 
 	const sortFilterForm = useSortFilterForm('singers.index', filters, sorts);
-	const [draftFilterData, setDraftFilterData] = useState(() =>
-		Object.fromEntries(filters.map(({ name }) => [name, sortFilterForm.data[name]]))
-	);
-	const appliedFilterDataRef = useRef(draftFilterData);
-	const [applyDraftFilters, setApplyDraftFilters] = useState(false);
-	const shouldSubmitAfterApplyRef = useRef(false);
-	const draftSingerFilterForm = {
-		data: draftFilterData,
-		setData: (name, value) => setDraftFilterData(previousData => ({ ...previousData, [name]: value })),
-		submit: event => event?.preventDefault(),
-	};
-
-	useEffect(() => {
-		const appliedFilterData = Object.fromEntries(filters.map(({ name }) => [name, sortFilterForm.data[name]]));
-		const filtersChanged = filters.some(
-			({ name }) => !areFilterValuesEqual(appliedFilterData[name], appliedFilterDataRef.current[name])
-		);
-
-		if (filtersChanged) {
-			appliedFilterDataRef.current = appliedFilterData;
-			setDraftFilterData(appliedFilterData);
-		}
-	}, [sortFilterForm.data]);
-
-	useEffect(() => {
-		if (!applyDraftFilters) {
-			return;
-		}
-
-		setApplyDraftFilters(false);
-		if (!isDesktop && shouldSubmitAfterApplyRef.current) {
-			sortFilterForm.submit(undefined, { preserveState: true });
-		}
-		setShowFilters(false);
-	}, [applyDraftFilters, isDesktop, sortFilterForm.data, sortFilterForm.submit]);
-
-	const applyFilterChanges = (filterData = draftFilterData, submitRegardless = false) => {
-		shouldSubmitAfterApplyRef.current =
-			submitRegardless ||
-			!filters
-				.filter(filter => ['date', 'text'].includes(filter.type))
-				.some(({ name }) => sortFilterForm.data[name] !== filterData[name]);
-		sortFilterForm.setData({ ...sortFilterForm.data, ...filterData });
-		setApplyDraftFilters(true);
-	};
-	const cancelFilterChanges = () => {
-		const appliedFilterData = Object.fromEntries(filters.map(({ name }) => [name, sortFilterForm.data[name]]));
-		appliedFilterDataRef.current = appliedFilterData;
-		setDraftFilterData(appliedFilterData);
-		setShowFilters(false);
-	};
-	const clearFilterChanges = () => {
-		const defaultFilterData = Object.fromEntries(
-			filters.map(({ name, defaultValue }) => [name, Array.isArray(defaultValue) ? [...defaultValue] : defaultValue])
-		);
-
-		setDraftFilterData(defaultFilterData);
-		applyFilterChanges(defaultFilterData, true);
-	};
 
 	const tableActions = [
 		{
@@ -259,18 +199,11 @@ const Index = ({ allSingers, statuses, defaultStatus, voiceParts, roles, ensembl
 					/>
 				}
 				filterPane={
-					<FilterDrawer
-						closeFn={() => setShowFilters(false)}
-						onApply={applyFilterChanges}
-						onCancel={cancelFilterChanges}
-						onClearAll={clearFilterChanges}
-					>
+					<FilterDrawer closeFn={() => setShowFilters(false)}>
 						<Filters
 							routeName="singers.index"
-							form={draftSingerFilterForm}
+							form={sortFilterForm}
 							filters={filters}
-							autoSubmit={false}
-							showClearAll={false}
 						/>
 					</FilterDrawer>
 				}

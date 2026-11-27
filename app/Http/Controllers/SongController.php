@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomSorts\SongStatusSort;
+use App\Enums\SingerStatus;
 use App\Http\Requests\SongRequest;
 use App\Models\Ensemble;
 use App\Models\Membership;
@@ -35,11 +36,11 @@ class SongController extends Controller
     {
         $includePending = auth()->user()?->isSuperAdmin || auth()->user()?->membership->hasAbility('songs_update');
         $statuses = SongStatus::query()
-            ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
+            ->when(!$includePending, fn($query) => $query->where('title', '!=', 'Pending'))
             ->get();
         $defaultStatuses = $statuses->where('title', '!=', 'Archived')->pluck('id')->toArray();
 
-        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->status->status === \App\Enums\SingerStatus::MEMBERS;
+        $includeNonAuditionSongs = auth()->user()?->isSuperAdmin || auth()->user()?->membership->status->status === SingerStatus::MEMBERS;
         $showForProspectsDefault = $includeNonAuditionSongs ? [false, true] : [true];
 
         $totalEnsemblesCount = Ensemble::count();
@@ -50,7 +51,7 @@ class SongController extends Controller
         return Inertia::render('Songs/Index', [
             'songs' => $this->getSongs($includePending, $defaultStatuses, $includeNonAuditionSongs, $showForProspectsDefault),
             'statuses' => SongStatus::query()
-                ->when(! $includePending, fn ($query) => $query->where('title', '!=', 'Pending'))
+                ->when(!$includePending, fn($query) => $query->where('title', '!=', 'Pending'))
                 ->get()
                 ->values(),
             'defaultStatuses' => $defaultStatuses,
@@ -259,17 +260,15 @@ class SongController extends Controller
                     ->ignore($includePending ? [] : [SongStatus::where('title', '=', 'Pending')->value('id')])
                     ->default($defaultStatuses),
                 AllowedFilter::callback('show_for_prospects', function (Builder $query, $value) use ($includeNonAuditionSongs): void {
-                    $selectedValues = collect((array) $value)
-                        ->reject(fn ($selectedValue) => is_null($selectedValue) || $selectedValue === '')
+                    $selectedValues = collect((array)$value)
+                        ->reject(fn($selectedValue) => is_null($selectedValue) || $selectedValue === '')
                         ->values();
 
-                    if (! $includeNonAuditionSongs) {
-                        $query->where('show_for_prospects', true);
-
-                        return;
-                    }
-
-                    $query->whereIn('show_for_prospects', $selectedValues->isEmpty() ? [false, true] : $selectedValues->all());
+                    $query->when(
+                        $includeNonAuditionSongs,
+                        fn (Builder $query) => $query->whereIn('show_for_prospects', $selectedValues->isEmpty() ? [false, true] : $selectedValues->all()),
+                        fn (Builder $query) => $query->where('show_for_prospects', true),
+                    );
                 })
                     ->default($showForProspectsDefault),
                 AllowedFilter::exact('categories.id'),

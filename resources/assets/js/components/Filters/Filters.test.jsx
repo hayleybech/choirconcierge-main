@@ -5,6 +5,7 @@ import { vi } from 'vitest';
 import FilterDrawer from './FilterDrawer';
 import Filters from './Filters';
 import { createRiserStackFilterDescriptors } from '../RiserStack/RiserStackFilterDescriptors';
+import { createSingerIndexFilterDescriptors } from '../SingerFilterDescriptors';
 
 const mocks = vi.hoisted(() => ({
 	setData: vi.fn(),
@@ -101,6 +102,48 @@ const RiserStackFilterForm = ({ initialData = { 'search': '', 'ensembles.id': []
 	);
 };
 
+const defaultSingerFilterData = {
+	'user.name': '',
+	status: ['members'],
+	'enrolments.voice_part_id': [],
+	'roles.id': [],
+	fee_status: [],
+};
+
+const singerFilters = createSingerIndexFilterDescriptors({
+	statuses: [
+		{ id: 'members', name: 'Members' },
+		{ id: 'prospects', name: 'Prospects' },
+	],
+	defaultStatus: 'members',
+	voiceParts: [],
+	roles: [],
+	ensembles: [],
+});
+
+const SingerFilterForm = () => {
+	const [data, updateData] = useState({ ...defaultSingerFilterData, status: ['prospects'] });
+
+	return (
+		<FilterDrawer closeFn={mocks.closeDrawer}>
+			<Filters
+				routeName="singers.index"
+				filters={singerFilters}
+				form={{
+					data,
+					defaultFilterData: defaultSingerFilterData,
+					searchableFilterNames: ['user.name'],
+					setData: nextData => {
+						mocks.setData(nextData);
+						updateData(nextData);
+					},
+					submit: mocks.submit,
+				}}
+			/>
+		</FilterDrawer>
+	);
+};
+
 beforeEach(() => {
 	vi.clearAllMocks();
 	mocks.submittedData = null;
@@ -169,6 +212,23 @@ it('resets to default values and closes the drawer when Reset to Default is clic
 	expect(nameFilter).toHaveValue('');
 	await waitFor(() => expect(mocks.setData).toHaveBeenCalledWith({ name: '' }));
 	await waitFor(() => expect(mocks.submit).toHaveBeenCalledOnce());
+	expect(mocks.closeDrawer).toHaveBeenCalledOnce();
+});
+
+it('resets Singer status to its descriptor default', async () => {
+	render(<SingerFilterForm />);
+	expect(screen.getByLabelText('Prospects')).toBeChecked();
+
+	fireEvent.click(screen.getByRole('button', { name: 'Reset to Default' }));
+
+	await waitFor(() =>
+		expect(mocks.setData).toHaveBeenCalledWith({
+			...defaultSingerFilterData,
+			status: ['members'],
+		})
+	);
+	expect(screen.getByLabelText('Members')).toBeChecked();
+	expect(screen.getByLabelText('Prospects')).not.toBeChecked();
 	expect(mocks.closeDrawer).toHaveBeenCalledOnce();
 });
 
